@@ -1,19 +1,17 @@
 import React, { Component } from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import logo from './res/majorna.png';
 import './App.css';
+import Header from './components/Header';
 
 class App extends Component {
   render() {
     return (
       <MuiThemeProvider>
         <div className="App">
-          <header className="App-header">
-            <img src={logo} className="App-logo" alt="logo" />
-            <h1 className="App-title">Welcome to React</h1>
-          </header>
+          <Header />
+
           <p className="App-intro">
-            To get started, edit <code>src/App.js</code> and save to reload.
+            Time is: {(new Date()).toTimeString()}
           </p>
         </div>
       </MuiThemeProvider>
