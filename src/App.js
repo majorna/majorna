@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import logo from './res/logo.png';
+import logo from './res/majorna.png';
 import './App.css';
 
 class App extends Component {
