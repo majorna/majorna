@@ -10,7 +10,7 @@ class App extends Component {
         <div className="App">
           <Header />
 
-          <p className="App-intro">
+          <p className="App-body">
             Time is: {(new Date()).toTimeString()}
           </p>
         </div>
