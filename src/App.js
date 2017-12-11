@@ -11,7 +11,7 @@ class App extends Component {
           <Header />
 
           <p className="App-body">
-            Time is: {(new Date()).toTimeString()}
+            Body text.
           </p>
         </div>
       </MuiThemeProvider>
