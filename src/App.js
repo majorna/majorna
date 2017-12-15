@@ -1,13 +1,41 @@
 import React, { Component } from 'react';
 import './App.css';
-import Header from './components/Header';
-import Footer from './components/Footer'
+import logo from './res/majorna.png';
 
 class App extends Component {
   render() {
     return (
       <div>
-        <Header />
+        <nav className="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+          <a className="navbar-brand" href="#">
+            <img src={logo} width="120" alt="Majorna"/>
+          </a>
+          <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault">
+            <span className="navbar-toggler-icon"/>
+          </button>
+
+          <div className="collapse navbar-collapse" id="navbarsExampleDefault">
+            <ul className="navbar-nav mr-auto">
+              <li className="nav-item active">
+                <a className="nav-link" href="#">Home <span className="sr-only">(current)</span></a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link" href="#">Link</a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link disabled" href="#">Disabled</a>
+              </li>
+              <li className="nav-item dropdown">
+                <a className="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown">Dropdown</a>
+                <div className="dropdown-menu">
+                  <a className="dropdown-item" href="#">Action</a>
+                  <a className="dropdown-item" href="#">Another action</a>
+                  <a className="dropdown-item" href="#">Something else here</a>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </nav>
 
         <main role="main">
           <div className="jumbotron">
@@ -38,7 +66,9 @@ class App extends Component {
           </div>
         </main>
 
-        <Footer />
+        <footer className="container">
+          <p>&copy; 2018 Teoman Soygul</p>
+        </footer>
       </div>
     );
   }
