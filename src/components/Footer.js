@@ -1,5 +1,7 @@
 import React from 'react';
 
 export default () => (
-  <div>footer</div>
+  <footer className="container">
+    <p>&copy; 2018 Teoman Soygul</p>
+  </footer>
 );

@@ -1,6 +1,4 @@
-.App {
+main {
+    /* move down content because we have a fixed navbar that is 3.5rem tall */
+    padding-top: 3.5rem;
 }
-
-.App-body {
-}
-
