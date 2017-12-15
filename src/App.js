@@ -5,7 +5,7 @@ import logo from './res/majorna.png';
 class App extends Component {
   render() {
     return (
-      <div>
+      <React.Fragment>
         <nav className="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
           <a className="navbar-brand" href="#">
             <img src={logo} width="120" alt="Majorna"/>
@@ -69,7 +69,7 @@ class App extends Component {
         <footer className="container">
           <p>&copy; 2018 Teoman Soygul</p>
         </footer>
-      </div>
+      </React.Fragment>
     );
   }
 }
