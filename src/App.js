@@ -31,7 +31,7 @@ class App extends Component {
 
         <div className="jumbotron text-center">
           <h1 className="display-4">Send and Receive Majorna</h1>
-          <p className="lead">Simple crypto currency with banking services.</p>
+          <p className="lead">Simple crypto currency with built-in banking services.</p>
           <a className="btn btn-info btn-lg" href="/">Get Started</a>
         </div>
 
