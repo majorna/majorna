@@ -1,34 +1,17 @@
 import React, { Component } from 'react';
 import 'bulma/css/bulma.css';
 import './App.css';
-import logo from './res/majorna.png';
+import Header from './components/Header'
 
-class App extends Component {
+export default class App extends Component {
   render() {
     return (
       <React.Fragment>
-        <div className="navbar is-light">
-          <div className="navbar-brand">
-            <a className="navbar-item" href="/"><img src={logo} alt="Majorna"/></a>
-            <div className="navbar-burger"><span/><span/><span/></div>
-          </div>
-          <div className="navbar-menu">
-            <div className="navbar-end">
-              <a className="navbar-item">Accounts</a>
-              <div className="navbar-item has-dropdown is-hoverable">
-                <a className="navbar-link">Profile</a>
-                <div className="navbar-dropdown is-boxed is-right">
-                  <a className="navbar-item">Settings</a>
-                  <a className="navbar-item">Logout</a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <Header />
 
         <div className="hero is-medium is-light">
           <div className="hero-body has-text-centered">
-            <h1 className="title">Send and Receive Majorna</h1>
+            <h1 className="is-size-1">Send and Receive Majorna</h1>
             <h2 className="subtitle">Simple crypto currency with built-in banking services.</h2>
             <a className="button is-medium is-info">Get Started</a>
           </div>
@@ -41,5 +24,3 @@ class App extends Component {
     );
   }
 }
-
-export default App;
