@@ -7,7 +7,7 @@ class App extends Component {
   render() {
     return (
       <React.Fragment>
-        <div className="navbar">
+        <div className="navbar is-light">
           <div className="navbar-brand">
             <a className="navbar-item" href="/"><img src={logo} alt="Majorna"/></a>
             <div className="navbar-burger"><span/><span/><span/></div>
@@ -15,7 +15,7 @@ class App extends Component {
           <div className="navbar-menu">
             <div className="navbar-end">
               <a className="navbar-item">Accounts</a>
-              <div className="navbar-item has-dropdown">
+              <div className="navbar-item has-dropdown is-hoverable">
                 <a className="navbar-link">Profile</a>
                 <div className="navbar-dropdown is-boxed is-right">
                   <a className="navbar-item">Settings</a>
