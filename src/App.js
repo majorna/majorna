@@ -18,8 +18,8 @@ class App extends Component {
               <div className="navbar-item has-dropdown">
                 <a className="navbar-link">Profile</a>
                 <div className="navbar-dropdown is-boxed is-right">
-                  <a className="navbar-item">Overview</a>
-                  <a className="navbar-item">Elements</a>
+                  <a className="navbar-item">Settings</a>
+                  <a className="navbar-item">Logout</a>
                 </div>
               </div>
             </div>
@@ -29,20 +29,14 @@ class App extends Component {
         <div className="hero is-medium is-light">
           <div className="hero-body">
             <div className="container has-text-centered">
-              <h1 className="title">
-                Primary bold title
-              </h1>
-              <h2 className="subtitle">
-                Primary bold subtitle
-              </h2>
-              <a className="button is-medium is-info">
-                Get Started
-              </a>
+              <h1 className="title">Send and Receive Majorna</h1>
+              <h2 className="subtitle">Simple crypto currency with built-in banking services.</h2>
+              <a className="button is-medium is-info">Get Started</a>
             </div>
           </div>
         </div>
 
-        <div class="App-footer is-size-6">
+        <div className="App-footer is-size-6">
           &copy; 2018 Majorna Team &middot; Source code is MIT licensed &middot; <a className="button is-small is-info is-outlined" href="https://github.com/majorna" target="_blank">View on GitHub</a>
         </div>
       </React.Fragment>
