@@ -3,6 +3,7 @@ import 'bulma/css/bulma.css';
 import './App.css';
 import Navbar from './components/Navbar'
 import GetStarted from './components/GetStarted'
+import { Switch, Route, Redirect } from 'react-router-dom'
 
 export default class App extends Component {
   render() {
@@ -10,7 +11,10 @@ export default class App extends Component {
       <React.Fragment>
         <Navbar />
 
-        <GetStarted />
+        <Switch>
+          <Route exact path='/' component={GetStarted}/>
+          <Redirect from='*' to='/'/>
+        </Switch>
 
         <div className="App-footer is-size-6">
           &copy; 2018 Majorna Team &middot; Source code is MIT &middot; <a className="button is-small is-info is-outlined" href="https://github.com/majorna" target="_blank" rel="noopener noreferrer">View on GitHub</a>
