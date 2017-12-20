@@ -1,18 +1,18 @@
 import React, { Component } from 'react';
 import 'bulma/css/bulma.css';
 import './App.css';
-import Header from './components/Header'
+import Navbar from './components/Navbar'
 
 export default class App extends Component {
   render() {
     return (
       <React.Fragment>
-        <Header />
+        <Navbar />
 
         <div className="hero is-medium is-light">
           <div className="hero-body has-text-centered">
             <h1 className="title is-size-1">Send and Receive Majorna</h1>
-            <h2 className="subtitle" style={{marginTop: '0.5rem'}}>Simple crypto currency with built-in banking services.</h2>
+            <h2 className="subtitle" style={{marginTop: '0.5rem'}}>Simple crypto currency with built-in services.</h2>
             <a className="button is-medium is-info">Get Started</a>
           </div>
         </div>
