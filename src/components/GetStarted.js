@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 export default class GetStarted extends Component {
-  handleClick = () => this.setState(s => ({navOpen: !s.navOpen}))
+  handleClick = () => {}
 
   render() {
     return (
