@@ -1,11 +1,13 @@
 {
   "name": "majorna",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "bulma": "^0.6.1",
+    "firebase": "^4.8.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
+    "react-firebaseui": "^1.0.10",
     "react-router-dom": "^4.2.2",
     "react-scripts": "1.0.17"
   },
@@ -13,6 +15,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
+    "deploy": "npm run build && firebase deploy",
     "eject": "react-scripts eject"
   }
 }
