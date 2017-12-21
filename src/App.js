@@ -1,15 +1,21 @@
 import React, { Component } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom'
 import firebase from 'firebase';
+import { FirebaseAuth } from 'react-firebaseui';
 import 'bulma/css/bulma.css';
 import './App.css';
 import Navbar from './components/Navbar'
 import GetStarted from './components/GetStarted'
-import Login from './components/Login'
 
 export default class App extends Component {
   constructor() {
     super();
+    this.firebaseUIConfig = {
+      signInSuccessUrl: '/',
+      signInOptions: [
+        firebase.auth.GoogleAuthProvider.PROVIDER_ID
+      ]
+    };
     this.firebaseApp = firebase.initializeApp({
       apiKey: "AIzaSyCxdSFEhrqdH2VJ8N4XmRZ9st5Q5hBmgfY",
       authDomain: "majorna-fire.firebaseapp.com",
@@ -28,7 +34,7 @@ export default class App extends Component {
 
         <Switch>
           <Route exact path='/' component={GetStarted} />
-          <Route path='/register' render={routeProps => <Login {...routeProps} firebaseAuth={this.firebaseAuth}/>} />
+          <Route path='/login' render={routeProps => <FirebaseAuth {...routeProps} uiConfig={this.firebaseUIConfig} firebaseAuth={this.firebaseAuth}/>} />
           <Redirect from='*' to='/'/>
         </Switch>
 
