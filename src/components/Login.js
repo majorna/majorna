@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { FirebaseAuth } from 'react-firebaseui';
 import firebase from 'firebase';
 
-export default class Register extends Component {
+export default class Login extends Component {
   constructor () {
     super();
     firebase.initializeApp({

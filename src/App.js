@@ -4,7 +4,7 @@ import 'bulma/css/bulma.css';
 import './App.css';
 import Navbar from './components/Navbar'
 import GetStarted from './components/GetStarted'
-import Register from './components/Register'
+import Login from './components/Login'
 
 export default class App extends Component {
   render() {
@@ -14,7 +14,7 @@ export default class App extends Component {
 
         <Switch>
           <Route exact path='/' component={GetStarted}/>
-          <Route path='/register' component={Register}/>
+          <Route path='/register' component={Login}/>
           <Redirect from='*' to='/'/>
         </Switch>
 
