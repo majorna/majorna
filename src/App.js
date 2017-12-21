@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom'
+import firebase from 'firebase';
 import 'bulma/css/bulma.css';
 import './App.css';
 import Navbar from './components/Navbar'
@@ -7,14 +8,27 @@ import GetStarted from './components/GetStarted'
 import Login from './components/Login'
 
 export default class App extends Component {
+  constructor() {
+    super();
+    this.firebaseApp = firebase.initializeApp({
+      apiKey: "AIzaSyCxdSFEhrqdH2VJ8N4XmRZ9st5Q5hBmgfY",
+      authDomain: "majorna-fire.firebaseapp.com",
+      databaseURL: "https://majorna-fire.firebaseio.com",
+      projectId: "majorna-fire",
+      storageBucket: "majorna-fire.appspot.com",
+      messagingSenderId: "526928901295"
+    });
+    this.firebaseAuth = firebase.auth();
+  }
+
   render() {
     return (
       <React.Fragment>
         <Navbar />
 
         <Switch>
-          <Route exact path='/' component={GetStarted}/>
-          <Route path='/register' component={Login}/>
+          <Route exact path='/' component={GetStarted} />
+          <Route path='/register' render={routeProps => <Login {...routeProps} firebaseAuth={this.firebaseAuth}/>} />
           <Redirect from='*' to='/'/>
         </Switch>
 
