@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { FirebaseAuth } from 'react-firebaseui';
 import firebase from 'firebase';
-import firebaseui from 'firebaseui';
 
 export default class Register extends Component {
   constructor () {
@@ -19,10 +18,8 @@ export default class Register extends Component {
   firebaseUIConfig = {
     signInSuccessUrl: '/',
     signInOptions: [
-      firebase.auth.EmailAuthProvider.PROVIDER_ID,
       firebase.auth.GoogleAuthProvider.PROVIDER_ID
-    ],
-    credentialHelper: firebaseui.auth.CredentialHelper.NONE
+    ]
   };
 
   render() {
