@@ -25,6 +25,11 @@ export default class App extends Component {
       messagingSenderId: "526928901295"
     });
     this.firebaseAuth = firebase.auth();
+    this.firebaseAuth.onAuthStateChanged(u => {
+      if (u) {
+        this.firebaseUser = u
+      }
+    });
   }
 
   render() {
