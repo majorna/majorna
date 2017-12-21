@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom'
 
 export default class GetStarted extends Component {
   handleClick = () => {}
@@ -11,7 +12,7 @@ export default class GetStarted extends Component {
           <h2 className="subtitle" style={{marginBottom: '3rem'}}>Simple crypto currency with built-in services.</h2>
           <div className="field is-grouped is-grouped-centered">
             <p className="control is-hidden-mobile"><input className="input is-medium" type="text" placeholder="Enter your email" /></p>
-            <p className="control"><a className="button is-medium is-info">Get Started</a></p>
+            <p className="control"><Link className="button is-medium is-info" to='/register'>Get Started</Link></p>
           </div>
         </div>
       </div>

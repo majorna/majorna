@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
+import { Switch, Route, Redirect } from 'react-router-dom'
 import 'bulma/css/bulma.css';
 import './App.css';
 import Navbar from './components/Navbar'
 import GetStarted from './components/GetStarted'
-import { Switch, Route, Redirect } from 'react-router-dom'
+import Register from './components/Register'
 
 export default class App extends Component {
   render() {
@@ -13,6 +14,7 @@ export default class App extends Component {
 
         <Switch>
           <Route exact path='/' component={GetStarted}/>
+          <Route path='/register' component={Register}/>
           <Redirect from='*' to='/'/>
         </Switch>
 
