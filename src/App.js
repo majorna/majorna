@@ -32,6 +32,14 @@ export default class App extends Component {
     });
   }
 
+  logout = async () => {
+    try {
+      await this.firebaseAuth.signOut();
+    } catch (e) {
+
+    }
+  }
+
   render() {
     return (
       <React.Fragment>
