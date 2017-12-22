@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom'
+import { Switch, Route, Redirect, withRouter } from 'react-router-dom'
 import firebase from 'firebase';
 import 'bulma/css/bulma.css';
 import './App.css';
 import Navbar from './components/Navbar'
 import GetStarted from './components/GetStarted'
 import Login from './components/Login'
+import Dashboard from './components/Dashboard'
+import Footer from './components/Footer'
 
-export default class App extends Component {
-  constructor() {
-    super();
+export default withRouter(class App extends Component {
+  constructor(props) {
+    super(props);
     this.firebaseUIConfig = {
       signInSuccessUrl: '/',
       signInOptions: [
@@ -28,33 +30,30 @@ export default class App extends Component {
     this.firebaseAuth.onAuthStateChanged(u => {
       if (u) {
         this.firebaseUser = u
+        props.history.push('/dashboard');
+      } else {
+        this.firebaseUser = null
+        props.history.push('/');
       }
     });
   }
 
-  logout = async () => {
-    try {
-      await this.firebaseAuth.signOut();
-    } catch (e) {
-
-    }
-  }
+  logout = async () => await this.firebaseAuth.signOut();
 
   render() {
     return (
       <React.Fragment>
-        <Navbar />
+        <Navbar/>
 
         <Switch>
           <Route exact path='/' component={GetStarted} />
           <Route path='/login' render={routeProps => <Login {...routeProps} uiConfig={this.firebaseUIConfig} firebaseAuth={this.firebaseAuth}/>} />
+          <Route path='/dashboard' component={Dashboard} />
           <Redirect from='*' to='/'/>
         </Switch>
 
-        <div className="App-footer is-size-6">
-          &copy; 2018 Majorna Team &middot; Source code is MIT &middot; <a className="button is-small is-info is-outlined" href="https://github.com/majorna" target="_blank" rel="noopener noreferrer">View on GitHub</a>
-        </div>
+        <Footer/>
       </React.Fragment>
     );
   }
-}
+})
