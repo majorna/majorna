@@ -2,6 +2,7 @@ import React from 'react';
 
 export default () => (
   <div>
-    Balance: 0mj
+    mj vs $ (graph) <br/>
+    Balance: 500mj (0$)
   </div>
 );
