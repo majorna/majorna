@@ -1,5 +1,5 @@
 import React from 'react';
-import { FirebaseAuth } from 'react-firebaseui'
+import { FirebaseAuth } from 'react-firebaseui';
 
 export default (props) => (
   <div className="hero is-medium is-light">

@@ -46,7 +46,7 @@ export default withRouter(class App extends Component {
   render() {
     return (
       <React.Fragment>
-        <Navbar/>
+        <Navbar logout={this.logout}/>
 
         <Switch>
           <Route exact path='/' component={GetStarted} />
