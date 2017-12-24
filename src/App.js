@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom'
-import firebase from 'firebase';
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/firestore';
 import 'bulma/css/bulma.css';
 import './App.css';
 import Navbar from './components/Navbar'
@@ -36,6 +38,7 @@ export default withRouter(class App extends Component {
         props.history.push('/');
       }
     });
+    this.firestore = firebase.firestore();
   }
 
   logout = async () => await this.firebaseAuth.signOut();
