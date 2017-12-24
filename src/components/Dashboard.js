@@ -1,8 +1,8 @@
 import React from 'react';
 
 export default () => (
-  <div>
-    mj vs $ (graph) <br/>
-    Balance: 500mj (0$)
+  <div className="has-text-centered">
+    mj vs $ (0.01) <br/>
+    Balance: 500mj (~5$)
   </div>
 );
