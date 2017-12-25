@@ -4,25 +4,23 @@ import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from 'rec
 export default class Dashboard extends Component {
   data = [
     {t: 'Dec 15', mj: 0},
-    {t: 'Dec 16', mj: 1},
-    {t: 'Dec 17', mj: 4},
-    {t: 'Dec 18', mj: 5},
-    {t: 'Dec 19', mj: 4},
-    {t: 'Dec 20', mj: 5},
-    {t: 'Dec 21', mj: 5},
+    {t: 'Dec 16', mj: 0.005},
+    {t: 'Dec 17', mj: 0.01},
+    {t: 'Dec 18', mj: 0.01},
+    {t: 'Dec 19', mj: 0.01}
   ];
 
   render() {
     return (
       <React.Fragment>
         <div className="mj-box">
-          <div className="is-size-4 has-text-centered">mj vs $</div>
+          <div className="is-size-4 has-text-centered">1 mj = 0.01$</div>
           <ResponsiveContainer width="100%" height={300}>
             <AreaChart data={this.data}>
               <XAxis dataKey="t"/>
               <YAxis orientation="right"/>
               <Tooltip/>
-              <Area type='monotone' dataKey='mj' stroke='DarkOrange' fill='Wheat'/>
+              <Area type='monotone' dataKey='mj' unit="$" stroke='DarkOrange' fill='Wheat'/>
             </AreaChart>
           </ResponsiveContainer>
         </div>
