@@ -7,7 +7,7 @@ export default class Dashboard extends Component {
   }
 
   getBalance = async () => {
-    const doc = await this.props.db.collection("cities").doc(this.props.user.uid).get();
+    const doc = await this.props.db.collection('users').doc(this.props.user.uid).get();
     console.log(doc.data())
   }
 
