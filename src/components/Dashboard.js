@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { AreaChart, Area, XAxis, YAxis, Tooltip } from 'recharts';
+import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from 'recharts';
 
 export default class Dashboard extends Component {
   data = [
@@ -14,17 +14,23 @@ export default class Dashboard extends Component {
 
   render() {
     return (
-      <div className="has-text-centered">
-        <AreaChart width={600} height={400} data={this.data}>
-          <XAxis dataKey="t"/>
-          <YAxis/>
-          <Tooltip/>
-          <Area type='monotone' dataKey='mj' stroke='DarkOrange' fill='Wheat'/>
-        </AreaChart>
+      <React.Fragment>
+        <div className="mj-box">
+          <div className="is-size-4 has-text-centered">mj vs $</div>
+          <ResponsiveContainer width="100%" height={300}>
+            <AreaChart data={this.data}>
+              <XAxis dataKey="t"/>
+              <YAxis orientation="right"/>
+              <Tooltip/>
+              <Area type='monotone' dataKey='mj' stroke='DarkOrange' fill='Wheat'/>
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
 
-        mj vs $ (0.01) <br/>
-        Balance: 500mj (~5$)
-      </div>
+        <div className="mj-box">
+          Balance: 500mj (~5$)
+        </div>
+      </React.Fragment>
     );
   }
 }

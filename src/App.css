@@ -2,3 +2,14 @@
     margin-top: 1rem;
     margin-left: 0.5rem;
 }
+
+.mj-box {
+    display: flex;
+    flex-direction: column;
+
+    border: 1px solid #DAE1E9;
+    border-radius: 0.3rem;
+
+    margin: 1rem;
+    padding: 1rem;
+}
