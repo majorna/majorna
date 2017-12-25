@@ -31,11 +31,10 @@ export default withRouter(class App extends Component {
     this.firebaseAuth = firebase.auth();
     this.firebaseAuth.onAuthStateChanged(u => {
       if (u) {
-        this.firebaseUser = u
-        props.history.push('/dashboard');
+        this.firebaseUser = u;
+        props.location.pathname !== '/dashboard' && props.history.push('/dashboard');
       } else {
-        this.firebaseUser = null
-        props.history.push('/');
+        this.firebaseUser = null; // logged out
       }
     });
     this.firestore = firebase.firestore();
