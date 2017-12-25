@@ -19,7 +19,7 @@ export default withRouter(class App extends Component {
       signInOptions: [
         firebase.auth.GoogleAuthProvider.PROVIDER_ID
       ],
-      callbacks: {signInSuccess: u => (this.firebaseUser = u)}
+      callbacks: {signInSuccess: u => (this.user = u)}
     };
     this.firebaseApp = firebase.initializeApp({
       apiKey: "AIzaSyCxdSFEhrqdH2VJ8N4XmRZ9st5Q5hBmgfY",
@@ -29,16 +29,16 @@ export default withRouter(class App extends Component {
       storageBucket: "majorna-fire.appspot.com",
       messagingSenderId: "526928901295"
     });
-    this.firebaseAuth = firebase.auth();
+    this.firebaseAuth = this.firebaseApp.auth();
     this.firebaseAuth.onAuthStateChanged(u => {
       if (u) {
-        this.firebaseUser = u;
+        this.user = u;
         props.location.pathname !== '/dashboard' && props.history.push('/dashboard');
       } else {
-        this.firebaseUser = null; // logged out
+        this.user = null; // logged out
       }
     });
-    this.firestore = firebase.firestore();
+    this.db = this.firebaseApp.firestore();
   }
 
   logout = async () => await this.firebaseAuth.signOut();
@@ -51,7 +51,7 @@ export default withRouter(class App extends Component {
         <Switch>
           <Route exact path='/' component={GetStarted} />
           <Route path='/login' render={routeProps => <Login {...routeProps} uiConfig={this.firebaseUIConfig} firebaseAuth={this.firebaseAuth}/>} />
-          <Route path='/dashboard' component={Dashboard} />
+          <Route path='/dashboard' render={routeProps => <Dashboard {...routeProps} db={this.db} user={this.user}/>} />
           <Redirect from='*' to='/'/>
         </Switch>
 
