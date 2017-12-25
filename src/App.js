@@ -29,16 +29,17 @@ export default withRouter(class App extends Component {
       storageBucket: "majorna-fire.appspot.com",
       messagingSenderId: "526928901295"
     });
+    this.db = this.firebaseApp.firestore();
     this.firebaseAuth = this.firebaseApp.auth();
-    this.firebaseAuth.onAuthStateChanged(u => {
+    this.firebaseAuth.onAuthStateChanged(async u => {
       if (u) {
         this.user = u;
+        this.userDb = await this.db.collection('users').doc(this.user.uid).get();
         props.location.pathname !== '/dashboard' && props.history.push('/dashboard');
       } else {
         this.user = null; // logged out
       }
     });
-    this.db = this.firebaseApp.firestore();
   }
 
   logout = async () => await this.firebaseAuth.signOut();
