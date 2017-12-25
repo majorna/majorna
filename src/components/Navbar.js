@@ -28,7 +28,6 @@ export default class Navbar extends Component {
             <div className="navbar-item has-dropdown is-hoverable">
               <a className="navbar-link">Profile</a>
               <div className="navbar-dropdown is-boxed is-right">
-                <Link className="navbar-item" to='/settings' onClick={this.closeNav}>Settings</Link>
                 <Link className="navbar-item" to='/' onClick={this.logout}>Logout</Link>
               </div>
             </div>

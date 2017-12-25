@@ -10,7 +10,7 @@ exports.createFirestoreUserDocument = functions.auth.user().onCreate(event => {
   const email = user.email
   const displayName = user.displayName
 
-  return admin.firestore().collection('users').doc(id).add({
+  return admin.firestore().collection('users').doc(id).set({
     email: email,
     displayName: displayName,
     created: new Date(),
