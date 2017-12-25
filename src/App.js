@@ -15,10 +15,11 @@ export default withRouter(class App extends Component {
   constructor(props) {
     super(props);
     this.firebaseUIConfig = {
-      signInSuccessUrl: '/',
+      signInSuccessUrl: '/dashboard',
       signInOptions: [
         firebase.auth.GoogleAuthProvider.PROVIDER_ID
-      ]
+      ],
+      callbacks: {signInSuccess: u => (this.firebaseUser = u)}
     };
     this.firebaseApp = firebase.initializeApp({
       apiKey: "AIzaSyCxdSFEhrqdH2VJ8N4XmRZ9st5Q5hBmgfY",
