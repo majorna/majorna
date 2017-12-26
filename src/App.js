@@ -23,11 +23,10 @@ export default withRouter(class App extends Component {
       account: null
     };
     this.firebaseUIConfig = {
-      signInSuccessUrl: '/dashboard',
       signInOptions: [
         firebase.auth.GoogleAuthProvider.PROVIDER_ID
       ],
-      callbacks: {signInSuccess: u => (this.setState({user: u}))}
+      callbacks: {signInSuccess: () => false}
     };
     this.firebaseApp = firebase.initializeApp({
       apiKey: "AIzaSyCxdSFEhrqdH2VJ8N4XmRZ9st5Q5hBmgfY",
