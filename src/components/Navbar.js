@@ -28,7 +28,7 @@ export default class Navbar extends Component {
               <React.Fragment>
                 <Link className="navbar-item" to='/dashboard' onClick={this.closeNav}>Dashboard</Link>
                 <div className="navbar-item has-dropdown is-hoverable">
-                  <a className="navbar-link">Profile</a>
+                  <a className="navbar-link">{this.props.user.displayName}</a>
                   <div className="navbar-dropdown is-boxed is-right">
                     <Link className="navbar-item" to='/' onClick={this.logout}>Logout</Link>
                   </div>
