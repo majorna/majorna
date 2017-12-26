@@ -14,7 +14,7 @@ import Footer from './components/Footer'
 export default withRouter(class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {
+    this.state = this.nullState = {
       user: null,
       userDb: null
     };
@@ -37,14 +37,11 @@ export default withRouter(class App extends Component {
     this.firebaseAuth = this.firebaseApp.auth();
     this.firebaseAuth.onAuthStateChanged(async u => {
       if (u) {
-        const userDb = await this.db.collection('users').doc(u.uid).get();
-        this.setState({
-          user: u,
-          userDb: userDb
-        });
+        !this.state.user && this.setState({user: u});
         props.location.pathname !== '/dashboard' && props.history.push('/dashboard');
+        !this.state.userDb && this.setState({userDb: await this.db.collection('users').doc(u.uid).get()});
       } else {
-        this.setState({user: null}); // logged out
+        this.setState(this.nullState); // logged out
       }
     });
   }
