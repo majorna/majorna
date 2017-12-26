@@ -1,0 +1,10 @@
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId} {
+      // users can read their own document
+      allow read: if request.auth.uid == userId;
+      // and write to transactions field
+      allow write: if resource.data.field == transactions;
+    }
+  }
+}
