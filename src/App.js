@@ -40,11 +40,12 @@ export default withRouter(class App extends Component {
     this.firebaseAuth = this.firebaseApp.auth();
     this.firebaseAuth.onAuthStateChanged(async u => {
       if (u) {
-        !this.state.user && this.setState({user: u});
-        props.location.pathname !== '/dashboard' && props.history.push('/dashboard');
-        !this.state.account && this.setState({account: await this.readFirestoreDoc(this.db.collection('users').doc(u.uid))});
+        this.setState({user: u});
+        props.history.push('/dashboard');
+        this.setState({account: await this.readFirestoreDoc(this.db.collection('users').doc(u.uid))}); // take a while
       } else {
         this.setState(this.nullState); // logged out
+        props.location.pathname !== '/login' && props.history.push('/');
       }
     });
   }
