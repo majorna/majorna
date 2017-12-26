@@ -52,7 +52,7 @@ export default withRouter(class App extends Component {
         <Switch>
           <Route exact path='/' component={GetStarted} />
           <Route path='/login' render={routeProps => <Login {...routeProps} uiConfig={this.firebaseUIConfig} firebaseAuth={this.firebaseAuth}/>} />
-          <Route path='/dashboard' render={routeProps => <Dashboard {...routeProps} db={this.db} user={this.user}/>} />
+          <Route path='/dashboard' render={routeProps => <Dashboard {...routeProps} user={this.user} userDb={this.userDb} />} />
           <Redirect from='*' to='/'/>
         </Switch>
 
