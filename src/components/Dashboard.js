@@ -35,7 +35,7 @@ export default class Dashboard extends Component {
             <div className="mj-box flex-row">
               <button className="button is-info r-m-m" disabled>Send</button>
               <button className="button is-info r-m-m" disabled>Receive</button>
-              <i>(Features to be enabled Feb 2018)</i>
+              <i>(Feature to be enabled in: Feb 2018)</i>
             </div>
           </React.Fragment>
         ) : (
