@@ -16,7 +16,7 @@ export default withRouter(class App extends Component {
     super(props);
     this.state = this.nullState = {
       user: null,
-      userDb: null
+      account: null
     };
     this.firebaseUIConfig = {
       signInSuccessUrl: '/dashboard',
@@ -39,7 +39,7 @@ export default withRouter(class App extends Component {
       if (u) {
         !this.state.user && this.setState({user: u});
         props.location.pathname !== '/dashboard' && props.history.push('/dashboard');
-        !this.state.userDb && this.setState({userDb: await this.db.collection('users').doc(u.uid).get()});
+        !this.state.account && this.setState({account: (await this.db.collection('users').doc(u.uid).get()).data()});
       } else {
         this.setState(this.nullState); // logged out
       }
@@ -56,7 +56,7 @@ export default withRouter(class App extends Component {
         <Switch>
           <Route exact path='/' component={GetStarted} />
           <Route path='/login' render={routeProps => <Login {...routeProps} uiConfig={this.firebaseUIConfig} firebaseAuth={this.firebaseAuth}/>} />
-          <Route path='/dashboard' render={routeProps => <Dashboard {...routeProps} user={this.state.user} userDb={this.state.userDb} />} />
+          <Route path='/dashboard' render={routeProps => <Dashboard {...routeProps} user={this.state.user} account={this.state.account} />} />
           <Redirect from='*' to='/'/>
         </Switch>
 

@@ -25,9 +25,11 @@ export default class Dashboard extends Component {
           </ResponsiveContainer>
         </div>
 
+        {this.props.account &&
         <div className="mj-box">
-          Balance: 500mj (~5$)
+          Balance: {this.props.account.balance}mj (~{this.props.account.balance * 0.01}$)
         </div>
+        }
       </React.Fragment>
     );
   }
