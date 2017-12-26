@@ -14,12 +14,16 @@ import Footer from './components/Footer'
 export default withRouter(class App extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      user: null,
+      userDb: null
+    };
     this.firebaseUIConfig = {
       signInSuccessUrl: '/dashboard',
       signInOptions: [
         firebase.auth.GoogleAuthProvider.PROVIDER_ID
       ],
-      callbacks: {signInSuccess: u => (this.user = u)}
+      callbacks: {signInSuccess: u => (this.setState({user: u}))}
     };
     this.firebaseApp = firebase.initializeApp({
       apiKey: "AIzaSyCxdSFEhrqdH2VJ8N4XmRZ9st5Q5hBmgfY",
@@ -33,11 +37,14 @@ export default withRouter(class App extends Component {
     this.firebaseAuth = this.firebaseApp.auth();
     this.firebaseAuth.onAuthStateChanged(async u => {
       if (u) {
-        this.user = u;
-        this.userDb = await this.db.collection('users').doc(this.user.uid).get();
+        const userDb = await this.db.collection('users').doc(u.uid).get();
+        this.setState({
+          user: u,
+          userDb: userDb
+        });
         props.location.pathname !== '/dashboard' && props.history.push('/dashboard');
       } else {
-        this.user = null; // logged out
+        this.setState({user: null}); // logged out
       }
     });
   }
@@ -47,12 +54,12 @@ export default withRouter(class App extends Component {
   render() {
     return (
       <React.Fragment>
-        <Navbar logout={this.logout}/>
+        <Navbar logout={this.logout} user={this.state.user}/>
 
         <Switch>
           <Route exact path='/' component={GetStarted} />
           <Route path='/login' render={routeProps => <Login {...routeProps} uiConfig={this.firebaseUIConfig} firebaseAuth={this.firebaseAuth}/>} />
-          <Route path='/dashboard' render={routeProps => <Dashboard {...routeProps} user={this.user} userDb={this.userDb} />} />
+          <Route path='/dashboard' render={routeProps => <Dashboard {...routeProps} user={this.state.user} userDb={this.state.userDb} />} />
           <Redirect from='*' to='/'/>
         </Switch>
 
