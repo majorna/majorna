@@ -3,6 +3,7 @@
     margin-left: 0.5rem;
 }
 
+/* flex-box with a border, margin, and padding */
 .mj-box {
     display: flex;
     flex-direction: column;
@@ -14,6 +15,11 @@
     padding: 1rem;
 }
 
-.mj-r-m-m {
+.flex-row {
+    flex-direction: row;
+}
+
+/* right margin medium */
+.r-m-m {
     margin-right: 1rem;
 }

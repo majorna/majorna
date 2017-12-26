@@ -25,20 +25,22 @@ export default class Dashboard extends Component {
           </ResponsiveContainer>
         </div>
 
-        {this.props.account &&
-        <React.Fragment>
-          <div className="mj-box">
-            <p><strong>Balance</strong>: <strong>{this.props.account.balance}</strong>mj (~{this.props.account.balance * 0.01}$)</p>
-            <p><strong>Address</strong>: <small>{this.props.user.uid}</small></p>
-          </div>
+        {this.props.account ? (
+          <React.Fragment>
+            <div className="mj-box">
+              <p><strong>Balance</strong>: <strong>{this.props.account.balance}</strong>mj (~{this.props.account.balance * 0.01}$)</p>
+              <p><strong>Address</strong>: <small>{this.props.user.uid}</small></p>
+            </div>
 
-          <div className="mj-box" style={{flexDirection: 'row'}}>
-            <button className="button is-info mj-r-m-m" disabled>Send</button>
-            <button className="button is-info mj-r-m-m" disabled>Receive</button>
-            <i>(Features to be enabled Feb 2018)</i>
-          </div>
-        </React.Fragment>
-        }
+            <div className="mj-box flex-row">
+              <button className="button is-info r-m-m" disabled>Send</button>
+              <button className="button is-info r-m-m" disabled>Receive</button>
+              <i>(Features to be enabled Feb 2018)</i>
+            </div>
+          </React.Fragment>
+        ) : (
+          <div className="mj-box"><button className="button is-info is-loading">loading..</button></div>
+        )}
       </React.Fragment>
     );
   }
