@@ -4,7 +4,7 @@
 
 /* flex-box with a border, margin, and padding */
 .mj-box {
-    box-sizing: border-box;
+    box-sizing: border-box; /* already applied to root html by bulma.css but here adding again as a reference */
     display: flex;
     flex-direction: column;
 
