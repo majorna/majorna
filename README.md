@@ -2,4 +2,11 @@
 
 [![Build Status](https://travis-ci.org/majorna/majorna.svg?branch=master)](https://travis-ci.org/majorna/majorna)
 
-Majorna majority consensus algorithm.
+Majorna source code repo contains:
+* Majorna wallet.
+* Majorna server.
+* Majorna miner.
+
+## License
+
+MIT
