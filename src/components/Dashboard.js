@@ -13,7 +13,7 @@ export default class Dashboard extends Component {
   render() {
     return (
       <React.Fragment>
-        <div className="mj-box">
+        <div className="mj-box p-s">
           <div className="is-size-4 has-text-centered">1 mj = 0.01$</div>
           <ResponsiveContainer width="100%" height={300}>
             <AreaChart data={this.data}>

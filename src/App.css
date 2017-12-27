@@ -26,6 +26,10 @@
     margin-right: 1rem;
 }
 
+.p-s { /* padding small */
+    padding: 0.5rem;
+}
+
 .m-m { /* margin medium */
     margin: 1rem;
 }
