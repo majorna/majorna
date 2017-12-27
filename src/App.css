@@ -20,7 +20,30 @@
     flex-direction: row;
 }
 
+.flex-center-all {
+    align-items: center; /* vertical */
+    justify-content: center; /* horizontal */
+    text-align: center; /* centered text */
+}
+
 /* right margin medium */
 .r-m-m {
     margin-right: 1rem;
+}
+
+/* spinner */
+.spinner:after {
+    content: '';
+    height: 1rem;
+    width: 1rem;
+    animation: rotate360 500ms infinite linear;
+    border: 2px solid #209cee;
+    border-left-color: transparent;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+}
+
+/* animations */
+@keyframes rotate360 {
+    to {transform: rotate(360deg);}
 }

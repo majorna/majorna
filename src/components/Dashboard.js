@@ -39,7 +39,7 @@ export default class Dashboard extends Component {
             </div>
           </React.Fragment>
         ) : (
-          <div className="mj-box"><button className="button is-info is-loading">loading..</button></div>
+          <div className="mj-box flex-center-all spinner"/>
         )}
       </React.Fragment>
     );
