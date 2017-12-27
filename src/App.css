@@ -1,10 +1,6 @@
-.App-footer {
-    margin: 1rem;
-}
-
 /* flex-box with a border, margin, and padding */
 .mj-box {
-    box-sizing: border-box; /* already applied to root html by bulma.css but here adding again as a reference */
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
 
@@ -25,9 +21,13 @@
     text-align: center; /* centered text */
 }
 
-/* right margin medium */
-.r-m-m {
+/* spacing */
+.r-m-m { /* right margin medium */
     margin-right: 1rem;
+}
+
+.m-m { /* margin medium */
+    margin: 1rem;
 }
 
 /* spinner */
