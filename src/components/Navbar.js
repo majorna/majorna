@@ -9,7 +9,9 @@ export default class Navbar extends Component {
   }
 
   handleExpandClick = () => this.setState(s => ({navOpen: !s.navOpen}));
+
   closeNav = () => this.setState(s => ({navOpen: false}));
+
   logout = async () => {
     this.closeNav();
     await this.props.logout();

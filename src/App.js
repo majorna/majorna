@@ -51,6 +51,7 @@ export default withRouter(class App extends Component {
   }
 
   logout = async () => await this.firebaseAuth.signOut();
+
   readFirestoreDoc = async (docRef) => {
     let doc = await docRef.get();
     while (!doc.exists) {
