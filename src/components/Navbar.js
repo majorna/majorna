@@ -24,7 +24,9 @@ export default class Navbar extends Component {
         </div>
         <div className={"navbar-menu" + (this.state.navOpen ? ' is-active' : '')}>
           <div className="navbar-end">
-            {this.props.user ? (
+            {!this.props.user ? (
+              <Link className="navbar-item" to='/login' onClick={this.closeNav}>Log In | Sign Up</Link>
+            ) : (
               <React.Fragment>
                 <Link className="navbar-item" to='/dashboard' onClick={this.closeNav}>Dashboard</Link>
                 <div className="navbar-item has-dropdown is-hoverable">
@@ -34,8 +36,6 @@ export default class Navbar extends Component {
                   </div>
                 </div>
               </React.Fragment>
-            ) : (
-              <Link className="navbar-item" to='/login' onClick={this.closeNav}>Log In | Sign Up</Link>
             )}
           </div>
         </div>

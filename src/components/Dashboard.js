@@ -25,7 +25,9 @@ export default class Dashboard extends Component {
           </ResponsiveContainer>
         </div>
 
-        {this.props.account ? (
+        {!this.props.account ? (
+          <div className="mj-box flex-center-all spinner"/>
+        ) : (
           <React.Fragment>
             <div className="mj-box">
               <p><strong>Balance</strong>: <strong>{this.props.account.balance}</strong>mj (~{this.props.account.balance * 0.01}$)</p>
@@ -38,8 +40,6 @@ export default class Dashboard extends Component {
               <i>(Feature to be enabled in: Feb 2018)</i>
             </div>
           </React.Fragment>
-        ) : (
-          <div className="mj-box flex-center-all spinner"/>
         )}
       </React.Fragment>
     );
