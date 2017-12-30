@@ -22,7 +22,7 @@ export default withRouter(class App extends Component {
       signInOptions: [
         firebase.auth.GoogleAuthProvider.PROVIDER_ID
       ],
-      callbacks: {signInSuccess: () => false}
+      callbacks: {signInSuccess: () => false /* don't redirecty anywhere */}
     };
     this.firebaseApp = firebase.initializeApp({
       apiKey: "AIzaSyCxdSFEhrqdH2VJ8N4XmRZ9st5Q5hBmgfY",

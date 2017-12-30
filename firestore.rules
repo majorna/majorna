@@ -6,5 +6,9 @@ service cloud.firestore {
       // and write to transactions field
       allow write: if resource.data.field == transactions;
     }
+
+    match /mj/exchanges/usd/daily {
+      allow read: if true;
+    }
   }
 }
