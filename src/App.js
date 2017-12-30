@@ -11,9 +11,7 @@ import Login from './components/Login'
 import Dashboard from './components/Dashboard'
 import Footer from './components/Footer'
 
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
+
 
 export default withRouter(class App extends Component {
   constructor(props) {
@@ -42,7 +40,7 @@ export default withRouter(class App extends Component {
       if (u) {
         this.setState({user: u});
         props.history.push('/dashboard');
-        this.setState({account: await this.readFirestoreDoc(this.db.collection('users').doc(u.uid))}); // take a while
+        this.db.collection('users').doc(u.uid).onSnapshot(doc => doc && doc.exists && this.setState({account: doc}));
       } else {
         this.setState(this.nullState); // logged out
         props.location.pathname !== '/login' && props.history.push('/');
@@ -51,15 +49,6 @@ export default withRouter(class App extends Component {
   }
 
   logout = async () => await this.firebaseAuth.signOut();
-
-  readFirestoreDoc = async (docRef) => {
-    let doc = await docRef.get();
-    while (!doc.exists) {
-      await sleep(2000);
-      doc = await docRef.get();
-    }
-    return doc.data()
-  }
 
   render() {
     return (
