@@ -38,7 +38,7 @@ export default withRouter(class App extends Component {
       if (u) {
         this.setState({user: u});
         props.history.push('/dashboard');
-        this.db.collection('users').doc(u.uid).onSnapshot(doc => doc && doc.exists && !doc.metadata.hasPendingWrites && this.setState({account: doc}));
+        this.fbUnsubUsers = this.db.collection('users').doc(u.uid).onSnapshot(doc => doc && doc.exists && !doc.metadata.hasPendingWrites && this.setState({account: doc}));
       } else {
         this.setState(this.nullState); // logged out
         props.location.pathname !== '/login' && props.history.push('/');
@@ -46,7 +46,10 @@ export default withRouter(class App extends Component {
     });
   }
 
-  logout = async () => await this.firebaseAuth.signOut();
+  logout = async () => {
+    this.fbUnsubUsers && this.fbUnsubUsers();
+    await this.firebaseAuth.signOut()
+  };
 
   render() {
     return (
