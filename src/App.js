@@ -11,8 +11,6 @@ import Login from './components/Login'
 import Dashboard from './components/Dashboard'
 import Footer from './components/Footer'
 
-
-
 export default withRouter(class App extends Component {
   constructor(props) {
     super(props);
@@ -40,7 +38,7 @@ export default withRouter(class App extends Component {
       if (u) {
         this.setState({user: u});
         props.history.push('/dashboard');
-        this.db.collection('users').doc(u.uid).onSnapshot(doc => doc && doc.exists && this.setState({account: doc}));
+        this.db.collection('users').doc(u.uid).onSnapshot(doc => doc && doc.exists && !doc.metadata.hasPendingWrites && this.setState({account: doc}));
       } else {
         this.setState(this.nullState); // logged out
         props.location.pathname !== '/login' && props.history.push('/');
