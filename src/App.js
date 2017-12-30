@@ -16,13 +16,18 @@ export default withRouter(class App extends Component {
     super(props);
     this.state = this.nullState = {
       user: null,
-      account: null
+      account: null,
+      exchange: {
+        usd: {
+          monthly: null
+        }
+      }
     };
     this.firebaseUIConfig = {
       signInOptions: [
         firebase.auth.GoogleAuthProvider.PROVIDER_ID
       ],
-      callbacks: {signInSuccess: () => false /* don't redirecty anywhere */}
+      callbacks: {signInSuccess: () => false /* don't redirect anywhere */}
     };
     this.firebaseApp = firebase.initializeApp({
       apiKey: "AIzaSyCxdSFEhrqdH2VJ8N4XmRZ9st5Q5hBmgfY",
@@ -38,7 +43,10 @@ export default withRouter(class App extends Component {
       if (u) {
         this.setState({user: u});
         props.history.push('/dashboard');
-        this.fbUnsubUsers = this.db.collection('users').doc(u.uid).onSnapshot(doc => doc && doc.exists && !doc.metadata.hasPendingWrites && this.setState({account: doc}));
+        this.fbUnsubUsers = this.db.collection('users').doc(u.uid)
+          .onSnapshot(doc => doc && doc.exists && !doc.metadata.hasPendingWrites && this.setState({account: doc}));
+        const usdDoc = await this.db.collection('mj/exchange/usd').doc('monthly').get();
+        this.setState({exchange: {usd: {monthly: usdDoc.exists ? usdDoc : null}}});
       } else {
         this.setState(this.nullState); // logged out
         props.location.pathname !== '/login' && props.history.push('/');
@@ -59,7 +67,7 @@ export default withRouter(class App extends Component {
         <Switch>
           <Route exact path='/' component={GetStarted} />
           <Route path='/login' render={routeProps => <Login {...routeProps} uiConfig={this.firebaseUIConfig} firebaseAuth={this.firebaseAuth}/>} />
-          <Route path='/dashboard' render={routeProps => <Dashboard {...routeProps} user={this.state.user} account={this.state.account} db={this.db}/>} />
+          <Route path='/dashboard' render={routeProps => <Dashboard {...routeProps} user={this.state.user} account={this.state.account} exchange={this.state.exchange}/>} />
           <Redirect from='*' to='/'/>
         </Switch>
 

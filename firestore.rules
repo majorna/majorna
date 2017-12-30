@@ -4,11 +4,11 @@ service cloud.firestore {
       // users can read their own document
       allow read: if request.auth.uid == userId;
       // and write to transactions field
-      allow write: if resource.data.field == transactions;
+      allow write: if request.auth.uid == userId && resource.data.field == transactions;
     }
 
     match /mj/exchange/usd/monthly {
-      allow read: if true;
+      allow read;
     }
   }
 }
