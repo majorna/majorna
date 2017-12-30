@@ -7,7 +7,7 @@ service cloud.firestore {
       allow write: if resource.data.field == transactions;
     }
 
-    match /mj/exchanges/usd/daily {
+    match /mj/exchange/usd/monthly {
       allow read: if true;
     }
   }

@@ -2,19 +2,12 @@ import React, { Component } from 'react';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from 'recharts';
 
 export default class Dashboard extends Component {
-  data = [
-    {t: 'Dec 5', mj: 0},
-    {t: 'Dec 10', mj: 0.005},
-    {t: 'Dec 15', mj: 0.01},
-    {t: 'Dec 20', mj: 0.01},
-    {t: 'Dec 25', mj: 0.01}
-  ];
 
   render() {
     return (
       <React.Fragment>
         <div className="mj-box p-s">
-          <div className="is-size-4 has-text-centered">1 mj = 0.01$</div>
+          <div className="is-size-4 has-text-centered">1 mj = 0.01$*</div>
           <ResponsiveContainer width="100%" height={300}>
             <AreaChart data={this.data}>
               <XAxis dataKey="t"/>
@@ -23,6 +16,7 @@ export default class Dashboard extends Component {
               <Area type='monotone' dataKey='mj' unit="$" stroke='DarkOrange' fill='Wheat'/>
             </AreaChart>
           </ResponsiveContainer>
+          <small><i>* (pre-determined trading price before exchange opens)</i></small>
         </div>
 
         {!this.props.account ? (
