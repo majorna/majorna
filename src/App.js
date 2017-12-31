@@ -19,6 +19,7 @@ export default withRouter(class App extends Component {
       account: null,
       exchange: {
         usd: {
+          val: null,
           monthly: null
         }
       }
@@ -46,7 +47,8 @@ export default withRouter(class App extends Component {
         this.fbUnsubUsers = this.db.collection('users').doc(u.uid)
           .onSnapshot(doc => doc && doc.exists && !doc.metadata.hasPendingWrites && this.setState({account: doc}));
         const usdDoc = await this.db.collection('mj/exchange/usd').doc('monthly').get();
-        this.setState({exchange: {usd: {monthly: usdDoc.exists ? usdDoc : null}}});
+        console.log(usdDoc.exists)
+        this.setState({exchange: {usd: {val: 0.01, monthly: usdDoc.exists ? usdDoc : null}}});
       } else {
         this.setState(this.nullState); // logged out
         props.location.pathname !== '/login' && props.history.push('/');

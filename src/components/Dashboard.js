@@ -1,19 +1,30 @@
 import React from 'react';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from 'recharts';
 
+function getChartData(val, data) {
+  if (!data && val) {
+    data = []
+    const month = new Date().toLocaleString('en-us', {month: 'short'});
+    for (let i = 1; i < 29; i++) {
+      data.push({t: `${month} ${i}`, mj: val});
+    }
+  }
+  return data;
+}
+
 export default (props) => (
   <React.Fragment>
     <div className="mj-box p-s">
-      <div className="is-size-4 has-text-centered">1 mj = 0.01$*</div>
+      <div className="is-size-4 has-text-centered">1 mj = {props.exchange.usd.val}$*</div>
       <ResponsiveContainer width="100%" height={300}>
-        <AreaChart data={props.exchange.usd.monthly}>
+        <AreaChart data={getChartData(props.exchange.usd.val, props.exchange.usd.monthly)}>
           <XAxis dataKey="t"/>
           <YAxis orientation="right"/>
           <Tooltip/>
           <Area type='monotone' dataKey='mj' unit="$" stroke='DarkOrange' fill='Wheat'/>
         </AreaChart>
       </ResponsiveContainer>
-      <small><i>* (pre-determined trading price before exchange opens)</i></small>
+      <small><i>* (future-fixed trading price before exchange opens)</i></small>
     </div>
 
     {!props.account ? (
