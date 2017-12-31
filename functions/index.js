@@ -5,7 +5,6 @@ fbAdmin.initializeApp(fbFunctions.config().firebase);
 exports.ping = fbFunctions.https.onRequest((request, response) => response.send('pong'))
 
 exports.createFirestoreUserDocument = fbFunctions.auth.user().onCreate(event => {
-  const time = fbAdmin.firestore.FieldValue.serverTimestamp();
   const user = event.data
   const id = user.uid
   const email = user.email
@@ -14,11 +13,12 @@ exports.createFirestoreUserDocument = fbFunctions.auth.user().onCreate(event => 
   return fbAdmin.firestore().collection('users').doc(id).set({
     email: email,
     displayName: displayName,
-    created: time,
+    created: fbAdmin.firestore.FieldValue.serverTimestamp(),
     balance: 500,
     transactions: [
       {
-        sent: time,
+        id: event.eventId,
+        sent: event.timestamp,
         from: 'majorna',
         amount: 500
       }
