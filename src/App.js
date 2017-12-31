@@ -45,10 +45,9 @@ export default withRouter(class App extends Component {
         this.setState({user: u});
         props.history.push('/dashboard');
         this.fbUnsubUsers = this.db.collection('users').doc(u.uid)
-          .onSnapshot(doc => doc && doc.exists && !doc.metadata.hasPendingWrites && this.setState({account: doc}));
+          .onSnapshot(doc => doc && doc.exists && !doc.metadata.hasPendingWrites && this.setState({account: doc.data()}));
         const usdDoc = await this.db.collection('mj/exchange/usd').doc('monthly').get();
-        console.log(usdDoc.exists)
-        this.setState({exchange: {usd: {val: 0.01, monthly: usdDoc.exists ? usdDoc : null}}});
+        this.setState({exchange: {usd: {val: 0.01, monthly: usdDoc.exists ? usdDoc.data() : null}}});
       } else {
         this.setState(this.nullState); // logged out
         props.location.pathname !== '/login' && props.history.push('/');
