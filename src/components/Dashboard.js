@@ -45,15 +45,17 @@ export default (props) => (
 
         <div className="mj-box flex-column">
           <strong className="m-b-s">Transactions</strong>
-          <div className="m-b-xs">
-            <span className="tag is-success">+100</span> <strong>From:</strong> abc
-          </div>
-          <div className="m-b-xs">
-            <span className="tag is-danger">-100</span> <strong>To:</strong> def
-          </div>
-          {/*{props.account.transactions && props.account.transactions.map(t =>*/}
-            {/*<div>test</div>*/}
-          {/*)}*/}
+          {props.account.transactions && props.account.transactions.map(t =>
+            t.from ? (
+              <div className="m-b-xs">
+                <span className="tag is-success">+100</span> <strong>From:</strong> abc
+              </div>
+            ) : (
+              <div className="m-b-xs">
+                <span className="tag is-danger">-100</span> <strong>To:</strong> def
+              </div>
+            )
+          )}
         </div>
       </React.Fragment>
     )}
