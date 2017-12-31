@@ -16,14 +16,19 @@ export default withRouter(class App extends Component {
     super(props);
     this.state = this.nullState = {
       user: null,
-      account: null
+      account: null,
+      exchange: {
+        usd: {
+          val: null,
+          monthly: null
+        }
+      }
     };
     this.firebaseUIConfig = {
-      signInSuccessUrl: '/dashboard',
       signInOptions: [
         firebase.auth.GoogleAuthProvider.PROVIDER_ID
       ],
-      callbacks: {signInSuccess: u => (this.setState({user: u}))}
+      callbacks: {signInSuccess: () => false /* don't redirect anywhere */}
     };
     this.firebaseApp = firebase.initializeApp({
       apiKey: "AIzaSyCxdSFEhrqdH2VJ8N4XmRZ9st5Q5hBmgfY",
@@ -37,16 +42,23 @@ export default withRouter(class App extends Component {
     this.firebaseAuth = this.firebaseApp.auth();
     this.firebaseAuth.onAuthStateChanged(async u => {
       if (u) {
-        !this.state.user && this.setState({user: u});
-        props.location.pathname !== '/dashboard' && props.history.push('/dashboard');
-        !this.state.account && this.setState({account: (await this.db.collection('users').doc(u.uid).get()).data()});
+        this.setState({user: u});
+        props.history.push('/dashboard');
+        this.fbUnsubUsers = this.db.collection('users').doc(u.uid)
+          .onSnapshot(doc => doc && doc.exists && !doc.metadata.hasPendingWrites && this.setState({account: doc.data()}));
+        const usdDoc = await this.db.collection('mj/exchange/usd').doc('monthly').get();
+        this.setState({exchange: {usd: {val: 0.01, monthly: usdDoc.exists ? usdDoc.data() : null}}});
       } else {
         this.setState(this.nullState); // logged out
+        props.location.pathname !== '/login' && props.history.push('/');
       }
     });
   }
 
-  logout = async () => await this.firebaseAuth.signOut();
+  logout = async () => {
+    this.fbUnsubUsers && this.fbUnsubUsers();
+    await this.firebaseAuth.signOut()
+  };
 
   render() {
     return (
@@ -56,7 +68,7 @@ export default withRouter(class App extends Component {
         <Switch>
           <Route exact path='/' component={GetStarted} />
           <Route path='/login' render={routeProps => <Login {...routeProps} uiConfig={this.firebaseUIConfig} firebaseAuth={this.firebaseAuth}/>} />
-          <Route path='/dashboard' render={routeProps => <Dashboard {...routeProps} user={this.state.user} account={this.state.account} />} />
+          <Route path='/dashboard' render={routeProps => <Dashboard {...routeProps} user={this.state.user} account={this.state.account} exchange={this.state.exchange}/>} />
           <Redirect from='*' to='/'/>
         </Switch>
 

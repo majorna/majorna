@@ -1,45 +1,63 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from 'recharts';
 
-export default class Dashboard extends Component {
-  data = [
-    {t: 'Dec 5', mj: 0},
-    {t: 'Dec 10', mj: 0.005},
-    {t: 'Dec 15', mj: 0.01},
-    {t: 'Dec 20', mj: 0.01},
-    {t: 'Dec 25', mj: 0.01}
-  ];
+// generate static chart data for a single value (useful for pre-trading price display)
+function getChartData(val, data) {
+  if (!data && val) {
+    data = []
+    const month = new Date().toLocaleString('en-us', {month: 'short'});
+    for (let i = 1; i < 29; i++) {
+      data.push({t: `${month} ${i}`, mj: val});
+    }
+  }
+  return data;
+}
 
-  render() {
-    return (
+export default (props) => (
+  <React.Fragment>
+    <div className="mj-box flex-column p-s">
+      <div className="is-size-4 has-text-centered">1 mj = {props.exchange.usd.val}$*</div>
+      <ResponsiveContainer width="100%" height={300}>
+        <AreaChart data={getChartData(props.exchange.usd.val, props.exchange.usd.monthly)}>
+          <XAxis dataKey="t"/>
+          <YAxis orientation="right"/>
+          <Tooltip/>
+          <Area type='monotone' dataKey='mj' unit="$" stroke='DarkOrange' fill='Wheat'/>
+        </AreaChart>
+      </ResponsiveContainer>
+      <small><i>* (future-fixed trading price before exchange opens)</i></small>
+    </div>
+
+    {!props.account ? (
+      <div className="mj-box flex-center-all spinner"/>
+    ) : (
       <React.Fragment>
-        <div className="mj-box">
-          <div className="is-size-4 has-text-centered">1 mj = 0.01$</div>
-          <ResponsiveContainer width="100%" height={300}>
-            <AreaChart data={this.data}>
-              <XAxis dataKey="t"/>
-              <YAxis orientation="right"/>
-              <Tooltip/>
-              <Area type='monotone' dataKey='mj' unit="$" stroke='DarkOrange' fill='Wheat'/>
-            </AreaChart>
-          </ResponsiveContainer>
+        <div className="mj-box flex-column">
+          <p><strong>Balance</strong>: <strong>{props.account.balance}</strong>mj (~{props.account.balance * 0.01}$)</p>
+          <p><strong>Address</strong>: <small>{props.user.uid}</small></p>
         </div>
 
-        {this.props.account &&
-        <React.Fragment>
-          <div className="mj-box">
-            <p><strong>Balance</strong>: <strong>{this.props.account.balance}</strong>mj (~{this.props.account.balance * 0.01}$)</p>
-            <p><strong>Address</strong>: <small>{this.props.user.uid}</small></p>
-          </div>
+        <div className="mj-box">
+          <button className="button is-info m-r-m" disabled>Send</button>
+          <button className="button is-info m-r-m" disabled>Receive</button>
+          <i>(Feature to be enabled in: Feb 2018)</i>
+        </div>
 
-          <div className="mj-box" style={{flexDirection: 'row'}}>
-            <button className="button is-info mj-r-m-m" disabled>Send</button>
-            <button className="button is-info mj-r-m-m" disabled>Receive</button>
-            <i>(Features to be enabled Feb 2018)</i>
-          </div>
-        </React.Fragment>
-        }
+        <div className="mj-box flex-column">
+          <strong className="m-b-s">Transactions</strong>
+          {props.account.transactions.map(t =>
+            t.from ? (
+              <div key={t.id} className="m-b-xs">
+                <span className="tag is-success">+{t.amount}</span> {t.sent.toLocaleDateString()} - <strong>From:</strong> {t.from}
+              </div>
+            ) : (
+              <div key={t.id} className="m-b-xs">
+                <span className="tag is-danger">-{t.amount}</span> {t.sent.toLocaleDateString()} - <strong>To:</strong> {t.to}
+              </div>
+            )
+          )}
+        </div>
       </React.Fragment>
-    );
-  }
-}
+    )}
+  </React.Fragment>
+);
