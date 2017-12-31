@@ -48,11 +48,11 @@ export default (props) => (
           {props.account.transactions && props.account.transactions.map(t =>
             t.from ? (
               <div className="m-b-xs">
-                <span className="tag is-success">+100</span> <strong>From:</strong> abc
+                <span className="tag is-success">+{t.amount}</span> <strong>From:</strong> {t.from} <small>{t.sent}</small>
               </div>
             ) : (
               <div className="m-b-xs">
-                <span className="tag is-danger">-100</span> <strong>To:</strong> def
+                <span className="tag is-danger">-{t.amount}</span> <strong>To:</strong> {t.to} <small>{t.sent}</small>
               </div>
             )
           )}
