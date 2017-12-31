@@ -10,6 +10,10 @@
     padding: 1rem;
 }
 
+.flex {
+    display: flex;
+}
+
 .flex-column {
     flex-direction: column;
 }
@@ -21,16 +25,25 @@
 }
 
 /* spacing */
-.r-m-m { /* right margin medium */
-    margin-right: 1rem;
-}
-
-.p-s { /* padding small */
+/* m: margin, p: padding  |  (optional) t, r, b, l: top, right, bottom, left  |  x: extra ..., s: small, m: medium, l: large */
+.p-s {
     padding: 0.5rem;
 }
 
-.m-m { /* margin medium */
+.m-m {
     margin: 1rem;
+}
+
+.m-b-xs {
+    margin-bottom: 0.25rem;
+}
+
+.m-b-s {
+    margin-bottom: 0.5rem;
+}
+
+.m-r-m {
+    margin-right: 1rem;
 }
 
 /* spinner */

@@ -38,13 +38,22 @@ export default (props) => (
         </div>
 
         <div className="mj-box">
-          <button className="button is-info r-m-m" disabled>Send</button>
-          <button className="button is-info r-m-m" disabled>Receive</button>
+          <button className="button is-info m-r-m" disabled>Send</button>
+          <button className="button is-info m-r-m" disabled>Receive</button>
           <i>(Feature to be enabled in: Feb 2018)</i>
         </div>
 
         <div className="mj-box flex-column">
-          <strong>Transactions</strong>
+          <strong className="m-b-s">Transactions</strong>
+          <div className="m-b-xs">
+            <span className="tag is-success">+100</span> <strong>From:</strong> abc
+          </div>
+          <div className="m-b-xs">
+            <span className="tag is-danger">-100</span> <strong>To:</strong> def
+          </div>
+          {/*{props.account.transactions && props.account.transactions.map(t =>*/}
+            {/*<div>test</div>*/}
+          {/*)}*/}
         </div>
       </React.Fragment>
     )}
