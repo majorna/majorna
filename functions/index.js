@@ -18,7 +18,7 @@ exports.createFirestoreUserDocument = fbFunctions.auth.user().onCreate(event => 
     transactions: [
       {
         id: event.eventId,
-        sent: event.timestamp,
+        sent: new Date(event.timestamp),
         from: 'majorna',
         amount: 500
       }

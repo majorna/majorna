@@ -47,12 +47,12 @@ export default (props) => (
           <strong className="m-b-s">Transactions</strong>
           {props.account.transactions.map(t =>
             t.from ? (
-              <div className="m-b-xs">
-                <span className="tag is-success">+{t.amount}</span> <strong>From:</strong> {t.from} <small>{t.sent.toLocaleDateString('en-US')}</small>
+              <div key={t.id} className="m-b-xs">
+                <span className="tag is-success">+{t.amount}</span> {t.sent.toLocaleDateString()} - <strong>From:</strong> {t.from}
               </div>
             ) : (
-              <div className="m-b-xs">
-                <span className="tag is-danger">-{t.amount}</span> <strong>To:</strong> {t.to} <small>{t.sent.toLocaleDateString('en-US')}</small>
+              <div key={t.id} className="m-b-xs">
+                <span className="tag is-danger">-{t.amount}</span> {t.sent.toLocaleDateString()} - <strong>To:</strong> {t.to}
               </div>
             )
           )}
