@@ -10,6 +10,8 @@ exports.createFirestoreUserDocument = fbFunctions.auth.user().onCreate(event => 
   const email = user.email
   const displayName = user.displayName
 
+  console.log(`created user: ${id} - ${email} - ${displayName}`)
+
   return fbAdmin.firestore().collection('users').doc(id).set({
     email: email,
     displayName: displayName,
