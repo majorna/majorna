@@ -26,12 +26,12 @@
 
 /* spacing */
 /* m: margin, p: padding  |  (optional) t, r, b, l: top, right, bottom, left  |  x: extra ..., s: small, m: medium, l: large */
-.p-s {
-    padding: 0.5rem;
-}
-
 .m-m {
     margin: 1rem;
+}
+
+.m-r-m {
+    margin-right: 1rem;
 }
 
 .m-b-xs {
@@ -42,8 +42,12 @@
     margin-bottom: 0.5rem;
 }
 
-.m-r-m {
-    margin-right: 1rem;
+.m-l-s {
+    margin-left: 0.5rem;
+}
+
+.p-s {
+    padding: 0.5rem;
 }
 
 /* spinner */
