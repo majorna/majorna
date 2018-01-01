@@ -1,8 +1,8 @@
-const fbFunctions = require('firebase-functions');
-const fbAdmin = require('firebase-admin');
-fbAdmin.initializeApp(fbFunctions.config().firebase);
+const functions = require('firebase-functions');
+const firebase = require('firebase-admin');
+firebase.initializeApp(functions.config().firebase);
 
-exports.createFirestoreUserDocument = fbFunctions.auth.user().onCreate(event => {
+exports.createUserDoc = functions.auth.user().onCreate(event => {
   const user = event.data
   const id = user.uid
   const email = user.email
@@ -10,10 +10,10 @@ exports.createFirestoreUserDocument = fbFunctions.auth.user().onCreate(event => 
 
   console.log(`created user: ${id} - ${email} - ${displayName}`)
 
-  return fbAdmin.firestore().collection('users').doc(id).set({
+  return firebase.firestore().collection('users').doc(id).set({
     email: email,
     displayName: displayName,
-    created: fbAdmin.firestore.FieldValue.serverTimestamp(),
+    created: firebase.firestore.FieldValue.serverTimestamp(),
     balance: 500,
     transactions: [
       {
@@ -26,10 +26,31 @@ exports.createFirestoreUserDocument = fbFunctions.auth.user().onCreate(event => 
   })
 })
 
+exports.updateUserDoc = functions.firestore.document('users/{userId}').onUpdate(event => {
+  // const oldDoc = event.data.previous.data() // user doc before this update
+  const doc = event.data.data() // user doc after update
+  const tx = doc.pendingTransaction
+
+  // send pending transaction
+  if (tx) {
+    // cancel invalid transaction
+    if (tx.amount > doc.balance) {
+      return event.data.ref.set({ // update sending user's doc
+        pendingTransaction: firebase.firestore.FieldValue.delete()
+      }, {merge: true})
+    }
+
+    return event.data.ref.set({ // update sending user's doc
+      pendingTransaction: firebase.firestore.FieldValue.delete()
+    }, {merge: true}).then(() => { // update receiving user's doc
+    })
+  }
+});
+
 // exports.deleteFirestoreUserDocuments = fbFunctions.auth.user().onDelete(event => {
 // })
 
-exports.ping = fbFunctions.https.onRequest((request, response) => response.send('pong'))
+exports.ping = functions.https.onRequest((request, response) => response.send('pong'))
 
 // taken from: https://github.com/firebase/functions-samples/tree/master/authenticated-json-api
 // Express middleware that validates Firebase ID Tokens passed in the Authorization HTTP header.
