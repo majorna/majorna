@@ -22,7 +22,7 @@ exports.createUserDoc = functions.auth.user().onCreate(event => {
         from: 'majorna',
         amount: 500
       }
-    ]
+    ] // todo: add this to 'tx' collection also
   })
 })
 

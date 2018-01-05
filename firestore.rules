@@ -9,5 +9,10 @@ service cloud.firestore {
     match /mj/exchange/usd/monthly {
       allow read;
     }
+
+    // transactions are only accessible to involved parties
+    match /transactions/{txId} {
+
+    }
   }
 }
