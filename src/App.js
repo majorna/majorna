@@ -38,19 +38,23 @@ export default withRouter(class App extends Component {
       storageBucket: "majorna-fire.appspot.com",
       messagingSenderId: "526928901295"
     });
+  }
+
+  componentDidMount() {
+    // start network requests
     this.db = this.firebaseApp.firestore();
     this.firebaseAuth = this.firebaseApp.auth();
     this.firebaseAuth.onAuthStateChanged(async u => {
       if (u) {
         this.setState({user: u});
-        props.history.push('/dashboard');
+        this.props.history.push('/dashboard');
         this.fbUnsubUsers = this.db.collection('users').doc(u.uid)
           .onSnapshot(doc => doc && doc.exists && !doc.metadata.hasPendingWrites && this.setState({account: doc.data()}));
         const usdDoc = await this.db.collection('mj/exchange/usd').doc('monthly').get();
         this.setState({exchange: {usd: {val: 0.01, monthly: usdDoc.exists ? usdDoc.data() : null}}});
       } else {
         this.setState(this.nullState); // logged out
-        props.location.pathname !== '/login' && props.history.push('/');
+        this.props.location.pathname !== '/login' && this.props.history.push('/');
       }
     });
   }
