@@ -24,6 +24,12 @@
     text-align: center; /* text: centered text */
 }
 
+/* alignment */
+.h-center {
+    justify-content: center; /* flex: horizontal */
+    text-align: center; /* text: centered text */
+}
+
 /* spacing */
 /* m: margin, p: padding  |  (optional) t, r, b, l: top, right, bottom, left  |  x: extra ..., s: small, m: medium, l: large */
 .m-m {
@@ -48,6 +54,12 @@
 
 .p-s {
     padding: 0.5rem;
+}
+
+/* sizing */
+/* f: font  |  x: extra ..., s: small, m: medium, l: large */
+.f-s {
+    font-size: 0.8rem;
 }
 
 /* spinner */
