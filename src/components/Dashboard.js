@@ -3,6 +3,11 @@ import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from 'rec
 import QRCode from 'qrcode';
 
 export default class extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {accountQr: null};
+  }
+
   async componentWillReceiveProps(nextProps) {
     nextProps.user && this.setState({
       accountQr: await QRCode.toDataURL([{data: nextProps.user.uid, mode: 'byte'}], {errorCorrectionLevel: 'H', margin: 1, scale: 8})
