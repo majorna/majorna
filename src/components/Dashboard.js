@@ -34,7 +34,7 @@ export default (props) => (
       <React.Fragment>
         <div className="mj-box flex-column">
           <p><strong>Balance</strong>: <strong>{props.account.balance}</strong>mj ({props.account.balance * props.exchange.usd.val}$)</p>
-          <p><strong>Address</strong>: <small>{props.user.uid}</small></p>
+          <p><strong>Address</strong>: <small>majorna:{props.user.uid}</small></p>
         </div>
 
         <div className="mj-box">
