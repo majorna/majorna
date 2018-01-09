@@ -24,6 +24,8 @@ export default withRouter(class App extends Component {
         }
       }
     };
+
+    // firebase config
     this.firebaseUIConfig = {
       signInOptions: [
         firebase.auth.GoogleAuthProvider.PROVIDER_ID
@@ -38,10 +40,8 @@ export default withRouter(class App extends Component {
       storageBucket: "majorna-fire.appspot.com",
       messagingSenderId: "526928901295"
     });
-  }
 
-  componentDidMount() {
-    // start network requests
+    // initialize firebase sockets
     this.db = this.firebaseApp.firestore();
     this.firebaseAuth = this.firebaseApp.auth();
     this.firebaseAuth.onAuthStateChanged(async u => {
@@ -57,6 +57,10 @@ export default withRouter(class App extends Component {
         this.props.location.pathname !== '/login' && this.props.history.push('/');
       }
     });
+  }
+
+  componentDidMount() {
+    // start network requests
   }
 
   logout = async () => {
