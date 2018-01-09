@@ -19,9 +19,9 @@
 }
 
 .flex-center-all {
-    align-items: center; /* vertical */
-    justify-content: center; /* horizontal */
-    text-align: center; /* centered text */
+    align-items: center; /* flex: vertical */
+    justify-content: center; /* flex: horizontal */
+    text-align: center; /* text: centered text */
 }
 
 /* spacing */
