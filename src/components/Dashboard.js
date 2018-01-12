@@ -10,7 +10,7 @@ export default class extends Component {
 
   async componentWillReceiveProps(nextProps) {
     nextProps.user && this.setState({
-      accountQr: await QRCode.toDataURL([{data: nextProps.user.uid, mode: 'byte'}], {errorCorrectionLevel: 'H', margin: 1, scale: 8})
+      accountQr: await QRCode.toDataURL([{data: `majorna:${nextProps.user.uid}`, mode: 'byte'}], {errorCorrectionLevel: 'H', margin: 1, scale: 8})
     })
   }
 
