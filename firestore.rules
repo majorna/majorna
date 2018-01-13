@@ -5,8 +5,8 @@ service cloud.firestore {
       allow read: if request.auth.uid == userId;
     }
 
-    // exchange data is public
-    match /mj/exchange/usd/monthly {
+    // metadata is public
+    match /mj/meta {
       allow read;
     }
 
