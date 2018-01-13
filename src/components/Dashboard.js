@@ -8,6 +8,8 @@ export default class extends Component {
     this.state = {accountQr: null};
   }
 
+  fm = new Intl.NumberFormat().format;
+
   async componentWillReceiveProps(nextProps) {
     nextProps.user && this.setState({
       accountQr: await QRCode.toDataURL([{data: `majorna:${nextProps.user.uid}`, mode: 'byte'}], {errorCorrectionLevel: 'H', margin: 1, scale: 8})
@@ -37,8 +39,8 @@ export default class extends Component {
     return (
       <React.Fragment>
         <div className="mj-box flex-column p-s">
-          <div className="is-size-5 has-text-centered"><span className="faded">Majorna Price:</span> {this.props.mj.meta.val}$*</div>
-          <div className="is-size-5 has-text-centered"><span className="faded">Market Cap:</span> {this.props.mj.meta.cap}mj ({this.props.mj.meta.cap * this.props.mj.meta.val}$)</div>
+          <div className="is-size-5 has-text-centered"><span className="faded">Majorna Price:</span> ${this.props.mj.meta.val}*</div>
+          <div className="is-size-5 has-text-centered"><span className="faded">Market Cap:</span> mj{this.fm(this.props.mj.meta.cap)} (${this.fm(this.props.mj.meta.cap * this.props.mj.meta.val)})</div>
           <ResponsiveContainer width="100%" height={300}>
             <AreaChart data={this.getChartData()}>
               <XAxis dataKey="t"/>
