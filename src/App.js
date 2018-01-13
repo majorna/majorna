@@ -21,7 +21,7 @@ export default withRouter(class App extends Component {
         meta: {
           val: null, // usd
           cap: null, // mj
-          monthly: null // usd per day
+          monthly: null // usd per day, for last 1 month
         }
       }
     };
@@ -52,7 +52,7 @@ export default withRouter(class App extends Component {
         this.fbUnsubUsers = this.db.collection('users').doc(u.uid)
           .onSnapshot(doc => doc && doc.exists && !doc.metadata.hasPendingWrites && this.setState({account: doc.data()}));
         const metaDoc = await this.db.collection('mj').doc('meta').get();
-        this.setState({mj: {meta: {val: 0.01, monthly: metaDoc.exists ? metaDoc.data() : null}}});
+        metaDoc.exists && this.setState({mj: {meta: metaDoc.data()}});
       } else {
         this.setState(this.nullState); // logged out
         this.props.location.pathname !== '/login' && this.props.history.push('/');
