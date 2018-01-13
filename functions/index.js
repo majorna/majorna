@@ -4,13 +4,14 @@ firebase.initializeApp(functions.config().firebase);
 
 exports.createUserDoc = functions.auth.user().onCreate(event => {
   const user = event.data
-  const id = user.uid
+  const uid = user.uid
   const email = user.email
   const displayName = user.displayName
 
-  console.log(`created user: ${id} - ${email} - ${displayName}`)
+  console.log(`created user: ${uid} - ${email} - ${displayName}`)
 
-  return firebase.firestore().collection('users').doc(id).set({
+  // create user doc
+  const dbPromise = firebase.firestore().collection('users').doc(uid).set({
     email: email,
     displayName: displayName,
     created: firebase.firestore.FieldValue.serverTimestamp(),
@@ -22,8 +23,18 @@ exports.createUserDoc = functions.auth.user().onCreate(event => {
         from: 'majorna',
         amount: 500
       }
-    ] // todo: add this to 'tx' collection also & increment mj/meta/cap
+    ]
   })
+
+  // append the tx to tx collection
+  // dbPromise.then(() => {
+  //   return firebase.firestore().collection('txs').doc(event.eventId).set({
+  //
+  //   })
+  // })
+
+  // update market cap (create necessary fields if they don't exist)
+  return dbPromise
 })
 
 exports.updateUserDoc = functions.firestore.document('users/{userId}').onUpdate(event => {
