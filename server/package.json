@@ -3,5 +3,8 @@
   "main": "index.js",
   "scripts": {
     "test": "jest"
+  },
+  "dependencies": {
+    "firebase-admin": "^5.8.0"
   }
 }
