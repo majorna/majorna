@@ -1,7 +1,6 @@
 {
   "name": "majorna",
   "version": "1.0.0",
-  "private": true,
   "dependencies": {
     "bulma": "^0.6.1",
     "firebase": "^4.8.1",
