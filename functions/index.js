@@ -11,6 +11,7 @@ exports.createUserDoc = functions.auth.user().onCreate(event => {
   console.log(`created user: ${uid} - ${email} - ${displayName}`)
 
   // create user doc
+  // todo: all db operations below should be combined into one transaction so this functions will be idempotent
   const dbPromise = firebase.firestore().collection('users').doc(uid).set({
     email: email,
     displayName: displayName,
