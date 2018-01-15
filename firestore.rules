@@ -5,9 +5,14 @@ service cloud.firestore {
       allow read: if request.auth.uid == userId;
     }
 
-    // exchange data is public
-    match /mj/exchange/usd/monthly {
+    // metadata is public
+    match /mj/meta {
       allow read;
+    }
+
+    // transactions are only accessible to involved parties
+    match /txs/{txId} {
+      allow read: if resource.data.from == request.auth.uid || resource.data.to == request.auth.uid;
     }
   }
 }

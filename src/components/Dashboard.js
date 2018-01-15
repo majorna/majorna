@@ -1,40 +1,61 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from 'recharts';
+import QRCode from 'qrcode';
 
-// generate static chart data for a single value (useful for pre-trading price display)
-function getChartData(val, data) {
-  if (!data && val) {
-    data = []
-    const month = new Date().toLocaleString('en-us', {month: 'short'});
-    for (let i = 1; i < 29; i++) {
-      data.push({t: `${month} ${i}`, mj: val});
-    }
+export default class extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {accountQr: null};
   }
-  return data;
-}
 
-export default (props) => (
-  <React.Fragment>
-    <div className="mj-box flex-column p-s">
-      <div className="is-size-4 has-text-centered">1 mj = {props.exchange.usd.val}$*</div>
-      <ResponsiveContainer width="100%" height={300}>
-        <AreaChart data={getChartData(props.exchange.usd.val, props.exchange.usd.monthly)}>
-          <XAxis dataKey="t"/>
-          <YAxis orientation="right"/>
-          <Tooltip/>
-          <Area type='monotone' dataKey='mj' unit="$" stroke='DarkOrange' fill='Wheat'/>
-        </AreaChart>
-      </ResponsiveContainer>
-      <small><i>* (future-fixed trading price before exchange opens)</i></small>
-    </div>
+  fm = new Intl.NumberFormat().format;
 
-    {!props.account ? (
-      <div className="mj-box flex-center-all spinner"/>
-    ) : (
+  async componentWillReceiveProps(nextProps) {
+    nextProps.user && this.setState({
+      accountQr: await QRCode.toDataURL([{data: `majorna:${nextProps.user.uid}`, mode: 'byte'}], {errorCorrectionLevel: 'H', margin: 1, scale: 8})
+    })
+  }
+
+  // generate static chart data for a single value (useful for pre-trading price display)
+  getChartData() {
+    let data = this.props.mj.meta.monthly;
+    const val = this.props.mj.meta.val;
+
+    if (!data && val) {
+      data = []
+      const month = new Date().toLocaleString('en-us', {month: 'short'});
+      for (let i = 1; i < 29; i++) {
+        data.push({t: `${month} ${i}`, mj: val});
+      }
+    }
+    return data;
+  }
+
+  render() {
+    if (!this.props.account) {
+      return <div className="mj-box flex-center-all spinner"/>
+    }
+
+    return (
       <React.Fragment>
+        <div className="mj-box flex-column p-s">
+          <div className="is-size-5 has-text-centered"><span className="faded">Majorna Price:</span> ${this.props.mj.meta.val}*</div>
+          <div className="is-size-5 has-text-centered"><span className="faded">Market Cap:</span> mj{this.fm(this.props.mj.meta.cap)} (${this.fm(this.props.mj.meta.cap * this.props.mj.meta.val)})</div>
+          <ResponsiveContainer width="100%" height={300}>
+            <AreaChart data={this.getChartData()}>
+              <XAxis dataKey="t"/>
+              <YAxis orientation="right"/>
+              <Tooltip/>
+              <Area type='monotone' dataKey='mj' unit="$" stroke='DarkOrange' fill='Wheat'/>
+            </AreaChart>
+          </ResponsiveContainer>
+          <small><i>* (future-fixed trading price before exchange opens)</i></small>
+        </div>
+
         <div className="mj-box flex-column">
-          <p><strong>Balance</strong>: <strong>{props.account.balance}</strong>mj (~{props.account.balance * 0.01}$)</p>
-          <p><strong>Address</strong>: <small>{props.user.uid}</small></p>
+          <div><strong>Balance</strong>: <strong>{this.props.account.balance}</strong>mj ({this.props.account.balance * this.props.mj.meta.val}$)</div>
+          <div><strong>Address</strong>: <small>{this.props.user.uid}</small></div>
+          <img width="72" src={this.state.accountQr} alt={this.props.user.uid}/>
         </div>
 
         <div className="mj-box">
@@ -45,19 +66,23 @@ export default (props) => (
 
         <div className="mj-box flex-column">
           <strong className="m-b-s">Transactions</strong>
-          {props.account.transactions.map(t =>
+          {this.props.account.transactions.map(t =>
             t.from ? (
-              <div key={t.id} className="m-b-xs">
-                <span className="tag is-success">+{t.amount}</span> {t.sent.toLocaleDateString()} - <strong>From:</strong> {t.from}
+              <div className="m-b-xs" key={t.id}>
+                <span className="tag is-success" title={'TX ID: ' + t.id}>+{t.amount}</span>
+                <span className="m-l-s" title={t.sent}>{t.sent.toLocaleDateString()}</span>
+                <strong className="m-l-s">From:</strong> {t.from}
               </div>
             ) : (
-              <div key={t.id} className="m-b-xs">
-                <span className="tag is-danger">-{t.amount}</span> {t.sent.toLocaleDateString()} - <strong>To:</strong> {t.to}
+              <div className="m-b-xs" key={t.id}>
+                <span className="tag is-danger" title={'TX ID: ' + t.id}>-{t.amount}</span>
+                <span className="m-l-s" title={t.sent}>{t.sent.toLocaleDateString()}</span>
+                <strong className="m-l-s">To:</strong> {t.to}
               </div>
             )
           )}
         </div>
       </React.Fragment>
-    )}
-  </React.Fragment>
-);
+    )
+  }
+};
