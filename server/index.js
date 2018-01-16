@@ -14,3 +14,12 @@ if (!isCloudFn) {
   const functions = require('firebase-functions')
   admin.initializeApp(functions.config().firebase)
 }
+
+const auth = admin.auth()
+
+async function verifyToken () {
+  // token is in: headers = {Authorization: 'Bearer ' + token}
+  const token = ''
+  const decodedToken = await auth.verifyIdToken(token)
+  const uid = decodedToken.uid
+}
