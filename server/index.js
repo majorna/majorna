@@ -17,9 +17,9 @@ if (!isCloudFn) {
 
 const auth = admin.auth()
 
-async function verifyToken () {
+async function verifyTokenMiddleware () {
   // token is in: headers = {Authorization: 'Bearer ' + token}
   const token = ''
-  const decodedToken = await auth.verifyIdToken(token)
+  const decodedToken = await auth.verifyIdToken(token) // catch error and respond with 401
   const uid = decodedToken.uid
 }
