@@ -1,4 +1,6 @@
 const admin = require('firebase-admin')
+const Koa = require('koa');
+const app = new Koa()
 
 const env = process.env.NODE_ENV
 const isProd = env === 'production'
@@ -23,3 +25,13 @@ async function verifyTokenMiddleware () {
   const decodedToken = await auth.verifyIdToken(token) // catch error and respond with 401
   const uid = decodedToken.uid
 }
+
+app.use(async (ctx, next) => {
+  // token is in: headers = {Authorization: 'Bearer ' + token}
+  const token = ''
+  const decodedToken = await auth.verifyIdToken(token) // catch error and respond with 401
+  const uid = decodedToken.uid
+  await next()
+});
+
+app.listen(3000);

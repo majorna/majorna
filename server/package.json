@@ -5,6 +5,12 @@
     "test": "jest"
   },
   "dependencies": {
-    "firebase-admin": "^5.8.0"
+    "firebase-admin": "^5.8.0",
+    "koa": "^2.4.1"
+  },
+  "devDependencies": {
+    "jest": "^22.1.1",
+    "standard": "^10.0.3",
+    "supertest": "^3.0.0"
   }
 }
