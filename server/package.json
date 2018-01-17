@@ -2,7 +2,8 @@
   "name": "server",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "lint": "standard --fix"
   },
   "dependencies": {
     "firebase-admin": "^5.8.0",
@@ -12,5 +13,10 @@
     "jest": "^22.1.1",
     "standard": "^10.0.3",
     "supertest": "^3.0.0"
+  },
+  "standard": {
+    "env": [
+      "jest"
+    ]
   }
 }

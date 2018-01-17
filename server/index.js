@@ -1,7 +1,7 @@
 const Koa = require('koa')
 const app = new Koa()
-const fbConf = require('./fb-conf')
+const firebaseConf = require('./firebase-conf')
 
-app.use(fbConf.verifyTokenMiddleware);
+app.use(firebaseConf.verifyTokenMiddleware)
 
-app.listen(3000);
+app.listen(3000)
