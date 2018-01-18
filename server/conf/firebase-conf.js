@@ -1,3 +1,4 @@
+// api ref: https://firebase.google.com/docs/reference/admin/node/
 const admin = require('firebase-admin')
 
 const env = process.env.NODE_ENV
