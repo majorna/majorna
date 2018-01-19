@@ -1,2 +1,5 @@
+const user = require('user')
 
-// todo do we need transaction.update({merge: true})? or is it default?
+test('updateMarketCap', async () => {
+  const decodedToken = await admin.auth().verifyIdToken(process.env.FIREBASE_TEST_TOKEN)
+})

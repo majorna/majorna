@@ -1,4 +1,4 @@
-const FieldValue = require("firebase-admin").firestore.FieldValue
+const FieldValue = require('firebase-admin').firestore.FieldValue
 
 /**
  * Create user doc and push first bonus transaction.
@@ -46,9 +46,11 @@ exports.createUserDoc = async (firestore, user) => {
  * Updates market cap metadata with given amount.
  */
 exports.updateMarketCap = async (firestore, amount) => {
-  firebase.runTransaction(async t => {
-    const metaRef = firebase.collection('mj').doc('meta')
+  firestore.runTransaction(async t => {
+    const metaRef = firestore.collection('mj').doc('meta')
     const metaDoc = await t.get(metaRef)
     await t.update(metaRef, {cap: metaDoc.data().cap + amount})
   })
 }
+
+exports.getMeta = async firestore => (await firestore.collection('mj').doc('meta').get()).data()
