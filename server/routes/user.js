@@ -1,4 +1,5 @@
-const FieldValue = require('firebase-admin').firestore.FieldValue
+const firebaseAdmin = require('firebase-admin')
+const FieldValue = firebaseAdmin.firestore.FieldValue
 
 /**
  * Create user doc and push first bonus transaction.
