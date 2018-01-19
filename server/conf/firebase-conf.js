@@ -1,4 +1,11 @@
-// api ref: https://firebase.google.com/docs/reference/admin/node/
+/**
+ * Firebase:
+ * - API ref: https://firebase.google.com/docs/reference/admin/node/
+ *
+ * Firestore:
+ * - Src: https://github.com/googleapis/nodejs-firestore
+ * - API ref: https://cloud.google.com/nodejs/docs/reference/firestore/latest/
+ */
 const admin = require('firebase-admin')
 
 const env = process.env.NODE_ENV
