@@ -1,11 +1,13 @@
 const firebaseAdmin = require('firebase-admin')
 const FieldValue = firebaseAdmin.firestore.FieldValue
+const firebaseConf = require('firebase-conf')
+const firestore = firebaseConf.firestore
 
 /**
  * Create user doc and push first bonus transaction.
  * Can be used as a firestore cloud function trigger.
  */
-exports.createUserDoc = async (firestore, user) => {
+exports.createUserDoc = async (user) => {
   const uid = user.uid
   const email = user.email
   const name = user.name || user.displayName // firebase auth token || firestore event
@@ -38,7 +40,7 @@ exports.createUserDoc = async (firestore, user) => {
   })
 
   // increase market cap
-  await exports.updateMarketCap(firestore, initBalance)
+  await exports.updateMarketCap(initBalance)
 
   console.log(`created user: ${uid} - ${email} - ${name}`)
 }
@@ -46,7 +48,7 @@ exports.createUserDoc = async (firestore, user) => {
 /**
  * Updates market cap metadata with given amount.
  */
-exports.updateMarketCap = async (firestore, amount) => {
+exports.updateMarketCap = async (amount) => {
   firestore.runTransaction(async t => {
     const metaRef = firestore.collection('mj').doc('meta')
     const metaDoc = await t.get(metaRef)
