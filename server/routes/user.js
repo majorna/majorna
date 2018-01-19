@@ -36,12 +36,19 @@ exports.createUserDoc = async (firestore, user) => {
     ]
   })
 
-  // update market cap
+  // increase market cap
+  await exports.updateMarketCap(firestore, initBalance)
+
+  console.log(`created user: ${uid} - ${email} - ${name}`)
+}
+
+/**
+ * Updates market cap metadata with given amount.
+ */
+exports.updateMarketCap = async (firestore, amount) => {
   firebase.runTransaction(async t => {
     const metaRef = firebase.collection('mj').doc('meta')
     const metaDoc = await t.get(metaRef)
-    await t.update(metaRef, {cap: metaDoc.data().cap + initBalance})
+    await t.update(metaRef, {cap: metaDoc.data().cap + amount})
   })
-
-  console.log(`created user: ${uid} - ${email} - ${name}`)
 }
