@@ -1,6 +1,6 @@
 const firebaseAdmin = require('firebase-admin')
 const FieldValue = firebaseAdmin.firestore.FieldValue
-const firebaseConf = require('firebase-conf')
+const firebaseConf = require('../conf/firebase-conf')
 const firestore = firebaseConf.firestore
 
 /**
@@ -49,7 +49,7 @@ exports.createUserDoc = async (user) => {
  * Updates market cap metadata with given amount.
  */
 exports.updateMarketCap = async (amount) => {
-  firestore.runTransaction(async t => {
+  await firestore.runTransaction(async t => {
     const metaRef = firestore.collection('mj').doc('meta')
     const metaDoc = await t.get(metaRef)
     await t.update(metaRef, {cap: metaDoc.data().cap + amount})
