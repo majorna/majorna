@@ -16,3 +16,11 @@ test('updateMarketCap', async () => {
 test('addTx, getTx', async () => {
   // valid and invalid txs
 })
+
+test('createUserDoc', async () => {
+  await db.createUserDoc({
+    uid: 1,
+    email: 'chuck.norris@majorna',
+    name: 'Chuck Norris'
+  })
+})

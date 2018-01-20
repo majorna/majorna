@@ -55,6 +55,5 @@ exports.createUserDoc = async (user) => {
 
   // increase market cap
   await exports.updateMarketCap(initBalance)
-
   console.log(`created user: ${uid} - ${email} - ${name}`)
 }
