@@ -14,9 +14,5 @@ test('updateMarketCap', async () => {
 })
 
 test('addTx, getTx', async () => {
-
-})
-
-test('addTx with insufficient funds', async () => {
-
+  // valid and invalid txs
 })

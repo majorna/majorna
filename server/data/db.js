@@ -35,7 +35,7 @@ exports.createUserDoc = async (user) => {
   const initBalance = 500
 
   // create the first transaction for the user
-  const txDoc = await exports.addTx('majorna', uid, time, initBalance)
+  const txDoc = await txsRef.add({from: 'majorna', to: uid, sent: time, amount: initBalance})
 
   // create user doc
   await usersRef.doc(uid).set({
