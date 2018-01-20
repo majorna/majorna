@@ -17,10 +17,10 @@ const app = exports.app = firebaseAdmin.initializeApp(conf.app.isCloudFn
   ? require('firebase-functions').config().firebase
   : {credential: creds, databaseURL: 'https://majorna-fire.firebaseio.com'})
 
-const auth = exports.auth = app.auth()
+exports.auth = app.auth()
 exports.firestore = app.firestore()
 
-const decodedTokenTemplate = {
+exports.decodedTokenTemplate = {
   iss: 'https://securetoken.google.com/majorna-fire',
   name: 'Chuck Norris',
   picture: 'https://lh3.googleusercontent.com/abc/def/photo.jpg',
@@ -42,9 +42,9 @@ const decodedTokenTemplate = {
   uid: 'dsafasdgasfgsadsdafdsfa'
 }
 
-exports.verifyTokenMiddleware = async function () {
-  // token is in: headers = {Authorization: 'Bearer ' + token}
-  const token = ''
-  const decodedToken = await auth.verifyIdToken(token) // catch error and respond with 401
-  const uid = decodedToken.uid
-}
+// exports.verifyTokenMiddleware = async function () {
+//   // token is in: headers = {Authorization: 'Bearer ' + token}
+//   const token = ''
+//   const decodedToken = await auth.verifyIdToken(token) // catch error and respond with 401
+//   const uid = decodedToken.uid
+// }
