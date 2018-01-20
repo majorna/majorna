@@ -7,19 +7,16 @@
  * - API ref: https://cloud.google.com/nodejs/docs/reference/firestore/latest/
  */
 const firebaseAdmin = require('firebase-admin')
-const conf = require('./conf')
+const config = require('./config')
 
-const creds = conf.app.isProd
-  ? firebaseAdmin.credential.applicationDefault() // required GCE access scopes: https://firebase.google.com/docs/admin/setup
-  : firebaseAdmin.credential.cert(require(process.env.FIREBASE_JSON_PATH))
-
-const app = exports.app = firebaseAdmin.initializeApp(conf.app.isCloudFn
-  ? require('firebase-functions').config().firebase
-  : {credential: creds, databaseURL: 'https://majorna-fire.firebaseio.com'})
+const app = exports.app = firebaseAdmin.initializeApp(config.firebase.config)
 
 exports.auth = app.auth()
 exports.firestore = app.firestore()
 
+/**
+ * Firebase auth token (JWT) content when decoded.
+ */
 exports.decodedTokenTemplate = {
   iss: 'https://securetoken.google.com/majorna-fire',
   name: 'Chuck Norris',

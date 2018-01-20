@@ -1,7 +1,7 @@
 const firebaseAdmin = require('firebase-admin')
 const FieldValue = firebaseAdmin.firestore.FieldValue
-const firebaseConf = require('../conf/firebase-conf')
-const firestore = firebaseConf.firestore
+const firebaseConfig = require('../config/firebase-config')
+const firestore = firebaseConfig.firestore
 
 exports.getMeta = async () => (await firestore.collection('mj').doc('meta').get()).data()
 
