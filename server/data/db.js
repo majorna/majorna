@@ -13,7 +13,7 @@ exports.updateMarketCap = async (amount) => {
   })
 }
 
-exports.addTransaction = async (from, to, sent, amount) => firestore.collection('txs').add({from, to, sent, amount})
+exports.addTransaction = (from, to, sent, amount) => firestore.collection('txs').add({from, to, sent, amount})
 
 /**
  * Create user doc and push first bonus transaction.
@@ -28,7 +28,7 @@ exports.createUserDoc = async (user) => {
   const initBalance = 500
 
   // create the first transaction for the user
-  const txDoc = exports.addTransaction('majorna', uid, time, initBalance)
+  const txDoc = await exports.addTransaction('majorna', uid, time, initBalance)
 
   // create user doc
   await firestore.collection('users').doc(uid).set({
