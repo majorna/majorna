@@ -12,3 +12,11 @@ test('updateMarketCap', async () => {
   const meta2 = await db.getMeta()
   expect(meta2.cap).toBe(meta.cap + 500)
 })
+
+test('addTx, getTx', async () => {
+
+})
+
+test('addTx with insufficient funds', async () => {
+
+})

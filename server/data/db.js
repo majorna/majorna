@@ -14,7 +14,13 @@ exports.updateMarketCap = (amount) => firestore.runTransaction(async t => {
   await t.update(metaRef, {cap: metaDoc.data().cap + amount})
 })
 
+// todo: verify that sender has enough funds and receiver exists
 exports.addTx = (from, to, sent, amount) => txsRef.add({from, to, sent, amount})
+
+exports.getTx = async id => {
+  const tx = await txsRef.doc(id).get()
+  return tx.exists ? tx.data() : null
+}
 
 /**
  * Create user doc and push first bonus transaction.
