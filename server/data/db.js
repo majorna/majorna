@@ -11,7 +11,7 @@ exports.getMeta = async () => (await metaRef.get()).data()
 
 exports.updateMarketCap = (amount) => firestore.runTransaction(async t => {
   const metaDoc = await t.get(metaRef)
-  await t.update(metaRef, {cap: metaDoc.data().cap + amount})
+  return t.update(metaRef, {cap: metaDoc.data().cap + amount})
 })
 
 exports.addTx = (from, to, sent, amount) => txsRef.add({from, to, sent, amount})
