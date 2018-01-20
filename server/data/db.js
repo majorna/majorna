@@ -3,17 +3,20 @@ const FieldValue = firebaseAdmin.firestore.FieldValue
 const firebaseConfig = require('../config/firebase-config')
 const firestore = firebaseConfig.firestore
 
-exports.getMeta = async () => (await firestore.collection('mj').doc('meta').get()).data()
+const metaRef = firestore.collection('mj').doc('meta')
+const txsRef = firestore.collection('txs')
+const usersRef = firestore.collection('users')
+
+exports.getMeta = async () => (await metaRef.get()).data()
 
 exports.updateMarketCap = async (amount) => {
   await firestore.runTransaction(async t => {
-    const metaRef = firestore.collection('mj').doc('meta')
     const metaDoc = await t.get(metaRef)
     await t.update(metaRef, {cap: metaDoc.data().cap + amount})
   })
 }
 
-exports.addTransaction = (from, to, sent, amount) => firestore.collection('txs').add({from, to, sent, amount})
+exports.addTx = (from, to, sent, amount) => txsRef.add({from, to, sent, amount})
 
 /**
  * Create user doc and push first bonus transaction.
@@ -28,10 +31,10 @@ exports.createUserDoc = async (user) => {
   const initBalance = 500
 
   // create the first transaction for the user
-  const txDoc = await exports.addTransaction('majorna', uid, time, initBalance)
+  const txDoc = await exports.addTx('majorna', uid, time, initBalance)
 
   // create user doc
-  await firestore.collection('users').doc(uid).set({
+  await usersRef.doc(uid).set({
     email: email,
     name: name,
     created: time,
