@@ -56,4 +56,4 @@ exports.updateMarketCap = async (amount) => {
   })
 }
 
-exports.getMeta = async firestore => (await firestore.collection('mj').doc('meta').get()).data()
+exports.getMeta = async () => (await firestore.collection('mj').doc('meta').get()).data()

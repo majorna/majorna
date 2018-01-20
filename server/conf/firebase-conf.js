@@ -7,16 +7,13 @@
  * - API ref: https://cloud.google.com/nodejs/docs/reference/firestore/latest/
  */
 const firebaseAdmin = require('firebase-admin')
+const conf = require('./conf')
 
-const env = process.env.NODE_ENV
-const isProd = env === 'production'
-const isCloudFn = false
-
-const creds = isProd
+const creds = conf.app.isProd
   ? firebaseAdmin.credential.applicationDefault() // required GCE access scopes: https://firebase.google.com/docs/admin/setup
   : firebaseAdmin.credential.cert(require(process.env.FIREBASE_JSON_PATH))
 
-const app = exports.app = firebaseAdmin.initializeApp(isCloudFn
+const app = exports.app = firebaseAdmin.initializeApp(conf.app.isCloudFn
   ? require('firebase-functions').config().firebase
   : {credential: creds, databaseURL: 'https://majorna-fire.firebaseio.com'})
 
