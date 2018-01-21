@@ -9,14 +9,28 @@ const usersRef = firestore.collection('users')
 
 exports.getMeta = async () => (await metaRef.get()).data()
 
-exports.updateMarketCap = (amount) => firestore.runTransaction(async t => {
+exports.updateMarketCap = amount => firestore.runTransaction(async t => {
   const metaDoc = await t.get(metaRef)
   await t.update(metaRef, {cap: metaDoc.data().cap + amount})
 })
 
 exports.addTx = (from, to, sent, amount) => firestore.runTransaction(async t => {
-  // todo: verify that sender has enough funds and receiver exists
-  t.add({from, to, sent, amount})
+  // verify sender's funds
+  const senderDoc = await t.get(usersRef.doc(from))
+  if (!senderDoc.exists || senderDoc.data().balance < amount) {
+    throw new Error('insufficient funds')
+  }
+
+  // check if receiver exists
+  const receiverDoc = await t.get(usersRef.doc(from))
+  if (!receiverDoc.exists) {
+    throw new Error('receiver does not exist')
+  }
+
+  // add tx to txs collection
+  await t.create(txsRef.doc(), {from, to, sent, amount})
+
+  // update user docs with tx
 })
 
 exports.getTx = async id => {
@@ -28,7 +42,7 @@ exports.getTx = async id => {
  * Create user doc and push first bonus transaction.
  * Can be used as a firestore cloud function trigger.
  */
-exports.createUserDoc = async (user) => {
+exports.createUserDoc = async user => {
   const uid = user.uid
   const email = user.email
   const name = user.name || user.displayName // firebase auth token || firestore event

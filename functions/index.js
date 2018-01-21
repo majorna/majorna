@@ -2,6 +2,8 @@ const functions = require('firebase-functions');
 const firebase = require('firebase-admin');
 firebase.initializeApp(functions.config().firebase);
 
+exports.ping = functions.https.onRequest((request, response) => response.send('pong'))
+
 exports.createUserDoc = functions.auth.user().onCreate(event => {
   const user = event.data
   const uid = user.uid
@@ -61,8 +63,6 @@ exports.updateUserDoc = functions.firestore.document('users/{userId}').onUpdate(
 
 // exports.deleteFirestoreUserDocuments = fbFunctions.auth.user().onDelete(event => {
 // })
-
-exports.ping = functions.https.onRequest((request, response) => response.send('pong'))
 
 // taken from: https://github.com/firebase/functions-samples/tree/master/authenticated-json-api
 // Express middleware that validates Firebase ID Tokens passed in the Authorization HTTP header.
