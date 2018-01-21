@@ -35,7 +35,9 @@ exports.createUserDoc = async (user) => {
   const initBalance = 500
 
   // create the first transaction for the user
-  const txDoc = await txsRef.add({from: 'majorna', to: uid, sent: time, amount: initBalance})
+  const txRef = await txsRef.add({from: 'majorna', to: uid, sent: time, amount: initBalance})
+  const txDoc = await txRef.get()
+  const tx = txDoc.data()
 
   // create user doc
   await usersRef.doc(uid).set({
@@ -45,9 +47,9 @@ exports.createUserDoc = async (user) => {
     balance: initBalance,
     transactions: [
       {
-        id: txDoc.id,
+        id: txRef.id,
         from: 'majorna',
-        sent: txDoc.sent,
+        sent: tx.sent,
         amount: initBalance
       }
     ]
