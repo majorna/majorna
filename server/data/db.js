@@ -1,5 +1,3 @@
-const firebaseAdmin = require('firebase-admin')
-const FieldValue = firebaseAdmin.firestore.FieldValue
 const firebaseConfig = require('../config/firebase-config')
 const firestore = firebaseConfig.firestore
 
@@ -54,13 +52,11 @@ exports.createUserDoc = async user => {
   const email = user.email
   const name = user.name || user.displayName // firebase auth token || firestore event
 
-  const time = FieldValue.serverTimestamp()
+  const time = new Date()
   const initBalance = 500
 
   // create the first transaction for the user
   const txRef = await txsRef.add({from: 'majorna', to: uid, sent: time, amount: initBalance})
-  const txDoc = await txRef.get()
-  const tx = txDoc.data()
 
   // create user doc
   await usersRef.doc(uid).set({
@@ -72,7 +68,7 @@ exports.createUserDoc = async user => {
       {
         id: txRef.id,
         from: 'majorna',
-        sent: tx.sent,
+        sent: time,
         amount: initBalance
       }
     ]
