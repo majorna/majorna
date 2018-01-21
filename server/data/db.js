@@ -1,4 +1,4 @@
-const firebaseConfig = require('../config/firebase-config')
+const firebaseConfig = require('../config/firebase')
 const firestore = firebaseConfig.firestore
 
 const metaRef = firestore.collection('mj').doc('meta')
