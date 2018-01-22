@@ -20,5 +20,8 @@
     "env": [
       "jest"
     ]
+  },
+  "jest": {
+    "globalSetup": "./config/jest.js"
   }
 }
