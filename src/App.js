@@ -16,6 +16,7 @@ export default withRouter(class App extends Component {
     super(props);
     this.state = this.nullState = {
       user: null,
+      idToken: null,
       account: null,
       mj: {
         meta: {
@@ -47,12 +48,12 @@ export default withRouter(class App extends Component {
     this.firebaseAuth = this.firebaseApp.auth();
     this.firebaseAuth.onAuthStateChanged(async u => {
       if (u) {
-        this.setState({user: u});
         this.props.history.push('/dashboard');
+        this.setState({user: u});
         this.fbUnsubUsers = this.db.collection('users').doc(u.uid)
           .onSnapshot(doc => doc && doc.exists && !doc.metadata.hasPendingWrites && this.setState({account: doc.data()}));
-        const metaDoc = await this.db.collection('mj').doc('meta').get();
-        metaDoc.exists && this.setState({mj: {meta: metaDoc.data()}});
+        this.fbUnsubMeta = this.db.collection('mj').doc('meta').onSnapshot(doc => doc && doc.exists && this.setState({mj: {meta: doc.data()}}));
+        this.setState({idToken: await u.getIdToken()})
       } else {
         this.setState(this.nullState); // logged out
         this.props.location.pathname !== '/login' && this.props.history.push('/');
@@ -66,6 +67,7 @@ export default withRouter(class App extends Component {
 
   logout = async () => {
     this.fbUnsubUsers && this.fbUnsubUsers();
+    this.fbUnsubMeta && this.fbUnsubMeta();
     await this.firebaseAuth.signOut()
   };
 
