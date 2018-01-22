@@ -11,11 +11,10 @@ const app = exports.app = {
 }
 
 const fb = exports.firebase = {
-  serviceKeyJsonPath: process.env.FIREBASE_JSON_PATH,
+  serviceKeyJsonPath: process.env.FIREBASE_TEST_JSON_PATH,
   credentials: null,
   config: {
-    credential: null,
-    databaseURL: 'https://majorna-fire.firebaseio.com'
+    credential: null
   }
 }
 
