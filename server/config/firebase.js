@@ -14,6 +14,13 @@ const app = exports.app = firebaseAdmin.initializeApp(config.firebase.config)
 exports.auth = app.auth()
 exports.firestore = app.firestore()
 
+// exports.verifyTokenMiddleware = async function () {
+//   // token is in: headers = {Authorization: 'Bearer ' + token}
+//   const token = ''
+//   const decodedToken = await auth.verifyIdToken(token) // catch error and respond with 401
+//   const uid = decodedToken.uid
+// }
+
 /**
  * Firebase auth token (JWT) content when decoded.
  */
@@ -38,10 +45,3 @@ exports.decodedTokenTemplate = {
   },
   uid: 'dsafasdgasfgsadsdafdsfa'
 }
-
-// exports.verifyTokenMiddleware = async function () {
-//   // token is in: headers = {Authorization: 'Bearer ' + token}
-//   const token = ''
-//   const decodedToken = await auth.verifyIdToken(token) // catch error and respond with 401
-//   const uid = decodedToken.uid
-// }
