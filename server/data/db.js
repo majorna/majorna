@@ -7,7 +7,7 @@ const usersRef = firestore.collection('users')
 const metaRef = firestore.collection('mj').doc('meta')
 
 /**
- * Initializes database
+ * Initializes database collections if database is empty, asynchronously.
  */
 exports.init = async () => {
 
