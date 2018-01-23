@@ -107,5 +107,7 @@ exports.seed = async () => {
   batch.delete(metaRef)
 
   // add seed data
+  batch.create(metaRef, {val: 0.01, cap: 500})
+
   await batch.commit()
 }
