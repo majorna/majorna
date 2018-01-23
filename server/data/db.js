@@ -59,7 +59,7 @@ exports.makeTx = (from, to, sent, amount) => firestore.runTransaction(async t =>
 })
 
 /**
- * Create user doc and push first bonus transaction.
+ * Create user doc and push first bonus transaction, asynchronously.
  * Can be used as a firestore cloud function trigger.
  */
 exports.createUserDoc = async user => {
@@ -95,8 +95,17 @@ exports.createUserDoc = async user => {
 }
 
 /**
- * Deletes all the data and seeds the database with dummy data for testing.
+ * Deletes all the data and seeds the database with dummy data for testing, asynchronously.
  */
 exports.seed = async () => {
+  // delete all data
+  const batch = firestore.batch()
+  const txsSnap = await txsRef.get()
+  txsSnap.forEach(txSnap => batch.delete(txSnap.ref))
+  const usersSnap = await usersRef.get()
+  usersSnap.forEach(userSnap => batch.delete(userSnap.ref))
+  batch.delete(metaRef)
 
+  // add seed data
+  await batch.commit()
 }
