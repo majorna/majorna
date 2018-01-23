@@ -10,7 +10,14 @@ const metaRef = firestore.collection('mj').doc('meta')
  * Initializes database collections if database is empty, asynchronously.
  */
 exports.init = async () => {
+  const metaDoc = await metaRef.get()
+  if (metaDoc.exists) {
+    return
+  }
 
+  const batch = firestore.batch()
+  batch.create(metaRef, {val: 0.01, cap: 5 * 1000 * 1000})
+  await batch.commit()
 }
 
 /**
