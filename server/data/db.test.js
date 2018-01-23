@@ -1,5 +1,8 @@
 const db = require('./db')
 
+test('init', async () => {
+})
+
 test('getMeta', async () => {
   const meta = await db.getMeta()
   expect(meta.cap >= 500)
