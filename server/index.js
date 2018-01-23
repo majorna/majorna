@@ -1,11 +1,14 @@
-const Koa = require('koa')
-const app = new Koa()
-const firebaseConfig = require('./config/firebase')
 const db = require('./data/db')
-
-app.use(firebaseConfig.verifyTokenMiddleware)
+const config = require('./config/config')
+const koaConfig = require('./config/koa')
 
 module.exports = async () => {
   await db.init()
-  app.listen(3000)
+  const koaApp = koaConfig()
+  koaApp.listen(3000)
+  if (!config.app.isTest) {
+    console.log('server listening on port ' + 300)
+  }
 }
+
+module.exports()
