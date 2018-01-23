@@ -1,23 +1,38 @@
 const firebaseConfig = require('../config/firebase')
 const firestore = firebaseConfig.firestore
 
-const metaRef = firestore.collection('mj').doc('meta')
+// collection and doc refs
 const txsRef = firestore.collection('txs')
 const usersRef = firestore.collection('users')
+const metaRef = firestore.collection('mj').doc('meta')
 
+/**
+ * Get majorna metadata document asynchronously.
+ */
 exports.getMeta = async () => (await metaRef.get()).data()
 
+/**
+ * Update market capitalization field in majorna metadata document asynchronously.
+ */
 exports.updateMarketCap = amount => firestore.runTransaction(async t => {
   const metaDoc = await t.get(metaRef)
   await t.update(metaRef, {cap: metaDoc.data().cap + amount})
 })
 
+/**
+ * Get a transaction from transactions collection by ID, asynchronously.
+ */
 exports.getTx = async id => {
   const tx = await txsRef.doc(id).get()
   return tx.exists ? tx.data() : null
 }
 
-exports.addTx = (from, to, sent, amount) => firestore.runTransaction(async t => {
+/**
+ * Performs a financial transaction from person A to B asynchronously.
+ * Both user documents and transactions collection is updated with the transaction data and results.
+ * Returned promise resolves to an error if transaction fails.
+ */
+exports.makeTx = (from, to, sent, amount) => firestore.runTransaction(async t => {
   // verify sender's funds
   const senderDoc = await t.get(usersRef.doc(from))
   const sender = senderDoc.data()
@@ -77,4 +92,11 @@ exports.createUserDoc = async user => {
   // increase market cap
   await exports.updateMarketCap(initBalance)
   console.log(`created user: ${uid} - ${email} - ${name}`)
+}
+
+/**
+ * Deletes all the data and seeds the database with dummy data for testing.
+ */
+exports.seed = async () => {
+
 }
