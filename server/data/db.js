@@ -7,6 +7,13 @@ const usersRef = firestore.collection('users')
 const metaRef = firestore.collection('mj').doc('meta')
 
 /**
+ * Initializes database
+ */
+exports.init = async () => {
+
+}
+
+/**
  * Get majorna metadata document asynchronously.
  */
 exports.getMeta = async () => (await metaRef.get()).data()
@@ -98,6 +105,8 @@ exports.createUserDoc = async user => {
  * Deletes all the data and seeds the database with dummy data for testing, asynchronously.
  */
 exports.seed = async () => {
+  const time = new Date()
+
   // delete all data
   const batch = firestore.batch()
   const txsSnap = await txsRef.get()
@@ -108,6 +117,7 @@ exports.seed = async () => {
 
   // add seed data
   batch.create(metaRef, {val: 0.01, cap: 500})
+  batch.create(usersRef.doc('1'), {email: 'bond@mj', name: 'James Bond', created: time, balance: 0, txs: []})
 
   await batch.commit()
 }
