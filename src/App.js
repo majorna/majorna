@@ -5,6 +5,7 @@ import 'firebase/auth';
 import 'firebase/firestore';
 import 'bulma/css/bulma.css';
 import './App.css';
+import apiClient from './data/api-client'
 import Navbar from './components/Navbar'
 import GetStarted from './components/GetStarted'
 import Login from './components/Login'
@@ -53,9 +54,9 @@ export default withRouter(class App extends Component {
         this.fbUnsubUsers = this.db.collection('users').doc(u.uid)
           .onSnapshot(doc => {
             if (doc.exists) {
-              !doc.metadata.hasPendingWrites && this.setState({account: doc.data()})
+              !doc.metadata.hasPendingWrites && this.setState({account: doc.data()});
             } else {
-              // todo: call rest.auth() for first time auth check and db init
+              apiClient.users.init();
             }
           });
         this.fbUnsubMeta = this.db.collection('mj').doc('meta').onSnapshot(doc => this.setState({mj: {meta: doc.data()}}));
