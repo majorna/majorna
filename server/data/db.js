@@ -49,7 +49,7 @@ exports.createUserDoc = async user => {
   const txRef = await txsRef.add({from: 'majorna', to: uid, sent: time, amount: initBalance})
 
   // create user doc
-  await usersRef.doc(uid).set({
+  await usersRef.doc(uid).create({
     email: email,
     name: name,
     created: time,
