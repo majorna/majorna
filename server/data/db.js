@@ -34,6 +34,42 @@ exports.updateMarketCap = amount => firestore.runTransaction(async t => {
 })
 
 /**
+ * Create user doc and push first bonus transaction, asynchronously.
+ * Can be used as a firestore cloud function trigger.
+ */
+exports.createUserDoc = async user => {
+  const uid = user.uid
+  const email = user.email
+  const name = user.name || user.displayName // firebase auth token || firestore event
+
+  const time = new Date()
+  const initBalance = 500
+
+  // create the first transaction for the user
+  const txRef = await txsRef.add({from: 'majorna', to: uid, sent: time, amount: initBalance})
+
+  // create user doc
+  await usersRef.doc(uid).set({
+    email: email,
+    name: name,
+    created: time,
+    balance: initBalance,
+    txs: [
+      {
+        id: txRef.id,
+        from: 'majorna',
+        sent: time,
+        amount: initBalance
+      }
+    ]
+  })
+
+  // increase market cap
+  await exports.updateMarketCap(initBalance)
+  console.log(`created user: ${uid} - ${email} - ${name}`)
+}
+
+/**
  * Get a transaction from transactions collection by ID, asynchronously.
  */
 exports.getTx = async id => {
@@ -71,42 +107,6 @@ exports.makeTx = (from, to, sent, amount) => firestore.runTransaction(async t =>
   receiver.txs.unshift({id: txRef.id, from, sent, amount})
   await t.update(receiverDoc, {balance: receiver.balance + amount, txs: receiver.txs})
 })
-
-/**
- * Create user doc and push first bonus transaction, asynchronously.
- * Can be used as a firestore cloud function trigger.
- */
-exports.createUserDoc = async user => {
-  const uid = user.uid
-  const email = user.email
-  const name = user.name || user.displayName // firebase auth token || firestore event
-
-  const time = new Date()
-  const initBalance = 500
-
-  // create the first transaction for the user
-  const txRef = await txsRef.add({from: 'majorna', to: uid, sent: time, amount: initBalance})
-
-  // create user doc
-  await usersRef.doc(uid).set({
-    email: email,
-    name: name,
-    created: time,
-    balance: initBalance,
-    txs: [
-      {
-        id: txRef.id,
-        from: 'majorna',
-        sent: time,
-        amount: initBalance
-      }
-    ]
-  })
-
-  // increase market cap
-  await exports.updateMarketCap(initBalance)
-  console.log(`created user: ${uid} - ${email} - ${name}`)
-}
 
 /**
  * Deletes all the data and seeds the database with dummy data for testing, asynchronously.
