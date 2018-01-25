@@ -1,6 +1,6 @@
-const db = require('./data/db')
-const config = require('./config/config')
-const koaConfig = require('./config/koa')
+const db = require('../data/db')
+const config = require('./config')
+const koaConfig = require('./koa')
 
 module.exports = async () => {
   await db.init()
