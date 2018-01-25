@@ -23,6 +23,6 @@
     ]
   },
   "jest": {
-    "globalSetup": "./config/jest.js"
+    "globalSetup": "./config/test-setup.js"
   }
 }
