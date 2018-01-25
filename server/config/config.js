@@ -1,6 +1,6 @@
 const firebaseAdmin = require('firebase-admin')
 
-const env = process.env.NODE_ENV || 'development'
+const env = process.env.NODE_ENV || (process.env.CI && 'test') || 'development'
 
 const app = exports.app = {
   env,
