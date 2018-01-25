@@ -16,7 +16,7 @@ exports.init = async () => {
   }
 
   const batch = firestore.batch()
-  batch.create(metaRef, {val: 0.01, cap: 5 * 1000 * 1000})
+  batch.create(metaRef, {val: 0.01, cap: 0})
   await batch.commit()
 }
 
