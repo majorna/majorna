@@ -23,7 +23,7 @@ test('addTx, getTx', async () => {
 test('createUserDoc', async () => {
   await db.createUserDoc({
     uid: '2',
-    email: 'chuck.norris@majorna',
-    name: 'Chuck Norris'
+    email: 'morgan.almighty@majorna',
+    name: 'Morgan Almighty'
   })
 })
