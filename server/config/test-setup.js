@@ -1,20 +1,20 @@
 const supertest = require('supertest')
 const db = require('../data/db')
 const server = require('./server')
+const config = require('./config')
 const firebaseConfig = require('./firebase')
 const auth = firebaseConfig.auth
 
-let initialized = false
+let request = null
 
 /**
  * Integration test initializer.
  */
-exports.init = async () => {
-  if (initialized) {
-    return
+module.exports = async () => {
+  if (request) {
+    return request
   }
 
-  initialized = true
   console.log('test-setup: initialized')
 
   // initialize firebase auth with users
@@ -39,9 +39,9 @@ exports.init = async () => {
   // initialize db for integration testing
   await db.seed()
 
-  // prepare supertest
-  exports.request = supertest.agent().set('Authorization', `Bearer ${idToken}`)
-
   // start server
   await server()
+
+  // prepare supertest
+  return (request = supertest.agent(`http://localhost:${config.app.port}`).set('Authorization', `Bearer ${idToken}`))
 }

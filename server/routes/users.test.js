@@ -1,5 +1,8 @@
 const testSetup = require('../config/test-setup')
+let request
+
+beforeAll(async () => { request = await testSetup() })
 
 test('init', async () => {
-  await testSetup.request.get().expect(200)
+  await request.get().expect(200)
 })
