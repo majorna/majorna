@@ -124,7 +124,7 @@ exports.seed = async () => {
 
   // add seed data
   batch.create(metaRef, {val: 0.01, cap: 500})
-  batch.create(usersRef.doc('1'), {email: 'bond@mj', name: 'James Bond', created: time, balance: 0, txs: []})
+  batch.create(usersRef.doc('1'), {email: 'chuck@mj.mj', name: 'Chuck Norris', created: time, balance: 0, txs: []})
 
   await batch.commit()
 }
