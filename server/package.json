@@ -2,7 +2,7 @@
   "name": "server",
   "main": "index.js",
   "scripts": {
-    "test": "npm run lint && jest",
+    "test": "npm run lint && NODE_ENV=test jest",
     "lint": "standard --fix"
   },
   "dependencies": {
@@ -21,8 +21,5 @@
     "env": [
       "jest"
     ]
-  },
-  "jest": {
-    "globalSetup": "./config/test-setup.js"
   }
 }

@@ -37,4 +37,3 @@ if (app.isCloudFn) { // Google Cloud Functions
   fb.credentials = firebaseAdmin.credential.applicationDefault()
   fb.config = {credential: fb.credentials}
 }
-

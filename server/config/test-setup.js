@@ -1,12 +1,20 @@
-/**
- * Global Jest config. Executed only once before test suit starts to run.
- */
 const supertest = require('supertest')
 const db = require('../data/db')
 const firebaseConfig = require('./firebase')
 const auth = firebaseConfig.auth
 
-module.exports = async () => {
+let initialized = false
+
+/**
+ * Integration test initializer.
+ */
+exports.init = async () => {
+  if (initialized) {
+    return
+  } else {
+    initialized = true
+  }
+
   // initialize firebase auth with users
   // todo: any of these two lines hangs the tests
   // await auth.deleteUser('1')
@@ -31,5 +39,5 @@ module.exports = async () => {
 
   // prepare supertest
   supertest.agent().set('Authorization', `Bearer ${idToken}`)
-  this.request = supertest()
+  exports.request = supertest()
 }
