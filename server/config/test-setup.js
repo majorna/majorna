@@ -1,5 +1,6 @@
 const supertest = require('supertest')
 const db = require('../data/db')
+const server = require('./server')
 const firebaseConfig = require('./firebase')
 const auth = firebaseConfig.auth
 
@@ -11,9 +12,10 @@ let initialized = false
 exports.init = async () => {
   if (initialized) {
     return
-  } else {
-    initialized = true
   }
+
+  initialized = true
+  console.log('test-setup: initialized')
 
   // initialize firebase auth with users
   // todo: any of these two lines hangs the tests
@@ -40,4 +42,7 @@ exports.init = async () => {
   // prepare supertest
   supertest.agent().set('Authorization', `Bearer ${idToken}`)
   exports.request = supertest()
+
+  // start server
+  await server()
 }
