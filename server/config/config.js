@@ -2,6 +2,7 @@ const firebaseAdmin = require('firebase-admin')
 
 const env = process.env.NODE_ENV || (process.env.CI && 'test') || 'development'
 
+// app config
 const app = exports.app = {
   env,
 
@@ -13,6 +14,7 @@ const app = exports.app = {
   port: process.env.PORT || 3000
 }
 
+// firebase config
 const fb = exports.firebase = {
   serviceKeyJsonPath: process.env.FIREBASE_TEST_JSON_PATH,
   credentials: null,
@@ -35,3 +37,4 @@ if (app.isCloudFn) { // Google Cloud Functions
   fb.credentials = firebaseAdmin.credential.applicationDefault()
   fb.config = {credential: fb.credentials}
 }
+
