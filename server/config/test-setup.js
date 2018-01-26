@@ -20,7 +20,7 @@ exports.init = async () => {
   // await auth.deleteUser('1')
   // await auth.createUser({
   //   uid: '1',
-  //   email: 'chuck@mj.mj',
+  //   email: 'chuck.norris@majorna.mj',
   //   emailVerified: true,
   //   phoneNumber: '+11234567890',
   //   password: 'password',
