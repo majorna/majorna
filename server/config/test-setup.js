@@ -40,8 +40,7 @@ exports.init = async () => {
   await db.seed()
 
   // prepare supertest
-  supertest.agent().set('Authorization', `Bearer ${idToken}`)
-  exports.request = supertest()
+  exports.request = supertest.agent().set('Authorization', `Bearer ${idToken}`)
 
   // start server
   await server()

@@ -2,7 +2,7 @@
   "name": "server",
   "main": "index.js",
   "scripts": {
-    "test": "npm run lint && NODE_ENV=test jest",
+    "test": "npm run lint && NODE_ENV=test jest --runInBand",
     "lint": "standard --fix"
   },
   "dependencies": {
