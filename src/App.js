@@ -5,6 +5,7 @@ import 'firebase/auth';
 import 'firebase/firestore';
 import 'bulma/css/bulma.css';
 import './App.css';
+import apiClient from './data/api-client'
 import Navbar from './components/Navbar'
 import GetStarted from './components/GetStarted'
 import Login from './components/Login'
@@ -51,8 +52,14 @@ export default withRouter(class App extends Component {
         this.props.history.push('/dashboard');
         this.setState({user: u});
         this.fbUnsubUsers = this.db.collection('users').doc(u.uid)
-          .onSnapshot(doc => doc && doc.exists && !doc.metadata.hasPendingWrites && this.setState({account: doc.data()}));
-        this.fbUnsubMeta = this.db.collection('mj').doc('meta').onSnapshot(doc => doc && doc.exists && this.setState({mj: {meta: doc.data()}}));
+          .onSnapshot(doc => {
+            if (doc.exists) {
+              !doc.metadata.hasPendingWrites && this.setState({account: doc.data()});
+            } else {
+              apiClient.users.init();
+            }
+          });
+        this.fbUnsubMeta = this.db.collection('mj').doc('meta').onSnapshot(doc => this.setState({mj: {meta: doc.data()}}));
         this.setState({idToken: await u.getIdToken()})
       } else {
         this.setState(this.nullState); // logged out

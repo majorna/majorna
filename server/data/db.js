@@ -1,23 +1,88 @@
 const firebaseConfig = require('../config/firebase')
 const firestore = firebaseConfig.firestore
 
-const metaRef = firestore.collection('mj').doc('meta')
+// collection and doc refs
 const txsRef = firestore.collection('txs')
 const usersRef = firestore.collection('users')
+const metaRef = firestore.collection('mj').doc('meta')
 
+/**
+ * Initializes database collections if database is empty, asynchronously.
+ */
+exports.init = async () => {
+  const metaDoc = await metaRef.get()
+  if (metaDoc.exists) {
+    return
+  }
+
+  const batch = firestore.batch()
+  batch.create(metaRef, {val: 0.01, cap: 0})
+  await batch.commit()
+}
+
+/**
+ * Get majorna metadata document asynchronously.
+ */
 exports.getMeta = async () => (await metaRef.get()).data()
 
+/**
+ * Update market capitalization field in majorna metadata document asynchronously.
+ */
 exports.updateMarketCap = amount => firestore.runTransaction(async t => {
   const metaDoc = await t.get(metaRef)
   await t.update(metaRef, {cap: metaDoc.data().cap + amount})
 })
 
+/**
+ * Create user doc and push first bonus transaction, asynchronously.
+ * Can be used as a firestore cloud function trigger.
+ */
+exports.createUserDoc = async user => {
+  const uid = user.uid
+  const email = user.email
+  const name = user.name || user.displayName // firebase auth token || firestore event
+
+  const time = new Date()
+  const initBalance = 500
+
+  // create the first transaction for the user
+  const txRef = await txsRef.add({from: 'majorna', to: uid, sent: time, amount: initBalance})
+
+  // create user doc
+  await usersRef.doc(uid).create({
+    email: email,
+    name: name,
+    created: time,
+    balance: initBalance,
+    txs: [
+      {
+        id: txRef.id,
+        from: 'majorna',
+        sent: time,
+        amount: initBalance
+      }
+    ]
+  })
+
+  // increase market cap
+  await exports.updateMarketCap(initBalance)
+  console.log(`created user: ${uid} - ${email} - ${name}`)
+}
+
+/**
+ * Get a transaction from transactions collection by ID, asynchronously.
+ */
 exports.getTx = async id => {
   const tx = await txsRef.doc(id).get()
   return tx.exists ? tx.data() : null
 }
 
-exports.addTx = (from, to, sent, amount) => firestore.runTransaction(async t => {
+/**
+ * Performs a financial transaction from person A to B asynchronously.
+ * Both user documents and transactions collection is updated with the transaction data and results.
+ * Returned promise resolves to an error if transaction fails.
+ */
+exports.makeTx = (from, to, sent, amount) => firestore.runTransaction(async t => {
   // verify sender's funds
   const senderDoc = await t.get(usersRef.doc(from))
   const sender = senderDoc.data()
@@ -44,37 +109,23 @@ exports.addTx = (from, to, sent, amount) => firestore.runTransaction(async t => 
 })
 
 /**
- * Create user doc and push first bonus transaction.
- * Can be used as a firestore cloud function trigger.
+ * Deletes all the data and seeds the database with dummy data for testing, asynchronously.
  */
-exports.createUserDoc = async user => {
-  const uid = user.uid
-  const email = user.email
-  const name = user.name || user.displayName // firebase auth token || firestore event
-
+exports.seed = async () => {
   const time = new Date()
-  const initBalance = 500
 
-  // create the first transaction for the user
-  const txRef = await txsRef.add({from: 'majorna', to: uid, sent: time, amount: initBalance})
+  // delete all data
+  const batch = firestore.batch()
+  const txsSnap = await txsRef.get()
+  txsSnap.forEach(txSnap => batch.delete(txSnap.ref))
+  const usersSnap = await usersRef.get()
+  usersSnap.forEach(userSnap => batch.delete(userSnap.ref))
+  batch.delete(metaRef)
 
-  // create user doc
-  await usersRef.doc(uid).set({
-    email: email,
-    name: name,
-    created: time,
-    balance: initBalance,
-    txs: [
-      {
-        id: txRef.id,
-        from: 'majorna',
-        sent: time,
-        amount: initBalance
-      }
-    ]
-  })
+  // add seed data
+  batch.create(metaRef, {val: 0.01, cap: 500})
+  batch.create(usersRef.doc('1'), {email: 'chuck.norris@majorna.mj', name: 'Chuck Norris', created: time, balance: 0, txs: []})
+  batch.create(usersRef.doc('2'), {email: 'morgan.almighty@majorna.mj', name: 'Morgan Almighty', created: time, balance: 0, txs: []})
 
-  // increase market cap
-  await exports.updateMarketCap(initBalance)
-  console.log(`created user: ${uid} - ${email} - ${name}`)
+  await batch.commit()
 }

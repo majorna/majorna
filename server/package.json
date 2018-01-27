@@ -2,17 +2,19 @@
   "name": "server",
   "main": "index.js",
   "scripts": {
-    "test": "npm run lint && jest",
+    "start": "node index.js",
+    "test": "npm run lint && NODE_ENV=test jest --runInBand",
     "lint": "standard --fix"
   },
   "dependencies": {
-    "firebase-admin": "^5.8.0",
+    "firebase-admin": "^5.8.1",
     "koa": "^2.4.1",
     "koa-bodyparser": "^4.2.0",
-    "koa-logger": "^3.1.0"
+    "koa-logger": "^3.1.0",
+    "koa-route": "^3.2.0"
   },
   "devDependencies": {
-    "jest": "^22.1.1",
+    "jest": "^22.1.4",
     "standard": "^10.0.3",
     "supertest": "^3.0.0"
   },

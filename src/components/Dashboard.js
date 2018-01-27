@@ -12,7 +12,9 @@ export default class extends Component {
 
   async componentWillReceiveProps(nextProps) {
     nextProps.user && this.setState({
-      accountQr: await QRCode.toDataURL([{data: `majorna:${nextProps.user.uid}`, mode: 'byte'}], {errorCorrectionLevel: 'H', margin: 1, scale: 8})
+      accountQr: await QRCode.toDataURL(
+        [{data: `majorna:${nextProps.user.uid}`, mode: 'byte'}],
+        {errorCorrectionLevel: 'H', margin: 1, scale: 8})
     })
   }
 
@@ -40,7 +42,9 @@ export default class extends Component {
       <React.Fragment>
         <div className="mj-box flex-column p-s">
           <div className="is-size-5 has-text-centered"><span className="faded">Majorna Price:</span> ${this.props.mj.meta.val}*</div>
-          <div className="is-size-5 has-text-centered"><span className="faded">Market Cap:</span> mj{this.fm(this.props.mj.meta.cap)} (${this.fm(this.props.mj.meta.cap * this.props.mj.meta.val)})</div>
+          <div className="is-size-5 has-text-centered">
+            <span className="faded">Market Cap:</span> ${this.fm(this.props.mj.meta.cap * this.props.mj.meta.val)} <small>mj{this.fm(this.props.mj.meta.cap)}</small>
+          </div>
           <ResponsiveContainer width="100%" height={300}>
             <AreaChart data={this.getChartData()}>
               <XAxis dataKey="t"/>

@@ -1,4 +1,11 @@
+const testSetup = require('../config/test-setup')
 const db = require('./db')
+
+beforeAll(testSetup)
+
+test('init', async () => {
+  await db.init()
+})
 
 test('getMeta', async () => {
   const meta = await db.getMeta()
@@ -19,8 +26,8 @@ test('addTx, getTx', async () => {
 
 test('createUserDoc', async () => {
   await db.createUserDoc({
-    uid: '123',
-    email: 'chuck.norris@majorna',
-    name: 'Chuck Norris'
+    uid: '3',
+    email: 'john.doe@majorna.mj',
+    name: 'John Doe'
   })
 })
