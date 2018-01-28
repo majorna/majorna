@@ -5,7 +5,9 @@ const config = require('./config')
 const firebaseConfig = require('./firebase')
 const auth = firebaseConfig.auth
 
-let request = null
+let request, koaApp
+
+exports.request = () => request
 
 before(async () => {
   // initialize firebase auth with users
@@ -31,10 +33,12 @@ before(async () => {
   await db.seed()
 
   // start server
-  await server()
+  koaApp = await server()
 
   // prepare supertest
   request = supertest.agent(`http://localhost:${config.app.port}`).set('Authorization', `Bearer ${idToken}`)
 })
 
-exports.request = () => request
+after(() => {
+  koaApp.close()
+})

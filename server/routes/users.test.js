@@ -1,4 +1,5 @@
+const request = require('../config/test').request
 
 it('init', async () => {
-  // await request.get().expect(200)
+  await request().get('/users').expect(404)
 })

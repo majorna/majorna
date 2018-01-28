@@ -33,7 +33,6 @@ function koaConfig () {
 
 module.exports = async () => {
   await db.init()
-  const koaApp = koaConfig()
-  koaApp.listen(config.app.port)
   console.log('server listening on port ' + config.app.port)
+  return koaConfig().listen(config.app.port)
 }
