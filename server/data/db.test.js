@@ -1,7 +1,4 @@
-const testSetup = require('../config/test-setup')
 const db = require('./db')
-
-beforeAll(testSetup)
 
 test('init', async () => {
   await db.init()
