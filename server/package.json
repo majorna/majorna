@@ -3,8 +3,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "npm run lint && NODE_ENV=test mocha",
-    "lint": "standard --fix"
+    "test": "standard --fix && NODE_ENV=test mocha **/*test.js --recursive --timeout 30s"
   },
   "dependencies": {
     "firebase-admin": "^5.8.1",

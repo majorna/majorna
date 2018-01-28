@@ -7,16 +7,7 @@ const auth = firebaseConfig.auth
 
 let request = null
 
-/**
- * Integration test initializer.
- */
-module.exports = async () => {
-  if (request) {
-    return request
-  }
-
-  console.log('test-setup: initialized')
-
+before(async () => {
   // initialize firebase auth with users
   // todo: any of these two lines hangs the tests
   // await auth.deleteUser('1')
@@ -43,5 +34,7 @@ module.exports = async () => {
   await server()
 
   // prepare supertest
-  return (request = supertest.agent(`http://localhost:${config.app.port}`).set('Authorization', `Bearer ${idToken}`))
-}
+  request = supertest.agent(`http://localhost:${config.app.port}`).set('Authorization', `Bearer ${idToken}`)
+})
+
+exports.request = () => request
