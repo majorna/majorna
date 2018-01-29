@@ -31,14 +31,7 @@ suiteSetup(async () => {
   })
 
   // initialize firebase client sdk and sign in as a user, to get an id token
-  firebaseClientSdk.initializeApp({
-    apiKey: 'AIzaSyBFZEhjyZdbZEMpboYZzRRHfIUhvo4VaHQ',
-    authDomain: 'majorna-test.firebaseapp.com',
-    databaseURL: 'https://majorna-test.firebaseio.com',
-    projectId: 'majorna-test',
-    storageBucket: 'majorna-test.appspot.com',
-    messagingSenderId: '346214163117'
-  })
+  firebaseClientSdk.initializeApp(require(config.firebase.testClientSdkKeyJsonPath))
   const user1 = await firebaseClientSdk.auth().signInWithEmailAndPassword('chuck.norris@majorna.mj', 'password')
   idToken = await user1.getIdToken()
 
