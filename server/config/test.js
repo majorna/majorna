@@ -36,7 +36,7 @@ suiteSetup(async () => {
   idToken = await user1.getIdToken()
 
   // initialize db for integration testing
-  await db.seed()
+  await db.testSeed()
 
   // start server
   koaApp = await server()

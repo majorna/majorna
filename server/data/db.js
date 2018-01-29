@@ -111,9 +111,7 @@ exports.makeTx = (from, to, sent, amount) => firestore.runTransaction(async t =>
 /**
  * Deletes all the data and seeds the database with dummy data for testing, asynchronously.
  */
-exports.seed = async () => {
-  const time = new Date()
-
+exports.testSeed = async () => {
   // delete all data
   const batch = firestore.batch()
   const txsSnap = await txsRef.get()
@@ -123,9 +121,32 @@ exports.seed = async () => {
   batch.delete(metaRef)
 
   // add seed data
-  batch.create(metaRef, {val: 0.01, cap: 500})
-  batch.create(usersRef.doc('1'), {email: 'chuck.norris@majorna.mj', name: 'Chuck Norris', created: time, balance: 0, txs: []})
-  batch.create(usersRef.doc('2'), {email: 'morgan.almighty@majorna.mj', name: 'Morgan Almighty', created: time, balance: 0, txs: []})
+  batch.create(metaRef, testData.mj.meta)
+  batch.create(usersRef.doc('1'), testData.users.id1)
+  batch.create(usersRef.doc('2'), testData.users.id2)
 
   await batch.commit()
+}
+
+const time = new Date()
+const testData = exports.testData = {
+  mj: {
+    meta: {val: 0.01, cap: 500}
+  },
+  users: {
+    id1: {
+      email: 'chuck.norris@majorna.mj',
+      name: 'Chuck Norris',
+      created: time,
+      balance: 0,
+      txs: []
+    },
+    id2: {
+      email: 'morgan.almighty@majorna.mj',
+      name: 'Morgan Almighty',
+      created: time,
+      balance: 0,
+      txs: []
+    }
+  }
 }
