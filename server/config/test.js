@@ -9,7 +9,11 @@ let request, koaApp
 
 exports.request = () => request
 
-before(async () => {
+/**
+ * Global test setup and teardown.
+ * These two run only run once before the test suite starts and after everything is finished.
+ */
+suiteSetup(async () => {
   // initialize firebase auth with users
   // todo: any of these two lines hangs the tests
   // await auth.deleteUser('1')
@@ -39,6 +43,4 @@ before(async () => {
   request = supertest.agent(`http://localhost:${config.app.port}`).set('Authorization', `Bearer ${idToken}`)
 })
 
-after(() => {
-  koaApp.close()
-})
+suiteTeardown(() => koaApp.close())
