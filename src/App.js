@@ -36,12 +36,12 @@ export default withRouter(class App extends Component {
       callbacks: {signInSuccess: () => false /* don't redirect anywhere */}
     };
     this.firebaseApp = firebase.initializeApp({
-      apiKey: "AIzaSyCxdSFEhrqdH2VJ8N4XmRZ9st5Q5hBmgfY",
-      authDomain: "majorna-fire.firebaseapp.com",
-      databaseURL: "https://majorna-fire.firebaseio.com",
-      projectId: "majorna-fire",
-      storageBucket: "majorna-fire.appspot.com",
-      messagingSenderId: "526928901295"
+      apiKey: 'AIzaSyCxdSFEhrqdH2VJ8N4XmRZ9st5Q5hBmgfY',
+      authDomain: 'majorna-fire.firebaseapp.com',
+      databaseURL: 'https://majorna-fire.firebaseio.com',
+      projectId: 'majorna-fire',
+      storageBucket: 'majorna-fire.appspot.com',
+      messagingSenderId: '526928901295'
     });
 
     // initialize firebase sockets

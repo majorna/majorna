@@ -1,7 +1,7 @@
 const assert = require('assert')
-const request = require('../config/test').request
+const getRequest = require('../config/test').getReqeust
 
 test('init', async () => {
-  assert(request)
-  // await request().get('/users/init').expect(500)
+  assert(getRequest)
+  // await getRequest().get('/users/init').expect(500)
 })
