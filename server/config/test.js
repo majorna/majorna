@@ -18,7 +18,6 @@ exports.getIdToken = () => idToken
  */
 suiteSetup(async () => {
   // initialize firebase auth with users
-  // todo: any of these two lines hangs the tests
   await firebaseConfig.auth.deleteUser('1')
   await firebaseConfig.auth.createUser({
     uid: '1',
@@ -53,7 +52,11 @@ suiteSetup(async () => {
   request = supertest.agent(`http://localhost:${config.app.port}`).set('Authorization', `Bearer ${idToken}`)
 })
 
-suiteTeardown(() => koaApp.close())
+suiteTeardown(async () => {
+  await firebaseClientSdk.app().delete()
+  await firebaseConfig.app.delete()
+  koaApp.close()
+})
 
 test('suiteSetup initializes everything', () => {
   assert(request)
