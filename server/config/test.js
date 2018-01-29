@@ -1,13 +1,16 @@
+const assert = require('assert')
 const supertest = require('supertest')
 const db = require('../data/db')
 const server = require('./server')
 const config = require('./config')
-const firebaseConfig = require('./firebase')
-const auth = firebaseConfig.auth
+const firebaseClient = require('firebase') // firebase client sdk (to get client id token), not the admin sdk
+const authClient = firebaseClient.auth()
 
-let request, koaApp
+let koaApp, request, idToken
 
+// module exports
 exports.request = () => request
+exports.idToken = () => idToken
 
 /**
  * Global test setup and teardown.
@@ -28,10 +31,9 @@ suiteSetup(async () => {
   //   disabled: false
   // })
 
-  const idToken = await auth.createCustomToken('1')
-
-  // const user2 = await require('firebase').auth().signInWithEmailAndPassword('chuck@mj.mj', 'password')
-  // console.log(await user2.getIdToken())
+  // initialize firebase client sdk and sign in as a user, to get an id token
+  const user1 = await authClient.signInWithEmailAndPassword('chuck.norris@majorna.mj', 'password')
+  idToken = await user1.getIdToken()
 
   // initialize db for integration testing
   await db.seed()
@@ -44,3 +46,8 @@ suiteSetup(async () => {
 })
 
 suiteTeardown(() => koaApp.close())
+
+test('suiteSetup initializes everything', () => {
+  assert(request)
+  assert(idToken)
+})
