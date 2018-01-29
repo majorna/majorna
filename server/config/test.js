@@ -36,7 +36,7 @@ suiteSetup(async () => {
     authDomain: 'majorna-test.firebaseapp.com',
     databaseURL: 'https://majorna-test.firebaseio.com',
     projectId: 'majorna-test',
-    storageBucket: '',
+    storageBucket: 'majorna-test.appspot.com',
     messagingSenderId: '346214163117'
   })
   const user1 = await firebaseClientSdk.auth().signInWithEmailAndPassword('chuck.norris@majorna.mj', 'password')
