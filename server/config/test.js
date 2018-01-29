@@ -3,8 +3,8 @@ const supertest = require('supertest')
 const db = require('../data/db')
 const server = require('./server')
 const config = require('./config')
-const firebaseClient = require('firebase') // firebase client sdk (to get client id token), not the admin sdk
-const authClient = firebaseClient.auth()
+const firebaseConfig = require('./firebase') // firebase admin sdk config
+const firebaseClientSdk = require('firebase') // firebase client sdk, to impersonate user logins
 
 let koaApp, request, idToken
 
@@ -19,20 +19,28 @@ exports.idToken = () => idToken
 suiteSetup(async () => {
   // initialize firebase auth with users
   // todo: any of these two lines hangs the tests
-  // await auth.deleteUser('1')
-  // await auth.createUser({
-  //   uid: '1',
-  //   email: 'chuck.norris@majorna.mj',
-  //   emailVerified: true,
-  //   phoneNumber: '+11234567890',
-  //   password: 'password',
-  //   displayName: 'Chuck Norris',
-  //   photoURL: 'http://www.example.com/12345678/photo.png',
-  //   disabled: false
-  // })
+  await firebaseConfig.auth.deleteUser('1')
+  await firebaseConfig.auth.createUser({
+    uid: '1',
+    email: 'chuck.norris@majorna.mj',
+    emailVerified: true,
+    phoneNumber: '+11234567890',
+    password: 'password',
+    displayName: 'Chuck Norris',
+    photoURL: 'http://www.example.com/12345678/photo.png',
+    disabled: false
+  })
 
   // initialize firebase client sdk and sign in as a user, to get an id token
-  const user1 = await authClient.signInWithEmailAndPassword('chuck.norris@majorna.mj', 'password')
+  firebaseClientSdk.initializeApp({
+    apiKey: 'AIzaSyBFZEhjyZdbZEMpboYZzRRHfIUhvo4VaHQ',
+    authDomain: 'majorna-test.firebaseapp.com',
+    databaseURL: 'https://majorna-test.firebaseio.com',
+    projectId: 'majorna-test',
+    storageBucket: '',
+    messagingSenderId: '346214163117'
+  })
+  const user1 = await firebaseClientSdk.auth().signInWithEmailAndPassword('chuck.norris@majorna.mj', 'password')
   idToken = await user1.getIdToken()
 
   // initialize db for integration testing
