@@ -37,8 +37,8 @@ exports.updateMarketCap = amount => firestore.runTransaction(async t => {
  * Create user doc and push first bonus transaction, asynchronously.
  * Can be used as a firestore cloud function trigger.
  */
-exports.createUserDoc = async user => {
-  const uid = user.uid
+exports.createUserDoc = async (user, uid) => {
+  uid = uid || user.uid
   const email = user.email
   const name = user.name || user.displayName // firebase auth token || firestore event
 
@@ -133,6 +133,7 @@ const testData = exports.testData = {
   mj: {
     meta: {val: 0.01, cap: 500}
   },
+  // idx = firestore doc, authx = firebase auth user
   users: {
     id1: {
       email: 'chuck.norris@majorna.mj',
@@ -141,9 +142,25 @@ const testData = exports.testData = {
       balance: 0,
       txs: []
     },
+    auth1: {
+      uid: '1',
+      email: 'chuck.norris@majorna.mj',
+      emailVerified: true,
+      password: 'password',
+      displayName: 'Chuck Norris',
+      photoURL: 'http://www.example.com/12345678/photo.png',
+      disabled: false
+    },
     id2: {
       email: 'morgan.almighty@majorna.mj',
       name: 'Morgan Almighty',
+      created: time,
+      balance: 0,
+      txs: []
+    },
+    id3: {
+      email: 'john.doe@majorna.mj',
+      name: 'John Doe',
       created: time,
       balance: 0,
       txs: []

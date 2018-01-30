@@ -18,20 +18,13 @@ exports.getIdToken = () => idToken
  */
 suiteSetup(async () => {
   // initialize firebase auth with users
+  const u1 = db.testData.users.auth1
   await firebaseConfig.auth.deleteUser('1')
-  await firebaseConfig.auth.createUser({
-    uid: '1',
-    email: 'chuck.norris@majorna.mj',
-    emailVerified: true,
-    password: 'password',
-    displayName: 'Chuck Norris',
-    photoURL: 'http://www.example.com/12345678/photo.png',
-    disabled: false
-  })
+  await firebaseConfig.auth.createUser(u1)
 
   // initialize firebase client sdk and sign in as a user, to get an id token
   firebaseClientSdk.initializeApp(require(config.firebase.testClientSdkKeyJsonPath))
-  const user1 = await firebaseClientSdk.auth().signInWithEmailAndPassword('chuck.norris@majorna.mj', 'password')
+  const user1 = await firebaseClientSdk.auth().signInWithEmailAndPassword(u1.email, u1.password)
   idToken = await user1.getIdToken()
 
   // initialize db for integration testing

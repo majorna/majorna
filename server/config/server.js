@@ -21,9 +21,7 @@ function koaConfig () {
 
   // mount all the routes
   fs.readdirSync('routes').forEach(file => {
-    if (file.endsWith('.test.js')) {
-      return
-    }
+    if (file.endsWith('.test.js')) return
     const route = require('../routes/' + file)
     Object.keys(route).forEach(key => koaApp.use(route[key]))
   })
