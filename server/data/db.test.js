@@ -18,8 +18,9 @@ test('updateMarketCap', async () => {
   assert(meta2.cap === meta.cap + 500)
 })
 
-test('addTx, getTx', async () => {
+test('makeTx, getTx', async () => {
   // valid and invalid txs
+  // verify all changes to sender and receiver are complete
 })
 
 test('createUserDoc', async () => {
