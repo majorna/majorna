@@ -41,5 +41,6 @@ suiteTeardown(async () => {
 
 test('suiteSetup initializes everything', () => {
   assert(db.testData.users.u1Request)
+  // todo: assert that u1 request has proper auth header set with id token
   assert(db.testData.users.u1Token)
 })
