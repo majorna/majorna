@@ -30,13 +30,14 @@ exports.getMeta = async () => (await metaRef.get()).data()
  * Can be used as a firestore cloud function trigger.
  */
 exports.createUserDoc = (user, uid) => firestore.runTransaction(async t => {
-  console.log(`creating user: ${uid} - ${email} - ${name}`)
   uid = uid || user.uid
   const email = user.email
   const name = user.name || user.displayName // decoded firebase auth token || cloud functions firestore event data
 
   const time = new Date()
   const initBalance = 500
+
+  console.log(`creating user: ${uid} - ${email} - ${name}`)
 
   // increase market cap
   const metaDoc = await t.get(metaRef)
