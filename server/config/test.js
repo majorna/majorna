@@ -23,7 +23,6 @@ suiteSetup(async () => {
     uid: '1',
     email: 'chuck.norris@majorna.mj',
     emailVerified: true,
-    phoneNumber: '+11234567890',
     password: 'password',
     displayName: 'Chuck Norris',
     photoURL: 'http://www.example.com/12345678/photo.png',
