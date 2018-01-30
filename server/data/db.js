@@ -26,14 +26,6 @@ exports.init = async () => {
 exports.getMeta = async () => (await metaRef.get()).data()
 
 /**
- * Update market capitalization field in majorna metadata document asynchronously.
- */
-exports.updateMarketCap = amount => firestore.runTransaction(async t => {
-  const metaDoc = await t.get(metaRef)
-  t.update(metaRef, {cap: metaDoc.data().cap + amount})
-})
-
-/**
  * Create user doc and push first bonus transaction, asynchronously.
  * Can be used as a firestore cloud function trigger.
  */

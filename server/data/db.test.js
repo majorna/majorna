@@ -11,21 +11,19 @@ test('getMeta', async () => {
   assert(meta.val >= 0)
 })
 
-test('updateMarketCap', async () => {
-  const meta = await db.getMeta()
-  await db.updateMarketCap(500)
-  const meta2 = await db.getMeta()
-  assert(meta2.cap === meta.cap + 500)
-})
-
 test('makeTx, getTx', async () => {
   // valid and invalid txs
   // verify all changes to sender and receiver are complete
 })
 
 test('createUserDoc', async () => {
-  await db.createUserDoc(db.testData.users.u3Doc, '3')
   // todo: get user doc and verify fields
   // todo: verify market cap
   // todo: verify txs collection
+  const meta = await db.getMeta()
+
+  await db.createUserDoc(db.testData.users.u3Doc, '3')
+
+  const metaAfter = await db.getMeta()
+  assert(metaAfter.cap === meta.cap + 500)
 })
