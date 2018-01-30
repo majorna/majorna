@@ -23,14 +23,14 @@ suiteSetup(async () => {
   const user1 = await firebaseClientSdk.auth().signInWithEmailAndPassword(u1.email, u1.password)
   db.testData.users.u1Token = await user1.getIdToken()
 
+  // prepare supertest with signed-in user's ID token in authorization header
+  db.testData.users.u1Request = supertest.agent(`http://localhost:${config.app.port}`).set('Authorization', `Bearer ${db.testData.users.u1Token}`)
+
   // initialize db for integration testing
   await db.testSeed()
 
   // start server
   koaApp = await server()
-
-  // prepare supertest
-  db.testData.users.u1Request = supertest.agent(`http://localhost:${config.app.port}`).set('Authorization', `Bearer ${db.testData.users.u1Token}`)
 })
 
 suiteTeardown(async () => {
