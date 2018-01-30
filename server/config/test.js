@@ -9,7 +9,7 @@ const firebaseClientSdk = require('firebase') // firebase client sdk, to imperso
 let koaApp, request, idToken
 
 // module exports
-exports.getReqeust = () => request
+exports.getRequest = () => request
 exports.getIdToken = () => idToken
 
 /**
