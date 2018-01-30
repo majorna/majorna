@@ -1,7 +1,7 @@
 const assert = require('assert')
-const getRequest = require('../config/test').getRequest
+const db = require('../data/db')
 
 test('init', async () => {
-  assert(getRequest)
+  assert(db.testData.users.id1Token)
   // await getRequest().get('/users/init').expect(500)
 })

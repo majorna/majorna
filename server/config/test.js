@@ -6,11 +6,7 @@ const config = require('./config')
 const firebaseConfig = require('./firebase') // firebase admin sdk config
 const firebaseClientSdk = require('firebase') // firebase client sdk, to impersonate user logins
 
-let koaApp, request, idToken
-
-// module exports
-exports.getRequest = () => request
-exports.getUser1IdToken = () => idToken
+let koaApp
 
 /**
  * Global test setup and teardown.
@@ -25,7 +21,7 @@ suiteSetup(async () => {
   // initialize firebase client sdk and sign in as a user, to get an id token
   firebaseClientSdk.initializeApp(require(config.firebase.testClientSdkKeyJsonPath))
   const user1 = await firebaseClientSdk.auth().signInWithEmailAndPassword(u1.email, u1.password)
-  idToken = await user1.getIdToken()
+  db.testData.users.id1Token = await user1.getIdToken()
 
   // initialize db for integration testing
   await db.testSeed()
@@ -34,7 +30,7 @@ suiteSetup(async () => {
   koaApp = await server()
 
   // prepare supertest
-  request = supertest.agent(`http://localhost:${config.app.port}`).set('Authorization', `Bearer ${idToken}`)
+  db.testData.users.id1Request = supertest.agent(`http://localhost:${config.app.port}`).set('Authorization', `Bearer ${db.testData.users.id1Token}`)
 })
 
 suiteTeardown(async () => {
@@ -44,6 +40,6 @@ suiteTeardown(async () => {
 })
 
 test('suiteSetup initializes everything', () => {
-  assert(request)
-  assert(idToken)
+  assert(db.testData.users.id1Request)
+  assert(db.testData.users.id1Token)
 })
