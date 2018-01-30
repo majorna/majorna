@@ -60,7 +60,7 @@ export default withRouter(class App extends Component {
             }
           });
         this.fbUnsubMeta = this.db.collection('mj').doc('meta').onSnapshot(doc => this.setState({mj: {meta: doc.data()}}));
-        this.setState({idToken: await u.getIdToken()})
+        this.setState({idToken: await u.getUser1IdToken()})
       } else {
         this.setState(this.nullState); // logged out
         this.props.location.pathname !== '/login' && this.props.history.push('/');

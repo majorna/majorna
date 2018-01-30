@@ -10,7 +10,7 @@ let koaApp, request, idToken
 
 // module exports
 exports.getRequest = () => request
-exports.getIdToken = () => idToken
+exports.getUser1IdToken = () => idToken
 
 /**
  * Global test setup and teardown.
