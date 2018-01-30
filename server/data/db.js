@@ -122,8 +122,8 @@ exports.testSeed = async () => {
 
   // add seed data
   batch.create(metaRef, testData.mj.meta)
-  batch.create(usersRef.doc('1'), testData.users.id1)
-  batch.create(usersRef.doc('2'), testData.users.id2)
+  batch.create(usersRef.doc('1'), testData.users.u1Doc)
+  batch.create(usersRef.doc('2'), testData.users.u2Doc)
 
   await batch.commit()
 }
@@ -135,14 +135,14 @@ const testData = exports.testData = {
   },
   // idx = firestore doc, authx = firebase auth user
   users: {
-    id1: {
+    u1Doc: {
       email: 'chuck.norris@majorna.mj',
       name: 'Chuck Norris',
       created: time,
       balance: 0,
       txs: []
     },
-    auth1: {
+    u1Auth: {
       uid: '1',
       email: 'chuck.norris@majorna.mj',
       emailVerified: true,
@@ -151,14 +151,16 @@ const testData = exports.testData = {
       photoURL: 'http://www.example.com/12345678/photo.png',
       disabled: false
     },
-    id2: {
+    u1Token: null,
+    u1Request: null,
+    u2Doc: {
       email: 'morgan.almighty@majorna.mj',
       name: 'Morgan Almighty',
       created: time,
       balance: 0,
       txs: []
     },
-    id3: {
+    u3Doc: {
       email: 'john.doe@majorna.mj',
       name: 'John Doe',
       created: time,
@@ -167,7 +169,7 @@ const testData = exports.testData = {
     }
   },
   // Firebase authentication ID token (JWT) content when decoded
-  decodedIdToken: {
+  decodedIdTokenSample: {
     iss: 'https://securetoken.google.com/majorna-fire',
     name: 'Chuck Norris',
     picture: 'https://lh3.googleusercontent.com/abc/def/photo.jpg',

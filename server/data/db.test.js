@@ -23,6 +23,6 @@ test('addTx, getTx', async () => {
 })
 
 test('createUserDoc', async () => {
-  await db.createUserDoc(db.testData.users.id3, '3')
+  await db.createUserDoc(db.testData.users.u3Doc, '3')
   // todo: get user doc and verify fields
 })

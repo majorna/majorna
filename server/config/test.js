@@ -14,14 +14,14 @@ let koaApp
  */
 suiteSetup(async () => {
   // initialize firebase auth with users
-  const u1 = db.testData.users.auth1
+  const u1 = db.testData.users.u1Auth
   await firebaseConfig.auth.deleteUser('1')
   await firebaseConfig.auth.createUser(u1)
 
   // initialize firebase client sdk and sign in as a user, to get an id token
   firebaseClientSdk.initializeApp(require(config.firebase.testClientSdkKeyJsonPath))
   const user1 = await firebaseClientSdk.auth().signInWithEmailAndPassword(u1.email, u1.password)
-  db.testData.users.id1Token = await user1.getIdToken()
+  db.testData.users.u1Token = await user1.getIdToken()
 
   // initialize db for integration testing
   await db.testSeed()
@@ -30,7 +30,7 @@ suiteSetup(async () => {
   koaApp = await server()
 
   // prepare supertest
-  db.testData.users.id1Request = supertest.agent(`http://localhost:${config.app.port}`).set('Authorization', `Bearer ${db.testData.users.id1Token}`)
+  db.testData.users.u1Request = supertest.agent(`http://localhost:${config.app.port}`).set('Authorization', `Bearer ${db.testData.users.u1Token}`)
 })
 
 suiteTeardown(async () => {
@@ -40,6 +40,6 @@ suiteTeardown(async () => {
 })
 
 test('suiteSetup initializes everything', () => {
-  assert(db.testData.users.id1Request)
-  assert(db.testData.users.id1Token)
+  assert(db.testData.users.u1Request)
+  assert(db.testData.users.u1Token)
 })
