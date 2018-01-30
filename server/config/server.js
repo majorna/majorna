@@ -1,3 +1,4 @@
+const assert = require('assert')
 const fs = require('fs')
 const bodyParser = require('koa-bodyparser')
 const Koa = require('koa')
@@ -12,9 +13,9 @@ function koaConfig () {
 
   // middleware below this line is only reached if jwt token is valid
   koaApp.use(async (ctx, next) => {
-    // token is in: headers = {Authorization: 'Bearer ' + token}
-    ctx.state.user = await firebaseConfig.verifyToken()
-    return next() // necessary?
+    assert(ctx.headers.Authorization, 'authorization header cannot be empty')
+    ctx.state.user = await firebaseConfig.verifyIdToken(ctx.headers.Authorization)
+    return next() // todo: necessary?
   })
 
   koaApp.use(bodyParser())
