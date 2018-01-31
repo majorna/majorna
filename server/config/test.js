@@ -14,19 +14,28 @@ let koaApp
  */
 suiteSetup(async () => {
   // initialize firebase auth with users
-  const u1 = data.users.u1Auth
-  await firebaseConfig.auth.deleteUser('1')
+  const u1 = testData.users.u1Auth
+  try { await firebaseConfig.auth.deleteUser('1') } catch (e) {}
   await firebaseConfig.auth.createUser(u1)
+  const u4 = testData.users.u4Auth
+  try { await firebaseConfig.auth.deleteUser('4') } catch (e) {}
+  await firebaseConfig.auth.createUser(u4)
 
   // initialize firebase client sdk and sign in as a user, to get an id token
   firebaseClientSdk.initializeApp(require(config.firebase.testClientSdkKeyJsonPath))
   const user1 = await firebaseClientSdk.auth().signInWithEmailAndPassword(u1.email, u1.password)
-  data.users.u1Token = await user1.getIdToken()
+  testData.users.u1Token = await user1.getIdToken()
+  const user4 = await firebaseClientSdk.auth().signInWithEmailAndPassword(u4.email, u4.password)
+  testData.users.u4Token = await user4.getIdToken()
 
   // prepare http request client with signed-in user's ID token in authorization header
-  data.users.u1Request = axios.create({
+  testData.users.u1Request = axios.create({
     baseURL: `http://localhost:${config.app.port}`,
-    headers: {'Authorization': `Bearer ${data.users.u1Token}`}
+    headers: {'Authorization': `Bearer ${testData.users.u1Token}`}
+  })
+  testData.users.u4Request = axios.create({
+    baseURL: `http://localhost:${config.app.port}`,
+    headers: {'Authorization': `Bearer ${testData.users.u4Token}`}
   })
 
   // initialize db for integration testing
@@ -43,15 +52,15 @@ suiteTeardown(async () => {
 })
 
 test('suiteSetup initializes everything', () => {
-  assert(data.users.u1Request)
-  assert(data.users.u1Request.defaults.headers.Authorization.includes(data.users.u1Token))
-  assert(data.users.u1Token)
+  assert(testData.users.u1Request)
+  assert(testData.users.u1Request.defaults.headers.Authorization.includes(testData.users.u1Token))
+  assert(testData.users.u1Token)
 })
 
 const time = new Date()
-const data = exports.data = {
+const testData = exports.data = {
   mj: {
-    meta: {val: 0.01, cap: 500}
+    meta: {val: 0.01, cap: 1000}
   },
   // idx = firestore doc, authx = firebase auth user
   users: {
@@ -68,8 +77,7 @@ const data = exports.data = {
       emailVerified: true,
       password: 'password',
       displayName: 'Chuck Norris',
-      photoURL: 'http://www.example.com/12345678/photo.png',
-      disabled: false
+      photoURL: 'https://example.com/p86sadfu/photo.png'
     },
     u1Token: null,
     u1Request: null,
@@ -86,7 +94,17 @@ const data = exports.data = {
       created: time,
       balance: 0,
       txs: []
-    }
+    },
+    u4Auth: {
+      uid: '4',
+      email: 'bob.marley@majorna.mj',
+      emailVerified: true,
+      password: 'password',
+      displayName: 'Bob Marley',
+      photoURL: 'https://example.com/58972q34/photo.png'
+    },
+    u4Token: null,
+    u4Request: null
   },
   // Firebase authentication ID token (JWT) content when decoded
   decodedIdTokenSample: {
