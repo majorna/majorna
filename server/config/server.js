@@ -13,6 +13,7 @@ function koaConfig () {
 
   // middleware below this line is only reached if jwt token is valid
   koaApp.use(async (ctx, next) => {
+    // todo: ctx.throw(401, '...')
     assert(ctx.headers.authorization, 'authorization header cannot be empty')
     ctx.state.user = await firebaseConfig.verifyIdToken(ctx.headers.authorization.substring(7)/* strip 'Bearer ' prefix */)
     return next()
