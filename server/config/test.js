@@ -29,6 +29,10 @@ suiteSetup(async () => {
   testData.users.u4Token = await user4.getIdToken()
 
   // prepare http request client with signed-in user's ID token in authorization header
+  testData.users.anonRequest = axios.create({
+    baseURL: `http://localhost:${config.app.port}`,
+    validateStatus: false
+  })
   testData.users.u1Request = axios.create({
     baseURL: `http://localhost:${config.app.port}`,
     headers: {'Authorization': `Bearer ${testData.users.u1Token}`}
@@ -66,6 +70,7 @@ const testData = exports.data = {
   },
   // idx = firestore doc, authx = firebase auth user
   users: {
+    anonRequest: null,
     u1Doc: {
       email: 'chuck.norris@majorna.mj',
       name: 'Chuck Norris',
