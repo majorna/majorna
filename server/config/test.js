@@ -51,10 +51,12 @@ suiteTeardown(async () => {
   koaApp.close()
 })
 
-test('suiteSetup initializes everything', () => {
-  assert(testData.users.u1Request)
-  assert(testData.users.u1Request.defaults.headers.Authorization.includes(testData.users.u1Token))
-  assert(testData.users.u1Token)
+suite('test-config', () => {
+  test('suiteSetup initializes everything', () => {
+    assert(testData.users.u1Request)
+    assert(testData.users.u1Request.defaults.headers.Authorization.includes(testData.users.u1Token))
+    assert(testData.users.u1Token)
+  })
 })
 
 const time = new Date()
