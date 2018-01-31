@@ -11,7 +11,7 @@ const app = {
   isTest: env === 'test',
   isCloudFn: false, // if "require('firebase-functions').config().firebase" is defined
 
-  port: process.env.PORT || 3000
+  port: process.env.PORT || 3001
 }
 
 // firebase config
