@@ -1,5 +1,6 @@
 const assert = require('assert')
 const db = require('./db')
+const testData = require('../config/test').data
 
 test('init', async () => {
   await db.init()
@@ -22,7 +23,7 @@ test('createUserDoc', async () => {
   // todo: verify txs collection
   const meta = await db.getMeta()
 
-  await db.createUserDoc(db.testData.users.u3Doc, '3')
+  await db.createUserDoc(testData.users.u3Doc, '3')
 
   const metaAfter = await db.getMeta()
   assert(metaAfter.cap === meta.cap + 500)
