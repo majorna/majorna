@@ -1,6 +1,9 @@
 {
   "name": "server",
   "main": "index.js",
+  "engines": {
+    "node": ">=9.4"
+  },
   "scripts": {
     "start": "node index.js",
     "test": "standard --fix && NODE_ENV=test mocha **/*test.js --recursive --timeout 30s --ui tdd"
