@@ -1,3 +1,4 @@
+const assert = require('assert')
 const fs = require('fs')
 const bodyParser = require('koa-bodyparser')
 const Koa = require('koa')
@@ -12,18 +13,16 @@ function koaConfig () {
 
   // middleware below this line is only reached if jwt token is valid
   koaApp.use(async (ctx, next) => {
-    // token is in: headers = {Authorization: 'Bearer ' + token}
-    ctx.state.user = await firebaseConfig.verifyToken()
-    return next() // necessary?
+    assert(ctx.headers.authorization, 'authorization header cannot be empty')
+    ctx.state.user = await firebaseConfig.verifyIdToken(ctx.headers.authorization.substring(7)/* strip 'Bearer ' prefix */)
+    return next()
   })
 
   koaApp.use(bodyParser())
 
   // mount all the routes
   fs.readdirSync('routes').forEach(file => {
-    if (file.endsWith('.test.js')) {
-      return
-    }
+    if (file.endsWith('.test.js')) return
     const route = require('../routes/' + file)
     Object.keys(route).forEach(key => koaApp.use(route[key]))
   })
@@ -33,7 +32,6 @@ function koaConfig () {
 
 module.exports = async () => {
   await db.init()
-  const koaApp = koaConfig()
-  koaApp.listen(config.app.port)
   console.log('server listening on port ' + config.app.port)
+  return koaConfig().listen(config.app.port)
 }

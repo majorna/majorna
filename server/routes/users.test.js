@@ -1,8 +1,9 @@
-const testSetup = require('../config/test-setup')
-let request
+const assert = require('assert')
+const testData = require('../config/test').data
 
-beforeAll(async () => { request = await testSetup() })
-
-test('init', async () => {
-  await request.get().expect(200)
+suite('users-route', () => {
+  test('init', async () => {
+    const res = await testData.users.u4Request.get('/users/init')
+    assert(res.status === 204)
+  })
 })

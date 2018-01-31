@@ -36,12 +36,12 @@ export default withRouter(class App extends Component {
       callbacks: {signInSuccess: () => false /* don't redirect anywhere */}
     };
     this.firebaseApp = firebase.initializeApp({
-      apiKey: "AIzaSyCxdSFEhrqdH2VJ8N4XmRZ9st5Q5hBmgfY",
-      authDomain: "majorna-fire.firebaseapp.com",
-      databaseURL: "https://majorna-fire.firebaseio.com",
-      projectId: "majorna-fire",
-      storageBucket: "majorna-fire.appspot.com",
-      messagingSenderId: "526928901295"
+      apiKey: 'AIzaSyCxdSFEhrqdH2VJ8N4XmRZ9st5Q5hBmgfY',
+      authDomain: 'majorna-fire.firebaseapp.com',
+      databaseURL: 'https://majorna-fire.firebaseio.com',
+      projectId: 'majorna-fire',
+      storageBucket: 'majorna-fire.appspot.com',
+      messagingSenderId: '526928901295'
     });
 
     // initialize firebase sockets
@@ -60,7 +60,7 @@ export default withRouter(class App extends Component {
             }
           });
         this.fbUnsubMeta = this.db.collection('mj').doc('meta').onSnapshot(doc => this.setState({mj: {meta: doc.data()}}));
-        this.setState({idToken: await u.getIdToken()})
+        this.setState({idToken: await u.getUser1IdToken()})
       } else {
         this.setState(this.nullState); // logged out
         this.props.location.pathname !== '/login' && this.props.history.push('/');
