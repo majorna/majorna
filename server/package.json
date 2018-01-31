@@ -6,6 +6,7 @@
     "test": "standard --fix && NODE_ENV=test mocha **/*test.js --recursive --timeout 30s --ui tdd"
   },
   "dependencies": {
+    "axios": "^0.17.1",
     "firebase-admin": "^5.8.1",
     "koa": "^2.4.1",
     "koa-bodyparser": "^4.2.0",
@@ -14,8 +15,7 @@
   },
   "devDependencies": {
     "mocha": "^5.0.0",
-    "standard": "^10.0.3",
-    "supertest": "^3.0.0"
+    "standard": "^10.0.3"
   },
   "standard": {
     "env": [

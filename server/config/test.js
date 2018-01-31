@@ -1,5 +1,5 @@
 const assert = require('assert')
-const supertest = require('supertest')
+const axios = require('axios')
 const db = require('../data/db')
 const server = require('./server')
 const config = require('./config')
@@ -24,7 +24,10 @@ suiteSetup(async () => {
   db.testData.users.u1Token = await user1.getIdToken()
 
   // prepare supertest with signed-in user's ID token in authorization header
-  db.testData.users.u1Request = supertest.agent(`http://localhost:${config.app.port}`).set('Authorization', `Bearer ${db.testData.users.u1Token}`)
+  db.testData.users.u1Request = axios.create({
+    baseURL: `http://localhost:${config.app.port}`,
+    headers: {'Authorization': `Bearer ${db.testData.users.u1Token}`}
+  })
 
   // initialize db for integration testing
   await db.testSeed()
@@ -41,6 +44,6 @@ suiteTeardown(async () => {
 
 test('suiteSetup initializes everything', () => {
   assert(db.testData.users.u1Request)
-  assert(db.testData.users.u1Request._defaults[0].arguments['1'].includes(db.testData.users.u1Token))
+  assert(db.testData.users.u1Request.defaults.headers.Authorization.includes(db.testData.users.u1Token))
   assert(db.testData.users.u1Token)
 })
