@@ -3,6 +3,8 @@
  */
 export default {
   users: {
-    init: () => {}
+    init: () => {
+      // todo: get /users/init
+    }
   }
 }
