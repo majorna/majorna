@@ -28,3 +28,6 @@
 //     ]
 //   })
 // })
+//
+// exports.deleteFirestoreUserDocuments = functions.auth.user().onDelete(event => {
+// })

@@ -13,12 +13,12 @@ let koaApp
  * These two run only run once before the test suite starts and after everything is finished.
  */
 suiteSetup(async () => {
-  // initialize firebase auth with users
+  // delete then re-initialize firebase auth with users
+  const usersRes = await firebaseConfig.auth.listUsers()
+  usersRes.users.forEach(u => firebaseConfig.auth.deleteUser(u.uid))
   const u1 = testData.users.u1Auth
-  try { await firebaseConfig.auth.deleteUser('1') } catch (e) {}
-  await firebaseConfig.auth.createUser(u1)
   const u4 = testData.users.u4Auth
-  try { await firebaseConfig.auth.deleteUser('4') } catch (e) {}
+  await firebaseConfig.auth.createUser(u1)
   await firebaseConfig.auth.createUser(u4)
 
   // initialize firebase client sdk and sign in as a user, to get an id token
