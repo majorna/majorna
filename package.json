@@ -15,7 +15,8 @@
   "scripts": {
     "start": "npm start --prefix server | react-scripts start",
     "build": "react-scripts build",
-    "test": "npm test --prefix server && react-scripts test --env=jsdom --coverage",
+    "test": "react-scripts test --env=jsdom",
+    "test-all": "npm test --prefix server && react-scripts test --env=jsdom --coverage",
     "deploy": "npm run build && firebase deploy && git subtree push --prefix server heroku master",
     "eject": "react-scripts eject"
   }
