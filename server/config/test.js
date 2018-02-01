@@ -75,7 +75,7 @@ const testData = exports.data = {
       email: 'chuck.norris@majorna.mj',
       name: 'Chuck Norris',
       created: time,
-      balance: 0,
+      balance: 500,
       txs: []
     },
     u1Auth: {
@@ -92,14 +92,14 @@ const testData = exports.data = {
       email: 'morgan.almighty@majorna.mj',
       name: 'Morgan Almighty',
       created: time,
-      balance: 0,
+      balance: 500,
       txs: []
     },
     u3Doc: {
       email: 'john.doe@majorna.mj',
       name: 'John Doe',
       created: time,
-      balance: 0,
+      balance: 500,
       txs: []
     },
     u4Auth: {
