@@ -17,8 +17,10 @@ export default withRouter(class App extends Component {
   constructor(props) {
     super(props);
     this.state = this.nullState = {
-      user: null,
-      account: null,
+      user: null, // firebase auth user
+
+      // firestore docs
+      userDoc: null,
       mj: {
         meta: {
           val: null, // usd
@@ -63,7 +65,7 @@ export default withRouter(class App extends Component {
         this.setState({user: u});
         this.fbUnsubUsers = this.db.collection('users').doc(u.uid).onSnapshot(async doc => {
             if (doc.exists) {
-              !doc.metadata.hasPendingWrites && this.setState({account: doc.data()});
+              !doc.metadata.hasPendingWrites && this.setState({userDoc: doc.data()});
             } else {
               await server.users.init(); // todo: id token might still be null at this point
             }
@@ -95,7 +97,7 @@ export default withRouter(class App extends Component {
         <Switch>
           <Route exact path='/' component={GetStarted} />
           <Route path='/login' render={routeProps => <Login {...routeProps} uiConfig={this.firebaseUIConfig} firebaseAuth={this.firebaseAuth}/>} />
-          <Route path='/dashboard' render={routeProps => <Dashboard {...routeProps} user={this.state.user} account={this.state.account} mj={this.state.mj}/>} />
+          <Route path='/dashboard' render={routeProps => <Dashboard {...routeProps} user={this.state.user} userDoc={this.state.userDoc} mj={this.state.mj}/>} />
           <Redirect from='*' to='/'/>
         </Switch>
 
