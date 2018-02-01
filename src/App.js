@@ -5,7 +5,8 @@ import 'firebase/auth';
 import 'firebase/firestore';
 import 'bulma/css/bulma.css';
 import './App.css';
-import apiClient from './data/api-client'
+import config from './data/config'
+import server from './data/server'
 import Navbar from './components/Navbar'
 import GetStarted from './components/GetStarted'
 import Login from './components/Login'
@@ -15,7 +16,6 @@ import Footer from './components/Footer'
 export default withRouter(class App extends Component {
   constructor(props) {
     super(props);
-    const env = window.document.URL.includes('http://localhost:3000') ? 'development' : 'production'
     this.state = this.nullState = {
       user: null,
       idToken: null,
@@ -36,7 +36,7 @@ export default withRouter(class App extends Component {
       ],
       callbacks: {signInSuccess: () => false /* don't redirect anywhere */}
     };
-    const firebaseConf = env === 'development' ?
+    const firebaseConf = config.app.isDev ?
       {
         apiKey: 'AIzaSyBFZEhjyZdbZEMpboYZzRRHfIUhvo4VaHQ',
         authDomain: 'majorna-test.firebaseapp.com',
@@ -67,7 +67,7 @@ export default withRouter(class App extends Component {
             if (doc.exists) {
               !doc.metadata.hasPendingWrites && this.setState({account: doc.data()});
             } else {
-              apiClient.users.init();
+              server.users.init();
             }
           });
         this.fbUnsubMeta = this.db.collection('mj').doc('meta').onSnapshot(doc => this.setState({mj: {meta: doc.data()}}));
