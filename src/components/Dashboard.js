@@ -70,7 +70,7 @@ export default class extends Component {
 
         <div className="mj-box flex-column">
           <strong className="m-b-s">Transactions</strong>
-          {this.props.account.transactions.map(t =>
+          {this.props.account.txs.map(t =>
             t.from ? (
               <div className="m-b-xs" key={t.id}>
                 <span className="tag is-success" title={'TX ID: ' + t.id}>+{t.amount}</span>

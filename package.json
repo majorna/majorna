@@ -13,7 +13,7 @@
     "recharts": "^1.0.0-beta.7"
   },
   "scripts": {
-    "start": "npm start --prefix server | react-scripts start",
+    "start": "NODE_ENV=development npm start --prefix server & react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "test-all": "npm test --prefix server && react-scripts test --env=jsdom --coverage",
