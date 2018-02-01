@@ -2,6 +2,7 @@ import config from './config'
 
 /**
  * Server API client. Uses window.fetch.
+ * All functions in this object is asynchronous wince window.fetch uses promises.
  */
 export default {
   users: {

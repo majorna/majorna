@@ -18,7 +18,6 @@ export default withRouter(class App extends Component {
     super(props);
     this.state = this.nullState = {
       user: null,
-      idToken: null,
       account: null,
       mj: {
         meta: {
@@ -62,16 +61,15 @@ export default withRouter(class App extends Component {
       if (u) {
         this.props.history.push('/dashboard');
         this.setState({user: u});
-        this.fbUnsubUsers = this.db.collection('users').doc(u.uid)
-          .onSnapshot(doc => {
+        this.fbUnsubUsers = this.db.collection('users').doc(u.uid).onSnapshot(async doc => {
             if (doc.exists) {
               !doc.metadata.hasPendingWrites && this.setState({account: doc.data()});
             } else {
-              server.users.init();
+              await server.users.init(); // todo: id token might still be null at this point
             }
           });
         this.fbUnsubMeta = this.db.collection('mj').doc('meta').onSnapshot(doc => this.setState({mj: {meta: doc.data()}}));
-        this.setState({idToken: await u.getIdToken()})
+        config.server.token = await u.getIdToken()
       } else {
         this.setState(this.nullState); // logged out
         this.props.location.pathname !== '/login' && this.props.history.push('/');
