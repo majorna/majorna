@@ -3,6 +3,7 @@ const testData = require('../config/test').data
 
 // todo: verify valid token auth
 // todo: verify server crash/exception from route
+// todo: verify cors headers / content type headers
 
 suite('server-config', () => {
   test('no token auth', async () => {
