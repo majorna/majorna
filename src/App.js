@@ -15,6 +15,7 @@ import Footer from './components/Footer'
 export default withRouter(class App extends Component {
   constructor(props) {
     super(props);
+    const env = window.document.URL.includes('http://localhost:3000') ? 'development' : 'production'
     this.state = this.nullState = {
       user: null,
       idToken: null,
@@ -35,14 +36,24 @@ export default withRouter(class App extends Component {
       ],
       callbacks: {signInSuccess: () => false /* don't redirect anywhere */}
     };
-    this.firebaseApp = firebase.initializeApp({
-      apiKey: 'AIzaSyCxdSFEhrqdH2VJ8N4XmRZ9st5Q5hBmgfY',
-      authDomain: 'majorna-fire.firebaseapp.com',
-      databaseURL: 'https://majorna-fire.firebaseio.com',
-      projectId: 'majorna-fire',
-      storageBucket: 'majorna-fire.appspot.com',
-      messagingSenderId: '526928901295'
-    });
+    const firebaseConf = env === 'development' ?
+      {
+        apiKey: 'AIzaSyBFZEhjyZdbZEMpboYZzRRHfIUhvo4VaHQ',
+        authDomain: 'majorna-test.firebaseapp.com',
+        databaseURL: 'https://majorna-test.firebaseio.com',
+        projectId: 'majorna-test',
+        storageBucket: 'majorna-test.appspot.com',
+        messagingSenderId: '346214163117'
+      } :
+      {
+        apiKey: 'AIzaSyCxdSFEhrqdH2VJ8N4XmRZ9st5Q5hBmgfY',
+        authDomain: 'majorna-fire.firebaseapp.com',
+        databaseURL: 'https://majorna-fire.firebaseio.com',
+        projectId: 'majorna-fire',
+        storageBucket: 'majorna-fire.appspot.com',
+        messagingSenderId: '526928901295'
+      }
+    this.firebaseApp = firebase.initializeApp(firebaseConf);
 
     // initialize firebase sockets
     this.db = this.firebaseApp.firestore();
