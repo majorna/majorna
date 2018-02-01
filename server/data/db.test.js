@@ -14,8 +14,8 @@ suite('db', () => {
   })
 
   test('makeTx, getTx', async () => {
-    // valid and invalid txs
-    // verify all changes to sender and receiver are complete
+    // todo: valid and invalid txs
+    // todo: verify all changes to sender and receiver are complete (balanced updated, arrays updated, txs doc updated etc.)
   })
 
   test('createUserDoc', async () => {

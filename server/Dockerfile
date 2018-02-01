@@ -1,5 +1,7 @@
 FROM node:9
 
+ENV NODE_ENV production
+
 # Create app directory
 WORKDIR /usr/src/app
 
@@ -10,5 +12,5 @@ RUN npm install --only=production
 
 COPY . .
 
-EXPOSE 3000
+EXPOSE 3001
 CMD [ "npm", "start" ]

@@ -13,12 +13,12 @@ let koaApp
  * These two run only run once before the test suite starts and after everything is finished.
  */
 suiteSetup(async () => {
-  // initialize firebase auth with users
+  // delete then re-initialize firebase auth with users
+  const usersRes = await firebaseConfig.auth.listUsers()
+  usersRes.users.forEach(u => firebaseConfig.auth.deleteUser(u.uid))
   const u1 = testData.users.u1Auth
-  try { await firebaseConfig.auth.deleteUser('1') } catch (e) {}
-  await firebaseConfig.auth.createUser(u1)
   const u4 = testData.users.u4Auth
-  try { await firebaseConfig.auth.deleteUser('4') } catch (e) {}
+  await firebaseConfig.auth.createUser(u1)
   await firebaseConfig.auth.createUser(u4)
 
   // initialize firebase client sdk and sign in as a user, to get an id token
@@ -29,6 +29,10 @@ suiteSetup(async () => {
   testData.users.u4Token = await user4.getIdToken()
 
   // prepare http request client with signed-in user's ID token in authorization header
+  testData.users.anonRequest = axios.create({
+    baseURL: `http://localhost:${config.app.port}`,
+    validateStatus: false
+  })
   testData.users.u1Request = axios.create({
     baseURL: `http://localhost:${config.app.port}`,
     headers: {'Authorization': `Bearer ${testData.users.u1Token}`}
@@ -66,11 +70,12 @@ const testData = exports.data = {
   },
   // idx = firestore doc, authx = firebase auth user
   users: {
+    anonRequest: null,
     u1Doc: {
       email: 'chuck.norris@majorna.mj',
       name: 'Chuck Norris',
       created: time,
-      balance: 0,
+      balance: 500,
       txs: []
     },
     u1Auth: {
@@ -87,14 +92,14 @@ const testData = exports.data = {
       email: 'morgan.almighty@majorna.mj',
       name: 'Morgan Almighty',
       created: time,
-      balance: 0,
+      balance: 500,
       txs: []
     },
     u3Doc: {
       email: 'john.doe@majorna.mj',
       name: 'John Doe',
       created: time,
-      balance: 0,
+      balance: 500,
       txs: []
     },
     u4Auth: {

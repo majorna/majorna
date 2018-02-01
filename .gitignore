@@ -63,3 +63,5 @@ build
 # intellij
 .idea
 majorna.iml
+
+.gitx

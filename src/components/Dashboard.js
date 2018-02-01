@@ -5,14 +5,14 @@ import QRCode from 'qrcode';
 export default class extends Component {
   constructor(props) {
     super(props);
-    this.state = {accountQr: null};
+    this.state = {accountAddrQr: null};
   }
 
   fm = new Intl.NumberFormat().format;
 
   async componentWillReceiveProps(nextProps) {
     nextProps.user && this.setState({
-      accountQr: await QRCode.toDataURL(
+      accountAddrQr: await QRCode.toDataURL(
         [{data: `majorna:${nextProps.user.uid}`, mode: 'byte'}],
         {errorCorrectionLevel: 'H', margin: 1, scale: 8})
     })
@@ -34,7 +34,7 @@ export default class extends Component {
   }
 
   render() {
-    if (!this.props.account) {
+    if (!this.props.userDoc) {
       return <div className="mj-box flex-center-all spinner"/>
     }
 
@@ -57,9 +57,9 @@ export default class extends Component {
         </div>
 
         <div className="mj-box flex-column">
-          <div><strong>Balance</strong>: <strong>{this.props.account.balance}</strong>mj ({this.props.account.balance * this.props.mj.meta.val}$)</div>
+          <div><strong>Balance</strong>: <strong>{this.props.userDoc.balance}</strong>mj ({this.props.userDoc.balance * this.props.mj.meta.val}$)</div>
           <div><strong>Address</strong>: <small>{this.props.user.uid}</small></div>
-          <img width="72" src={this.state.accountQr} alt={this.props.user.uid}/>
+          <img width="72" src={this.state.accountAddrQr} alt={this.props.user.uid}/>
         </div>
 
         <div className="mj-box">
@@ -70,7 +70,7 @@ export default class extends Component {
 
         <div className="mj-box flex-column">
           <strong className="m-b-s">Transactions</strong>
-          {this.props.account.transactions.map(t =>
+          {this.props.userDoc.txs.map(t =>
             t.from ? (
               <div className="m-b-xs" key={t.id}>
                 <span className="tag is-success" title={'TX ID: ' + t.id}>+{t.amount}</span>

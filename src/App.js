@@ -5,7 +5,8 @@ import 'firebase/auth';
 import 'firebase/firestore';
 import 'bulma/css/bulma.css';
 import './App.css';
-import apiClient from './data/api-client'
+import config from './data/config'
+import server from './data/server'
 import Navbar from './components/Navbar'
 import GetStarted from './components/GetStarted'
 import Login from './components/Login'
@@ -16,9 +17,10 @@ export default withRouter(class App extends Component {
   constructor(props) {
     super(props);
     this.state = this.nullState = {
-      user: null,
-      idToken: null,
-      account: null,
+      user: null, // firebase auth user
+
+      // firestore docs
+      userDoc: null,
       mj: {
         meta: {
           val: null, // usd
@@ -35,14 +37,24 @@ export default withRouter(class App extends Component {
       ],
       callbacks: {signInSuccess: () => false /* don't redirect anywhere */}
     };
-    this.firebaseApp = firebase.initializeApp({
-      apiKey: 'AIzaSyCxdSFEhrqdH2VJ8N4XmRZ9st5Q5hBmgfY',
-      authDomain: 'majorna-fire.firebaseapp.com',
-      databaseURL: 'https://majorna-fire.firebaseio.com',
-      projectId: 'majorna-fire',
-      storageBucket: 'majorna-fire.appspot.com',
-      messagingSenderId: '526928901295'
-    });
+    const firebaseConf = config.app.isDev ?
+      {
+        apiKey: 'AIzaSyBFZEhjyZdbZEMpboYZzRRHfIUhvo4VaHQ',
+        authDomain: 'majorna-test.firebaseapp.com',
+        databaseURL: 'https://majorna-test.firebaseio.com',
+        projectId: 'majorna-test',
+        storageBucket: 'majorna-test.appspot.com',
+        messagingSenderId: '346214163117'
+      } :
+      {
+        apiKey: 'AIzaSyCxdSFEhrqdH2VJ8N4XmRZ9st5Q5hBmgfY',
+        authDomain: 'majorna-fire.firebaseapp.com',
+        databaseURL: 'https://majorna-fire.firebaseio.com',
+        projectId: 'majorna-fire',
+        storageBucket: 'majorna-fire.appspot.com',
+        messagingSenderId: '526928901295'
+      }
+    this.firebaseApp = firebase.initializeApp(firebaseConf);
 
     // initialize firebase sockets
     this.db = this.firebaseApp.firestore();
@@ -51,16 +63,15 @@ export default withRouter(class App extends Component {
       if (u) {
         this.props.history.push('/dashboard');
         this.setState({user: u});
-        this.fbUnsubUsers = this.db.collection('users').doc(u.uid)
-          .onSnapshot(doc => {
+        this.fbUnsubUsers = this.db.collection('users').doc(u.uid).onSnapshot(async doc => {
             if (doc.exists) {
-              !doc.metadata.hasPendingWrites && this.setState({account: doc.data()});
+              !doc.metadata.hasPendingWrites && this.setState({userDoc: doc.data()});
             } else {
-              apiClient.users.init();
+              await server.users.init(); // todo: id token might still be null at this point
             }
           });
         this.fbUnsubMeta = this.db.collection('mj').doc('meta').onSnapshot(doc => this.setState({mj: {meta: doc.data()}}));
-        this.setState({idToken: await u.getUser1IdToken()})
+        config.server.token = await u.getIdToken()
       } else {
         this.setState(this.nullState); // logged out
         this.props.location.pathname !== '/login' && this.props.history.push('/');
@@ -86,7 +97,7 @@ export default withRouter(class App extends Component {
         <Switch>
           <Route exact path='/' component={GetStarted} />
           <Route path='/login' render={routeProps => <Login {...routeProps} uiConfig={this.firebaseUIConfig} firebaseAuth={this.firebaseAuth}/>} />
-          <Route path='/dashboard' render={routeProps => <Dashboard {...routeProps} user={this.state.user} account={this.state.account} mj={this.state.mj}/>} />
+          <Route path='/dashboard' render={routeProps => <Dashboard {...routeProps} user={this.state.user} userDoc={this.state.userDoc} mj={this.state.mj}/>} />
           <Redirect from='*' to='/'/>
         </Switch>
 
