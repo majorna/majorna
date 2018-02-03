@@ -5,6 +5,7 @@ const server = require('./server')
 const config = require('./config')
 const firebaseConfig = require('./firebase') // firebase admin sdk config
 const firebaseClientSdk = require('firebase') // firebase client sdk, to impersonate user logins
+require('firebase/firestore') // side effect: required for the firebase client sdk app to have .firebase() method
 
 let koaApp
 

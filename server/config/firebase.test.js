@@ -8,8 +8,13 @@ suite('firebase-config', () => {
     // todo: people can't read others' transactions
     // todo: none of the collections are writeable
 
-    // todo: firebase node.js (client) does not have firestore support yet: https://firebase.google.com/docs/reference/node/
-    // const querySnapshot = await testData.users.u1FBClient.firestore().collection('txs').get()
+    const firestore = testData.users.u1FBClient.firestore()
+
+    const userDoc = await firestore.collection('users').doc('1').get()
+    assert(userDoc.exists)
+    assert(userDoc.data().email = testData.users.u1Doc.email)
+
+    // const querySnapshot = await firestore.collection('txs').get()
     // querySnapshot.forEach(txDoc => {
     //   const tx = txDoc.data()
     //   assert(tx.from === '1' || tx.to === '1')
