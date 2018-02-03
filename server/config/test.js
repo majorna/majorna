@@ -35,11 +35,13 @@ suiteSetup(async () => {
   })
   testData.users.u1Request = axios.create({
     baseURL: `http://localhost:${config.app.port}`,
-    headers: {'Authorization': `Bearer ${testData.users.u1Token}`}
+    headers: {'Authorization': `Bearer ${testData.users.u1Token}`},
+    validateStatus: false
   })
   testData.users.u4Request = axios.create({
     baseURL: `http://localhost:${config.app.port}`,
-    headers: {'Authorization': `Bearer ${testData.users.u4Token}`}
+    headers: {'Authorization': `Bearer ${testData.users.u4Token}`},
+    validateStatus: false
   })
 
   // initialize db for integration testing
