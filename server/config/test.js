@@ -69,9 +69,11 @@ suite('test-config', () => {
 })
 
 const time = new Date()
+const from = 'majorna'
+const initBalance = 500
 const testData = exports.data = {
   mj: {
-    meta: {val: 0.01, cap: 1000}
+    meta: {val: 0.01, cap: initBalance * 3}
   },
   // u1: User #1
   // u1Doc: Firestore doc seed data
@@ -85,8 +87,8 @@ const testData = exports.data = {
       email: 'chuck.norris@majorna.mj',
       name: 'Chuck Norris',
       created: time,
-      balance: 500,
-      txs: []
+      balance: initBalance,
+      txs: [{from, to: '1', sent: time, amount: initBalance}]
     },
     u1Auth: {
       uid: '1',
@@ -103,15 +105,15 @@ const testData = exports.data = {
       email: 'morgan.almighty@majorna.mj',
       name: 'Morgan Almighty',
       created: time,
-      balance: 500,
-      txs: []
+      balance: initBalance,
+      txs: [{from, to: '2', sent: time, amount: initBalance}]
     },
     u3Doc: {
       email: 'john.doe@majorna.mj',
       name: 'John Doe',
       created: time,
-      balance: 500,
-      txs: []
+      balance: initBalance,
+      txs: [{from, to: '3', sent: time, amount: initBalance}]
     },
     u4Auth: {
       uid: '4',

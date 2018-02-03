@@ -43,8 +43,9 @@ suite('db', () => {
     assert(tx.amount === 500)
   })
 
+  // todo: make valid and invalid txs
+  // todo: verify all changes to sender and receiver are complete (balanced updated, arrays updated, txs doc updated etc.)
+
   test('makeTx, getTx', async () => {
-    // todo: make valid and invalid txs
-    // todo: verify all changes to sender and receiver are complete (balanced updated, arrays updated, txs doc updated etc.)
   })
 })
