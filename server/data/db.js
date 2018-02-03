@@ -26,6 +26,14 @@ exports.init = async () => {
 exports.getMeta = async () => (await metaRef.get()).data()
 
 /**
+ * Get a user by id, asynchronously.
+ */
+exports.getUser = async id => {
+  const user = await usersRef.doc(id).get()
+  return user.exists ? user.data() : null
+}
+
+/**
  * Create user doc and push first bonus transaction, asynchronously.
  * Can be used as a firestore cloud function trigger.
  */
