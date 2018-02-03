@@ -30,6 +30,7 @@ exports.getMeta = async () => (await metaDocRef.get()).data()
  * Get a user by id, asynchronously.
  */
 exports.getUser = async id => {
+  assert(id)
   const userDoc = await usersColRef.doc(id).get()
   if (!userDoc.exists) {
     throw new Error(`user ID:${id} does not exist`)
@@ -42,7 +43,9 @@ exports.getUser = async id => {
  * Can be used as a firestore cloud function trigger.
  */
 exports.createUserDoc = (user, uid) => firestore.runTransaction(async t => {
+  assert(user)
   uid = uid || user.uid
+  assert(uid)
   const email = user.email
   const name = user.name || user.displayName // decoded firebase auth token || cloud functions firestore event data
 
@@ -80,6 +83,7 @@ exports.createUserDoc = (user, uid) => firestore.runTransaction(async t => {
  * Get a transaction from transactions collection by ID, asynchronously.
  */
 exports.getTx = async id => {
+  assert(id)
   const txDoc = await txsColRef.doc(id).get()
   if (!txDoc.exists) {
     throw new Error(`transaction ID:${id} does not exist`)
