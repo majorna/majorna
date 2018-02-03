@@ -2,7 +2,7 @@ const assert = require('assert')
 const testData = require('./test').data
 const firebaseConfig = require('./firebase')
 
-suite('firebase-config', () => {
+suite('config: firebase', () => {
   test('firestore access rules', async () => {
     // todo: people can only read their user doc and cannot write to it
     // todo: people can't read others' transactions

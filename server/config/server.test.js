@@ -1,7 +1,7 @@
 const assert = require('assert')
 const testData = require('../config/test').data
 
-suite('server-config', () => {
+suite('config: server', () => {
   test('valid token auth', async () => {
     const res = await testData.users.u1Request.get('/ping')
     assert(res.status === 200)

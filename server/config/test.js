@@ -60,7 +60,7 @@ suiteTeardown(async () => {
   koaApp.close()
 })
 
-suite('test-config', () => {
+suite('config: test', () => {
   test('suiteSetup initializes everything', () => {
     assert(testData.users.u1Request)
     assert(testData.users.u1Request.defaults.headers.Authorization.includes(testData.users.u1Token))
