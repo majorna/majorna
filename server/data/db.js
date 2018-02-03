@@ -1,3 +1,4 @@
+const assert = require('assert')
 const firebaseConfig = require('../config/firebase')
 const firestore = firebaseConfig.firestore
 
@@ -92,6 +93,11 @@ exports.getTx = async id => {
  * Returned promise resolves to transaction ID -or- to an error if transaction fails.
  */
 exports.makeTx = (from, to, amount) => firestore.runTransaction(async t => {
+  assert(from)
+  assert(to)
+  assert(amount)
+  assert(amount > 0)
+
   // verify sender's funds
   const senderDocRef = usersColRef.doc(from)
   const senderDoc = await t.get(senderDocRef)

@@ -86,16 +86,20 @@ suite('db', () => {
   })
 
   test('makeTx: invalid', async () => {
-    // let err
-    // try { await db.makeTx() } catch (e) { err = e }
-    // assert(err)
-    //
-    // let err2
-    // try { await db.makeTx('1', '129807aysdfiopohasdf') } catch (e) { err2 = e }
-    // assert(err2)
-    //
-    // let err3
-    // try { await db.makeTx('1', '2', 6000) } catch (e) { err3 = e }
-    // assert(err3)
+    let err
+    try { await db.makeTx() } catch (e) { err = e }
+    assert(err)
+
+    err = null
+    try { await db.makeTx('asdf98709ysadgfg', '2', 10) } catch (e) { err = e }
+    assert(err)
+
+    err = null
+    try { await db.makeTx('1', '129807aysdfiopohasdf', 10) } catch (e) { err = e }
+    assert(err)
+
+    err = null
+    try { await db.makeTx('1', '2', 6000) } catch (e) { err = e }
+    assert(err)
   })
 })
