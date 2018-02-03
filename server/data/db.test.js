@@ -29,9 +29,8 @@ suite('db', () => {
     const userDoc = await db.getUser(uid)
     assert(userDoc.email === userData.email)
     assert(userDoc.name === userData.name)
-    // todo: this time is off by 10-15s for some reason! in future they will add local version of server timestamp approximation
-    assert(userDoc.created.getTime() + 20 * 1000 > userData.created.getTime())
-    assert(userDoc.created.getTime() - 20 * 1000 < userData.created.getTime())
+    assert(userDoc.created.getTime() + 20 * 1000 > new Date())
+    assert(userDoc.created.getTime() - 20 * 1000 < new Date())
     assert(userDoc.balance === userData.balance)
     assert(userDoc.txs.length === 1)
 
@@ -49,8 +48,15 @@ suite('db', () => {
   test('makeTx, getTx', async () => {
     // make a valid tx
     const now = new Date()
-    await db.makeTx('1', '2', now, 100)
+    const txId = await db.makeTx('1', '2', now, 100)
 
+    // validate tx in txs col
+    const tx = await db.getTx(txId)
+    assert(tx.from === '1')
+    assert(tx.to === '2')
+    assert(tx.sent.getTime() === now.getTime())
+    assert(tx.amount === 100)
 
+    // validate affected user docs
   })
 })

@@ -83,7 +83,7 @@ exports.getTx = async id => {
 /**
  * Performs a financial transaction from person A to B asynchronously.
  * Both user documents and transactions collection is updated with the transaction data and results.
- * Returned promise resolves to an error if transaction fails.
+ * Returned promise resolves to transaction ID -or- to an error if transaction fails.
  */
 exports.makeTx = (from, to, sent, amount) => firestore.runTransaction(async t => {
   // verify sender's funds
@@ -111,6 +111,8 @@ exports.makeTx = (from, to, sent, amount) => firestore.runTransaction(async t =>
   t.update(senderDocRef, {balance: sender.balance - amount, txs: sender.txs})
   receiver.txs.unshift({id: txRef.id, from, sent, amount})
   t.update(receiverDocRef, {balance: receiver.balance + amount, txs: receiver.txs})
+
+  return txRef.id
 })
 
 /**
