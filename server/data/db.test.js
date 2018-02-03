@@ -101,5 +101,10 @@ suite('db', () => {
     err = null
     try { await db.makeTx('1', '2', 6000) } catch (e) { err = e }
     assert(err)
+
+    // tx to self is not allowed
+    err = null
+    try { await db.makeTx('1', '1', 10) } catch (e) { err = e }
+    assert(err)
   })
 })

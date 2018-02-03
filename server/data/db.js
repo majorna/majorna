@@ -99,6 +99,7 @@ exports.getTx = async id => {
 exports.makeTx = (from, to, amount) => firestore.runTransaction(async t => {
   assert(from)
   assert(to)
+  assert(from !== to)
   assert(amount)
   assert(amount > 0)
 
