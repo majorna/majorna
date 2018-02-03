@@ -12,7 +12,7 @@ export default {
     init: () => get('/users/init')
   },
   txs: {
-    make: () => postJson('/txs')
+    make: (to, amount) => postJson('/txs', {to, amount})
   }
 }
 

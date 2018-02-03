@@ -12,6 +12,7 @@ exports.send = route.post('/txs', async ctx => {
   try {
     await db.makeTx(ctx.state.user.uid, tx.to, tx.amount)
   } catch (e) {
+    console.error(e)
     ctx.throw(400, 'failed to make transaction')
   }
 
