@@ -22,10 +22,11 @@ suiteSetup(async () => {
   await firebaseConfig.auth.createUser(u4)
 
   // initialize firebase client sdk and sign in as a user, to get an id token
-  firebaseClientSdk.initializeApp(require(config.firebase.testClientSdkKeyJsonPath))
-  const authUser1 = await firebaseClientSdk.auth().signInWithEmailAndPassword(u1.email, u1.password)
+  testData.users.u1FBClient = firebaseClientSdk.initializeApp(require(config.firebase.testClientSdkKeyJsonPath), 'u1FBClient')
+  const authUser1 = await testData.users.u1FBClient.auth().signInWithEmailAndPassword(u1.email, u1.password)
   testData.users.u1Token = await authUser1.getIdToken()
-  const authUser2 = await firebaseClientSdk.auth().signInWithEmailAndPassword(u4.email, u4.password)
+  testData.users.u4FBClient = firebaseClientSdk.initializeApp(require(config.firebase.testClientSdkKeyJsonPath), 'u4FBClient')
+  const authUser2 = await testData.users.u4FBClient.auth().signInWithEmailAndPassword(u4.email, u4.password)
   testData.users.u4Token = await authUser2.getIdToken()
 
   // prepare http request client with signed-in user's ID token in authorization header
@@ -52,7 +53,8 @@ suiteSetup(async () => {
 })
 
 suiteTeardown(async () => {
-  await firebaseClientSdk.app().delete()
+  await testData.users.u1FBClient.delete()
+  await testData.users.u4FBClient.delete()
   await firebaseConfig.app.delete()
   koaApp.close()
 })

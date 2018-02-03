@@ -8,11 +8,11 @@ suite('firebase-config', () => {
     // todo: people can't read others' transactions
     // todo: none of the collections are writeable
 
-    // todo: u1FBClient needs to be firebaseApp (== firebaseClientSdk.initializeApp())
+    // todo: firebase node.js (client) does not have firestore support yet: https://firebase.google.com/docs/reference/node/
     // const querySnapshot = await testData.users.u1FBClient.firestore().collection('txs').get()
     // querySnapshot.forEach(txDoc => {
     //   const tx = txDoc.data()
-    //   assert(tx.from === uid || tx.to === uid)
+    //   assert(tx.from === '1' || tx.to === '1')
     // })
   })
 
