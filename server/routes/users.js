@@ -13,10 +13,3 @@ exports.init = route.get('/users/init', async ctx => {
   }
   ctx.status = 204
 })
-
-/**
- * Send majorna to another user.
- */
-exports.send = route.get('/users/send', async ctx => {
-  ctx.status = 501
-})
