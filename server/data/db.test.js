@@ -47,5 +47,10 @@ suite('db', () => {
   // todo: verify all changes to sender and receiver are complete (balanced updated, arrays updated, txs doc updated etc.)
 
   test('makeTx, getTx', async () => {
+    // make a valid tx
+    const now = new Date()
+    await db.makeTx('1', '2', now, 100)
+
+
   })
 })
