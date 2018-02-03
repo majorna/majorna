@@ -23,10 +23,10 @@ suiteSetup(async () => {
 
   // initialize firebase client sdk and sign in as a user, to get an id token
   firebaseClientSdk.initializeApp(require(config.firebase.testClientSdkKeyJsonPath))
-  const user1 = await firebaseClientSdk.auth().signInWithEmailAndPassword(u1.email, u1.password)
-  testData.users.u1Token = await user1.getIdToken()
-  const user4 = await firebaseClientSdk.auth().signInWithEmailAndPassword(u4.email, u4.password)
-  testData.users.u4Token = await user4.getIdToken()
+  const authUser1 = await firebaseClientSdk.auth().signInWithEmailAndPassword(u1.email, u1.password)
+  testData.users.u1Token = await authUser1.getIdToken()
+  const authUser2 = await firebaseClientSdk.auth().signInWithEmailAndPassword(u4.email, u4.password)
+  testData.users.u4Token = await authUser2.getIdToken()
 
   // prepare http request client with signed-in user's ID token in authorization header
   testData.users.anonRequest = axios.create({
@@ -70,7 +70,12 @@ const testData = exports.data = {
   mj: {
     meta: {val: 0.01, cap: 1000}
   },
-  // idx = firestore doc, authx = firebase auth user
+  // u1: User #1
+  // u1Doc: Firestore doc seed data
+  // u1Auth: Firebase Authentication user seed data
+  // u1FBClient: Firebase Client instance (with live connection to Firebase servers)
+  // u1Token: Firebase Authentication ID token (has limited lifetime)
+  // u1Request: Preconfigured HTTP client instance with Firebase Auth token in it for that user
   users: {
     anonRequest: null,
     u1Doc: {
@@ -88,6 +93,7 @@ const testData = exports.data = {
       displayName: 'Chuck Norris',
       photoURL: 'https://example.com/p86sadfu/photo.png'
     },
+    u1FBClient: null,
     u1Token: null,
     u1Request: null,
     u2Doc: {
@@ -112,9 +118,11 @@ const testData = exports.data = {
       displayName: 'Bob Marley',
       photoURL: 'https://example.com/58972q34/photo.png'
     },
+    u4FBClient: null,
     u4Token: null,
     u4Request: null
   },
+  txs: [],
   // Firebase authentication ID token (JWT) content when decoded
   decodedIdTokenSample: {
     iss: 'https://securetoken.google.com/majorna-fire',

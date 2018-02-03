@@ -3,10 +3,17 @@ const testData = require('./test').data
 const firebaseConfig = require('./firebase')
 
 suite('firebase-config', () => {
-  test('firestore access rules', () => {
+  test('firestore access rules', async () => {
     // todo: people can only read their user doc and cannot write to it
     // todo: people can't read others' transactions
     // todo: none of the collections are writeable
+
+    // todo: u1FBClient needs to be firebaseApp (== firebaseClientSdk.initializeApp())
+    // const querySnapshot = await testData.users.u1FBClient.firestore().collection('txs').get()
+    // querySnapshot.forEach(txDoc => {
+    //   const tx = txDoc.data()
+    //   assert(tx.from === uid || tx.to === uid)
+    // })
   })
 
   test('verifyIdToken', async () => {
