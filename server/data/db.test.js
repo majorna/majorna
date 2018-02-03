@@ -73,8 +73,20 @@ suite('db', () => {
     // validate affected user docs
     const sender = await db.getUser(from)
     assert(sender.balance === initBalance - amount)
+    const senderTx = sender.txs[0]
+    assert(senderTx.to === to)
+    assert(senderTx.sent.getTime() === now.getTime())
+    assert(senderTx.amount === amount)
 
-    // todo: make valid and invalid txs
-    // todo: verify all changes to sender and receiver are complete (balanced updated, arrays updated, txs doc updated etc.)
+    const receiver = await db.getUser(to)
+    assert(receiver.balance === initBalance + amount)
+    const receiverTx = receiver.txs[0]
+    assert(receiverTx.from === from)
+    assert(receiverTx.sent.getTime() === now.getTime())
+    assert(receiverTx.amount === amount)
+  })
+
+  test('makeTx: invalid', async () => {
+
   })
 })
