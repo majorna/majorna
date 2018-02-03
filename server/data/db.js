@@ -2,34 +2,34 @@ const firebaseConfig = require('../config/firebase')
 const firestore = firebaseConfig.firestore
 
 // collection and doc refs
-const txsRef = firestore.collection('txs')
-const usersRef = firestore.collection('users')
-const metaRef = firestore.collection('mj').doc('meta')
+const txsColRef = firestore.collection('txs')
+const usersColRef = firestore.collection('users')
+const metaDocRef = firestore.collection('mj').doc('meta')
 
 /**
  * Initializes database collections if database is empty, asynchronously.
  */
 exports.init = async () => {
-  const metaDoc = await metaRef.get()
+  const metaDoc = await metaDocRef.get()
   if (metaDoc.exists) {
     return
   }
 
   const batch = firestore.batch()
-  batch.create(metaRef, {val: 0.01, cap: 0})
+  batch.create(metaDocRef, {val: 0.01, cap: 0})
   await batch.commit()
 }
 
 /**
  * Get majorna metadata document asynchronously.
  */
-exports.getMeta = async () => (await metaRef.get()).data()
+exports.getMeta = async () => (await metaDocRef.get()).data()
 
 /**
  * Get a user by id, asynchronously.
  */
 exports.getUser = async id => {
-  const user = await usersRef.doc(id).get()
+  const user = await usersColRef.doc(id).get()
   return user.exists ? user.data() : null
 }
 
@@ -48,15 +48,15 @@ exports.createUserDoc = (user, uid) => firestore.runTransaction(async t => {
   console.log(`creating user: ${uid} - ${email} - ${name}`)
 
   // increase market cap
-  const metaDoc = await t.get(metaRef)
-  t.update(metaRef, {cap: metaDoc.data().cap + initBalance})
+  const metaDoc = await t.get(metaDocRef)
+  t.update(metaDocRef, {cap: metaDoc.data().cap + initBalance})
 
   // create the first transaction for the user
-  const txRef = txsRef.doc()
+  const txRef = txsColRef.doc()
   t.create(txRef, {from: 'majorna', to: uid, sent: time, amount: initBalance})
 
   // create user doc
-  t.create(usersRef.doc(uid), {
+  t.create(usersColRef.doc(uid), {
     email: email,
     name: name,
     created: time,
@@ -76,7 +76,7 @@ exports.createUserDoc = (user, uid) => firestore.runTransaction(async t => {
  * Get a transaction from transactions collection by ID, asynchronously.
  */
 exports.getTx = async id => {
-  const tx = await txsRef.doc(id).get()
+  const tx = await txsColRef.doc(id).get()
   return tx.exists ? tx.data() : null
 }
 
@@ -87,21 +87,21 @@ exports.getTx = async id => {
  */
 exports.makeTx = (from, to, sent, amount) => firestore.runTransaction(async t => {
   // verify sender's funds
-  const senderDoc = await t.get(usersRef.doc(from))
+  const senderDoc = await t.get(usersColRef.doc(from))
   const sender = senderDoc.data()
   if (!senderDoc.exists || sender.balance < amount) {
     throw new Error('insufficient funds')
   }
 
   // check if receiver exists
-  const receiverDoc = await t.get(usersRef.doc(to))
+  const receiverDoc = await t.get(usersColRef.doc(to))
   const receiver = receiverDoc.data()
   if (!receiverDoc.exists) {
     throw new Error('receiver does not exist')
   }
 
   // add tx to txs collection
-  const txRef = txsRef.doc()
+  const txRef = txsColRef.doc()
   t.create(txRef, {from, to, sent, amount})
 
   // update user docs with tx and updated balances
@@ -119,16 +119,16 @@ exports.initTest = async () => {
   const batch = firestore.batch()
 
   // delete all data
-  const txsSnap = await txsRef.get()
+  const txsSnap = await txsColRef.get()
   txsSnap.forEach(txSnap => batch.delete(txSnap.ref))
-  const usersSnap = await usersRef.get()
+  const usersSnap = await usersColRef.get()
   usersSnap.forEach(userSnap => batch.delete(userSnap.ref))
-  batch.delete(metaRef)
+  batch.delete(metaDocRef)
 
   // add seed data
-  batch.create(metaRef, testData.mj.meta)
-  batch.create(usersRef.doc('1'), testData.users.u1Doc)
-  batch.create(usersRef.doc('2'), testData.users.u2Doc)
+  batch.create(metaDocRef, testData.mj.meta)
+  batch.create(usersColRef.doc('1'), testData.users.u1Doc)
+  batch.create(usersColRef.doc('2'), testData.users.u2Doc)
 
   await batch.commit()
 }
