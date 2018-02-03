@@ -42,21 +42,27 @@ suite('db', () => {
     assert(tx.amount === 500)
   })
 
-  // todo: make valid and invalid txs
-  // todo: verify all changes to sender and receiver are complete (balanced updated, arrays updated, txs doc updated etc.)
-
   test('makeTx, getTx', async () => {
     // make a valid tx
     const now = new Date()
-    const txId = await db.makeTx('1', '2', now, 100)
+    const from = '1'
+    const to = '2'
+    const initBalance = 500
+    const amount = 100
+    const txId = await db.makeTx(from, to, now, amount)
 
     // validate tx in txs col
     const tx = await db.getTx(txId)
-    assert(tx.from === '1')
-    assert(tx.to === '2')
+    assert(tx.from === from)
+    assert(tx.to === to)
     assert(tx.sent.getTime() === now.getTime())
-    assert(tx.amount === 100)
+    assert(tx.amount === amount)
 
     // validate affected user docs
+    const sender = await db.getUser(from)
+    assert(sender.balance === initBalance - amount)
+
+    // todo: make valid and invalid txs
+    // todo: verify all changes to sender and receiver are complete (balanced updated, arrays updated, txs doc updated etc.)
   })
 })
