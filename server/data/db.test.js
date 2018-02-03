@@ -1,5 +1,6 @@
 const assert = require('assert')
 const db = require('./db')
+const utils = require('./utils')
 const testData = require('../config/test').data
 
 suite('db', () => {
@@ -35,8 +36,7 @@ suite('db', () => {
     const userDoc = await db.getUser(uid)
     assert(userDoc.email === userData.email)
     assert(userDoc.name === userData.name)
-    assert(userDoc.created.getTime() + 20 * 1000 > new Date())
-    assert(userDoc.created.getTime() - 20 * 1000 < new Date())
+    assert(utils.isCloseToDate(userDoc.created))
     assert(userDoc.balance === userData.balance)
     assert(userDoc.txs.length === 1)
 
@@ -56,18 +56,17 @@ suite('db', () => {
 
   test('makeTx', async () => {
     // make a valid tx
-    const now = new Date()
     const from = '1'
     const to = '2'
-    const initBalance = 500
+    const initBalance = testData.users.u1Doc.balance
     const amount = 100
-    const txId = await db.makeTx(from, to, now, amount)
+    const txId = await db.makeTx(from, to, amount)
 
     // validate tx in txs col
     const tx = await db.getTx(txId)
     assert(tx.from === from)
     assert(tx.to === to)
-    assert(tx.sent.getTime() === now.getTime())
+    assert(utils.isCloseToDate(tx.sent))
     assert(tx.amount === amount)
 
     // validate affected user docs
@@ -75,18 +74,28 @@ suite('db', () => {
     assert(sender.balance === initBalance - amount)
     const senderTx = sender.txs[0]
     assert(senderTx.to === to)
-    assert(senderTx.sent.getTime() === now.getTime())
+    assert(utils.isCloseToDate(senderTx.sent))
     assert(senderTx.amount === amount)
 
     const receiver = await db.getUser(to)
     assert(receiver.balance === initBalance + amount)
     const receiverTx = receiver.txs[0]
     assert(receiverTx.from === from)
-    assert(receiverTx.sent.getTime() === now.getTime())
+    assert(utils.isCloseToDate(receiverTx.sent))
     assert(receiverTx.amount === amount)
   })
 
   test('makeTx: invalid', async () => {
-
+    // let err
+    // try { await db.makeTx() } catch (e) { err = e }
+    // assert(err)
+    //
+    // let err2
+    // try { await db.makeTx('1', '129807aysdfiopohasdf') } catch (e) { err2 = e }
+    // assert(err2)
+    //
+    // let err3
+    // try { await db.makeTx('1', '2', 6000) } catch (e) { err3 = e }
+    // assert(err3)
   })
 })

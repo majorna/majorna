@@ -91,7 +91,7 @@ exports.getTx = async id => {
  * Both user documents and transactions collection is updated with the transaction data and results.
  * Returned promise resolves to transaction ID -or- to an error if transaction fails.
  */
-exports.makeTx = (from, to, sent, amount) => firestore.runTransaction(async t => {
+exports.makeTx = (from, to, amount) => firestore.runTransaction(async t => {
   // verify sender's funds
   const senderDocRef = usersColRef.doc(from)
   const senderDoc = await t.get(senderDocRef)
@@ -102,6 +102,8 @@ exports.makeTx = (from, to, sent, amount) => firestore.runTransaction(async t =>
   if (sender.balance < amount) {
     throw new Error(`sender ID:${from} has insufficient funds`)
   }
+
+  const sent = new Date()
 
   // check if receiver exists
   const receiverDocRef = usersColRef.doc(to)
