@@ -30,7 +30,7 @@ exports.getMeta = async () => (await metaDocRef.get()).data()
  * Get a user by id, asynchronously.
  */
 exports.getUser = async id => {
-  assert(id)
+  assert(id, 'user ID parameters is required')
   const userDoc = await usersColRef.doc(id).get()
   if (!userDoc.exists) {
     throw new Error(`user ID:${id} does not exist`)
@@ -43,9 +43,9 @@ exports.getUser = async id => {
  * Can be used as a firestore cloud function trigger.
  */
 exports.createUserDoc = (user, uid) => firestore.runTransaction(async t => {
-  assert(user)
+  assert(user, 'user parameters is required')
   uid = uid || user.uid
-  assert(uid)
+  assert(uid, 'user.uid or user ID parameter is required')
   const email = user.email
   const name = user.name || user.displayName // decoded firebase auth token || cloud functions firestore event data
 
@@ -83,7 +83,7 @@ exports.createUserDoc = (user, uid) => firestore.runTransaction(async t => {
  * Get a transaction from transactions collection by ID, asynchronously.
  */
 exports.getTx = async id => {
-  assert(id)
+  assert(id, 'tx ID parameters is required')
   const txDoc = await txsColRef.doc(id).get()
   if (!txDoc.exists) {
     throw new Error(`transaction ID:${id} does not exist`)
@@ -97,11 +97,11 @@ exports.getTx = async id => {
  * Returned promise resolves to transaction ID -or- to an error if transaction fails.
  */
 exports.makeTx = (from, to, amount) => firestore.runTransaction(async t => {
-  assert(from)
-  assert(to)
-  assert(from !== to)
-  assert(amount)
-  assert(amount > 0)
+  assert(from, 'from parameters is required')
+  assert(to, 'to parameters is required')
+  assert(from !== to, 'from and to parameters cannot be same')
+  assert(amount, 'amount ID parameters is required')
+  assert(amount > 0, 'amount should be > 0')
 
   // verify sender's funds
   const senderDocRef = usersColRef.doc(from)

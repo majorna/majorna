@@ -9,7 +9,11 @@ exports.send = route.post('/txs', async ctx => {
   ctx.assert(tx.to, 400, '"to" field is required')
   ctx.assert(tx.amount, 400, '"amount" field is required')
 
-  await db.makeTx(ctx.state.user.uid, tx.to, tx.amount)
+  try {
+    await db.makeTx(ctx.state.user.uid, tx.to, tx.amount)
+  } catch (e) {
+    ctx.throw(400, 'failed to make transaction')
+  }
 
   ctx.status = 201
 })
