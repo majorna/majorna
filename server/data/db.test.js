@@ -14,6 +14,12 @@ suite('db', () => {
     assert(meta.val >= 0)
   })
 
+  test('getUser', async () => {
+    let err
+    try { await db.getUser('98u23hkasd8') } catch (e) { err = e }
+    assert(err)
+  })
+
   test('createUserDoc', async () => {
     const uid = '3'
     const userData = testData.users.u3Doc
@@ -42,7 +48,13 @@ suite('db', () => {
     assert(tx.amount === 500)
   })
 
-  test('makeTx, getTx', async () => {
+  test('getTx', async () => {
+    let err
+    try { await db.getTx('sdaf089y097gs') } catch (e) { err = e }
+    assert(err)
+  })
+
+  test('makeTx', async () => {
     // make a valid tx
     const now = new Date()
     const from = '1'

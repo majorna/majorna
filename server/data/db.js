@@ -29,8 +29,11 @@ exports.getMeta = async () => (await metaDocRef.get()).data()
  * Get a user by id, asynchronously.
  */
 exports.getUser = async id => {
-  const user = await usersColRef.doc(id).get()
-  return user.data()
+  const userDoc = await usersColRef.doc(id).get()
+  if (!userDoc.exists) {
+    throw new Error(`user ID:${id} does not exist`)
+  }
+  return userDoc.data()
 }
 
 /**
@@ -76,8 +79,11 @@ exports.createUserDoc = (user, uid) => firestore.runTransaction(async t => {
  * Get a transaction from transactions collection by ID, asynchronously.
  */
 exports.getTx = async id => {
-  const tx = await txsColRef.doc(id).get()
-  return tx.data()
+  const txDoc = await txsColRef.doc(id).get()
+  if (!txDoc.exists) {
+    throw new Error(`transaction ID:${id} does not exist`)
+  }
+  return txDoc.data()
 }
 
 /**
@@ -90,11 +96,11 @@ exports.makeTx = (from, to, sent, amount) => firestore.runTransaction(async t =>
   const senderDocRef = usersColRef.doc(from)
   const senderDoc = await t.get(senderDocRef)
   if (!senderDoc.exists) {
-    throw new Error('sender does not exist')
+    throw new Error(`sender ID:${from} does not exist`)
   }
   const sender = senderDoc.data()
   if (sender.balance < amount) {
-    throw new Error('sender has insufficient funds')
+    throw new Error(`sender ID:${from} has insufficient funds`)
   }
 
   // check if receiver exists
@@ -102,7 +108,7 @@ exports.makeTx = (from, to, sent, amount) => firestore.runTransaction(async t =>
   const receiverDoc = await t.get(receiverDocRef)
   const receiver = receiverDoc.data()
   if (!receiverDoc.exists) {
-    throw new Error('receiver does not exist')
+    throw new Error(`receiver ID:${to} does not exist`)
   }
 
   // add tx to txs collection
