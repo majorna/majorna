@@ -7,16 +7,21 @@ export default class extends Component {
   constructor(props) {
     super(props);
     this.state = {accountAddrQr: null};
+    props.user && this.setAccountAddrQr(props.user.uid)
   }
 
   fm = new Intl.NumberFormat().format;
 
-  async componentWillReceiveProps(nextProps) {
-    nextProps.user && this.setState({
+  async setAccountAddrQr(accAddr) {
+    this.setState({
       accountAddrQr: await QRCode.toDataURL(
-        [{data: `majorna:${nextProps.user.uid}`, mode: 'byte'}],
+        [{data: `majorna:${accAddr}`, mode: 'byte'}],
         {errorCorrectionLevel: 'H', margin: 1, scale: 8})
     })
+  }
+
+  async componentWillReceiveProps(nextProps) {
+    nextProps.user && this.setAccountAddrQr(nextProps.user.uid)
   }
 
   // generate static chart data for a single value (useful for pre-trading price display)
