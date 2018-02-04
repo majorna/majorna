@@ -12,6 +12,7 @@ import GetStarted from './components/GetStarted'
 import Login from './components/Login'
 import Dashboard from './components/Dashboard'
 import Footer from './components/Footer'
+import Send from './components/Send'
 
 export default withRouter(class App extends Component {
   constructor(props) {
@@ -98,6 +99,7 @@ export default withRouter(class App extends Component {
           <Route exact path='/' component={GetStarted} />
           <Route path='/login' render={routeProps => <Login {...routeProps} uiConfig={this.firebaseUIConfig} firebaseAuth={this.firebaseAuth}/>} />
           <Route path='/dashboard' render={routeProps => <Dashboard {...routeProps} user={this.state.user} userDoc={this.state.userDoc} mj={this.state.mj}/>} />
+          <Route path='/send' component={Send} />
           <Redirect from='*' to='/'/>
         </Switch>
 

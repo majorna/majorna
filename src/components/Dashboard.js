@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from 'recharts';
 import QRCode from 'qrcode';
+import { Link } from 'react-router-dom'
 
 export default class extends Component {
   constructor(props) {
@@ -63,9 +64,8 @@ export default class extends Component {
         </div>
 
         <div className="mj-box">
-          <button className="button is-info m-r-m" disabled>Send</button>
-          <button className="button is-info m-r-m" disabled>Receive</button>
-          <i>(Feature to be enabled in: Feb 2018)</i>
+          <Link to="/send" className="button is-info m-r-m">Send</Link>
+          <Link to="/receive" className="button">Receive</Link>
         </div>
 
         <div className="mj-box flex-column">
