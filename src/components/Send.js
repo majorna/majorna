@@ -13,9 +13,11 @@ export default class extends Component {
   handleAmount = e => this.setState({amount: e.target.value})
 
   render() {
+    // todo: beautify the form using bulma components
     // todo: render confirm page -or- sent page according to state
     // todo: receiver box can be a search box
     // todo: show receiver details (acct no, name) upon receiver input
+    // todo: ask to authenticate again before sending (10 min cooldown)
 
     return (
       <div className="mj-box flex-column">

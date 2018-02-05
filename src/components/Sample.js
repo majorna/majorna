@@ -5,3 +5,5 @@ export default () => (
     <span>Wow</span>
   </div>
 )
+
+// const OneLinerSample = () => <div>Wow</div>
