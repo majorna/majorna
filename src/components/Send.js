@@ -1,7 +1,14 @@
-import React from 'react';
+import React, { Component } from 'react'
 
-export default () => (
-  <div className="mj-box flex-column">
-    <strong className="has-text-centered">Send mj</strong>
-  </div>
-);
+export default class extends Component {
+  render() {
+    return (
+      <div className="mj-box flex-column">
+        <strong className="has-text-centered">Send mj</strong>
+
+        <strong>Receiver:</strong>
+        <input type="text" />
+      </div>
+    )
+  }
+}
