@@ -13,6 +13,10 @@ export default class extends Component {
   handleAmount = e => this.setState({amount: e.target.value})
 
   render() {
+    // todo: render confirm page -or- sent page according to state
+    // todo: receiver box can be a search box
+    // todo: show receiver details (acct no, name) upon receiver input
+
     return (
       <div className="mj-box flex-column">
         <strong className="has-text-  centered">Send mj</strong>
