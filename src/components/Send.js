@@ -1,7 +1,14 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
 
 export default class extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      receiver: '',
+      amount: 0
+    }
+  }
+
   handleReceiver = e => this.setState({receiver: e.target.value})
   handleAmount = e => this.setState({amount: e.target.value})
 
@@ -16,7 +23,7 @@ export default class extends Component {
         <strong>Amount:</strong>
         <input type="number" value={this.state.amount} onChange={this.handleAmount} />
 
-        <Link to="/send" className="button is-info m-r-m">Send</Link>
+        <button className="button is-info m-r-m">Send</button>
       </div>
     )
   }
