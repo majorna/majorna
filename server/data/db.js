@@ -101,6 +101,7 @@ exports.makeTx = (from, to, amount) => firestore.runTransaction(async t => {
   assert(to, 'to parameters is required')
   assert(from !== to, 'from and to parameters cannot be same')
   assert(amount, 'amount ID parameters is required')
+  assert(Number.isInteger(amount))
   assert(amount > 0, 'amount should be > 0')
 
   // verify sender's funds

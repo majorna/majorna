@@ -86,24 +86,27 @@ suite('db', () => {
   })
 
   test('makeTx: invalid', async () => {
-    let err
+    let err // missing args
     try { await db.makeTx() } catch (e) { err = e }
     assert(err)
 
-    err = null
+    err = null // inexistent sender
     try { await db.makeTx('asdf98709ysadgfg', '2', 10) } catch (e) { err = e }
     assert(err)
 
-    err = null
+    err = null // inexistent receiver
     try { await db.makeTx('1', '129807aysdfiopohasdf', 10) } catch (e) { err = e }
     assert(err)
 
-    err = null
+    err = null // can't send more than what is in user balance
     try { await db.makeTx('1', '2', 6000) } catch (e) { err = e }
     assert(err)
 
-    // tx to self is not allowed
-    err = null
+    err = null // amount should be integer
+    try { await db.makeTx('1', '1', 5.1) } catch (e) { err = e }
+    assert(err)
+
+    err = null // tx to self is not allowed
     try { await db.makeTx('1', '1', 10) } catch (e) { err = e }
     assert(err)
   })
