@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react'
+import { Link } from 'react-router-dom'
 
 export default () => (
   <div className="hero is-medium is-light">
@@ -12,4 +12,4 @@ export default () => (
       </div>
     </div>
   </div>
-);
+)

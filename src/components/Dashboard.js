@@ -1,16 +1,16 @@
-import React, { Component } from 'react';
-import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from 'recharts';
-import QRCode from 'qrcode';
+import React, { Component } from 'react'
+import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from 'recharts'
+import QRCode from 'qrcode'
 import { Link } from 'react-router-dom'
 
 export default class extends Component {
   constructor(props) {
-    super(props);
-    this.state = {accountAddrQr: null};
+    super(props)
+    this.state = {accountAddrQr: null}
     props.user && this.setAccountAddrQr(props.user.uid)
   }
 
-  fm = new Intl.NumberFormat().format;
+  fm = new Intl.NumberFormat().format
 
   async setAccountAddrQr(accAddr) {
     this.setState({
@@ -26,17 +26,17 @@ export default class extends Component {
 
   // generate static chart data for a single value (useful for pre-trading price display)
   getChartData() {
-    let data = this.props.mj.meta.monthly;
-    const val = this.props.mj.meta.val;
+    let data = this.props.mj.meta.monthly
+    const val = this.props.mj.meta.val
 
     if (!data && val) {
       data = []
-      const month = new Date().toLocaleString('en-us', {month: 'short'});
+      const month = new Date().toLocaleString('en-us', {month: 'short'})
       for (let i = 1; i < 29; i++) {
-        data.push({t: `${month} ${i}`, mj: val});
+        data.push({t: `${month} ${i}`, mj: val})
       }
     }
-    return data;
+    return data
   }
 
   render() {
@@ -94,4 +94,4 @@ export default class extends Component {
       </React.Fragment>
     )
   }
-};
+}
