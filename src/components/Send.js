@@ -21,15 +21,15 @@ export default class extends Component {
 
     return (
       <div className="mj-box flex-column">
-        <strong className="has-text-  centered">Send mj</strong>
+        <strong className="has-text-centered">Send mj</strong>
 
         <strong>Receiver:</strong>
-        <input type="text" value={this.state.receiver} onChange={this.handleReceiver} />
+        <input className="input" type="text" value={this.state.receiver} onChange={this.handleReceiver} />
 
         <strong>Amount:</strong>
-        <input type="number" value={this.state.amount} onChange={this.handleAmount} />
+        <input className="input" type="number" value={this.state.amount} onChange={this.handleAmount} />
 
-        <button className="button is-info m-r-m">Send</button>
+        <button className="button is-info">Send</button>
       </div>
     )
   }
