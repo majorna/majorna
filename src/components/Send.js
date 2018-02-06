@@ -26,10 +26,10 @@ export default class extends Component {
         <strong>Receiver</strong>
         <input className="input" type="text" value={this.state.receiver} onChange={this.handleReceiver}/>
 
-        <strong>Amount</strong>
+        <strong className="m-t-m">Amount</strong>
         <input className="input" type="number" value={this.state.amount} onChange={this.handleAmount}/>
 
-        <button className="button is-info">Send</button>
+        <button className="button is-info m-t-xs">Send</button>
       </div>
     )
   }
