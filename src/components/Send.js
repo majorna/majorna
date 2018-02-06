@@ -6,6 +6,7 @@ export default class extends Component {
     receiver: '',
     amount: 0,
     error: null,
+    step: 'start',
     sending: false
   }
 
@@ -62,6 +63,14 @@ export default class extends Component {
     // todo: receiver box can be a search box (for account no or email or maybe event name)
     // todo: show receiver details (acct no, name) upon receiver input
     // todo: ask to authenticate again before sending (10 min cooldown)
+
+    if (this.state.step === 'confirm') {
+
+    }
+
+    if (this.state.step === 'sent') {
+
+    }
 
     return (
       <div className="mj-box flex-column">
