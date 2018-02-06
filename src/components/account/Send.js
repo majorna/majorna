@@ -10,6 +10,8 @@ export default class extends Component {
     sending: false
   }
 
+  fm = new Intl.NumberFormat().format
+
   handleReceiver = e => this.setState({receiver: e.target.value})
 
   handleAmount = e => {
@@ -40,13 +42,17 @@ export default class extends Component {
       return
     }
 
+    this.setState({step: 'confirm'})
+  }
+
+  handleConfirm = async () => {
     // try to send
-    this.setState({sending: true})
+    let error
+    this.setState({error, sending: true})
     try {
       const res = await server.txs.make(this.state.receiver, this.state.amount)
       if (res.status === 201) {
-        this.setState({sending: false})
-        this.props.history.goBack()
+        this.setState({error, sending: false, step: 'complete'})
         return
       }
       error = await res.text()
@@ -58,18 +64,45 @@ export default class extends Component {
   }
 
   render() {
+    // todo: allow amount input be empty string or it is really annoying to put in single digit amounts like "5" (which becomes "05")
     // todo: improve server errors (i.e. receiver does not exist)
+    // todo: cleanup state code & error handling code
     // todo: render confirm page -or- sent page according to state
     // todo: receiver box can be a search box (for account no or email or maybe event name)
     // todo: show receiver details (acct no, name) upon receiver input
     // todo: ask to authenticate again before sending (10 min cooldown)
 
     if (this.state.step === 'confirm') {
+      return (
+        <div className="mj-box flex-column">
+          <div className="is-size-5 has-text-centered">Confirm Send</div>
 
+          <div><strong>Receiver:</strong> {this.state.receiver}</div>
+
+          <div><strong className="m-t-m">Amount:</strong> mj{this.fm(this.state.amount)}</div>
+
+          {this.state.error && <strong className="has-text-danger has-text-centered m-t-l">{this.state.error}</strong>}
+
+          {this.state.sending ? (
+            <div className="flex-row flex-center-all spinner m-t-l"/>
+          ) : (
+            <div className="flex-row m-t-l">
+              <button className="button is-info" onClick={this.handleConfirm}>Confirm</button>
+              <button className="button m-l-m" onClick={this.handleCancel}>Cancel</button>
+            </div>
+          )}
+        </div>
+      )
     }
 
-    if (this.state.step === 'sent') {
+    if (this.state.step === 'complete') {
+      return (
+        <div className="mj-box flex-column">
+          <div className="is-size-5 has-text-centered has-text-info">Successfully Sent</div>
 
+          <button className="button is-info m-t-l" onClick={this.handleCancel}>Close</button>
+        </div>
+      )
     }
 
     return (
@@ -84,14 +117,10 @@ export default class extends Component {
 
         {this.state.error && <strong className="has-text-danger has-text-centered m-t-l">{this.state.error}</strong>}
 
-        {this.state.sending ? (
-          <div className="flex-row flex-center-all spinner m-t-l"/>
-        ) : (
-          <div className="flex-row m-t-l">
-            <button className="button is-info" onClick={this.handleSend}>Send</button>
-            <button className="button m-l-m" onClick={this.handleCancel}>Cancel</button>
-          </div>
-        )}
+        <div className="flex-row m-t-l">
+          <button className="button is-info" onClick={this.handleSend}>Send</button>
+          <button className="button m-l-m" onClick={this.handleCancel}>Cancel</button>
+        </div>
       </div>
     )
   }
