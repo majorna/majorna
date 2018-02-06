@@ -3,17 +3,34 @@ import React, { Component } from 'react'
 export default class extends Component {
   state = {
     receiver: '',
-    amount: 0
+    amount: 0,
+    error: null
   }
 
   handleReceiver = e => this.setState({receiver: e.target.value})
+
   handleAmount = e => {
     // cannot send more than account
     let amount = e.target.value
     if (amount > this.props.userDoc.balance) {
       amount = this.props.userDoc.balance
     }
+    // cannot send negative amount
+    if (amount <= 0) {
+      amount = 0
+    }
+
     this.setState({amount})
+  }
+
+  handleCancel = () => {}
+
+  handleSend = () => {
+    let error = !this.state.receiver ? 'Put in a receiver.' :
+      this.state.amount <= 0 ? 'Put in the amount to be sent.' :
+      null
+
+    this.setState({error})
   }
 
   render() {
@@ -33,7 +50,12 @@ export default class extends Component {
         <strong className="m-t-m">Amount</strong>
         <input className="input" type="number" value={this.state.amount} onChange={this.handleAmount}/>
 
-        <button className="button is-info m-t-l">Send</button>
+        {this.state.error && <strong className="has-text-danger has-text-centered m-t-l">{this.state.error}</strong>}
+
+        <div className="flex-row m-t-l">
+          <button className="button" onClick={this.handleCancel}>Cancel</button>
+          <button className="button is-info m-l-m" onClick={this.handleSend}>Send</button>
+        </div>
       </div>
     )
   }
