@@ -21,7 +21,7 @@ export default class extends Component {
 
     return (
       <div className="mj-box flex-column">
-        <strong className="has-text-centered">Send mj</strong>
+        <div className="is-size-5 has-text-centered">Send mj</div>
 
         <strong>Receiver</strong>
         <input className="input" type="text" value={this.state.receiver} onChange={this.handleReceiver}/>
