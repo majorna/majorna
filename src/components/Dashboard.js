@@ -69,21 +69,21 @@ export default class extends Component {
         </div>
 
         <div className="mj-box">
-          <Link to="/send" className="button is-info m-r-m">Send</Link>
-          <Link to="/receive" className="button">Receive</Link>
+          <Link to="/send" className="button is-info">Send</Link>
+          <Link to="/receive" className="button m-l-m">Receive</Link>
         </div>
 
         <div className="mj-box flex-column">
-          <strong className="m-b-s">Transactions</strong>
+          <strong>Transactions</strong>
           {this.props.userDoc.txs.map(t =>
             t.from ? (
-              <div className="m-b-xs" key={t.id}>
+              <div className="m-t-xs" key={t.id}>
                 <span className="tag is-success" title={'TX ID: ' + t.id}>+{t.amount}</span>
                 <span className="m-l-s" title={t.sent}>{t.sent.toLocaleDateString()}</span>
                 <strong className="m-l-s">From:</strong> {t.from}
               </div>
             ) : (
-              <div className="m-b-xs" key={t.id}>
+              <div className="m-t-xs" key={t.id}>
                 <span className="tag is-danger" title={'TX ID: ' + t.id}>-{t.amount}</span>
                 <span className="m-l-s" title={t.sent}>{t.sent.toLocaleDateString()}</span>
                 <strong className="m-l-s">To:</strong> {t.to}

@@ -34,20 +34,17 @@
 
 /* spacing */
 /* m: margin, p: padding  |  (optional) t, r, b, l: top, right, bottom, left  |  x: extra ..., s: small, m: medium, l: large */
+/* note: try to use top and left margins whenever possible for simplicity and to avoid margin collapsing */
 .m-m {
     margin: 1rem;
 }
 
-.m-r-m {
-    margin-right: 1rem;
+.m-t-xs {
+    margin-top: 0.25rem;
 }
 
-.m-b-xs {
-    margin-bottom: 0.25rem;
-}
-
-.m-b-s {
-    margin-bottom: 0.5rem;
+.m-l-m {
+    margin-left: 1rem;
 }
 
 .m-l-s {
