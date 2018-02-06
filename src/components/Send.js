@@ -57,7 +57,7 @@ export default class extends Component {
   }
 
   render() {
-    // todo: lock cancel/send buttons and show indicator while trying to send request
+    // todo: improve server errors (i.e. receiver does not exist)
     // todo: render confirm page -or- sent page according to state
     // todo: receiver box can be a search box (for account no or email or maybe event name)
     // todo: show receiver details (acct no, name) upon receiver input
