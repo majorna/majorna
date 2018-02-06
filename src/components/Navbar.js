@@ -1,20 +1,17 @@
-import React, { Component } from 'react';
-import logo from '../res/majorna.png';
+import React, { Component } from 'react'
+import logo from '../res/majorna.png'
 import { Link } from 'react-router-dom'
 
 export default class extends Component {
-  constructor (props) {
-    super(props);
-    this.state = {navOpen: false};
-  }
+  state = {navOpen: false}
 
-  handleExpandClick = () => this.setState(s => ({navOpen: !s.navOpen}));
+  handleExpandClick = () => this.setState(s => ({navOpen: !s.navOpen}))
 
-  closeNav = () => this.setState(s => ({navOpen: false}));
+  closeNav = () => this.setState(s => ({navOpen: false}))
 
   logout = async () => {
-    this.closeNav();
-    await this.props.logout();
+    this.closeNav()
+    await this.props.logout()
   }
 
   render() {
@@ -42,6 +39,6 @@ export default class extends Component {
           )}
         </div>
       </div>
-    );
+    )
   }
 }

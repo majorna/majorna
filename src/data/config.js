@@ -12,6 +12,6 @@ export default {
   },
   server: {
     url: isDev ? 'http://localhost:3001' : 'https://majorna.herokuapp.com',
-    token: null
+    token: null // lazy initialized
   }
 }

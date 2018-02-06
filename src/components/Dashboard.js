@@ -1,36 +1,42 @@
-import React, { Component } from 'react';
-import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from 'recharts';
-import QRCode from 'qrcode';
+import React, { Component } from 'react'
+import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from 'recharts'
+import QRCode from 'qrcode'
+import { Link } from 'react-router-dom'
 
 export default class extends Component {
   constructor(props) {
-    super(props);
-    this.state = {accountAddrQr: null};
+    super(props)
+    this.state = {accountAddrQr: null}
+    props.user && this.setAccountAddrQr(props.user.uid)
   }
 
-  fm = new Intl.NumberFormat().format;
+  fm = new Intl.NumberFormat().format
 
-  async componentWillReceiveProps(nextProps) {
-    nextProps.user && this.setState({
+  async setAccountAddrQr(accAddr) {
+    this.setState({
       accountAddrQr: await QRCode.toDataURL(
-        [{data: `majorna:${nextProps.user.uid}`, mode: 'byte'}],
+        [{data: `majorna:${accAddr}`, mode: 'byte'}],
         {errorCorrectionLevel: 'H', margin: 1, scale: 8})
     })
   }
 
+  async componentWillReceiveProps(nextProps) {
+    nextProps.user && this.setAccountAddrQr(nextProps.user.uid)
+  }
+
   // generate static chart data for a single value (useful for pre-trading price display)
   getChartData() {
-    let data = this.props.mj.meta.monthly;
-    const val = this.props.mj.meta.val;
+    let data = this.props.mj.meta.monthly
+    const val = this.props.mj.meta.val
 
     if (!data && val) {
       data = []
-      const month = new Date().toLocaleString('en-us', {month: 'short'});
+      const month = new Date().toLocaleString('en-us', {month: 'short'})
       for (let i = 1; i < 29; i++) {
-        data.push({t: `${month} ${i}`, mj: val});
+        data.push({t: `${month} ${i}`, mj: val})
       }
     }
-    return data;
+    return data
   }
 
   render() {
@@ -63,22 +69,21 @@ export default class extends Component {
         </div>
 
         <div className="mj-box">
-          <button className="button is-info m-r-m" disabled>Send</button>
-          <button className="button is-info m-r-m" disabled>Receive</button>
-          <i>(Feature to be enabled in: Feb 2018)</i>
+          <Link to="/send" className="button is-info">Send</Link>
+          <Link to="/receive" className="button m-l-m">Receive</Link>
         </div>
 
         <div className="mj-box flex-column">
-          <strong className="m-b-s">Transactions</strong>
+          <strong>Transactions</strong>
           {this.props.userDoc.txs.map(t =>
             t.from ? (
-              <div className="m-b-xs" key={t.id}>
+              <div className="m-t-xs" key={t.id}>
                 <span className="tag is-success" title={'TX ID: ' + t.id}>+{t.amount}</span>
                 <span className="m-l-s" title={t.sent}>{t.sent.toLocaleDateString()}</span>
                 <strong className="m-l-s">From:</strong> {t.from}
               </div>
             ) : (
-              <div className="m-b-xs" key={t.id}>
+              <div className="m-t-xs" key={t.id}>
                 <span className="tag is-danger" title={'TX ID: ' + t.id}>-{t.amount}</span>
                 <span className="m-l-s" title={t.sent}>{t.sent.toLocaleDateString()}</span>
                 <strong className="m-l-s">To:</strong> {t.to}
@@ -89,4 +94,4 @@ export default class extends Component {
       </React.Fragment>
     )
   }
-};
+}

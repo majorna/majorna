@@ -2,9 +2,14 @@
 
 [![Build Status](https://travis-ci.org/majorna/majorna.svg?branch=master)](https://travis-ci.org/majorna/majorna)
 
-Majorna source code repo contains:
-* Majorna wallet.
+Majorna is a cryptocurrency with primary objectives of becoming:
+* Decentralized
+* Trustless
+* PoW-less
+
+This repo contains Majorna source code with following components:
 * Majorna server.
+* Majorna UI.
 * Majorna miner.
 
 ## Heroku Push

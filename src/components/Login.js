@@ -1,5 +1,5 @@
-import React from 'react';
-import { FirebaseAuth } from 'react-firebaseui';
+import React from 'react'
+import { FirebaseAuth } from 'react-firebaseui'
 
 export default (props) => (
   <div className="hero is-medium is-light">
@@ -8,4 +8,4 @@ export default (props) => (
       <FirebaseAuth uiConfig={props.uiConfig} firebaseAuth={props.firebaseAuth}/>
     </div>
   </div>
-);
+)

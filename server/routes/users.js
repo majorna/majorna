@@ -9,7 +9,7 @@ exports.init = route.get('/users/init', async ctx => {
     await db.createUserDoc(ctx.state.user)
   } catch (e) {
     console.error(e)
-    ctx.throw(400, 'user init failed')
+    ctx.throw(400, 'User initialization failed.')
   }
   ctx.status = 204
 })
