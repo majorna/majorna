@@ -70,7 +70,7 @@ export default class extends Component {
 
         <div className="mj-box">
           <Link to="/send" className="button is-info">Send</Link>
-          <Link to="/receive" className="button m-l-m">Receive</Link>
+          {/*<Link to="/receive" className="button m-l-m">Receive</Link>*/}
         </div>
 
         <div className="mj-box flex-column">
