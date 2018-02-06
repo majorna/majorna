@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import server from '../data/server'
 
 export default class extends Component {
   state = {
@@ -23,18 +24,31 @@ export default class extends Component {
     this.setState({amount})
   }
 
-  handleCancel = () => {}
+  handleCancel = () => this.props.history.goBack()
 
-  handleSend = () => {
+  handleSend = async () => {
+    // verify inputs
     let error = !this.state.receiver ? 'Put in a receiver.' :
       this.state.amount <= 0 ? 'Put in the amount to be sent.' :
       null
+
+    // try to send
+    if (!error) {
+      try {
+        const res = await server.txs.make(this.state.receiver, this.state.amount)
+        if (res.status === 201) {
+          this.props.history.goBack()
+        }
+        error = await res.text()
+      } catch (e) {
+        error = e
+      }
+    }
 
     this.setState({error})
   }
 
   render() {
-    // todo: cannot send more than account
     // todo: render confirm page -or- sent page according to state
     // todo: receiver box can be a search box (for account no or email or maybe event name)
     // todo: show receiver details (acct no, name) upon receiver input
@@ -53,8 +67,8 @@ export default class extends Component {
         {this.state.error && <strong className="has-text-danger has-text-centered m-t-l">{this.state.error}</strong>}
 
         <div className="flex-row m-t-l">
-          <button className="button" onClick={this.handleCancel}>Cancel</button>
-          <button className="button is-info m-l-m" onClick={this.handleSend}>Send</button>
+          <button className="button is-info" onClick={this.handleSend}>Send</button>
+          <button className="button m-l-m" onClick={this.handleCancel}>Cancel</button>
         </div>
       </div>
     )
