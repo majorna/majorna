@@ -1,5 +1,7 @@
 /* flex-box (direction: row) with a border, margin, and padding */
 .mj-box {
+    /* https://www.paulirish.com/2012/box-sizing-border-box-ftw/
+     * https://github.com/jgthms/bulma/blob/master/sass/base/minireset.sass */
     box-sizing: border-box;
     display: flex;
 
