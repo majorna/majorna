@@ -99,7 +99,7 @@ export default withRouter(class App extends Component {
           <Route exact path='/' component={GetStarted} />
           <Route path='/login' render={routeProps => <Login {...routeProps} uiConfig={this.firebaseUIConfig} firebaseAuth={this.firebaseAuth}/>} />
           <Route path='/dashboard' render={routeProps => <Dashboard {...routeProps} user={this.state.user} userDoc={this.state.userDoc} mj={this.state.mj}/>} />
-          <Route path='/send' component={Send} />
+          <Route path='/send' render={routeProps => <Send {...routeProps} userDoc={this.state.userDoc}/>} />
           <Redirect from='*' to='/'/>
         </Switch>
 

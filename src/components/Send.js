@@ -1,21 +1,25 @@
 import React, { Component } from 'react'
 
 export default class extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      receiver: '',
-      amount: 0
-    }
+  state = {
+    receiver: '',
+    amount: 0
   }
 
   handleReceiver = e => this.setState({receiver: e.target.value})
-  handleAmount = e => this.setState({amount: e.target.value})
+  handleAmount = e => {
+    // cannot send more than account
+    let amount = e.target.value
+    if (amount > this.props.userDoc.balance) {
+      amount = this.props.userDoc.balance
+    }
+    this.setState({amount})
+  }
 
   render() {
-    // todo: beautify the form using bulma components
+    // todo: cannot send more than account
     // todo: render confirm page -or- sent page according to state
-    // todo: receiver box can be a search box
+    // todo: receiver box can be a search box (for account no or email or maybe event name)
     // todo: show receiver details (acct no, name) upon receiver input
     // todo: ask to authenticate again before sending (10 min cooldown)
 
@@ -29,7 +33,7 @@ export default class extends Component {
         <strong className="m-t-m">Amount</strong>
         <input className="input" type="number" value={this.state.amount} onChange={this.handleAmount}/>
 
-        <button className="button is-info m-t-xs">Send</button>
+        <button className="button is-info m-t-l">Send</button>
       </div>
     )
   }
