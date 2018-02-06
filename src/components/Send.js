@@ -23,11 +23,11 @@ export default class extends Component {
       <div className="mj-box flex-column">
         <strong className="has-text-centered">Send mj</strong>
 
-        <strong>Receiver:</strong>
-        <input className="input" type="text" value={this.state.receiver} onChange={this.handleReceiver} />
+        <strong>Receiver</strong>
+        <input className="input" type="text" value={this.state.receiver} onChange={this.handleReceiver}/>
 
-        <strong>Amount:</strong>
-        <input className="input" type="number" value={this.state.amount} onChange={this.handleAmount} />
+        <strong>Amount</strong>
+        <input className="input" type="number" value={this.state.amount} onChange={this.handleAmount}/>
 
         <button className="button is-info">Send</button>
       </div>

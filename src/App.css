@@ -1,4 +1,4 @@
-/* flex-box with a border, margin, and padding */
+/* flex-box (direction: row) with a border, margin, and padding */
 .mj-box {
     box-sizing: border-box;
     display: flex;
@@ -10,11 +10,13 @@
     padding: 1rem;
 }
 
-.flex {
+.flex-row {
     display: flex;
+    flex-direction: row;
 }
 
 .flex-column {
+    display: flex;
     flex-direction: column;
 }
 
