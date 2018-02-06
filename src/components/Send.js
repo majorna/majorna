@@ -16,12 +16,13 @@ export default class extends Component {
     if (amount > this.props.userDoc.balance) {
       amount = this.props.userDoc.balance
     }
+
     // cannot send negative amount
     if (amount <= 0) {
       amount = 0
     }
 
-    this.setState({amount})
+    this.setState({amount: parseInt(amount, 10)})
   }
 
   handleCancel = () => this.props.history.goBack()
@@ -32,23 +33,29 @@ export default class extends Component {
       this.state.amount <= 0 ? 'Put in the amount to be sent.' :
       null
 
+    if (error) {
+      this.setState({error})
+      return
+    }
+
     // try to send
-    if (!error) {
-      try {
-        const res = await server.txs.make(this.state.receiver, this.state.amount)
-        if (res.status === 201) {
-          this.props.history.goBack()
-        }
-        error = await res.text()
-      } catch (e) {
-        error = e
+    try {
+      const res = await server.txs.make(this.state.receiver, this.state.amount)
+      if (res.status === 201) {
+        this.setState({error})
+        this.props.history.goBack()
       }
+      error = await res.text()
+    } catch (e) {
+      error = e
     }
 
     this.setState({error})
   }
 
   render() {
+    // todo: amount field should be number
+    // todo: lock cancel/send buttons and show indicator while trying to send request
     // todo: render confirm page -or- sent page according to state
     // todo: receiver box can be a search box (for account no or email or maybe event name)
     // todo: show receiver details (acct no, name) upon receiver input

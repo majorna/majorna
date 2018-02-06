@@ -25,7 +25,7 @@ const postJson = (url, data) => fetch(config.server.url + url, {
   method: 'POST',
   headers: new Headers({
     Authorization: `Bearer ${config.server.token}`,
-    'Content-Type': 'application/json',
-    body: JSON.stringify(data)
-  })
+    'Content-Type': 'application/json'
+  }),
+  body: JSON.stringify(data)
 })
