@@ -5,7 +5,8 @@ export default class extends Component {
   state = {
     receiver: '',
     amount: 0,
-    error: null
+    error: null,
+    sending: false
   }
 
   handleReceiver = e => this.setState({receiver: e.target.value})
@@ -33,28 +34,29 @@ export default class extends Component {
       this.state.amount <= 0 ? 'Put in the amount to be sent.' :
       null
 
+    this.setState({error})
     if (error) {
-      this.setState({error})
       return
     }
 
     // try to send
+    this.setState({sending: true})
     try {
       const res = await server.txs.make(this.state.receiver, this.state.amount)
       if (res.status === 201) {
-        this.setState({error})
+        this.setState({sending: false})
         this.props.history.goBack()
+        return
       }
       error = await res.text()
     } catch (e) {
       error = e
     }
 
-    this.setState({error})
+    this.setState({error, sending: false})
   }
 
   render() {
-    // todo: amount field should be number
     // todo: lock cancel/send buttons and show indicator while trying to send request
     // todo: render confirm page -or- sent page according to state
     // todo: receiver box can be a search box (for account no or email or maybe event name)
@@ -73,10 +75,14 @@ export default class extends Component {
 
         {this.state.error && <strong className="has-text-danger has-text-centered m-t-l">{this.state.error}</strong>}
 
-        <div className="flex-row m-t-l">
-          <button className="button is-info" onClick={this.handleSend}>Send</button>
-          <button className="button m-l-m" onClick={this.handleCancel}>Cancel</button>
-        </div>
+        {this.state.sending ? (
+          <div className="flex-row flex-center-all spinner m-t-l"/>
+        ) : (
+          <div className="flex-row m-t-l">
+            <button className="button is-info" onClick={this.handleSend}>Send</button>
+            <button className="button m-l-m" onClick={this.handleCancel}>Cancel</button>
+          </div>
+        )}
       </div>
     )
   }
