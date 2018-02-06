@@ -10,9 +10,9 @@ import server from './data/server'
 import Navbar from './components/Navbar'
 import GetStarted from './components/GetStarted'
 import Login from './components/Login'
-import Dashboard from './components/Dashboard'
+import Dashboard from './components/account/Dashboard'
 import Footer from './components/Footer'
-import Send from './components/Send'
+import Send from './components/account/Send'
 
 export default withRouter(class App extends Component {
   constructor(props) {
@@ -37,6 +37,10 @@ export default withRouter(class App extends Component {
         firebase.auth.GoogleAuthProvider.PROVIDER_ID
       ],
       callbacks: {signInSuccess: () => false /* don't redirect anywhere */}
+    }
+    if (config.app.isDev) {
+      this.firebaseUIConfig.signInOptions.push(firebase.auth.EmailAuthProvider.PROVIDER_ID)
+      this.firebaseUIConfig.credentialHelper = 'none'
     }
     const firebaseConf = config.app.isDev ?
       {

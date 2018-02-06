@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import server from '../data/server'
+import server from '../../data/server'
 
 export default class extends Component {
   state = {
