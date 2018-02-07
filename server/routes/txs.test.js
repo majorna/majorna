@@ -4,7 +4,7 @@ const testData = require('../config/test').data
 
 suite('route: txs', () => {
   test('valid tx', async () => {
-    const res = await testData.users.u1Request.post('/txs', {
+    let res = await testData.users.u1Request.post('/txs', {
       to: '2',
       amount: 100
     })
@@ -13,6 +13,13 @@ suite('route: txs', () => {
     // validate at least one field even though db tests validate everything
     const sender = await db.getUser('1')
     assert(sender.balance === testData.users.u1Doc.balance - 200)
+
+    // now send with a prefix
+    res = await testData.users.u1Request.post('/txs', {
+      to: 'majorna:2',
+      amount: 10
+    })
+    assert(res.status === 201)
   })
 
   test('invalid tx', async () => {

@@ -8,7 +8,13 @@ exports.send = route.post('/txs', async ctx => {
   const tx = ctx.request.body
   ctx.assert(tx.to, 400, '"to" field is required.')
   ctx.assert(tx.amount, 400, '"amount" field is required.')
-  // todo: strip 'mj:' or 'majorna:' prefix if any
+
+  // strip address prefix if any
+  if (tx.to.startsWith('mj:')) {
+    tx.to = tx.to.substring(3)
+  } else if (tx.to.startsWith('majorna:')) {
+    tx.to = tx.to.substring(8)
+  }
 
   try {
     await db.makeTx(ctx.state.user.uid, tx.to, tx.amount)
