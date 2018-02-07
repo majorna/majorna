@@ -6,6 +6,7 @@ export default class extends Component {
   state = {
     receiver: '',
     amount: 0,
+    receiverName: null,
     error: null,
     step: 'start',
     sending: false
@@ -111,6 +112,7 @@ export default class extends Component {
 
         <strong>Receiver</strong>
         <input className="input" type="text" value={this.state.receiver} onChange={this.handleReceiver}/>
+        {this.state.receiverName && <small className="has-text-info">{this.state.receiverName}</small>}
 
         <strong className="m-t-m">Amount</strong>
         <input className="input" type="number" value={this.state.amount} onChange={this.handleAmount}/>

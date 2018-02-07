@@ -16,6 +16,9 @@ suite('db', () => {
   })
 
   test('getUser', async () => {
+    const user = await db.getUser('1')
+    assert(user.name)
+
     let err
     try { await db.getUser('98u23hkasd8') } catch (e) { err = e }
     assert(err)
