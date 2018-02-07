@@ -5,7 +5,7 @@ import { fm, getChartData } from '../../data/utils'
 
 export default props => {
   if (!props.userDoc) {
-    return <div className="mj-box flex-center-all spinner"/>
+    return <div className="mj-box center-all spinner"/>
   }
 
   return (
