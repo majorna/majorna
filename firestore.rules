@@ -2,7 +2,7 @@ service cloud.firestore {
   match /databases/{database}/documents {
     // users can read their own document
     match /users/{userId} {
-      allow read: if request.auth.uid == userId;
+      allow get: if request.auth.uid == userId;
     }
 
     // metadata is public
