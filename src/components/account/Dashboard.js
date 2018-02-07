@@ -1,28 +1,9 @@
 import React, { Component } from 'react'
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from 'recharts'
-import QRCode from 'qrcode'
 import { Link } from 'react-router-dom'
 
 export default class extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {accountAddrQr: null}
-    props.user && this.setAccountAddrQr(props.user.uid)
-  }
-
   fm = new Intl.NumberFormat().format
-
-  async setAccountAddrQr(accAddr) {
-    this.setState({
-      accountAddrQr: await QRCode.toDataURL(
-        [{data: `majorna:${accAddr}`, mode: 'byte'}],
-        {errorCorrectionLevel: 'H', margin: 1, scale: 8})
-    })
-  }
-
-  async componentWillReceiveProps(nextProps) {
-    nextProps.user && this.setAccountAddrQr(nextProps.user.uid)
-  }
 
   // generate static chart data for a single value (useful for pre-trading price display)
   getChartData() {
@@ -65,7 +46,7 @@ export default class extends Component {
         <div className="mj-box flex-column">
           <div><strong>Balance</strong>: <strong>{this.props.userDoc.balance}</strong>mj ({this.props.userDoc.balance * this.props.mj.meta.val}$)</div>
           <div><strong>Address</strong>: <small>{this.props.user.uid}</small></div>
-          <img width="72" src={this.state.accountAddrQr} alt={this.props.user.uid}/>
+          <img width="72" src={this.props.acctQr} alt={this.props.user.uid}/>
         </div>
 
         <div className="mj-box">
