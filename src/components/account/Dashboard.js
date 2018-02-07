@@ -1,21 +1,7 @@
 import React from 'react'
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from 'recharts'
 import { Link } from 'react-router-dom'
-
-const fm = new Intl.NumberFormat().format
-
-// generate static chart data for a single value (useful for pre-trading price display)
-function getChartData(meta) {
-  let data = meta.monthly
-  const val = meta.val
-
-  if (!data && val) {
-    data = []
-    const month = new Date().toLocaleString('en-us', {month: 'short'})
-    for (let i = 1; i < 29; i++) data.push({t: `${month} ${i}`, mj: val})
-  }
-  return data
-}
+import { fm, getChartData } from '../../data/utils'
 
 export default props => {
   if (!props.userDoc) {

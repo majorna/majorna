@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import server from '../../data/server'
+import { fm } from '../../data/utils'
 
 export default class extends Component {
   state = {
@@ -9,8 +10,6 @@ export default class extends Component {
     step: 'start',
     sending: false
   }
-
-  fm = new Intl.NumberFormat().format
 
   handleReceiver = e => this.setState({receiver: e.target.value})
 
@@ -78,7 +77,7 @@ export default class extends Component {
 
           <div><strong>Receiver:</strong> {this.state.receiver}</div>
 
-          <div><strong className="m-t-m">Amount:</strong> mj{this.fm(this.state.amount)}</div>
+          <div><strong className="m-t-m">Amount:</strong> mj{fm(this.state.amount)}</div>
 
           {this.state.error && <strong className="has-text-danger has-text-centered m-t-l">{this.state.error}</strong>}
 
