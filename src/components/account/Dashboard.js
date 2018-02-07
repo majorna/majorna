@@ -1,78 +1,74 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from 'recharts'
 import { Link } from 'react-router-dom'
 
-export default class extends Component {
-  fm = new Intl.NumberFormat().format
+const fm = new Intl.NumberFormat().format
 
-  // generate static chart data for a single value (useful for pre-trading price display)
-  getChartData() {
-    let data = this.props.mj.meta.monthly
-    const val = this.props.mj.meta.val
+// generate static chart data for a single value (useful for pre-trading price display)
+function getChartData(meta) {
+  let data = meta.monthly
+  const val = meta.val
 
-    if (!data && val) {
-      data = []
-      const month = new Date().toLocaleString('en-us', {month: 'short'})
-      for (let i = 1; i < 29; i++) {
-        data.push({t: `${month} ${i}`, mj: val})
-      }
-    }
-    return data
+  if (!data && val) {
+    data = []
+    const month = new Date().toLocaleString('en-us', {month: 'short'})
+    for (let i = 1; i < 29; i++) data.push({t: `${month} ${i}`, mj: val})
+  }
+  return data
+}
+
+export default props => {
+  if (!props.userDoc) {
+    return <div className="mj-box flex-center-all spinner"/>
   }
 
-  render() {
-    if (!this.props.userDoc) {
-      return <div className="mj-box flex-center-all spinner"/>
-    }
-
-    return (
-      <React.Fragment>
-        <div className="mj-box flex-column p-s">
-          <div className="is-size-5 has-text-centered"><span className="faded">Majorna Price:</span> ${this.props.mj.meta.val}*</div>
-          <div className="is-size-5 has-text-centered">
-            <span className="faded">Market Cap:</span> ${this.fm(this.props.mj.meta.cap * this.props.mj.meta.val)} <small>mj{this.fm(this.props.mj.meta.cap)}</small>
-          </div>
-          <ResponsiveContainer width="100%" height={300}>
-            <AreaChart data={this.getChartData()}>
-              <XAxis dataKey="t"/>
-              <YAxis orientation="right"/>
-              <Tooltip/>
-              <Area type='monotone' dataKey='mj' unit="$" stroke='DarkOrange' fill='Wheat'/>
-            </AreaChart>
-          </ResponsiveContainer>
-          <small><i>* (future-fixed trading price before exchange opens)</i></small>
+  return (
+    <React.Fragment>
+      <div className="mj-box flex-column p-s">
+        <div className="is-size-5 has-text-centered"><span className="faded">Majorna Price:</span> ${props.mj.meta.val}*</div>
+        <div className="is-size-5 has-text-centered">
+          <span className="faded">Market Cap:</span> ${fm(props.mj.meta.cap * props.mj.meta.val)} <small>mj{fm(props.mj.meta.cap)}</small>
         </div>
+        <ResponsiveContainer width="100%" height={300}>
+          <AreaChart data={getChartData(props.mj.meta)}>
+            <XAxis dataKey="t"/>
+            <YAxis orientation="right"/>
+            <Tooltip/>
+            <Area type='monotone' dataKey='mj' unit="$" stroke='DarkOrange' fill='Wheat'/>
+          </AreaChart>
+        </ResponsiveContainer>
+        <small><i>* (future-fixed trading price before exchange opens)</i></small>
+      </div>
 
-        <div className="mj-box flex-column">
-          <div><strong>Balance</strong>: <strong>{this.props.userDoc.balance}</strong>mj ({this.props.userDoc.balance * this.props.mj.meta.val}$)</div>
-          <div><strong>Address</strong>: <small>{this.props.user.uid}</small></div>
-          <img width="72" src={this.props.acctQr} alt={this.props.user.uid}/>
-        </div>
+      <div className="mj-box flex-column">
+        <div><strong>Balance</strong>: <strong>{props.userDoc.balance}</strong>mj ({props.userDoc.balance * props.mj.meta.val}$)</div>
+        <div><strong>Address</strong>: <small>{props.user.uid}</small></div>
+        <img width="72" src={props.acctQr} alt={props.user.uid}/>
+      </div>
 
-        <div className="mj-box">
-          <Link to="/send" className="button is-info">Send</Link>
-          <Link to="/receive" className="button m-l-m">Receive</Link>
-        </div>
+      <div className="mj-box">
+        <Link to="/send" className="button is-info">Send</Link>
+        <Link to="/receive" className="button m-l-m">Receive</Link>
+      </div>
 
-        <div className="mj-box flex-column">
-          <strong>Transactions</strong>
-          {this.props.userDoc.txs.map(t =>
-            t.from ? (
-              <div className="m-t-xs" key={t.id}>
-                <span className="tag is-success" title={'TX ID: ' + t.id}>+{t.amount}</span>
-                <span className="m-l-s" title={t.sent}>{t.sent.toLocaleDateString()}</span>
-                <strong className="m-l-s">From:</strong> {t.from}
-              </div>
-            ) : (
-              <div className="m-t-xs" key={t.id}>
-                <span className="tag is-danger" title={'TX ID: ' + t.id}>-{t.amount}</span>
-                <span className="m-l-s" title={t.sent}>{t.sent.toLocaleDateString()}</span>
-                <strong className="m-l-s">To:</strong> {t.to}
-              </div>
-            )
-          )}
-        </div>
-      </React.Fragment>
-    )
-  }
+      <div className="mj-box flex-column">
+        <strong>Transactions</strong>
+        {props.userDoc.txs.map(t =>
+          t.from ? (
+            <div className="m-t-xs" key={t.id}>
+              <span className="tag is-success" title={'TX ID: ' + t.id}>+{t.amount}</span>
+              <span className="m-l-s" title={t.sent}>{t.sent.toLocaleDateString()}</span>
+              <strong className="m-l-s">From:</strong> {t.from}
+            </div>
+          ) : (
+            <div className="m-t-xs" key={t.id}>
+              <span className="tag is-danger" title={'TX ID: ' + t.id}>-{t.amount}</span>
+              <span className="m-l-s" title={t.sent}>{t.sent.toLocaleDateString()}</span>
+              <strong className="m-l-s">To:</strong> {t.to}
+            </div>
+          )
+        )}
+      </div>
+    </React.Fragment>
+  )
 }
