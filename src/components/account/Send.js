@@ -12,7 +12,23 @@ export default class extends Component {
     sending: false
   }
 
-  handleReceiver = e => this.setState({receiver: e.target.value})
+  handleReceiver = async e => {
+    const receiverId = e.target.value
+    this.setState({receiver: receiverId})
+
+    // get receiver name if exists
+    let receiverName
+    if (receiverId) {
+      try {
+        const res = await server.users.get(receiverId)
+        if (res.status === 200) {
+          const user = await res.json()
+          receiverName = user.name
+        }
+      } catch (e) { console.error(e) }
+    }
+    this.setState({receiverName})
+  }
 
   handleAmount = e => {
     // cannot send more than account
@@ -112,7 +128,7 @@ export default class extends Component {
 
         <strong>Receiver</strong>
         <input className="input" type="text" value={this.state.receiver} onChange={this.handleReceiver}/>
-        {this.state.receiverName && <small className="has-text-info">{this.state.receiverName}</small>}
+        {this.state.receiverName && <strong className="has-text-info">Name: {this.state.receiverName}</strong>}
 
         <strong className="m-t-m">Amount</strong>
         <input className="input" type="number" value={this.state.amount} onChange={this.handleAmount}/>

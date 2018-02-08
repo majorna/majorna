@@ -9,7 +9,8 @@ export default {
     ping: () => get('/ping')
   },
   users: {
-    init: () => get('/users/init')
+    init: () => get('/users/init'),
+    get: id => get('/users/' + id)
   },
   txs: {
     make: (to, amount) => postJson('/txs', {to, amount})
