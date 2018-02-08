@@ -38,11 +38,8 @@ export default class extends Component {
     }
 
     // cannot send negative amount
-    if (amount <= 0) {
-      amount = 0
-    }
-
-    this.setState({amount: parseInt(amount, 10)})
+    amount = amount <= 0 ? '' : parseInt(amount, 10)
+    this.setState({amount: amount && parseInt(amount, 10)})
   }
 
   handleCancel = () => this.props.history.goBack()
@@ -80,7 +77,6 @@ export default class extends Component {
   }
 
   render() {
-    // todo: allow amount input be empty string or it is really annoying to put in single digit amounts like "5" (which becomes "05")
     // todo: improve server errors (i.e. receiver does not exist)
     // todo: cleanup state code & error handling code
     // todo: receiver box should also allow search by email (maybe not for security?)
