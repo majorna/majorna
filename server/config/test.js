@@ -16,8 +16,7 @@ let koaApp
 suiteSetup(async () => {
   // delete then re-initialize firebase auth with users
   const usersRes = await firebaseConfig.auth.listUsers()
-  // todo: deleteUser is async so we need Promise.all here or an async iterator
-  usersRes.users.forEach(u => firebaseConfig.auth.deleteUser(u.uid))
+  await Promise.all(usersRes.users.map(u => firebaseConfig.auth.deleteUser(u.uid)))
   const u1 = testData.users.u1Auth
   const u4 = testData.users.u4Auth
   await firebaseConfig.auth.createUser(u1)
