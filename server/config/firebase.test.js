@@ -6,7 +6,7 @@ suite('config: firebase', () => {
   test('firestore access rules', async () => {
     // todo: people can only read their user doc and cannot write to it
     // todo: people can't read others' transactions
-    // todo: none of the collections are writeable
+    // todo: none of the collections/docs are writeable/deleteable/etc.
 
     const firestore = testData.users.u1FBClient.firestore()
 

@@ -13,3 +13,15 @@ exports.init = route.get('/users/init', async ctx => {
   }
   ctx.status = 204
 })
+
+exports.get = route.get('/users/:id', async (ctx, id) => {
+  try {
+    const user = await db.getUser(id)
+    ctx.body = {
+      name: user.name
+    }
+  } catch (e) {
+    console.error(e)
+    ctx.throw(404, 'User not found.')
+  }
+})

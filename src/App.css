@@ -22,14 +22,14 @@
     flex-direction: column;
 }
 
-.flex-center-all {
+/* alignment */
+.center-all {
     align-items: center; /* flex: vertical */
     justify-content: center; /* flex: horizontal */
     text-align: center; /* text: centered text */
 }
 
-/* alignment */
-.h-center {
+.center-h {
     justify-content: center; /* flex: horizontal */
     text-align: center; /* text: centered text */
 }

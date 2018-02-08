@@ -1,9 +1,9 @@
 import React from 'react'
 
-export default () => (
+export default props => (
   <div>
     <span>Wow</span>
   </div>
 )
 
-// const OneLinerSample = () => <div>Wow</div>
+// const OneLinerSample = props => <div>Wow</div>

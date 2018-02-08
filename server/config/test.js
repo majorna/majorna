@@ -16,7 +16,7 @@ let koaApp
 suiteSetup(async () => {
   // delete then re-initialize firebase auth with users
   const usersRes = await firebaseConfig.auth.listUsers()
-  usersRes.users.forEach(u => firebaseConfig.auth.deleteUser(u.uid))
+  await Promise.all(usersRes.users.map(u => firebaseConfig.auth.deleteUser(u.uid)))
   const u1 = testData.users.u1Auth
   const u4 = testData.users.u4Auth
   await firebaseConfig.auth.createUser(u1)
@@ -88,7 +88,7 @@ const testData = exports.data = {
       name: 'Chuck Norris',
       created: time,
       balance: initBalance,
-      txs: [{from, to: '1', sent: time, amount: initBalance}]
+      txs: [{from, id: 'kou908y4hd', sent: time, amount: initBalance}]
     },
     u1Auth: {
       uid: '1',
@@ -106,14 +106,14 @@ const testData = exports.data = {
       name: 'Morgan Almighty',
       created: time,
       balance: initBalance,
-      txs: [{from, to: '2', sent: time, amount: initBalance}]
+      txs: [{from, id: '09gsda89987goaew', sent: time, amount: initBalance}]
     },
     u3Doc: {
       email: 'john.doe@majorna.mj',
       name: 'John Doe',
       created: time,
       balance: initBalance,
-      txs: [{from, to: '3', sent: time, amount: initBalance}]
+      txs: [{from, id: 'zxc56326yhdsk', sent: time, amount: initBalance}]
     },
     u4Auth: {
       uid: '4',

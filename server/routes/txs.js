@@ -9,6 +9,13 @@ exports.send = route.post('/txs', async ctx => {
   ctx.assert(tx.to, 400, '"to" field is required.')
   ctx.assert(tx.amount, 400, '"amount" field is required.')
 
+  // strip address prefix if any
+  if (tx.to.startsWith('mj:')) {
+    tx.to = tx.to.substring(3)
+  } else if (tx.to.startsWith('majorna:')) {
+    tx.to = tx.to.substring(8)
+  }
+
   try {
     await db.makeTx(ctx.state.user.uid, tx.to, tx.amount)
   } catch (e) {

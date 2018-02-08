@@ -16,7 +16,10 @@ suite('db', () => {
   })
 
   test('getUser', async () => {
-    let err
+    const user = await db.getUser('1')
+    assert(user.name)
+
+    let err = null
     try { await db.getUser('98u23hkasd8') } catch (e) { err = e }
     assert(err)
   })
@@ -46,10 +49,15 @@ suite('db', () => {
     assert(tx.to === uid)
     assert(tx.sent.getTime() === userDoc.created.getTime())
     assert(tx.amount === 500)
+
+    // try to create user again and verify error
+    let err = null
+    try { await db.createUserDoc(userData, uid) } catch (e) { err = e }
+    assert(err)
   })
 
   test('getTx', async () => {
-    let err
+    let err = null
     try { await db.getTx('sdaf089y097gs') } catch (e) { err = e }
     assert(err)
   })
@@ -86,7 +94,7 @@ suite('db', () => {
   })
 
   test('makeTx: invalid', async () => {
-    let err // missing args
+    let err = null // missing args
     try { await db.makeTx() } catch (e) { err = e }
     assert(err)
 
