@@ -2,6 +2,12 @@ import React, { Component } from 'react'
 import server from '../../data/server'
 import { fm } from '../../data/utils'
 
+// todo: every character difference in handleReceiver results in a search query and the last one overwrite everything (might be the one with no result)
+// todo: improve server errors (i.e. receiver does not exist)
+// todo: cleanup state code & error handling code
+// todo: receiver box should also allow search by email (maybe not for security?)
+// todo: show receiver details (acct no, name) upon receiver input
+// todo: ask to authenticate again before sending (10 min cooldown)
 export default class extends Component {
   state = {
     receiver: '',
@@ -77,12 +83,6 @@ export default class extends Component {
   }
 
   render() {
-    // todo: improve server errors (i.e. receiver does not exist)
-    // todo: cleanup state code & error handling code
-    // todo: receiver box should also allow search by email (maybe not for security?)
-    // todo: show receiver details (acct no, name) upon receiver input
-    // todo: ask to authenticate again before sending (10 min cooldown)
-
     if (this.state.step === 'confirm') {
       return (
         <div className="mj-box flex-column">
