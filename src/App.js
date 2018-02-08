@@ -79,7 +79,9 @@ export default withRouter(class App extends Component {
                 [{data: `majorna:${userData.uid}`, mode: 'byte'}],
                 {errorCorrectionLevel: 'H', margin: 1, scale: 8})})
             } else {
-              await server.users.init() // todo: id token might still be null at this point
+              // id token might still be null at this point
+              if (!config.server.token) config.server.token = await u.getIdToken()
+              await server.users.init()
             }
           })
         this.fbUnsubMeta = this.db.collection('mj').doc('meta').onSnapshot(doc => this.setState({mj: {meta: doc.data()}}))
