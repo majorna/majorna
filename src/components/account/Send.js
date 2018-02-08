@@ -83,7 +83,7 @@ export default class extends Component {
     // todo: allow amount input be empty string or it is really annoying to put in single digit amounts like "5" (which becomes "05")
     // todo: improve server errors (i.e. receiver does not exist)
     // todo: cleanup state code & error handling code
-    // todo: receiver box can be a search box (for account no or email or maybe event name)
+    // todo: receiver box should also allow search by email (maybe not for security?)
     // todo: show receiver details (acct no, name) upon receiver input
     // todo: ask to authenticate again before sending (10 min cooldown)
 
