@@ -19,6 +19,14 @@ octokit.authenticate({
 const owner = config.github.owner
 const repo = config.github.repo
 
+// https://stackoverflow.com/a/7225329/628273
+function gitBlobHash (buffer) {
+  const gitFileBlob = Buffer.concat([Buffer.from(`blob ${buffer.length}\0`), buffer])
+  const fileHasher = crypto.createHash('sha1')
+  fileHasher.update(gitFileBlob)
+  return fileHasher.digest('hex')
+}
+
 /**
  * Creates a file with given data if it does not exist.
  * Updates the file with the data if it exists.
@@ -26,13 +34,12 @@ const repo = config.github.repo
  * @param text - Text to be appended at the end of the file.
  */
 exports.upsertFile = async (path, text) => {
-  const gitbRes = await octokit.repos.getContent({owner, repo, path})
-  const fileRes = await axios.get(gitbRes.data.download_url)
+  const gitRes = await octokit.repos.getContent({owner, repo, path})
+  const fileRes = await axios.get(gitRes.data.download_url)
   const newFile = fileRes.data + '\n' + text
   const fileBuffer = Buffer.from(newFile)
   const fileBase64 = fileBuffer.toString('base64')
-  const fileHasher = crypto.createHash('sha1')
-  fileHasher.update(fileBuffer)
+  const fileHash = gitBlobHash(fileBuffer)
 
   const upGitRes = await octokit.repos.updateFile({
     owner,
@@ -40,7 +47,7 @@ exports.upsertFile = async (path, text) => {
     path,
     message: 'tx',
     content: fileBase64,
-    sha: fileHasher.digest('hex')
+    sha: fileHash
   })
 
   return upGitRes.status
