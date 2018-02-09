@@ -17,6 +17,7 @@ octokit.authenticate({
 const owner = config.github.owner
 const repo = config.github.repo
 const message = 'tx' // commit msg
+const committer = {name: 'majorna', email: 'mj@majorna'}
 
 /**
  * Creates a file with given data if it does not exist.
@@ -28,14 +29,13 @@ exports.upsertFile = async (path, text) => {
   let res
   try {
     res = await octokit.repos.getContent({owner, repo, path})
-    console.log('some res', res)
   } catch (e) {
     if (e.code !== 404) {
       throw e
     }
 
     // file does not exist so create it
-    await octokit.repos.createFile(owner, repo, path, message, Buffer.from(text).toString('base64'))
+    await octokit.repos.createFile({owner, repo, path, message, committer, content: Buffer.from(text).toString('base64')})
     return
   }
 
@@ -44,6 +44,7 @@ exports.upsertFile = async (path, text) => {
     repo,
     path,
     message,
+    committer,
     content: Buffer.concat([Buffer.from(res.data.content, 'base64'), Buffer.from('\n' + text)]).toString('base64'),
     sha: res.data.sha
   })
