@@ -6,6 +6,7 @@
  */
 const octokit = require('@octokit/rest')()
 const config = require('../config/config')
+const utils = require('./utils')
 
 // token auth (https://github.com/settings/tokens)
 octokit.authenticate({
@@ -50,14 +51,6 @@ exports.upsertFile = async (path, text) => {
   })
 }
 
-function getWeekNumber (date) {
-  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()))
-  const dayNum = d.getUTCDay() || 7
-  d.setUTCDate(d.getUTCDate() + 4 - dayNum)
-  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1))
-  return Math.ceil((((d - yearStart) / 86400000) + 1) / 7)
-}
-
 /**
  * Inserts a transaction into a block, which is currently choose by date.
  * @param tx - Transaction object.
@@ -65,6 +58,6 @@ function getWeekNumber (date) {
 exports.insertTxInBlock = async tx => {
   // block file frequency = 1 per week for now
   const now = new Date()
-  const path = `${now.getFullYear()}/weeks/${getWeekNumber(now)}`
+  const path = `${now.getFullYear()}/weeks/${utils.getWeekNumber(now)}`
   await exports.upsertFile(path, JSON.stringify(tx))
 }
