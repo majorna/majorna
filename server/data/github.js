@@ -50,12 +50,12 @@ exports.upsertFile = async (path, text) => {
   })
 }
 
-Date.prototype.getWeekNumber = function(){
-  const d = new Date(Date.UTC(this.getFullYear(), this.getMonth(), this.getDate()));
-  const dayNum = d.getUTCDay() || 7;
-  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
-  const yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
-  return Math.ceil((((d - yearStart) / 86400000) + 1)/7)
+function getWeekNumber (date) {
+  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()))
+  const dayNum = d.getUTCDay() || 7
+  d.setUTCDate(d.getUTCDate() + 4 - dayNum)
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1))
+  return Math.ceil((((d - yearStart) / 86400000) + 1) / 7)
 }
 
 /**
@@ -65,6 +65,6 @@ Date.prototype.getWeekNumber = function(){
 exports.insertTxInBlock = async tx => {
   // block file frequency = 1 per week for now
   const now = new Date()
-  const path = `${now.getFullYear()}/weeks/${now.getWeekNumber()}`
+  const path = `${now.getFullYear()}/weeks/${getWeekNumber(now)}`
   await exports.upsertFile(path, JSON.stringify(tx))
 }

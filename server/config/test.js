@@ -128,7 +128,9 @@ const testData = exports.data = {
     u4Request: null
   },
   txs: [
-    // todo: import from user docs
+    {from, to: '1', id: 'kou908y4hd', sent: time, amount: initBalance},
+    {from, to: '2', id: '09gsda89987goaew', sent: time, amount: initBalance},
+    {from, to: '3', id: 'zxc56326yhdsk', sent: time, amount: initBalance}
   ],
   // Firebase authentication ID token (JWT) content when decoded
   decodedIdTokenSample: {
