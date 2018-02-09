@@ -4,7 +4,9 @@
  * - Node.js SDK: https://github.com/octokit/rest.js
  * - Node.js SDK ref: https://octokit.github.io/rest.js/#api-Repos-getContent
  */
+const crypto = require('crypto')
 const octokit = require('@octokit/rest')()
+const axios = require('axios')
 const config = require('../config/config')
 
 // token auth (https://github.com/settings/tokens)
@@ -21,12 +23,27 @@ const repo = config.github.repo
  * Creates a file with given data if it does not exist.
  * Updates the file with the data if it exists.
  * @param path - Path of the file in git repo.
- * @param data - Data to be appended at the end of the file.
+ * @param text - Text to be appended at the end of the file.
  */
-exports.upsertFile = async (path, data) => {
-  const res = await octokit.repos.getContent({owner, repo, path})
-  console.log(res)
-  return res
+exports.upsertFile = async (path, text) => {
+  const gitbRes = await octokit.repos.getContent({owner, repo, path})
+  const fileRes = await axios.get(gitbRes.data.download_url)
+  const newFile = fileRes.data + '\n' + text
+  const fileBuffer = Buffer.from(newFile)
+  const fileBase64 = fileBuffer.toString('base64')
+  const fileHasher = crypto.createHash('sha1')
+  fileHasher.update(fileBuffer)
+
+  const upGitRes = await octokit.repos.updateFile({
+    owner,
+    repo,
+    path,
+    message: 'tx',
+    content: fileBase64,
+    sha: fileHasher.digest('hex')
+  })
+
+  return upGitRes.status
 }
 
 /**
