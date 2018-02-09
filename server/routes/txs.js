@@ -17,6 +17,7 @@ exports.send = route.post('/txs', async ctx => {
   }
 
   try {
+    // todo: get entire tx object from this and pass to github.makeTx (also adjust tests and remove isCloseToDate
     await db.makeTx(ctx.state.user.uid, tx.to, tx.amount)
   } catch (e) {
     console.error(e)
