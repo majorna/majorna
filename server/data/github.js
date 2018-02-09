@@ -4,7 +4,6 @@
  * - Node.js SDK: https://github.com/octokit/rest.js
  * - Node.js SDK ref: https://octokit.github.io/rest.js/#api-Repos-getContent
  */
-const crypto = require('crypto')
 const octokit = require('@octokit/rest')()
 const axios = require('axios')
 const config = require('../config/config')
@@ -19,14 +18,6 @@ octokit.authenticate({
 const owner = config.github.owner
 const repo = config.github.repo
 
-// https://stackoverflow.com/a/7225329/628273
-function gitBlobHash (buffer) {
-  const gitFileBlob = Buffer.concat([Buffer.from(`blob ${buffer.length}\0`), buffer])
-  const fileHasher = crypto.createHash('sha1')
-  fileHasher.update(gitFileBlob)
-  return fileHasher.digest('hex')
-}
-
 /**
  * Creates a file with given data if it does not exist.
  * Updates the file with the data if it exists.
@@ -36,21 +27,18 @@ function gitBlobHash (buffer) {
 exports.upsertFile = async (path, text) => {
   const gitRes = await octokit.repos.getContent({owner, repo, path})
   const fileRes = await axios.get(gitRes.data.download_url)
-  const newFile = fileRes.data + '\n' + text
+  const newFile = fileRes.data + text
   const fileBuffer = Buffer.from(newFile)
   const fileBase64 = fileBuffer.toString('base64')
-  const fileHash = gitBlobHash(fileBuffer)
 
-  const upGitRes = await octokit.repos.updateFile({
+  await octokit.repos.updateFile({
     owner,
     repo,
     path,
     message: 'tx',
     content: fileBase64,
-    sha: fileHash
+    sha: gitRes.data.sha
   })
-
-  return upGitRes.status
 }
 
 /**
