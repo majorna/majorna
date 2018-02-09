@@ -41,6 +41,7 @@ exports.getUser = async id => {
 /**
  * Create user doc and push first bonus transaction, asynchronously.
  * Can be used as a firestore cloud function trigger.
+ * Returns newly created user data.
  */
 exports.createUserDoc = (user, uid) => firestore.runTransaction(async t => {
   assert(user, 'user parameters is required')
@@ -63,7 +64,7 @@ exports.createUserDoc = (user, uid) => firestore.runTransaction(async t => {
   t.create(txRef, {from: 'majorna', to: uid, sent: time, amount: initBalance})
 
   // create user doc
-  t.create(usersColRef.doc(uid), {
+  const userData = {
     email: email,
     name: name,
     created: time,
@@ -76,7 +77,10 @@ exports.createUserDoc = (user, uid) => firestore.runTransaction(async t => {
         amount: initBalance
       }
     ]
-  })
+  }
+
+  t.create(usersColRef.doc(uid), userData)
+  return userData
 })
 
 /**
@@ -94,7 +98,7 @@ exports.getTx = async id => {
 /**
  * Performs a financial transaction from person A to B asynchronously.
  * Both user documents and transactions collection is updated with the transaction data and results.
- * Returned promise resolves to transaction ID -or- to an error if transaction fails.
+ * Returned promise resolves to completed transaction data -or- to an error if transaction fails.
  */
 exports.makeTx = (from, to, amount) => firestore.runTransaction(async t => {
   assert(from, 'from parameters is required')
@@ -135,7 +139,7 @@ exports.makeTx = (from, to, amount) => firestore.runTransaction(async t => {
   receiver.txs.unshift({id: txRef.id, from, sent, amount})
   t.update(receiverDocRef, {balance: receiver.balance + amount, txs: receiver.txs})
 
-  return txRef.id
+  return {id: txRef.id, from, to, sent, amount}
 })
 
 /**
