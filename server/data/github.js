@@ -5,7 +5,6 @@
  * - Node.js SDK ref: https://octokit.github.io/rest.js/#api-Repos-getContent
  */
 const octokit = require('@octokit/rest')()
-const axios = require('axios')
 const config = require('../config/config')
 
 // token auth (https://github.com/settings/tokens)
@@ -25,19 +24,14 @@ const repo = config.github.repo
  * @param text - Text to be appended at the end of the file.
  */
 exports.upsertFile = async (path, text) => {
-  const gitRes = await octokit.repos.getContent({owner, repo, path})
-  const fileRes = await axios.get(gitRes.data.download_url)
-  const newFile = fileRes.data + text
-  const fileBuffer = Buffer.from(newFile)
-  const fileBase64 = fileBuffer.toString('base64')
-
+  const res = await octokit.repos.getContent({owner, repo, path})
   await octokit.repos.updateFile({
     owner,
     repo,
     path,
     message: 'tx',
-    content: fileBase64,
-    sha: gitRes.data.sha
+    content: Buffer.concat([Buffer.from(res.data.content, 'base64'), Buffer.from('\n' + text)]).toString('base64'),
+    sha: res.data.sha
   })
 }
 
