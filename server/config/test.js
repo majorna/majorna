@@ -127,7 +127,9 @@ const testData = exports.data = {
     u4Token: null,
     u4Request: null
   },
-  txs: [],
+  txs: [
+    // todo: import from user docs
+  ],
   // Firebase authentication ID token (JWT) content when decoded
   decodedIdTokenSample: {
     iss: 'https://securetoken.google.com/majorna-fire',

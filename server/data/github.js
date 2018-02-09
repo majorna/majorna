@@ -59,10 +59,12 @@ Date.prototype.getWeekNumber = function(){
 }
 
 /**
- * Inserts a transaction into a block.
- * @param tx - Transaction data.
+ * Inserts a transaction into a block, which is currently choose by date.
+ * @param tx - Transaction object.
  */
-exports.insertTxInBlock = tx => {
+exports.insertTxInBlock = async tx => {
   // block file frequency = 1 per week for now
-  const path = `2018/${new Date().getWeekNumber()}`
+  const now = new Date()
+  const path = `${now.getFullYear()}/weeks/${now.getWeekNumber()}`
+  await exports.upsertFile(path, JSON.stringify(tx))
 }
