@@ -5,7 +5,7 @@
  * - Node.js SDK ref: https://octokit.github.io/rest.js/#api-Repos-getContent
  */
 const octokit = require('@octokit/rest')()
-const config = require('./config')
+const config = require('../config/config')
 
 // token auth (https://github.com/settings/tokens)
 octokit.authenticate({
@@ -25,6 +25,8 @@ const repo = config.github.repo
  */
 exports.upsertFile = async (path, data) => {
   const res = await octokit.repos.getContent({owner, repo, path})
+  console.log(res)
+  return res
 }
 
 /**
