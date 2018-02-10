@@ -1,3 +1,5 @@
+const AssertionError = require('assert').AssertionError
+
 exports.sleep = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds))
 
 exports.isCloseToDate = (date, closeToDate = new Date(), varianceSeconds = 30) =>
@@ -18,3 +20,10 @@ exports.getWeekNumber = date => {
  * Instances of this error type will have their 'message' field shown to users.
  */
 exports.PublicError = class extends Error {}
+
+exports.handlePubErr = (ctx, err, errCode = 400) => {
+  console.error(err)
+  if (err instanceof exports.PublicError || err instanceof AssertionError) {
+    ctx.throw(errCode, err.message)
+  }
+}
