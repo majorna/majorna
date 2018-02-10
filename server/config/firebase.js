@@ -3,11 +3,11 @@
  * - API ref: https://firebase.google.com/docs/reference/admin/node/
  *
  * Firestore:
- *  * - API ref: https://cloud.google.com/nodejs/docs/reference/firestore/latest/
+ * - API ref: https://cloud.google.com/nodejs/docs/reference/firestore/latest/
  * - Src: https://github.com/googleapis/nodejs-firestore
  *
  * gRPC:
- * - Status Ref: https://grpc.io/grpc/node/grpc.html#.status__anchor
+ * - Status API Ref: https://grpc.io/grpc/node/grpc.html#.status__anchor
  * - Src: https://github.com/grpc/grpc-node/blob/master/packages/grpc-native-core/src/constants.js
  *
  * Firestore calls gRPC errors in the format {code: grpc.status.ALREADY_EXISTS ('6'), message: ..., details: ...}
