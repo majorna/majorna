@@ -2,12 +2,6 @@ const assert = require('assert')
 const testData = require('../config/test').data
 
 suite('config: server', () => {
-  test('valid token auth', async () => {
-    const res = await testData.users.u1Request.get('/ping')
-    assert(res.status === 200)
-    assert(res.data === 'pong')
-  })
-
   test('receive valid cors headers', async () => {
     const res = await testData.users.anonRequest.options('/users/init', {
       headers: {
@@ -18,6 +12,17 @@ suite('config: server', () => {
     assert(res.status === 204)
     assert(res.headers['access-control-allow-origin'] === 'randomOrigin')
     assert(res.headers['access-control-allow-methods'].includes('GET'))
+  })
+
+  test('error', async () => {
+    // todo: make sure that we show PublicError/AssertionErrors to users
+    // and just log the other and send 500 (except for 404)
+  })
+
+  test('valid token auth', async () => {
+    const res = await testData.users.u1Request.get('/ping')
+    assert(res.status === 200)
+    assert(res.data === 'pong')
   })
 
   test('no token auth', async () => {
