@@ -6,6 +6,8 @@ const cors = require('kcors')
 const config = require('./config')
 const firebaseConfig = require('./firebase')
 const db = require('../data/db')
+const utils = require('../data/utils')
+const AssertionError = require('assert').AssertionError
 
 function koaConfig () {
   const koaApp = new Koa()
@@ -25,6 +27,18 @@ function koaConfig () {
   })
 
   koaApp.use(bodyParser())
+
+  // AssertionError and UserVisibleError are user visible
+  koaApp.use(async (ctx, next) => {
+    try {
+      await next()
+    } catch (err) {
+      if (err instanceof utils.UserVisibleError || err instanceof AssertionError) {
+        ctx.throw(400, err.message)
+      }
+      throw err
+    }
+  })
 
   // mount all the routes
   fs.readdirSync('routes').forEach(file => {

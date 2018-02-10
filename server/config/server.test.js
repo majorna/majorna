@@ -15,7 +15,7 @@ suite('config: server', () => {
   })
 
   test('error', async () => {
-    // todo: make sure that we show PublicError/AssertionErrors to users
+    // todo: make sure that we show UserVisibleError/AssertionErrors to users
     // and just log the other and send 500 (except for 404)
   })
 

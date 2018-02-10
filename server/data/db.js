@@ -1,5 +1,5 @@
 const assert = require('assert')
-const PublicError = require('./utils').PublicError
+const PublicError = require('./utils').UserVisibleError
 const firebaseConfig = require('../config/firebase')
 const firestore = firebaseConfig.firestore
 
