@@ -9,7 +9,7 @@ import './App.css'
 import config from './data/config'
 import server from './data/server'
 import Navbar from './components/Navbar'
-import GetStarted from './components/GetStarted'
+import Home from './components/Home'
 import Login from './components/Login'
 import Dashboard from './components/account/Dashboard'
 import Footer from './components/Footer'
@@ -109,7 +109,7 @@ export default withRouter(class App extends Component {
         <Navbar logout={this.logout} user={this.state.user}/>
 
         <Switch>
-          <Route exact path='/' component={GetStarted} />
+          <Route exact path='/' component={Home} />
           <Route path='/login' render={routeProps => <Login {...routeProps} uiConfig={this.firebaseUIConfig} firebaseAuth={this.firebaseAuth}/>} />
           <Route path='/dashboard' render={routeProps => <Dashboard {...routeProps} user={this.state.user} acctQr={this.state.acctQr} userDoc={this.state.userDoc} mj={this.state.mj}/>} />
           <Route path='/send' render={routeProps => <Send {...routeProps} userDoc={this.state.userDoc}/>} />
