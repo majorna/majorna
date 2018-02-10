@@ -36,7 +36,7 @@ Following environment variables are required to run the tests:
 ```
 MAJORNA_FIREBASE_TEST_JSON
 MAJORNA_FIREBASE_TEST_JSON_PATH # alternative
-MAJORNA_FIREBASE_CLIENT_TEST_JSON_PATH
+MAJORNA_FIREBASE_CLIENT_TEST_JSON_PATH # same public config used for UI (see App.js)
 MAJORNA_GITHUB_TOKEN
 ```
 
