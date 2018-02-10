@@ -19,9 +19,8 @@ exports.getWeekNumber = date => {
 /**
  * Instances of this error type will have their 'message' field shown to users.
  */
-exports.PublicError = class extends Error {
-  expose = true // error message will be sent to user by Koa
-}
+exports.PublicError = class extends Error {}
+exports.PublicError.prototype.expose = true // error message will be sent to user by Koa
 
 exports.handlePubErr = (ctx, err, errCode = 400) => {
   console.error(err)
