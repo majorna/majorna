@@ -20,6 +20,7 @@ exports.send = route.post('/txs', async ctx => {
   try {
     const txData = await db.makeTx(ctx.state.user.uid, tx.to, tx.amount)
     await github.insertTxInBlock(txData)
+    // todo: try github insert again if it fails
   } catch (e) {
     console.error(e)
     ctx.throw(400, 'Failed to make transaction.')
