@@ -45,7 +45,7 @@ suite('config: server', () => {
   })
 
   test('invalid route with valid token', async () => {
-    const res = await testData.users.u1Request.get('/users/po09879234ghsdaf')
+    const res = await testData.users.u1Request.get('/usersxxx/po09879234ghsdaf')
     assert(res.status === 404)
 
     const res2 = await testData.users.u1Request.get('/kjlh3498udfsaf')
