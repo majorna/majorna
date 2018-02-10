@@ -6,12 +6,12 @@ suite('route: users', () => {
     const res = await testData.users.u4Request.get('/users/init')
     assert(res.status === 204)
 
-    // now init same user again and verify error
+    // now init same user again and that no error is returned
     const resExisting = await testData.users.u4Request.get('/users/init')
-    assert(resExisting.status === 400)
+    assert(resExisting.status === 200)
 
     const resExisting2 = await testData.users.u1Request.get('/users/init')
-    assert(resExisting2.status === 400)
+    assert(resExisting2.status === 200)
   })
 
   test('get', async () => {

@@ -10,7 +10,8 @@
  * - Status Ref: https://grpc.io/grpc/node/grpc.html#.status__anchor
  * - Src: https://github.com/grpc/grpc-node/blob/master/packages/grpc-native-core/src/constants.js
  *
- * Firestore calls gRPC errors in the format {code: nodejs grpc.status.ALREADY_EXISTS (6), message: ..., details: ...}
+ * Firestore calls gRPC errors in the format {code: grpc.status.ALREADY_EXISTS ('6'), message: ..., details: ...}
+ * Error code comparison requires parseInt: parseInt(err.code) === grpc.status.ALREADY_EXISTS
  */
 const firebaseAdmin = require('firebase-admin')
 const config = require('./config')
