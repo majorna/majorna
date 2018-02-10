@@ -1,5 +1,5 @@
 const assert = require('assert')
-const PublicError = require('./utils').UserVisibleError
+const utils = require('./utils')
 const firebaseConfig = require('../config/firebase')
 const firestore = firebaseConfig.firestore
 
@@ -34,7 +34,7 @@ exports.getUser = async id => {
   assert(id, 'user ID parameters is required')
   const userDoc = await usersColRef.doc(id).get()
   if (!userDoc.exists) {
-    throw new PublicError(`user ID:${id} does not exist`)
+    throw new utils.UserVisibleError(`user ID:${id} does not exist`, 404)
   }
   return userDoc.data()
 }
@@ -91,7 +91,7 @@ exports.getTx = async id => {
   assert(id, 'tx ID parameters is required')
   const txDoc = await txsColRef.doc(id).get()
   if (!txDoc.exists) {
-    throw new PublicError(`transaction ID:${id} does not exist`)
+    throw new utils.UserVisibleError(`transaction ID:${id} does not exist`, 404)
   }
   return txDoc.data()
 }
@@ -113,11 +113,11 @@ exports.makeTx = (from, to, amount) => firestore.runTransaction(async t => {
   const senderDocRef = usersColRef.doc(from)
   const senderDoc = await t.get(senderDocRef)
   if (!senderDoc.exists) {
-    throw new PublicError(`sender ID:${from} does not exist`)
+    throw new utils.UserVisibleError(`sender ID:${from} does not exist`)
   }
   const sender = senderDoc.data()
   if (sender.balance < amount) {
-    throw new PublicError(`sender ID:${from} has insufficient funds`)
+    throw new utils.UserVisibleError(`sender ID:${from} has insufficient funds`)
   }
 
   const sent = new Date()
@@ -127,7 +127,7 @@ exports.makeTx = (from, to, amount) => firestore.runTransaction(async t => {
   const receiverDoc = await t.get(receiverDocRef)
   const receiver = receiverDoc.data()
   if (!receiverDoc.exists) {
-    throw new PublicError(`receiver ID:${to} does not exist`)
+    throw new utils.UserVisibleError(`receiver ID:${to} does not exist`)
   }
 
   // add tx to txs collection

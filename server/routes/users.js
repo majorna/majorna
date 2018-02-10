@@ -21,7 +21,5 @@ exports.init = route.get('/users/init', async ctx => {
 
 exports.get = route.get('/users/:id', async (ctx, id) => {
   const user = await db.getUser(id)
-  ctx.body = {
-    name: user.name
-  }
+  ctx.body = {name: user.name}
 })

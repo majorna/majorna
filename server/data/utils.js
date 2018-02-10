@@ -17,6 +17,10 @@ exports.getWeekNumber = date => {
 /**
  * Instances of this error type will have their 'message' field shown to users.
  */
-exports.UserVisibleError = class extends Error {}
-exports.UserVisibleError.prototype.expose = true // error message will be sent to user by Koa
-exports.UserVisibleError.prototype.status = 400
+exports.UserVisibleError = class extends Error {
+  constructor (msg, httpStatusCode = 400) {
+    super(msg)
+    this.expose = true // error message will be sent to user by Koa
+    this.status = httpStatusCode
+  }
+}
