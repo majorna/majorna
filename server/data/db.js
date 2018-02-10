@@ -116,6 +116,7 @@ exports.makeTx = (from, to, amount) => firestore.runTransaction(async t => {
     throw new utils.UserVisibleError(`sender ID:${from} does not exist`)
   }
   const sender = senderDoc.data()
+  const fromName = sender.name
   if (sender.balance < amount) {
     throw new utils.UserVisibleError(`sender ID:${from} has insufficient funds`)
   }
@@ -125,19 +126,20 @@ exports.makeTx = (from, to, amount) => firestore.runTransaction(async t => {
   // check if receiver exists
   const receiverDocRef = usersColRef.doc(to)
   const receiverDoc = await t.get(receiverDocRef)
-  const receiver = receiverDoc.data()
   if (!receiverDoc.exists) {
     throw new utils.UserVisibleError(`receiver ID:${to} does not exist`)
   }
+  const receiver = receiverDoc.data()
+  const toName = receiver.name
 
   // add tx to txs collection
   const txRef = txsColRef.doc()
   t.create(txRef, {from, to, sent, amount})
 
   // update user docs with tx and updated balances
-  sender.txs.unshift({id: txRef.id, to, sent, amount})
+  sender.txs.unshift({id: txRef.id, to, toName, sent, amount})
   t.update(senderDocRef, {balance: sender.balance - amount, txs: sender.txs})
-  receiver.txs.unshift({id: txRef.id, from, sent, amount})
+  receiver.txs.unshift({id: txRef.id, from, fromName, sent, amount})
   t.update(receiverDocRef, {balance: receiver.balance + amount, txs: receiver.txs})
 
   return {id: txRef.id, from, to, sent, amount}
