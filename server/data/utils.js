@@ -19,3 +19,4 @@ exports.getWeekNumber = date => {
  */
 exports.UserVisibleError = class extends Error {}
 exports.UserVisibleError.prototype.expose = true // error message will be sent to user by Koa
+exports.UserVisibleError.prototype.status = 400
