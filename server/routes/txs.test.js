@@ -2,6 +2,8 @@ const assert = require('assert')
 const db = require('../data/db')
 const testData = require('../config/test').data
 
+// todo: validate tx insert @github
+
 suite('route: txs', () => {
   test('valid tx', async () => {
     let res = await testData.users.u1Request.post('/txs', {

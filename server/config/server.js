@@ -6,6 +6,7 @@ const cors = require('kcors')
 const config = require('./config')
 const firebaseConfig = require('./firebase')
 const db = require('../data/db')
+const AssertionError = require('assert').AssertionError
 
 function koaConfig () {
   const koaApp = new Koa()
@@ -25,6 +26,18 @@ function koaConfig () {
   })
 
   koaApp.use(bodyParser())
+
+  // AssertionError is user visible and return status = 400 (bad request)
+  koaApp.use(async (ctx, next) => {
+    try {
+      await next()
+    } catch (err) {
+      if (err instanceof AssertionError) {
+        ctx.throw(400, err.message)
+      }
+      throw err
+    }
+  })
 
   // mount all the routes
   fs.readdirSync('routes').forEach(file => {

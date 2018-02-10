@@ -48,8 +48,16 @@ if (app.isTest || app.isDev) { // test config with config file
   fb.config = {credential: fb.credentials}
 }
 
+// github
+const github = {
+  token: process.env.MAJORNA_GITHUB_TOKEN,
+  owner: 'majorna',
+  repo: app.isProd ? 'blockchain' : 'test-blockchain'
+}
+
 // module exports
 module.exports = {
   app,
-  firebase: fb
+  firebase: fb,
+  github
 }

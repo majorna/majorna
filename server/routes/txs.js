@@ -1,5 +1,6 @@
 const route = require('koa-route')
 const db = require('../data/db')
+const github = require('../data/github')
 
 /**
  * Send majorna to another user.
@@ -16,12 +17,9 @@ exports.send = route.post('/txs', async ctx => {
     tx.to = tx.to.substring(8)
   }
 
-  try {
-    await db.makeTx(ctx.state.user.uid, tx.to, tx.amount)
-  } catch (e) {
-    console.error(e)
-    ctx.throw(400, 'Failed to make transaction.')
-  }
+  const txData = await db.makeTx(ctx.state.user.uid, tx.to, tx.amount)
+  await github.insertTxInBlock(txData)
+  // todo: try github insert again if it fails -or- queue it
 
   ctx.status = 201
 })

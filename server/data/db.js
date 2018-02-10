@@ -1,4 +1,5 @@
 const assert = require('assert')
+const utils = require('./utils')
 const firebaseConfig = require('../config/firebase')
 const firestore = firebaseConfig.firestore
 
@@ -33,7 +34,7 @@ exports.getUser = async id => {
   assert(id, 'user ID parameters is required')
   const userDoc = await usersColRef.doc(id).get()
   if (!userDoc.exists) {
-    throw new Error(`user ID:${id} does not exist`)
+    throw new utils.UserVisibleError(`user ID:${id} does not exist`, 404)
   }
   return userDoc.data()
 }
@@ -41,6 +42,7 @@ exports.getUser = async id => {
 /**
  * Create user doc and push first bonus transaction, asynchronously.
  * Can be used as a firestore cloud function trigger.
+ * Returns newly created user data.
  */
 exports.createUserDoc = (user, uid) => firestore.runTransaction(async t => {
   assert(user, 'user parameters is required')
@@ -63,7 +65,7 @@ exports.createUserDoc = (user, uid) => firestore.runTransaction(async t => {
   t.create(txRef, {from: 'majorna', to: uid, sent: time, amount: initBalance})
 
   // create user doc
-  t.create(usersColRef.doc(uid), {
+  const userData = {
     email: email,
     name: name,
     created: time,
@@ -76,7 +78,10 @@ exports.createUserDoc = (user, uid) => firestore.runTransaction(async t => {
         amount: initBalance
       }
     ]
-  })
+  }
+
+  t.create(usersColRef.doc(uid), userData)
+  return userData
 })
 
 /**
@@ -86,7 +91,7 @@ exports.getTx = async id => {
   assert(id, 'tx ID parameters is required')
   const txDoc = await txsColRef.doc(id).get()
   if (!txDoc.exists) {
-    throw new Error(`transaction ID:${id} does not exist`)
+    throw new utils.UserVisibleError(`transaction ID:${id} does not exist`, 404)
   }
   return txDoc.data()
 }
@@ -94,7 +99,7 @@ exports.getTx = async id => {
 /**
  * Performs a financial transaction from person A to B asynchronously.
  * Both user documents and transactions collection is updated with the transaction data and results.
- * Returned promise resolves to transaction ID -or- to an error if transaction fails.
+ * Returned promise resolves to completed transaction data -or- to an error if transaction fails.
  */
 exports.makeTx = (from, to, amount) => firestore.runTransaction(async t => {
   assert(from, 'from parameters is required')
@@ -108,11 +113,11 @@ exports.makeTx = (from, to, amount) => firestore.runTransaction(async t => {
   const senderDocRef = usersColRef.doc(from)
   const senderDoc = await t.get(senderDocRef)
   if (!senderDoc.exists) {
-    throw new Error(`sender ID:${from} does not exist`)
+    throw new utils.UserVisibleError(`sender ID:${from} does not exist`)
   }
   const sender = senderDoc.data()
   if (sender.balance < amount) {
-    throw new Error(`sender ID:${from} has insufficient funds`)
+    throw new utils.UserVisibleError(`sender ID:${from} has insufficient funds`)
   }
 
   const sent = new Date()
@@ -122,7 +127,7 @@ exports.makeTx = (from, to, amount) => firestore.runTransaction(async t => {
   const receiverDoc = await t.get(receiverDocRef)
   const receiver = receiverDoc.data()
   if (!receiverDoc.exists) {
-    throw new Error(`receiver ID:${to} does not exist`)
+    throw new utils.UserVisibleError(`receiver ID:${to} does not exist`)
   }
 
   // add tx to txs collection
@@ -135,7 +140,7 @@ exports.makeTx = (from, to, amount) => firestore.runTransaction(async t => {
   receiver.txs.unshift({id: txRef.id, from, sent, amount})
   t.update(receiverDocRef, {balance: receiver.balance + amount, txs: receiver.txs})
 
-  return txRef.id
+  return {id: txRef.id, from, to, sent, amount}
 })
 
 /**

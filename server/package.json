@@ -10,6 +10,7 @@
     "lint": "standard --fix"
   },
   "dependencies": {
+    "@octokit/rest": "^14.0.8",
     "axios": "^0.17.1",
     "firebase-admin": "^5.8.1",
     "kcors": "^2.2.1",

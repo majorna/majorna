@@ -1,6 +1,5 @@
 const assert = require('assert')
 const db = require('./db')
-const utils = require('./utils')
 const testData = require('../config/test').data
 
 suite('db', () => {
@@ -26,10 +25,10 @@ suite('db', () => {
 
   test('createUserDoc', async () => {
     const uid = '3'
-    const userData = testData.users.u3Doc
+    const testUserData = testData.users.u3Doc
     const meta = await db.getMeta()
 
-    await db.createUserDoc(userData, uid)
+    const newUserData = await db.createUserDoc(testUserData, uid)
 
     // verify market cap increase
     const metaAfter = await db.getMeta()
@@ -37,10 +36,10 @@ suite('db', () => {
 
     // verify user doc fields
     const userDoc = await db.getUser(uid)
-    assert(userDoc.email === userData.email)
-    assert(userDoc.name === userData.name)
-    assert(utils.isCloseToDate(userDoc.created))
-    assert(userDoc.balance === userData.balance)
+    assert(userDoc.email === testUserData.email)
+    assert(userDoc.name === testUserData.name)
+    assert(userDoc.created.getTime() === newUserData.created.getTime())
+    assert(userDoc.balance === testUserData.balance)
     assert(userDoc.txs.length === 1)
 
     // verify tx in txs collection
@@ -52,7 +51,7 @@ suite('db', () => {
 
     // try to create user again and verify error
     let err = null
-    try { await db.createUserDoc(userData, uid) } catch (e) { err = e }
+    try { await db.createUserDoc(testUserData, uid) } catch (e) { err = e }
     assert(err)
   })
 
@@ -68,13 +67,13 @@ suite('db', () => {
     const to = '2'
     const initBalance = testData.users.u1Doc.balance
     const amount = 100
-    const txId = await db.makeTx(from, to, amount)
+    const newTx = await db.makeTx(from, to, amount)
 
     // validate tx in txs col
-    const tx = await db.getTx(txId)
+    const tx = await db.getTx(newTx.id)
     assert(tx.from === from)
     assert(tx.to === to)
-    assert(utils.isCloseToDate(tx.sent))
+    assert(tx.sent.getTime() === newTx.sent.getTime())
     assert(tx.amount === amount)
 
     // validate affected user docs
@@ -82,14 +81,14 @@ suite('db', () => {
     assert(sender.balance === initBalance - amount)
     const senderTx = sender.txs[0]
     assert(senderTx.to === to)
-    assert(utils.isCloseToDate(senderTx.sent))
+    assert(senderTx.sent.getTime() === newTx.sent.getTime())
     assert(senderTx.amount === amount)
 
     const receiver = await db.getUser(to)
     assert(receiver.balance === initBalance + amount)
     const receiverTx = receiver.txs[0]
     assert(receiverTx.from === from)
-    assert(utils.isCloseToDate(receiverTx.sent))
+    assert(receiverTx.sent.getTime() === newTx.sent.getTime())
     assert(receiverTx.amount === amount)
   })
 

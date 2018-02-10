@@ -127,7 +127,11 @@ const testData = exports.data = {
     u4Token: null,
     u4Request: null
   },
-  txs: [],
+  txs: [
+    {from, to: '1', id: 'kou908y4hd', sent: time, amount: initBalance},
+    {from, to: '2', id: '09gsda89987goaew', sent: time, amount: initBalance},
+    {from, to: '3', id: 'zxc56326yhdsk', sent: time, amount: initBalance}
+  ],
   // Firebase authentication ID token (JWT) content when decoded
   decodedIdTokenSample: {
     iss: 'https://securetoken.google.com/majorna-fire',
