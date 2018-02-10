@@ -21,6 +21,25 @@ git subtree push --prefix server heroku master
 git push heroku `git subtree split --prefix server master`:master --force
 ```
 
+## Deployment
+
+Server requires following environment variables in production mode:
+
+```
+MAJORNA_FIREBASE_JSON
+MAJORNA_FIREBASE_JSON_PATH # alternative
+MAJORNA_GITHUB_TOKEN
+```
+
+Following environment variables are required to run the tests:
+
+```
+MAJORNA_FIREBASE_TEST_JSON
+MAJORNA_FIREBASE_TEST_JSON_PATH # alternative
+MAJORNA_FIREBASE_CLIENT_TEST_JSON_PATH
+MAJORNA_GITHUB_TOKEN
+```
+
 ## License
 
 MIT
