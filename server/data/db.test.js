@@ -12,6 +12,7 @@ suite('db', () => {
     const meta = await db.getMeta()
     assert(meta.cap >= 500)
     assert(meta.val >= 0)
+    assert(meta.userCount >= 0)
   })
 
   test('getUser', async () => {
@@ -33,6 +34,7 @@ suite('db', () => {
     // verify market cap increase
     const metaAfter = await db.getMeta()
     assert(metaAfter.cap === meta.cap + 500)
+    assert(metaAfter.userCount === meta.userCount + 1)
 
     // verify user doc fields
     const userDoc = await db.getUser(uid)

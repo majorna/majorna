@@ -18,7 +18,7 @@ exports.init = async () => {
   }
 
   const batch = firestore.batch()
-  batch.create(metaDocRef, {val: 0.01, cap: 0})
+  batch.create(metaDocRef, {val: 0.01, cap: 0, userCount: 0})
   await batch.commit()
 }
 
@@ -58,7 +58,8 @@ exports.createUserDoc = (user, uid) => firestore.runTransaction(async t => {
 
   // increase market cap
   const metaDoc = await t.get(metaDocRef)
-  t.update(metaDocRef, {cap: metaDoc.data().cap + initBalance})
+  const meta = metaDoc.data()
+  t.update(metaDocRef, {cap: meta.cap + initBalance, userCount: meta.userCount + 1})
 
   // create the first transaction for the user
   const txRef = txsColRef.doc()
