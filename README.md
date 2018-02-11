@@ -12,15 +12,6 @@ This repo contains Majorna source code with following components:
 * Majorna UI.
 * Majorna miner.
 
-## Heroku Push
-
-```bash
-git subtree push --prefix server heroku master
-
-# in case --force is needed
-git push heroku `git subtree split --prefix server master`:master --force
-```
-
 ## Deployment
 
 Server requires following environment variables in production mode:
@@ -38,6 +29,15 @@ MAJORNA_FIREBASE_TEST_JSON
 MAJORNA_FIREBASE_TEST_JSON_PATH # alternative
 MAJORNA_FIREBASE_CLIENT_TEST_JSON_PATH # same public config used for UI (see App.js)
 MAJORNA_GITHUB_TOKEN
+```
+
+## Heroku Push
+
+```bash
+git subtree push --prefix server heroku master
+
+# in case --force is needed
+git push heroku `git subtree split --prefix server master`:master --force
 ```
 
 ## Upgrading Packages
