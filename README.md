@@ -40,6 +40,14 @@ MAJORNA_FIREBASE_CLIENT_TEST_JSON_PATH # same public config used for UI (see App
 MAJORNA_GITHUB_TOKEN
 ```
 
+## Upgrading Packages
+
+UI:
+
+* Firebase: https://firebase.google.com/support/release-notes/js
+* Bulma: https://github.com/jgthms/bulma/releases
+* React-scripts: https://github.com/facebook/create-react-app/releases (see `Migrating from x.x.x to x.x.x` section)
+
 ## License
 
 MIT

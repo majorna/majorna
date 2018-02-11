@@ -29,7 +29,7 @@ const fb = {
 }
 
 if (app.isTest || app.isDev) { // test config with config file
-  console.log('config: firebase: test mode')
+  console.log('config: firebase: dev/test mode')
   const serviceJson = require(fb.testServiceKeyJsonPath)
   fb.credentials = firebaseAdmin.credential.cert(serviceJson)
   fb.config = {credential: fb.credentials}
