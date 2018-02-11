@@ -44,13 +44,13 @@ export default props => {
             <div className="m-t-xs" key={t.id}>
               <span className="tag is-success" title={'TX ID: ' + t.id}>+{t.amount}</span>
               <span className="m-l-s" title={t.sent}>{t.sent.toLocaleDateString()}</span>
-              <strong className="m-l-s">From:</strong> {t.from}
+              <strong className="m-l-s">From:</strong> <span title={t.fromName}>{t.from}</span>
             </div>
           ) : (
             <div className="m-t-xs" key={t.id}>
               <span className="tag is-danger" title={'TX ID: ' + t.id}>-{t.amount}</span>
               <span className="m-l-s" title={t.sent}>{t.sent.toLocaleDateString()}</span>
-              <strong className="m-l-s">To:</strong> {t.to}
+              <strong className="m-l-s">To:</strong> <span title={t.toName}>{t.to}</span>
             </div>
           )
         )}

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import logo from '../res/majorna.png'
+import logo from '../../res/majorna.png'
 import { Link } from 'react-router-dom'
 
 export default class extends Component {
