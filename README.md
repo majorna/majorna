@@ -48,6 +48,9 @@ UI:
 * Bulma: https://github.com/jgthms/bulma/releases
 * React-scripts: https://github.com/facebook/create-react-app/releases (see `Migrating from x.x.x to x.x.x` section)
 
+Server:
+* Node.js: https://nodejs.org/en/download/releases/
+
 ## License
 
 MIT
