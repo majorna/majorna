@@ -6,4 +6,4 @@ export default props => (
   </div>
 )
 
-// const OneLinerSample = props => <div>Wow</div>
+export const OneLinerSample = props => <div>Wow</div>
