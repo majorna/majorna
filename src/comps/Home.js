@@ -26,7 +26,7 @@ export default () => (
         <div className="is-size-5">Simple Cryptocurrency</div>
         Easy to use cryptocurrency in your browser.
         Log in with your Google, Facebook, or Twitter account to start sending and receiving Majorna.
-        <Link to='/login'>+mj500 balance for all new accounts in 2018.</Link>
+        <Link to='/login'>+mj500 balance for all new accounts (until fund cap).</Link>
       </div>
     </div>
 
