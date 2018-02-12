@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import mj from '../res/mj.png'
 
 export default () => (
   <React.Fragment>
@@ -16,11 +17,11 @@ export default () => (
     </div>
 
     {/* Majorna stats from firestore/mj/meta document */}
-    <div className="mj-box">Some Stats</div>
+    {/*<div className="mj-box">Majorna Stats</div>*/}
 
     {/* Media items with key Majorna facts */}
     <div className="mj-box align-start">
-      <img src="http://via.placeholder.com/128x128" alt=""/>
+      <img src={mj} width="128" alt="Majorna"/>
       <div className="flex-column flex-grow-1 m-l-m">
         <div className="is-size-5">Simple Cryptocurrency</div>
         Easy to use cryptocurrency in your browser.
@@ -30,7 +31,7 @@ export default () => (
     </div>
 
     <div className="mj-box align-start">
-      <img className="flex-order-1 m-l-m" src="http://via.placeholder.com/128x128" alt=""/>
+      <i className="flex-order-1 m-l-m fas fa-globe" style={{width: 110, height: 110}}/>
       <div className="flex-column flex-grow-1">
         <div className="is-size-5">Decentralized and Scalable</div>
         Trustless and decentralized with simple in-browser miner.
@@ -40,7 +41,7 @@ export default () => (
     </div>
 
     <div className="mj-box align-start">
-      <img src="http://via.placeholder.com/128x128" alt=""/>
+      <i className="fab fa-github" style={{width: 110, height: 110}}/>
       <div className="flex-column flex-grow-1 m-l-m">
         <div className="is-size-5">Open Source</div>
         <span>Easy to understand source code, licensed under MIT, hosted on <a href="https://github.com/majorna" target="_blank" rel="noopener noreferrer">GitHub</a>.</span>
@@ -50,11 +51,10 @@ export default () => (
     </div>
 
     <div className="mj-box align-start">
-      <img className="flex-order-1 m-l-m" src="http://via.placeholder.com/128x128" alt=""/>
+      <i className="flex-order-1 m-l-m fas fa-credit-card" style={{width: 110, height: 120}}/>
       <div className="flex-column flex-grow-1">
         <div className="is-size-5">Open Business Model</div>
         Majorna team intents to fund development via providing services around the cryptocurrency, as well as through the initial distribution of the currency.
-        25% of the Majorna funds are planned to be allocated for Majorna fund, to stabilize the market during initial years.
       </div>
     </div>
 
