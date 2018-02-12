@@ -22,10 +22,10 @@ export default () => (
     <div className="mj-box align-start">
       <img src="http://via.placeholder.com/128x128" alt=""/>
       <div className="flex-column flex-grow-1 m-l-m">
-        <div className="is-size-5">Media Title</div>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-        In erat mauris, faucibus quis pharetra sit amet, pretium ac libero.
-        Etiam vehicula eleifend bibendum.
+        <div className="is-size-5">Simplified Cryptocurrency</div>
+        Simple to use cryptocurrency, in your browser.
+        Easily login with your Google, Facebook, or Twitter account to start sending and receiving Majorna.
+        +mj500 balance for all new accounts in 2018.
       </div>
     </div>
 
