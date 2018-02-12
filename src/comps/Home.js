@@ -34,6 +34,7 @@ export default () => (
       <div className="flex-column flex-grow-1">
         <div className="is-size-5">Decentralized and Scalable</div>
         Trustless and decentralized with simple in-browser miner.
+        Peer-to-peer payments without a central authority.
         Horizontal scalability through delegated trust.
       </div>
     </div>
