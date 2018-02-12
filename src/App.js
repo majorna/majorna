@@ -91,10 +91,6 @@ export default withRouter(class App extends Component {
     })
   }
 
-  componentDidMount() {
-    // start network requests
-  }
-
   logout = async () => {
     this.fbUnsubUsers && this.fbUnsubUsers()
     this.fbUnsubMeta && this.fbUnsubMeta()
