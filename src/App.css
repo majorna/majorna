@@ -39,7 +39,7 @@
 }
 
 .flex-grow-1 {
-    flex-grow: 1;
+    flex-grow: 1; /* by default, boxes in flex-row will only wrap content, this makes them take full with of remaining parent space */
 }
 
 .flex-order-1 {
