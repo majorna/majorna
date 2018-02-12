@@ -34,6 +34,14 @@
     text-align: center; /* text: centered text */
 }
 
+.align-start {
+    align-items: flex-start; /* stretch is default, which stretches images in flex-row layout */
+}
+
+.flex-grow-1 {
+    flex-grow: 1;
+}
+
 /* spacing */
 /* m: margin, p: padding  |  (optional) t, r, b, l: top, right, bottom, left  |  x: extra ..., s: small, m: medium, l: large */
 /* note: try to use top and left margins whenever possible for simplicity and to avoid margin collapsing */
