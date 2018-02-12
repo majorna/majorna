@@ -10,7 +10,7 @@ export default props => (
       <button className="button is-small is-info is-outlined m-l-s" onClick={() => toClipboard(props.user.uid)}>Copy</button>
     </div>
 
-    <img width="248" src={props.acctQr} alt={props.user.uid}/>
+    <img className="m-t-m" width="248" src={props.acctQr} alt={props.user.uid}/>
 
     <button className="button m-t-l" onClick={props.history.goBack}>Close</button>
   </div>
