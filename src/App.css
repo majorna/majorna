@@ -42,6 +42,10 @@
     flex-grow: 1;
 }
 
+.flex-order-1 {
+    order: 1; /* default order is 0, so order: 1 will pull item to right */
+}
+
 /* spacing */
 /* m: margin, p: padding  |  (optional) t, r, b, l: top, right, bottom, left  |  x: extra ..., s: small, m: medium, l: large */
 /* note: try to use top and left margins whenever possible for simplicity and to avoid margin collapsing */
