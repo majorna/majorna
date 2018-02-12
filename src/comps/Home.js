@@ -43,6 +43,7 @@ export default () => (
       <div className="flex-column flex-grow-1 m-l-m">
         <div className="is-size-5">Open Source</div>
         <span>Easy to understand source code, licensed under MIT, hosted on <a href="https://github.com/majorna" target="_blank" rel="noopener noreferrer">GitHub</a>.</span>
+        <span>Transaction logs are hosted at GitHub <a href="https://github.com/majorna/blockchain" target="_blank" rel="noopener noreferrer">blockchain repo</a>. Sender and receiver identities are kept secret.</span>
         <span>Community discussions hosted on <a href="https://www.reddit.com/r/majorna/" target="_blank" rel="noopener noreferrer">Reddit</a>.</span>
       </div>
     </div>
@@ -50,11 +51,14 @@ export default () => (
     <div className="mj-box align-start">
       <img className="flex-order-1 m-l-m" src="http://via.placeholder.com/128x128" alt=""/>
       <div className="flex-column flex-grow-1">
-        <div className="is-size-5">Open Ledger</div>
-        <span>Public transaction logs are hosted at <a href="https://github.com/majorna/blockchain" target="_blank" rel="noopener noreferrer">GitHub MJ-Blockchain</a> repo.</span>
-        Sender and receiver identities are kept secret.
-        Anonymous transactions with batch-send is a work in progress.
+        <div className="is-size-5">Open Business Model</div>
+        Majorna team intents to fund development via providing services around the cryptocurrency, as well as through the initial distribution of the currency.
+        25% of the Majorna funds are planned to be allocated for Majorna fund, to stabilize the market during initial years.
       </div>
+    </div>
+
+    <div className="mj-box flex-column center-h">
+      Still not decided? <Link to='/login'>Give Majorna a go for free and get +mj500 as starter balance.</Link>
     </div>
   </React.Fragment>
 )
