@@ -1,3 +1,4 @@
+const fs = require('fs')
 const firebaseAdmin = require('firebase-admin')
 
 const env = process.env.NODE_ENV || (process.env.CI && 'test') || 'development'
@@ -73,8 +74,8 @@ const crypto = {
 
 if (app.isProd) {
   if (!crypto.publicKey) {
-    crypto.publicKey = require(crypto.publicKeyPath)
-    crypto.privateKey = require(crypto.privateKeyPath)
+    crypto.publicKey = fs.readFileSync(crypto.publicKeyPath)
+    crypto.privateKey = fs.readFileSync(crypto.privateKeyPath)
   }
 } else {
   crypto.publicKey = `-----BEGIN PUBLIC KEY-----
