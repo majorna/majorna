@@ -1,6 +1,8 @@
+const fs = require('fs')
 const firebaseAdmin = require('firebase-admin')
 
 const env = process.env.NODE_ENV || (process.env.CI && 'test') || 'development'
+console.log(`config: ${env}`)
 
 // app config
 const app = {
@@ -20,7 +22,14 @@ const fb = {
   serviceKeyJsonPath: process.env.MAJORNA_FIREBASE_JSON_PATH,
 
   testServiceKeyJsonPath: process.env.MAJORNA_FIREBASE_TEST_JSON_PATH, // test (admin sdk) only
-  testClientSdkKeyJsonPath: process.env.MAJORNA_FIREBASE_CLIENT_TEST_JSON_PATH, // test (client sdk) only
+  testClientSdkKeyJsonPath: { // test (client sdk) only (same as in App.js)
+    apiKey: 'AIzaSyBFZEhjyZdbZEMpboYZzRRHfIUhvo4VaHQ',
+    authDomain: 'majorna-test.firebaseapp.com',
+    databaseURL: 'https://majorna-test.firebaseio.com',
+    projectId: 'majorna-test',
+    storageBucket: 'majorna-test.appspot.com',
+    messagingSenderId: '346214163117'
+  },
 
   credentials: null,
   config: {
@@ -55,9 +64,35 @@ const github = {
   repo: app.isProd ? 'blockchain' : 'test-blockchain'
 }
 
+// crypto
+const crypto = {
+  privateKey: process.env.MAJORNA_TX_SIGN_PRIVATE_KEY,
+  privateKeyPath: process.env.MAJORNA_TX_SIGN_PRIVATE_KEY_PATH,
+  publicKey: process.env.MAJORNA_TX_SIGN_PUBLIC_KEY,
+  publicKeyPath: process.env.MAJORNA_TX_SIGN_PUBLIC_KEY_PATH
+}
+
+if (app.isProd) {
+  if (!crypto.privateKey) {
+    crypto.privateKey = fs.readFileSync(crypto.privateKeyPath)
+    crypto.publicKey = fs.readFileSync(crypto.publicKeyPath)
+  }
+} else {
+  crypto.privateKey = `-----BEGIN EC PRIVATE KEY-----
+MHQCAQEEIHZ9HWFXtortTsbEOOjPZ6hIMDTiFVWX552YWW5aZHlgoAcGBSuBBAAK
+oUQDQgAE2yLEGhHZMiClLt4rHm6Kajo2qsRRQMUW3PqHOBnECvFkwXZstFNGyZD4
+SVbeNVCQy7nXERlaQ7Kvt4dgZTp1UA==
+-----END EC PRIVATE KEY-----`
+  crypto.publicKey = `-----BEGIN PUBLIC KEY-----
+MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAE2yLEGhHZMiClLt4rHm6Kajo2qsRRQMUW
+3PqHOBnECvFkwXZstFNGyZD4SVbeNVCQy7nXERlaQ7Kvt4dgZTp1UA==
+-----END PUBLIC KEY-----`
+}
+
 // module exports
 module.exports = {
   app,
   firebase: fb,
-  github
+  github,
+  crypto
 }

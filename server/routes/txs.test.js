@@ -2,7 +2,7 @@ const assert = require('assert')
 const db = require('../data/db')
 const testData = require('../config/test').data
 
-// todo: validate tx insert @github
+// todo: validate tx insert @github (needs task about cleaning up github repo before each test run [not after to have debug info left])
 
 suite('route: txs', () => {
   test('valid tx', async () => {

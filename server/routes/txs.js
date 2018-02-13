@@ -1,6 +1,7 @@
 const route = require('koa-route')
 const db = require('../data/db')
 const github = require('../data/github')
+const crypto = require('../data/crypto')
 
 /**
  * Send majorna to another user.
@@ -18,7 +19,8 @@ exports.send = route.post('/txs', async ctx => {
   }
 
   const txData = await db.makeTx(ctx.state.user.uid, tx.to, tx.amount)
-  await github.insertTxInBlock(txData)
+  const signedTx = crypto.signTx(txData)
+  await github.insertTxInBlock(signedTx)
   // todo: try github insert again if it fails -or- queue it
 
   ctx.status = 201
