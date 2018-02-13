@@ -1,6 +1,7 @@
 const firebaseAdmin = require('firebase-admin')
 
 const env = process.env.NODE_ENV || (process.env.CI && 'test') || 'development'
+console.log(`config: ${env}`)
 
 // app config
 const app = {
@@ -65,10 +66,17 @@ const github = {
 // crypto
 const crypto = {
   publicKey: process.env.MAJORNA_TX_SIGN_PUBLIC_KEY,
-  privateKey: process.env.MAJORNA_TX_SIGN_PRIVATE_KEY
+  privateKey: process.env.MAJORNA_TX_SIGN_PRIVATE_KEY,
+  publicKeyPath: process.env.MAJORNA_TX_SIGN_PUBLIC_KEY_PATH,
+  privateKeyPath: process.env.MAJORNA_TX_SIGN_PRIVATE_KEY_PATH
 }
 
-if (!app.isProd) { // test and development only
+if (app.isProd) {
+  if (!crypto.publicKey) {
+    crypto.publicKey = require(crypto.publicKeyPath)
+    crypto.privateKey = require(crypto.privateKeyPath)
+  }
+} else {
   crypto.publicKey = `-----BEGIN PUBLIC KEY-----
 MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAE2yLEGhHZMiClLt4rHm6Kajo2qsRRQMUW
 3PqHOBnECvFkwXZstFNGyZD4SVbeNVCQy7nXERlaQ7Kvt4dgZTp1UA==

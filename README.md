@@ -19,9 +19,13 @@ Server requires following environment variables in production mode:
 ```
 MAJORNA_FIREBASE_JSON
 MAJORNA_FIREBASE_JSON_PATH # alternative
+
 MAJORNA_GITHUB_TOKEN
+
 MAJORNA_TX_SIGN_PUBLIC_KEY
 MAJORNA_TX_SIGN_PRIVATE_KEY
+MAJORNA_TX_SIGN_PUBLIC_KEY_PATH # alternative
+MAJORNA_TX_SIGN_PRIVATE_KEY_PATH
 ```
 
 Following environment variables are required to run the tests:
@@ -29,6 +33,7 @@ Following environment variables are required to run the tests:
 ```
 MAJORNA_FIREBASE_TEST_JSON
 MAJORNA_FIREBASE_TEST_JSON_PATH # alternative
+
 MAJORNA_GITHUB_TOKEN
 ```
 
