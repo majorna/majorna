@@ -7,7 +7,7 @@ suite.only('crypto', () => {
     const sig = crypto.sign(text)
     assert(crypto.verify(text, sig))
 
-    const text2 = 'asdf89u -098sd7fsadufih sadfh0isaudf09-2ui3/;sdipf90as.sdajf-9i1j?KJPOih-9?oiuasdf83348'
+    const text2 = 'asdf89u -098sd7fsadufih sadfh0isaudf09-2ui3/;sd3/.,mOI_(*YT*(^FTIDTXipf90as.sdafsdas djf-9i1j?KJPOih-9?oiuasdf83348'
     const sig2 = crypto.sign(text2)
     assert(crypto.verify(text2, sig2))
 
