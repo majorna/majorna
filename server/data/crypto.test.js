@@ -15,6 +15,11 @@ suite.only('crypto', () => {
   })
 
   test('signAndSerialize', () => {
-
+    const obj = {wow: 'yeah'}
+    const json = crypto.signAndSerialize(obj)
+    const sigObj = JSON.parse(json)
+    assert(sigObj.sig)
+    assert(sigObj.sig.length > 50)
+    assert(sigObj.data.wow === 'yeah')
   })
 })

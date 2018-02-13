@@ -1,3 +1,4 @@
+const assert = require('assert')
 const crypto = require('crypto')
 const config = require('../config/config')
 
@@ -14,7 +15,11 @@ exports.verify = (text, signature) => {
 
 /**
  * Input (Object): {some: ..., other: ...}
- * Output (String): {sig: ..., data: {some: ..., other: ...}}
+ * Output (String): {"sig": ..., "data": ...}
  */
 exports.signAndSerialize = txObj => {
+  const str = JSON.stringify(txObj)
+  const sig = exports.sign(str)
+  assert(exports.verify(str, sig))
+  return `{"sig":"${sig}","data":${str}}`
 }
