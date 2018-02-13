@@ -1,15 +1,13 @@
 const crypto = require('crypto')
 const config = require('../config/config')
 
-const sign = crypto.createSign('SHA256')
-const verify = crypto.createVerify('SHA256')
+const algo = 'SHA256'
+const encoding = 'base64'
 
 exports.sign = data => {
-  sign.update(data)
-  return sign.sign(config.crypto.privateKey)
+  return crypto.createSign(algo).update(data).sign(config.crypto.privateKey, encoding)
 }
 
 exports.verify = (data, signature) => {
-  verify.update(data)
-  return verify.verify(config.crypto.publicKey, signature)
+  return crypto.createVerify(algo).update(data).verify(config.crypto.publicKey, signature, encoding)
 }
