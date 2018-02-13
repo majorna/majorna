@@ -13,4 +13,8 @@ suite.only('crypto', () => {
 
     assert(sig2.length < 100, `signature length was: ${sig2.length}`)
   })
+
+  test('signAndSerialize', () => {
+
+  })
 })
