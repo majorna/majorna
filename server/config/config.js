@@ -66,27 +66,27 @@ const github = {
 
 // crypto
 const crypto = {
-  publicKey: process.env.MAJORNA_TX_SIGN_PUBLIC_KEY,
   privateKey: process.env.MAJORNA_TX_SIGN_PRIVATE_KEY,
-  publicKeyPath: process.env.MAJORNA_TX_SIGN_PUBLIC_KEY_PATH,
-  privateKeyPath: process.env.MAJORNA_TX_SIGN_PRIVATE_KEY_PATH
+  privateKeyPath: process.env.MAJORNA_TX_SIGN_PRIVATE_KEY_PATH,
+  publicKey: process.env.MAJORNA_TX_SIGN_PUBLIC_KEY,
+  publicKeyPath: process.env.MAJORNA_TX_SIGN_PUBLIC_KEY_PATH
 }
 
 if (app.isProd) {
-  if (!crypto.publicKey) {
-    crypto.publicKey = fs.readFileSync(crypto.publicKeyPath)
+  if (!crypto.privateKey) {
     crypto.privateKey = fs.readFileSync(crypto.privateKeyPath)
+    crypto.publicKey = fs.readFileSync(crypto.publicKeyPath)
   }
 } else {
-  crypto.publicKey = `-----BEGIN PUBLIC KEY-----
-MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAE2yLEGhHZMiClLt4rHm6Kajo2qsRRQMUW
-3PqHOBnECvFkwXZstFNGyZD4SVbeNVCQy7nXERlaQ7Kvt4dgZTp1UA==
------END PUBLIC KEY-----`
   crypto.privateKey = `-----BEGIN EC PRIVATE KEY-----
 MHQCAQEEIHZ9HWFXtortTsbEOOjPZ6hIMDTiFVWX552YWW5aZHlgoAcGBSuBBAAK
 oUQDQgAE2yLEGhHZMiClLt4rHm6Kajo2qsRRQMUW3PqHOBnECvFkwXZstFNGyZD4
 SVbeNVCQy7nXERlaQ7Kvt4dgZTp1UA==
 -----END EC PRIVATE KEY-----`
+  crypto.publicKey = `-----BEGIN PUBLIC KEY-----
+MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAE2yLEGhHZMiClLt4rHm6Kajo2qsRRQMUW
+3PqHOBnECvFkwXZstFNGyZD4SVbeNVCQy7nXERlaQ7Kvt4dgZTp1UA==
+-----END PUBLIC KEY-----`
 }
 
 // module exports
