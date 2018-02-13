@@ -12,6 +12,10 @@ This repo contains Majorna source code with following components:
 * Majorna UI.
 * Majorna miner.
 
+## Blockchain
+
+Blockchain (ledger of all transactions) is kept in its [own repo](https://github.com/majorna/blockchain).
+
 ## Deployment
 
 Server requires following environment variables in production mode:
