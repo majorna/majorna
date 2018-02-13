@@ -1,7 +1,7 @@
 const assert = require('assert')
 const crypto = require('./crypto')
 
-suite.only('crypto', () => {
+suite('crypto', () => {
   test('sign-verify', () => {
     const text = 'lorem ipsum dolor'
     const sig = crypto.sign(text)
@@ -14,10 +14,9 @@ suite.only('crypto', () => {
     assert(sig2.length < 100, `signature length was: ${sig2.length}`)
   })
 
-  test('signAndSerialize', () => {
+  test('signTx', () => {
     const obj = {wow: 'yeah'}
-    const json = crypto.signAndSerialize(obj)
-    const sigObj = JSON.parse(json)
+    const sigObj = crypto.signTx(obj)
     assert(sigObj.sig)
     assert(sigObj.sig.length > 50)
     assert(sigObj.data.wow === 'yeah')
