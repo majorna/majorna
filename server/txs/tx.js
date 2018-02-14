@@ -1,5 +1,5 @@
-const db = require('./db')
-const github = require('./github')
+const db = require('../data/db')
+const github = require('../data/github')
 const crypto = require('./crypto')
 
 /**
