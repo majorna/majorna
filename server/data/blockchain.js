@@ -8,15 +8,17 @@ function getMerkle(tx) {
 
 exports.createBlock = (txs, prevBlock) => {
   const merkle = getMerkle(txs)
-  const block = {
-    no: prevBlock.no + 1,
-    time: new Date(),
-    prevHash: prevBlock.hash,
-    difficulty: 0,
-    nonce: 0,
+  return {
     txs,
-    txsMerkle
+    merkle,
+    header: {
+      no: prevBlock.no + 1,
+      prevHash: prevBlock.hash,
+      merkleRoot: merkle.hash,
+      time: new Date(),
+      txCount: txs.length,
+      difficulty: 0,
+      nonce: 0
+    }
   }
-  const hash = null
-  return {hash, block}
 }
