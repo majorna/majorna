@@ -1,4 +1,4 @@
-function getMerkle(tx) {
+function getMerkle (tx) {
   return {
     hash: 0,
     l: {},
