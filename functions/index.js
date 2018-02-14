@@ -21,7 +21,7 @@
 //     transactions: [
 //       {
 //         id: event.eventId,
-//         sent: new Date(event.timestamp),
+//         time: new Date(event.timestamp),
 //         from: 'majorna',
 //         amount: 500
 //       }

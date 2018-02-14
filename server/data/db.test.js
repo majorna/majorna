@@ -48,7 +48,7 @@ suite('db', () => {
     const tx = await db.getTx(userDoc.txs[0].id)
     assert(tx.from === 'majorna')
     assert(tx.to === uid)
-    assert(tx.sent.getTime() === userDoc.created.getTime())
+    assert(tx.time.getTime() === userDoc.created.getTime())
     assert(tx.amount === 500)
 
     // try to create user again and verify error
@@ -75,7 +75,7 @@ suite('db', () => {
     const tx = await db.getTx(newTx.id)
     assert(tx.from === from)
     assert(tx.to === to)
-    assert(tx.sent.getTime() === newTx.sent.getTime())
+    assert(tx.time.getTime() === newTx.time.getTime())
     assert(tx.amount === amount)
 
     // validate affected user docs
@@ -83,14 +83,14 @@ suite('db', () => {
     assert(sender.balance === initBalance - amount)
     const senderTx = sender.txs[0]
     assert(senderTx.to === to)
-    assert(senderTx.sent.getTime() === newTx.sent.getTime())
+    assert(senderTx.time.getTime() === newTx.time.getTime())
     assert(senderTx.amount === amount)
 
     const receiver = await db.getUser(to)
     assert(receiver.balance === initBalance + amount)
     const receiverTx = receiver.txs[0]
     assert(receiverTx.from === from)
-    assert(receiverTx.sent.getTime() === newTx.sent.getTime())
+    assert(receiverTx.time.getTime() === newTx.time.getTime())
     assert(receiverTx.amount === amount)
   })
 
