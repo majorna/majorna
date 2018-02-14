@@ -18,10 +18,10 @@ exports.send = route.post('/txs', async ctx => {
     tx.to = tx.to.substring(8)
   }
 
+  // todo: try github insert again if it fails -or- queue it -or- all of this should be a single transaction so they all fail at once
   const txData = await db.makeTx(ctx.state.user.uid, tx.to, tx.amount)
   const signedTx = crypto.signTx(txData)
   await github.insertTxInBlock(signedTx)
-  // todo: try github insert again if it fails -or- queue it
 
   ctx.status = 201
 })

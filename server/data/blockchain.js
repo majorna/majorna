@@ -1,4 +1,4 @@
-function getMerkle (tx) {
+exports.createMerkle = txs => {
   return {
     hash: 0,
     l: {},
@@ -7,7 +7,8 @@ function getMerkle (tx) {
 }
 
 exports.createBlock = (txs, prevBlock) => {
-  const merkle = getMerkle(txs)
+  // todo: verify all tx signatures first
+  const merkle = exports.createMerkle(txs)
   return {
     txs,
     merkle,
