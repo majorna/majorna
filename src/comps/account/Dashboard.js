@@ -27,7 +27,7 @@ export default props => {
       </div>
 
       <div className="mj-box flex-column">
-        <div><strong>Balance</strong>: <strong>{props.userDoc.balance}</strong>mj ({props.userDoc.balance * props.mjDoc.meta.val}$)</div>
+        <div><strong>Balance</strong>: mj<strong>{props.userDoc.balance}</strong> (${props.userDoc.balance * props.mjDoc.meta.val})</div>
         <div><strong>Address</strong>: <small>{props.user.uid}</small></div>
         <img width="72" src={props.acctQr} alt={props.user.uid}/>
       </div>
