@@ -19,6 +19,7 @@ exports.init = async () => {
 
   const batch = firestore.batch()
   batch.create(metaDocRef, {val: 0.01, cap: 0, userCount: 0})
+  batch.create(usersColRef.doc('majorna'), {email: 'majorna@majorna', name: 'Majorna', created: new Date(), balance: 0, txs: []})
   await batch.commit()
 }
 
@@ -63,7 +64,7 @@ exports.createUserDoc = (user, uid) => firestore.runTransaction(async t => {
 
   // create the first transaction for the user
   const txRef = txsColRef.doc()
-  t.create(txRef, {from: 'majorna', to: uid, sent: time, amount: initBalance})
+  t.create(txRef, {from: 'majorna', to: uid, time, amount: initBalance})
 
   // create user doc
   const userData = {
@@ -75,7 +76,7 @@ exports.createUserDoc = (user, uid) => firestore.runTransaction(async t => {
       {
         id: txRef.id,
         from: 'majorna',
-        sent: time,
+        time,
         amount: initBalance
       }
     ]
@@ -101,6 +102,9 @@ exports.getTx = async id => {
  * Performs a financial transaction from person A to B asynchronously.
  * Both user documents and transactions collection is updated with the transaction data and results.
  * Returned promise resolves to completed transaction data -or- to an error if transaction fails.
+ * @param from - Sender ID.
+ * @param to - Receiver ID.
+ * @param amount - Transaction amount as integer.
  */
 exports.makeTx = (from, to, amount) => firestore.runTransaction(async t => {
   assert(from, 'from parameters is required')
@@ -122,7 +126,7 @@ exports.makeTx = (from, to, amount) => firestore.runTransaction(async t => {
     throw new utils.UserVisibleError(`sender ID:${from} has insufficient funds`)
   }
 
-  const sent = new Date()
+  const time = new Date()
 
   // check if receiver exists
   const receiverDocRef = usersColRef.doc(to)
@@ -135,15 +139,15 @@ exports.makeTx = (from, to, amount) => firestore.runTransaction(async t => {
 
   // add tx to txs collection
   const txRef = txsColRef.doc()
-  t.create(txRef, {from, to, sent, amount})
+  t.create(txRef, {from, to, time, amount})
 
   // update user docs with tx and updated balances
-  sender.txs.unshift({id: txRef.id, to, toName, sent, amount})
+  sender.txs.unshift({id: txRef.id, to, toName, time, amount})
   t.update(senderDocRef, {balance: sender.balance - amount, txs: sender.txs})
-  receiver.txs.unshift({id: txRef.id, from, fromName, sent, amount})
+  receiver.txs.unshift({id: txRef.id, from, fromName, time, amount})
   t.update(receiverDocRef, {balance: receiver.balance + amount, txs: receiver.txs})
 
-  return {id: txRef.id, from, to, sent, amount}
+  return {id: txRef.id, from: {id: from, balance: sender.balance}, to: {id: to, balance: receiver.balance}, time, amount}
 })
 
 /**

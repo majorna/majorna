@@ -89,7 +89,7 @@ const testData = exports.data = {
       name: 'Chuck Norris',
       created: time,
       balance: initBalance,
-      txs: [{id: 'kou908y4hd', from, fromName, sent: time, amount: initBalance}]
+      txs: [{id: 'kou908y4hd', from, fromName, time, amount: initBalance}]
     },
     u1Auth: {
       uid: '1',
@@ -107,14 +107,14 @@ const testData = exports.data = {
       name: 'Morgan Almighty',
       created: time,
       balance: initBalance,
-      txs: [{id: '09gsda89987goaew', from, fromName, sent: time, amount: initBalance}]
+      txs: [{id: '09gsda89987goaew', from, fromName, time, amount: initBalance}]
     },
     u3Doc: {
       email: 'john.doe@majorna.mj',
       name: 'John Doe',
       created: time,
       balance: initBalance,
-      txs: [{id: 'zxc56326yhdsk', from, fromName, sent: time, amount: initBalance}]
+      txs: [{id: 'zxc56326yhdsk', from, fromName, time, amount: initBalance}]
     },
     u4Auth: {
       uid: '4',
@@ -129,9 +129,9 @@ const testData = exports.data = {
     u4Request: null
   },
   txs: [
-    {id: 'kou908y4hd', from, to: '1', sent: time, amount: initBalance},
-    {id: '09gsda89987goaew', from, to: '2', sent: time, amount: initBalance},
-    {id: 'zxc56326yhdsk', from, to: '3', sent: time, amount: initBalance}
+    {id: 'kou908y4hd', from, to: '1', time, amount: initBalance},
+    {id: '09gsda89987goaew', from, to: '2', time, amount: initBalance},
+    {id: 'zxc56326yhdsk', from, to: '3', time, amount: initBalance}
   ],
   // Firebase authentication ID token (JWT) content when decoded
   decodedIdTokenSample: {
