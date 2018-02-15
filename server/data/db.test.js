@@ -67,7 +67,7 @@ suite('db', () => {
     // make a valid tx
     const from = '1'
     const to = '2'
-    const initBalance = testData.users.u1Doc.balance
+    const initBalance = (await db.getUser(from)).balance
     const amount = 100
     const newTx = await db.makeTx(from, to, amount)
 
