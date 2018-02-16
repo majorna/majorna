@@ -24,3 +24,8 @@ exports.UserVisibleError = class extends Error {
     this.status = httpStatusCode
   }
 }
+
+/**
+ * Strips majorna:/mj: prefixes from a string, if any.
+ */
+exports.stripPrefix = str => str.startsWith('mj:') ? str.substring(3) : str.startsWith('majorna:') ? str.substring(8) : str
