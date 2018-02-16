@@ -9,8 +9,6 @@ exports.stripPrefix = str => str.startsWith('mj:') ? str.substring(3) : str.star
 
 /**
  * Inserts a tx in database and then github.
- * If database step fails, transaction fails.
- * todo: If github step fails, it is retried until success.
  */
 exports.makeTx = async (from, to, amount) => {
   from = exports.stripPrefix(from)
