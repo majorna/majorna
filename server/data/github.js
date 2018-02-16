@@ -20,6 +20,11 @@ const repo = config.github.repo
 const message = 'tx' // commit msg
 const committer = {name: 'majorna', email: 'mj@majorna'}
 
+exports.getFile = async path => {
+  const res = await octokit.repos.getContent({owner, repo, path})
+  return res.data.content
+}
+
 /**
  * Creates a file with given data if it does not exist.
  * Updates the file with the data if it exists.
