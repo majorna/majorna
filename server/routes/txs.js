@@ -1,5 +1,5 @@
 const route = require('koa-route')
-const tx = require('../txs/tx')
+const tx = require('../blocks/tx')
 
 /**
  * Send majorna to another user.
