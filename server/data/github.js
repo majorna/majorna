@@ -20,9 +20,12 @@ const repo = config.github.repo
 const message = 'tx' // commit msg
 const committer = {name: 'majorna', email: 'mj@majorna'}
 
-exports.getFile = async path => {
+/**
+ * Retrieves a file's content from repo with given full path. i.e. "dir/sub_dir/filename".
+ */
+exports.getFileContent = async path => {
   const res = await octokit.repos.getContent({owner, repo, path})
-  return res.data.content
+  return (Buffer.from(res.data.content, 'base64')).toString()
 }
 
 /**
