@@ -15,6 +15,6 @@ exports.makeTx = async (from, to, amount) => {
   to = exports.stripPrefix(to)
 
   const txData = await db.makeTx(from, to, amount)
-  const signedTx = crypto.signTx(txData)
+  const signedTx = crypto.signObj(txData)
   await github.insertTxInBlock(signedTx)
 }

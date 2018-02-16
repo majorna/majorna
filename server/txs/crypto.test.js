@@ -14,9 +14,9 @@ suite('crypto', () => {
     assert(sig2.length < 100, `signature length was: ${sig2.length}`)
   })
 
-  test('signTx', () => {
+  test('signObj', () => {
     const obj = {wow: 'yeah'}
-    const sigObj = crypto.signTx(obj)
+    const sigObj = crypto.signObj(obj)
     assert(sigObj.sig)
     assert(sigObj.sig.length > 50)
     assert(sigObj.data.wow === 'yeah')
