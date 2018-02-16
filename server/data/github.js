@@ -29,12 +29,18 @@ exports.getFileContent = async path => {
 }
 
 /**
+ * Creates a file with given content at given path, asynchronously.
+ * Throws an error if the file already exists.
+ */
+exports.createFile = (text, path) => octokit.repos.createFile({owner, repo, path, message, committer, content: Buffer.from(text).toString('base64')})
+
+/**
  * Creates a file with given data if it does not exist. Updates the file with the data if it exists.
  * Concurrent updates to the same file will throw an error.
- * @param path - Path of the file in git repo.
  * @param text - Text to be appended at the end of the file.
+ * @param path - Path of the file in git repo.
  */
-exports.upsertFile = async (path, text) => {
+exports.upsertFile = async (text, path) => {
   let res
   try {
     res = await octokit.repos.getContent({owner, repo, path})
@@ -67,5 +73,5 @@ exports.insertTxInBlock = async tx => {
   // block file frequency = 1 per week for now
   const now = new Date()
   const path = `${now.getFullYear()}/weeks/${utils.getWeekNumber(now)}`
-  await exports.upsertFile(path, JSON.stringify(tx))
+  await exports.upsertFile(JSON.stringify(tx), path)
 }

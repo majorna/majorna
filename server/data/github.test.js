@@ -16,9 +16,20 @@ suite('github', () => {
     assert(readme.includes('test-blockchain'))
   })
 
+  test('createFile', async () => {
+    const path = 'testfiles/testfile-' + Math.random()
+    const text = 'some-text-' + Math.random()
+    await github.createFile(text, path)
+    const file = await github.getFileContent(path)
+    console.log(file)
+    assert(file === text)
+
+    // verify that it is not overwritten by calling create again
+  })
+
   test('upsertFile', async () => {
-    const appendText = 'some-text' + Math.random()
-    await github.upsertFile(testFilePath, appendText)
+    const appendText = 'some-text-' + Math.random()
+    await github.upsertFile(appendText, testFilePath)
     const updatedFile = await github.getFileContent(testFilePath)
     assert(updatedFile.endsWith(updatedFile))
   })
