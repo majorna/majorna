@@ -59,3 +59,20 @@ exports.getTxMerklePath = (tx, merkle) => {}
  * Verifies a tx given a block header and merkle path (of full merkle tree) for that tx.
  */
 exports.verifyTxInBlock = (tx, blockHeader, merklePath) => {}
+
+exports.insertBlock = async () => {
+  // get last block header
+
+  // get all txs since last block interval + 1 hours (not to allow any conflicts)
+
+  // const signedBlock = crypto.signObj()
+  // await github.insertTxInBlock(signedBlock)
+
+  // block file frequency = 1 per week for now
+  // const now = new Date()
+  // const path = `${now.getFullYear()}/weeks/${utils.getWeekNumber(now)}`
+}
+
+exports.blockPeriodCheck = async () => {
+  // check if it is time to create a block
+}

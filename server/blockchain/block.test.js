@@ -1,5 +1,5 @@
 const assert = require('assert')
-const blockchain = require('./blockchain')
+const blockchain = require('./block')
 
 suite('blockchain', () => {
   test('createMerkle', () => {

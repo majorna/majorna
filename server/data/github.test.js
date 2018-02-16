@@ -1,7 +1,5 @@
 const assert = require('assert')
-const testData = require('../config/test').data
 const github = require('./github')
-const utils = require('./utils')
 
 const testFilePath = 'testfile'
 const readmePath = 'README.md'
@@ -35,10 +33,5 @@ suite('github', () => {
     await github.upsertFile(appendText, testFilePath)
     const updatedFile = await github.getFileContent(testFilePath)
     assert(updatedFile.endsWith(updatedFile))
-  })
-
-  test('insertTxInBlock', async () => {
-    await github.insertTxInBlock(testData.txs[utils.getRandomInt(testData.txs.length)])
-    // todo: assert file content
   })
 })

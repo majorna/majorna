@@ -6,7 +6,6 @@
  */
 const octokit = require('@octokit/rest')()
 const config = require('../config/config')
-const utils = require('./utils')
 
 // token auth (https://github.com/settings/tokens)
 octokit.authenticate({
@@ -63,15 +62,4 @@ exports.upsertFile = async (text, path) => {
     content: Buffer.concat([Buffer.from(res.data.content, 'base64'), Buffer.from('\n' + text)]).toString('base64'),
     sha: res.data.sha
   })
-}
-
-/**
- * Inserts a transaction into a block, which is currently choose by date.
- * @param tx - Transaction object.
- */
-exports.insertTxInBlock = async tx => {
-  // block file frequency = 1 per week for now
-  const now = new Date()
-  const path = `${now.getFullYear()}/weeks/${utils.getWeekNumber(now)}`
-  await exports.upsertFile(JSON.stringify(tx), path)
 }
