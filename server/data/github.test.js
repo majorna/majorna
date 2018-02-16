@@ -25,6 +25,9 @@ suite('github', () => {
     assert(file === text)
 
     // verify that it is not overwritten by calling create again
+    let err = null
+    try { await github.createFile(text, path) } catch (e) { err = e }
+    assert(err)
   })
 
   test('upsertFile', async () => {
