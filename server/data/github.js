@@ -29,8 +29,8 @@ exports.getFileContent = async path => {
 }
 
 /**
- * Creates a file with given data if it does not exist.
- * Updates the file with the data if it exists.
+ * Creates a file with given data if it does not exist. Updates the file with the data if it exists.
+ * Concurrent updates to the same file will throw an error.
  * @param path - Path of the file in git repo.
  * @param text - Text to be appended at the end of the file.
  */
