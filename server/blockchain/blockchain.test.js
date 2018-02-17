@@ -3,7 +3,9 @@ const blockchain = require('./blockchain')
 
 suite('blockchain', () => {
   test('getBlockPath', () => {
-    assert(blockchain)
+    const now = new Date()
+    const path = blockchain.getBlockPath(now)
+    assert(path)
   })
 
   test('insertBlock', () => {

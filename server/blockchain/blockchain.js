@@ -1,20 +1,19 @@
 const github = require('../data/github')
 
 /**
- *
- * @param time
- * @param dayShift
+ * Retrieves the full path of a block in a git repo with respect to given time and day shift.
+ * @param time - 'Date' object instance.
+ * @param dayShift - No of days to shift the time, if any. i.e. +5, -3, etc.
  */
-exports.getBlockPath = (time, dayShift) => `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate() + dayShift}`
+exports.getBlockPath = (time, dayShift) => `${time.getFullYear()}/${time.getMonth() + 1}/${time.getDate() + dayShift}`
 
 /**
- *
- * @param blockPath
- * @returns {Promise.<void>}
+ * Creates and inserts a new block into the blockchain git repo, asynchronously.
+ * Two separate files are created for the block header and data.
+ * @param blockPath - Full path of the block to create. i.e. "dir/sub_dir/filename".
  */
 exports.insertBlock = async blockPath => {
   // get last block header
-  const prevBlockHeader =  await github.getFileContent(prevBlockPath + '-header')
 
   // get all txs since last block interval + 1 hours (not to allow any conflicts)
 
@@ -27,8 +26,7 @@ exports.insertBlock = async blockPath => {
 }
 
 /**
- *
- * @returns {Promise.<void>}
+ * Checks if it is time then creates the required block in blockchain, asynchronously.
  */
 exports.insertBlockIfRequired = async () => {
   // check if it is time to create a block
