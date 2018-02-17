@@ -31,7 +31,11 @@ exports.insertBlockIfRequired = async () => {
 }
 
 let timerStarted = false
-exports.startBlockchainTimer = () => {
+/**
+ * Starts the the blockchain insert timer.
+ * Returns a number that can be used in clearing the interval with "clearInterval(ret)".
+ */
+exports.startBlockchainInsertTimer = () => {
   // prevent duplicate timers
   if (timerStarted) {
     return
@@ -40,7 +44,7 @@ exports.startBlockchainTimer = () => {
 
   // start timer
   const interval = 1000/* ms */ * 60/* s */ * 10/* min */
-  setInterval(async () => {
+  return setInterval(async () => {
     try {
       await exports.insertBlockIfRequired()
     } catch (e) { console.error(e) }

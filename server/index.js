@@ -2,4 +2,4 @@ const server = require('./config/server')
 const blockchain = require('./blockchain/blockchain')
 
 server()
-blockchain.startBlockchainTimer()
+blockchain.startBlockchainInsertTimer()
