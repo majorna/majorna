@@ -1,7 +1,20 @@
 const github = require('../data/github')
 
-exports.insertBlock = async () => {
+/**
+ *
+ * @param time
+ * @param dayShift
+ */
+exports.getBlockPath = (time, dayShift) => `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate() + dayShift}`
+
+/**
+ *
+ * @param blockPath
+ * @returns {Promise.<void>}
+ */
+exports.insertBlock = async blockPath => {
   // get last block header
+  const prevBlockHeader =  await github.getFileContent(prevBlockPath + '-header')
 
   // get all txs since last block interval + 1 hours (not to allow any conflicts)
 
@@ -13,11 +26,15 @@ exports.insertBlock = async () => {
   // const path = `${now.getFullYear()}/weeks/${utils.getWeekNumber(now)}`
 }
 
+/**
+ *
+ * @returns {Promise.<void>}
+ */
 exports.insertBlockIfRequired = async () => {
   // check if it is time to create a block
   const now = new Date()
   now.setMinutes(now.getMinutes() - 10 /* some latency to let ongoing txs to complete */)
-  const prevBlockPath = `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate() - 1}`
+  const prevBlockPath = exports.getBlockPath(now, -1)
   try {
     await github.getFileContent(prevBlockPath + '-header')
   } catch (e) {
