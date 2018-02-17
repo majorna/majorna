@@ -1,3 +1,6 @@
+const github = require('../data/github')
+const utils = require('../data/utils')
+
 exports.insertBlock = async () => {
   // get last block header
 
@@ -11,6 +14,23 @@ exports.insertBlock = async () => {
   // const path = `${now.getFullYear()}/weeks/${utils.getWeekNumber(now)}`
 }
 
+exports.insertBlockIfOnTime = async () => {
+  // check if it is time to create a block
+  const now = new Date()
+  now.setMinutes(now.getMinutes() - 10) // to let ongoing txs to complete
+  const prevBlockPath = `${now.getFullYear()}/${now.getMonth()+1}/${now.getDate()-1}`
+  try {
+    await github.getFileContent(prevBlockPath + '-header')
+  } catch (e) {
+    if (e.code === 404) {
+      await exports.insertBlock(prevBlockPath)
+      console.log(`inserted block ${prevBlockPath}`)
+    } else {
+      throw e
+    }
+  }
+}
+
 let timerStarted = false
 exports.startBlockchainTimer = () => {
   // prevent duplicate timers
@@ -22,6 +42,8 @@ exports.startBlockchainTimer = () => {
   // start timer
   const interval = 1000/*ms*/ * 60/*s*/ * 10/*min*/
   setInterval(() => {
-    // check if it is time to create a block
+    try {
+      exports.insertBlockIfOnTime()
+    } catch (e) {console.error (e)}
   }, interval)
 }
