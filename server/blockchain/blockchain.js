@@ -9,6 +9,16 @@ const github = require('../data/github')
  */
 exports.getBlockPath = (time, dayShift) => `${time.getFullYear()}/${time.getMonth() + 1}/${time.getDate() + (dayShift || 0)}`
 
+exports.getBlockTimeRange = now => {
+  const start = new Date()
+  start.setDate(start.getDate() - 1)
+
+  const end = new Date(now.getTime())
+  end.setUTCHours(0, 0, 0, 0)
+
+  return {start, end}
+}
+
 /**
  * Creates and inserts a new block into the blockchain git repo, asynchronously.
  * Two separate files are created for the block header and data.
@@ -24,18 +34,23 @@ exports.insertBlock = async (startTime, endTime, blockPath) => {
 
 /**
  * Checks if it is time then creates the required block in blockchain, asynchronously.
+ * Returns true if a block was inserted. False otherwise.
+ * @param prevBlockPath - Only used for testing. Automatically calculated otherwise.
  */
-exports.insertBlockIfRequired = async () => {
+exports.insertBlockIfRequired = async prevBlockPath => {
   // check if it is time to create a block
   const now = new Date()
-  now.setMinutes(now.getMinutes() - 10 /* some latency to let ongoing txs to complete */)
-  const prevBlockPath = exports.getBlockPath(now, -1)
+  now.setMinutes(now.getMinutes() - 15 /* some latency to let ongoing txs to complete */)
+  prevBlockPath = prevBlockPath || exports.getBlockPath(now, -1)
   try {
     await github.getFileContent(prevBlockPath)
+    return false
   } catch (e) {
     if (e.code === 404) {
-      await exports.insertBlock(now, prevBlockPath)
+      const blockTimeRange = exports.getBlockTimeRange(now)
+      await exports.insertBlock(blockTimeRange.start, blockTimeRange.end, prevBlockPath)
       console.log(`inserted block ${prevBlockPath}`)
+      return true
     } else {
       throw e
     }
