@@ -11,18 +11,12 @@ exports.getBlockPath = (time, dayShift) => `${time.getFullYear()}/${time.getMont
  * Creates and inserts a new block into the blockchain git repo, asynchronously.
  * Two separate files are created for the block header and data.
  * @param blockPath - Full path of the block to create. i.e. "dir/sub_dir/filename".
+ * @param startTime - Time to start including txs from.
+ * @param endTime - Time to stop including txs from.
  */
-exports.insertBlock = async blockPath => {
-  // get last block header
-
-  // get all txs since last block interval + 1 hours (not to allow any conflicts)
-
+exports.insertBlock = async (startTime, endTime, blockPath) => {
   // const signedBlock = crypto.signObj()
   // await github.insertTxInBlock(signedBlock)
-
-  // block file frequency = 1 per week for now
-  // const now = new Date()
-  // const path = `${now.getFullYear()}/weeks/${utils.getWeekNumber(now)}`
 }
 
 /**
@@ -37,7 +31,7 @@ exports.insertBlockIfRequired = async () => {
     await github.getFileContent(prevBlockPath + '-header')
   } catch (e) {
     if (e.code === 404) {
-      await exports.insertBlock(prevBlockPath)
+      await exports.insertBlock(now, prevBlockPath)
       console.log(`inserted block ${prevBlockPath}`)
     } else {
       throw e
