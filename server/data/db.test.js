@@ -71,9 +71,12 @@ suite('db', () => {
   })
 
   test('getTxsByTimeRange', async () => {
-    // let err = null
-    // try { await db.getTxsByTimeRange('sdaf089y097gs') } catch (e) { err = e }
-    // assert(err)
+    const now = new Date()
+    const yesterday = new Date()
+    yesterday.setDate(yesterday.getDate() - 1)
+    const txs = await db.getTxsByTimeRange(yesterday, now)
+    assert(txs.length >= testData.txs.length)
+    assert(txs[0].from === testData.txs[0].from)
   })
 
   test('makeTx', async () => {

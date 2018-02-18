@@ -101,7 +101,10 @@ exports.getTx = async id => {
 /**
  * Queries the txs by given date objects range: start time (inclusive), end time (exclusive).
  */
-exports.getTxsByTimeRange = async (startTime, endTime) => txsColRef.where('time', '>=', startTime).where('time', '<', endTime)
+exports.getTxsByTimeRange = async (startTime, endTime) => {
+  const txsSnap = await txsColRef.where('time', '>=', startTime).where('time', '<', endTime).get()
+  return txsSnap.docs.map(doc => doc.data())
+}
 
 /**
  * Performs a financial transaction from person A to B asynchronously.
