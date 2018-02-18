@@ -55,7 +55,7 @@ exports.startBlockchainInsertTimer = () => {
   timerStarted = true
 
   // start timer
-  const interval = 1000/* ms */ * 60/* s */ * 10/* min */
+  const interval = 1000/* ms */ * 60/* s */ * 15/* min */
   return setInterval(async () => {
     try {
       await exports.insertBlockIfRequired()

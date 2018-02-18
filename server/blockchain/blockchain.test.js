@@ -12,7 +12,7 @@ suite('blockchain', () => {
     const now = new Date()
     const yesterday = new Date()
     yesterday.setDate(yesterday.getDate() - 1)
-    const path = blockchain.getBlockPath(now)
+    const path = blockchain.getBlockPath(now) + '-' + Math.random()
     await blockchain.insertBlock(now, yesterday, path)
   })
 

@@ -1,7 +1,7 @@
 /**
  * GitHub Integration:
  * - API v3 ref: https://developer.github.com/v3/repos/contents/
- * - Node.js SDK: https://github.com/octokit/rest.js
+ * - Node.js SDK src: https://github.com/octokit/rest.js
  * - Node.js SDK ref: https://octokit.github.io/rest.js/#api-Repos-getContent
  */
 const octokit = require('@octokit/rest')()
