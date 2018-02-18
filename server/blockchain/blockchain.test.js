@@ -8,8 +8,12 @@ suite('blockchain', () => {
     assert(path)
   })
 
-  test('insertBlock', () => {
-    assert(blockchain)
+  test('insertBlock', async () => {
+    const now = new Date()
+    const yesterday = new Date()
+    yesterday.setDate(yesterday.getDate() - 1)
+    const path = blockchain.getBlockPath(now)
+    await blockchain.insertBlock(now, yesterday, path)
   })
 
   test('insertBlockIfRequired', () => {

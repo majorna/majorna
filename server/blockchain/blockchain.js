@@ -1,3 +1,5 @@
+const db = require('../data/db')
+const crypto = require('./crypto')
 const github = require('../data/github')
 
 /**
@@ -5,7 +7,7 @@ const github = require('../data/github')
  * @param time - 'Date' object instance.
  * @param dayShift - No of days to shift the time, if any. i.e. +5, -3, etc.
  */
-exports.getBlockPath = (time, dayShift) => `${time.getFullYear()}/${time.getMonth() + 1}/${time.getDate() + dayShift}`
+exports.getBlockPath = (time, dayShift) => `${time.getFullYear()}/${time.getMonth() + 1}/${time.getDate() + (dayShift || 0)}`
 
 /**
  * Creates and inserts a new block into the blockchain git repo, asynchronously.
@@ -15,8 +17,9 @@ exports.getBlockPath = (time, dayShift) => `${time.getFullYear()}/${time.getMont
  * @param endTime - Time to stop including txs from.
  */
 exports.insertBlock = async (startTime, endTime, blockPath) => {
-  // const signedBlock = crypto.signObj()
-  // await github.insertTxInBlock(signedBlock)
+  const txs = await db.getTxsByTimeRange(startTime, endTime)
+  const signedBlock = crypto.signObj(txs)
+  await github.createFile(JSON.stringify(signedBlock), blockPath)
 }
 
 /**
@@ -28,7 +31,7 @@ exports.insertBlockIfRequired = async () => {
   now.setMinutes(now.getMinutes() - 10 /* some latency to let ongoing txs to complete */)
   const prevBlockPath = exports.getBlockPath(now, -1)
   try {
-    await github.getFileContent(prevBlockPath + '-header')
+    await github.getFileContent(prevBlockPath)
   } catch (e) {
     if (e.code === 404) {
       await exports.insertBlock(now, prevBlockPath)
