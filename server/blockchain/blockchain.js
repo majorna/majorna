@@ -44,6 +44,7 @@ exports.insertBlockIfRequired = async prevBlockPath => {
   prevBlockPath = prevBlockPath || exports.getBlockPath(now, -1)
   try {
     await github.getFileContent(prevBlockPath)
+    console.log('not time to create a block yet')
     return false
   } catch (e) {
     if (e.code === 404) {
@@ -61,8 +62,9 @@ let timerStarted = false
 /**
  * Starts the the blockchain insert timer.
  * Returns a number that can be used in clearing the interval with "clearInterval(ret)".
+ * @param interval - Only used for testing. Automatically calculated otherwise.
  */
-exports.startBlockchainInsertTimer = () => {
+exports.startBlockchainInsertTimer = interval => {
   // prevent duplicate timers
   if (timerStarted) {
     return
@@ -70,7 +72,7 @@ exports.startBlockchainInsertTimer = () => {
   timerStarted = true
 
   // start timer
-  const interval = 1000/* ms */ * 60/* s */ * 15/* min */
+  interval = interval || 1000/* ms */ * 60/* s */ * 15/* min */
   return setInterval(async () => {
     try {
       await exports.insertBlockIfRequired()

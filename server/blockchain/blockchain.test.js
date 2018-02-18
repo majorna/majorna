@@ -2,7 +2,7 @@ const assert = require('assert')
 const blockchain = require('./blockchain')
 const github = require('../data/github')
 
-suite.only('blockchain', () => {
+suite('blockchain', () => {
   test('getBlockPath', () => {
     const now = new Date()
     const path = blockchain.getBlockPath(now)
@@ -37,6 +37,7 @@ suite.only('blockchain', () => {
   })
 
   test('startBlockchainInsertTimer', () => {
-    assert(blockchain)
+    const timer = blockchain.startBlockchainInsertTimer(1)
+    clearInterval(timer)
   })
 })
