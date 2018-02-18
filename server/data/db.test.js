@@ -58,9 +58,25 @@ suite('db', () => {
   })
 
   test('getTx', async () => {
+    const tx0 = testData.txs[0]
+    const tx = await db.getTx('0')
+    assert(tx.id === tx0.id)
+    assert(tx.from === tx0.from)
+
+    // inexisting tx
     let err = null
     try { await db.getTx('sdaf089y097gs') } catch (e) { err = e }
     assert(err)
+    console.log(err.status === 404)
+  })
+
+  test('getTxsByTimeRange', async () => {
+    const now = new Date()
+    const yesterday = new Date()
+    yesterday.setDate(yesterday.getDate() - 1)
+    const txs = await db.getTxsByTimeRange(yesterday, now)
+    assert(txs.length >= testData.txs.length)
+    assert(txs[0].from === testData.txs[0].from)
   })
 
   test('makeTx', async () => {

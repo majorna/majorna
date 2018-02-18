@@ -99,6 +99,14 @@ exports.getTx = async id => {
 }
 
 /**
+ * Queries the txs by given date objects range: start time (inclusive), end time (exclusive).
+ */
+exports.getTxsByTimeRange = async (startTime, endTime) => {
+  const txsSnap = await txsColRef.where('time', '>=', startTime).where('time', '<', endTime).get()
+  return txsSnap.docs.map(doc => doc.data())
+}
+
+/**
  * Performs a financial transaction from person A to B asynchronously.
  * Both user documents and transactions collection is updated with the transaction data and results.
  * Returned promise resolves to completed transaction data -or- to an error if transaction fails.
@@ -168,6 +176,7 @@ exports.initTest = async () => {
   batch.create(metaDocRef, testData.mj.meta)
   batch.create(usersColRef.doc('1'), testData.users.u1Doc)
   batch.create(usersColRef.doc('2'), testData.users.u2Doc)
+  testData.txs.forEach((tx, i) => batch.create(txsColRef.doc(i.toString()), tx))
 
   await batch.commit()
 }

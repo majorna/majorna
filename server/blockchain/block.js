@@ -2,7 +2,6 @@
  * Block no = 0.
  */
 exports.genesisBlock = {
-  txs: [],
   header: {
     no: 0,
     prevHash: '0',
@@ -11,7 +10,8 @@ exports.genesisBlock = {
     time: Date.parse('01 Jan 2018 00:00:00 GMT'),
     difficulty: 0,
     nonce: 0
-  }
+  },
+  data: []
 }
 
 /**
@@ -27,12 +27,10 @@ exports.createMerkle = arr => {
 
 /**
  * Creates a block with given txs and previous block data.
- * Verifies all given txs first.
  */
 exports.createBlock = (txs, prevBlock) => {
   const merkle = exports.createMerkle(txs)
   return {
-    txs,
     header: {
       no: prevBlock.no + 1,
       prevHash: prevBlock.hash,
@@ -41,7 +39,8 @@ exports.createBlock = (txs, prevBlock) => {
       time: new Date(),
       difficulty: 0,
       nonce: 0
-    }
+    },
+    data: txs
   }
 }
 
