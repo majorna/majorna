@@ -22,7 +22,15 @@ suite('crypto', () => {
     assert(sigObj.data.wow === 'yeah')
   })
 
-  text('hash', () => {
-    // todo: write me
+  test('hash', () => {
+    const obj = {stuff: 'loremipsum'}
+    const text = JSON.stringify(obj)
+    const hash = 'dIg1zb/3Caq5LJnoBnKprd19JRYylKg/CMAB09nPFXA=' // calculated with another tool
+
+    const calcHash = crypto.hashText(text)
+    assert(calcHash === hash)
+
+    const calcHash2 = crypto.hashObj(obj)
+    assert(calcHash2 === hash)
   })
 })
