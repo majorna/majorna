@@ -1,7 +1,7 @@
 const assert = require('assert')
 const block = require('./block')
 
-suite.only('block', () => {
+suite('block', () => {
   test('createMerkle', () => {
     const arr = ['lorem', 'ipsum', 'dolor']
     const merkle = block.createMerkle(arr)

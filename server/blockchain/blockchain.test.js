@@ -1,6 +1,7 @@
 const assert = require('assert')
 const blockchain = require('./blockchain')
 const github = require('../data/github')
+const crypto = require('./crypto')
 
 suite('blockchain', () => {
   test('getBlockPath', () => {
@@ -20,8 +21,10 @@ suite('blockchain', () => {
     const path = blockchain.getBlockPath(now) + '-' + Math.random()
     await blockchain.insertBlock(now, yesterday, path)
 
-    const block = await github.getFileContent(path)
-    assert(block.includes('"data":'))
+    const blockFile = await github.getFileContent(path)
+    assert(blockFile.includes('"data":'))
+    const block = JSON.parse(blockFile)
+    assert(crypto.verify(JSON.stringify(block.data), block.sig))
   })
 
   test('insertBlockIfRequired', async () => {
