@@ -21,4 +21,8 @@ suite('crypto', () => {
     assert(sigObj.sig.length > 50)
     assert(sigObj.data.wow === 'yeah')
   })
+
+  text('hash', () => {
+    // todo: write me
+  })
 })

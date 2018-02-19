@@ -9,9 +9,13 @@ exports.signObj = obj => exports.signText(JSON.stringify(obj))
 
 exports.signText = text => crypto.createSign(algo).update(text).sign(config.crypto.privateKey, encoding)
 
-exports.verifyObj = (obj, signatureSha256Base64) => exports.verifyText(JSON.stringify(obj), signatureSha256Base64)
+exports.verifyObj = (obj, sig) => exports.verifyText(JSON.stringify(obj), sig)
 
-exports.verifyText = (text, signatureSha256Base64) => crypto.createVerify(algo).update(text).verify(config.crypto.publicKey, signatureSha256Base64, encoding)
+exports.verifyText = (text, sig) => crypto.createVerify(algo).update(text).verify(config.crypto.publicKey, sig, encoding)
+
+exports.hashText = text => crypto.createHash(algo).update(text).digest(encoding)
+
+exports.hashObj = obj => exports.hashText(JSON.stringify(obj))
 
 /**
  * Wraps a given object into a new object with its signature:
@@ -23,8 +27,4 @@ exports.signObj = obj => {
   const sig = exports.signText(str)
   assert(exports.verifyText(str, sig))
   return {sig, data: obj}
-}
-
-exports.hashSha256 = obj => {
-
 }
