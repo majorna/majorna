@@ -24,7 +24,7 @@ suite('blockchain', () => {
     const blockFile = await github.getFileContent(path)
     assert(blockFile.includes('"data":'))
     const block = JSON.parse(blockFile)
-    assert(crypto.verifyText(JSON.stringify(block.data), block.sig))
+    assert(crypto.verifyObj(block.data, block.sig))
   })
 
   test('insertBlockIfRequired', async () => {
