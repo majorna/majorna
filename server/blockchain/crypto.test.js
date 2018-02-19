@@ -11,7 +11,7 @@ suite('crypto', () => {
     const sig2 = crypto.signText(text2)
     assert(crypto.verifyText(text2, sig2))
 
-    assert(sig2.length < 100, `signature length was: ${sig2.length}`)
+    assert(sig2.length === 96)
   })
 
   test('hash', () => {
@@ -31,7 +31,7 @@ suite('crypto', () => {
     const obj = {wow: 'yeah'}
     const sigObj = crypto.signAndWrapObj(obj)
     assert(sigObj.sig)
-    assert(sigObj.sig.length > 50)
+    assert(sigObj.sig.length === 96)
     assert(sigObj.data.wow === 'yeah')
   })
 })
