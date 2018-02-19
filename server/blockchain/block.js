@@ -2,7 +2,7 @@ const MerkleTools = require('merkle-tools')
 const crypto = require('./crypto')
 
 /**
- * Block no = 0.
+ * The very first block of the blockchain (no = 0).
  */
 exports.genesisBlock = {
   header: {

@@ -14,14 +14,6 @@ suite('crypto', () => {
     assert(sig2.length < 100, `signature length was: ${sig2.length}`)
   })
 
-  test('signObj', () => {
-    const obj = {wow: 'yeah'}
-    const sigObj = crypto.signObj(obj)
-    assert(sigObj.sig)
-    assert(sigObj.sig.length > 50)
-    assert(sigObj.data.wow === 'yeah')
-  })
-
   test('hash', () => {
     const obj = {stuff: 'loremipsum'}
     const text = JSON.stringify(obj)
@@ -29,8 +21,17 @@ suite('crypto', () => {
 
     const calcHash = crypto.hashText(text)
     assert(calcHash === hash)
+    assert(calcHash.length === 44)
 
     const calcHash2 = crypto.hashObj(obj)
     assert(calcHash2 === hash)
+  })
+
+  test('signObj', () => {
+    const obj = {wow: 'yeah'}
+    const sigObj = crypto.signObj(obj)
+    assert(sigObj.sig)
+    assert(sigObj.sig.length > 50)
+    assert(sigObj.data.wow === 'yeah')
   })
 })
