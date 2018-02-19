@@ -20,8 +20,8 @@ exports.genesisBlock = {
 exports.createMerkle = arr => {
   return {
     hash: 0,
-    l: {},
-    r: {}
+    lelft: {},
+    right: {}
   }
 }
 
