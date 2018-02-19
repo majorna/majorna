@@ -1,4 +1,5 @@
 const MerkleTools = require('merkle-tools')
+const crypto = require('./crypto')
 
 /**
  * Block no = 0.
@@ -34,7 +35,7 @@ exports.createBlock = (txs, prevBlock) => {
   return {
     header: {
       no: prevBlock.header.no + 1,
-      prevHash: prevBlock.hash,
+      prevHash: crypto.hashObj(prevBlock),
       txCount: txs.length,
       merkleRoot: merkle.getMerkleRoot().toString('base64'),
       time: new Date(),

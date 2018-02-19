@@ -17,7 +17,14 @@ suite('block', () => {
   test('createBlock', () => {
     const blockObj = block.createBlock(txs, genBlock)
     assert(blockObj.header.no === genBlock.header.no + 1)
-    // assert(blockObj.header.prevHash)
-    // assert(blockObj.header.txCount === txs.length)
+    assert(blockObj.header.prevHash)
+    assert(blockObj.header.txCount === txs.length)
+    assert(blockObj.header.merkleRoot.length >= (256 / 8))
+    assert(blockObj.header.time.getTime() <= (new Date()).getTime())
+    // assert(blockObj.header.difficulty > 0)
+    // assert(blockObj.header.nonce > 0)
+
+    // todo: verify merkle tree, root, and proof
+    // todo: verify nonce, difficulty, and hash
   })
 })
