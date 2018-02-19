@@ -33,7 +33,7 @@ exports.createBlock = (txs, prevBlock) => {
   const merkle = exports.createMerkle(txs)
   return {
     header: {
-      no: prevBlock.no + 1,
+      no: prevBlock.header.no + 1,
       prevHash: prevBlock.hash,
       txCount: txs.length,
       merkleRoot: merkle.getMerkleRoot().toString('base64'),
