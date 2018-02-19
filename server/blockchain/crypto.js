@@ -22,7 +22,7 @@ exports.hashObj = obj => exports.hashText(JSON.stringify(obj))
  * Input: {field1: ..., field2: ...}
  * Output: {sig: 'base64_encoded_sig', data: {field1: ..., field2: ...}}
  */
-exports.signObj = obj => {
+exports.signAndWrapObj = obj => {
   const str = JSON.stringify(obj)
   const sig = exports.signText(str)
   assert(exports.verifyText(str, sig))

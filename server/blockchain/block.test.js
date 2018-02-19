@@ -1,5 +1,6 @@
 const assert = require('assert')
 const block = require('./block')
+const crypto = require('./crypto')
 
 const genBlock = block.genesisBlock
 const txs = ['lorem', 'ipsum', 'dolor']
@@ -21,8 +22,15 @@ suite('block', () => {
     assert(blockObj.header.txCount === txs.length)
     assert(blockObj.header.merkleRoot.length === 44)
     assert(blockObj.header.time.getTime() <= (new Date()).getTime())
-    // assert(blockObj.header.difficulty > 0)
-    // assert(blockObj.header.nonce > 0)
+    if (blockObj.sig) {
+      assert(blockObj.sig.length === 96)
+      assert(crypto.verifyObj(blockObj.header, blockObj.sig))
+      assert(blockObj.header.difficulty === 0)
+      assert(blockObj.header.nonce === 0)
+    } else {
+      assert(blockObj.header.difficulty > 0)
+      assert(blockObj.header.nonce > 0)
+    }
 
     // todo: verify merkle tree, root, and proof
     // todo: verify nonce, difficulty, and hash

@@ -27,9 +27,9 @@ suite('crypto', () => {
     assert(calcHash2 === hash)
   })
 
-  test('signObj', () => {
+  test('signAndWrapObj', () => {
     const obj = {wow: 'yeah'}
-    const sigObj = crypto.signObj(obj)
+    const sigObj = crypto.signAndWrapObj(obj)
     assert(sigObj.sig)
     assert(sigObj.sig.length > 50)
     assert(sigObj.data.wow === 'yeah')

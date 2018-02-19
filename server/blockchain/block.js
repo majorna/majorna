@@ -5,6 +5,7 @@ const crypto = require('./crypto')
  * The very first block of the blockchain (no = 0).
  */
 exports.genesisBlock = {
+  sig: 0, // optional: if given, difficulty and nonce are not required
   header: {
     no: 0,
     prevHash: '0',
@@ -32,16 +33,18 @@ exports.createMerkle = arr => {
  */
 exports.createBlock = (txs, prevBlock) => {
   const merkle = exports.createMerkle(txs)
+  const header = {
+    no: prevBlock.header.no + 1,
+    prevHash: crypto.hashObj(prevBlock),
+    txCount: txs.length,
+    merkleRoot: merkle.getMerkleRoot().toString('base64'),
+    time: new Date(),
+    difficulty: 0,
+    nonce: 0
+  }
   return {
-    header: {
-      no: prevBlock.header.no + 1,
-      prevHash: crypto.hashObj(prevBlock),
-      txCount: txs.length,
-      merkleRoot: merkle.getMerkleRoot().toString('base64'),
-      time: new Date(),
-      difficulty: 0,
-      nonce: 0
-    },
+    sig: crypto.signObj(header),
+    header,
     data: txs
   }
 }

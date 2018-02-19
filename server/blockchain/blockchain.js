@@ -28,7 +28,7 @@ exports.getBlockTimeRange = now => {
  */
 exports.insertBlock = async (startTime, endTime, blockPath) => {
   const txs = await db.getTxsByTimeRange(startTime, endTime)
-  const signedBlock = crypto.signObj(txs)
+  const signedBlock = crypto.signAndWrapObj(txs)
   await github.createFile(JSON.stringify(signedBlock), blockPath)
 }
 
