@@ -1,3 +1,5 @@
+const MerkleTools = require('merkle-tools')
+
 /**
  * Block no = 0.
  */
@@ -18,11 +20,10 @@ exports.genesisBlock = {
  * Creates a merkle tree out of given array of objects.
  */
 exports.createMerkle = arr => {
-  return {
-    hash: 0,
-    lelft: {},
-    right: {}
-  }
+  const merkleTools = new MerkleTools({hashType: 'sha256'})
+  merkleTools.addLeaves(arr, true)
+  merkleTools.makeTree()
+  return merkleTools
 }
 
 /**
@@ -35,7 +36,7 @@ exports.createBlock = (txs, prevBlock) => {
       no: prevBlock.no + 1,
       prevHash: prevBlock.hash,
       txCount: txs.length,
-      merkleRoot: merkle.hash,
+      merkleRoot: merkle.getMerkleRoot().toString('base64'),
       time: new Date(),
       difficulty: 0,
       nonce: 0
