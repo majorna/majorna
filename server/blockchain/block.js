@@ -3,6 +3,7 @@ const crypto = require('./crypto')
 
 /**
  * The very first block of the blockchain (no = 0).
+ * Either trust (signature) or PoW (difficulty and nonce) are required.
  */
 exports.genesisBlock = {
   sig: 0, // optional: if given, difficulty and nonce are not required
@@ -50,16 +51,16 @@ exports.createBlock = (txs, prevBlock) => {
 }
 
 /**
- * Verifies a given block and all its txs.
+ * Verifies a given block header and data (if given).
  */
 exports.verifyBlock = block => {}
 
 /**
- * Returns a markle path leading to a given tx out of a full merkle tree.
+ * Returns a merkle proof for a given tx and the merkle tree.
  */
-exports.getTxMerklePath = (tx, merkle) => {}
+exports.getTxProof = (tx, merkle) => {}
 
 /**
- * Verifies a tx given a block header and merkle path (of full merkle tree) for that tx.
+ * Verifies a tx given a block header and merkle proof for that tx.
  */
-exports.verifyTxInBlock = (tx, blockHeader, merklePath) => {}
+exports.verifyTxInBlock = (tx, blockHeader, merkleProof) => {}
