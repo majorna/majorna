@@ -9,9 +9,9 @@ exports.genesisBlock = {
   sig: 0, // optional: if given, difficulty and nonce are not required
   header: {
     no: 0,
-    prevHash: '0',
+    prevHash: '',
     txCount: 0,
-    merkleRoot: '0',
+    merkleRoot: '',
     time: Date.parse('01 Jan 2018 00:00:00 GMT'),
     difficulty: 0, // optional: if sig is not present, should be > 0
     nonce: 0 // optional: if sig is not present, should be > 0
@@ -38,7 +38,7 @@ exports.createSignedBlock = (txs, prevBlock, mine = false) => {
     no: prevHeader.no + 1,
     prevHash: crypto.hashObj(prevHeader),
     txCount: txs.length,
-    merkleRoot: exports.createMerkle(txs).getMerkleRoot().toString('base64'),
+    merkleRoot: (txs.length && exports.createMerkle(txs).getMerkleRoot().toString('base64')) || '',
     time: new Date(),
     difficulty: 0,
     nonce: 0

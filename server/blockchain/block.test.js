@@ -5,6 +5,24 @@ const crypto = require('./crypto')
 const genBlock = block.genesisBlock
 const txs = ['lorem', 'ipsum', 'dolor']
 
+function verifyBlock (blockObj, prevBlock, txs) {
+  assert(blockObj.header.no === prevBlock.header.no + 1)
+  assert(blockObj.header.prevHash.length === 44)
+  assert(blockObj.header.txCount === txs.length)
+  txs.length && assert(blockObj.header.merkleRoot.length === 44)
+  assert(blockObj.header.time.getTime() <= (new Date()).getTime())
+
+  if (blockObj.sig) {
+    assert(blockObj.sig.length === 96)
+    assert(crypto.verifyObj(blockObj.header, blockObj.sig))
+    assert(blockObj.header.difficulty === 0)
+    assert(blockObj.header.nonce === 0)
+  } else {
+    assert(blockObj.header.difficulty > 0)
+    assert(blockObj.header.nonce > 0)
+  }
+}
+
 suite('block', () => {
   test('createMerkle', () => {
     const merkle = block.createMerkle(txs)
@@ -17,29 +35,18 @@ suite('block', () => {
 
   test('createSignedBlock', () => {
     const blockObj = block.createSignedBlock(txs, genBlock)
-    verifyBlock(blockObj)
+    verifyBlock(blockObj, genBlock, txs)
 
     const minedBlockObj = block.createSignedBlock(txs, genBlock, true)
     delete minedBlockObj.sig
-    verifyBlock(minedBlockObj)
+    verifyBlock(minedBlockObj, genBlock, txs)
+  })
 
-    function verifyBlock (blockObj) {
-      assert(blockObj.header.no === genBlock.header.no + 1)
-      assert(blockObj.header.prevHash.length === 44)
-      assert(blockObj.header.txCount === txs.length)
-      assert(blockObj.header.merkleRoot.length === 44)
-      assert(blockObj.header.time.getTime() <= (new Date()).getTime())
-
-      if (blockObj.sig) {
-        assert(blockObj.sig.length === 96)
-        assert(crypto.verifyObj(blockObj.header, blockObj.sig))
-        assert(blockObj.header.difficulty === 0)
-        assert(blockObj.header.nonce === 0)
-      } else {
-        assert(blockObj.header.difficulty > 0)
-        assert(blockObj.header.nonce > 0)
-      }
-    }
+  test('createSignedBlock with empy txs', () => {
+    const emptyTxs = []
+    const minedBlockObj = block.createSignedBlock(emptyTxs, genBlock, true)
+    delete minedBlockObj.sig
+    verifyBlock(minedBlockObj, genBlock, emptyTxs)
   })
 
   test('verifyBlock', () => {})
