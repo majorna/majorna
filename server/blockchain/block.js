@@ -74,8 +74,8 @@ exports.verifyTxInBlock = (tx, blockHeader, merkleProof) => {}
  */
 exports.mineBlock = block => {
   const header = block.header
-  header.difficulty = 1
-  const hashPrefix = '0'
+  header.difficulty = 1 // todo: difficulty should depend on average block timer
+  const hashPrefix = '0'.repeat(header.difficulty) // todo: this is exponential like growth!
 
   let hash
   while (true) {
