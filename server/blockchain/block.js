@@ -6,7 +6,7 @@ const crypto = require('./crypto')
  * Either trust (signature) or PoW (difficulty and nonce) are required.
  */
 exports.genesisBlock = {
-  sig: 0, // optional: if given, difficulty and nonce are not required
+  sig: '', // optional: if given, difficulty and nonce are not required
   header: {
     no: 0,
     prevHash: '',
@@ -43,14 +43,14 @@ exports.createSignedBlock = (txs, prevBlock, mine = false) => {
     difficulty: 0,
     nonce: 0
   }
-
-  const block = {
-    sig: crypto.signObj(header),
+  let block = {
+    sig: '',
     header,
     data: txs
   }
-
-  return mine ? exports.mineBlock(block) : block
+  mine && exports.mineBlock(block)
+  block.sig = crypto.signObj(header)
+  return block
 }
 
 /**
@@ -86,7 +86,7 @@ exports.mineBlock = block => {
     hash = crypto.hashObj(header)
     if (hash.substring(0, header.difficulty) === hashPrefix) {
       console.log(`mined block with nonce: ${header.nonce}, hash: ${hash}`)
-      return block
+      return
     }
   }
 }

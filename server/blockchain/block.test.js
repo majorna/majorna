@@ -5,24 +5,6 @@ const crypto = require('./crypto')
 const genBlock = block.genesisBlock
 const txs = ['lorem', 'ipsum', 'dolor']
 
-function verifyBlock (blockObj, prevBlock, txs) {
-  assert(blockObj.header.no === prevBlock.header.no + 1)
-  assert(blockObj.header.prevHash.length === 44)
-  assert(blockObj.header.txCount === txs.length)
-  txs.length && assert(blockObj.header.merkleRoot.length === 44)
-  assert(blockObj.header.time.getTime() <= (new Date()).getTime())
-
-  if (blockObj.sig) {
-    assert(blockObj.sig.length === 96)
-    assert(crypto.verifyObj(blockObj.header, blockObj.sig))
-    assert(blockObj.header.difficulty === 0)
-    assert(blockObj.header.nonce === 0)
-  } else {
-    assert(blockObj.header.difficulty > 0)
-    assert(blockObj.header.nonce > 0)
-  }
-}
-
 suite('block', () => {
   test('createMerkle', () => {
     const merkle = block.createMerkle(txs)
@@ -32,6 +14,29 @@ suite('block', () => {
     // https://github.com/Tierion/merkle-tools#about-tree-generation-using-maketree
     // console.log(JSON.parse(JSON.stringify(merkle.getTree())))
   })
+
+  function verifyBlock (blockObj, prevBlock, txs) {
+    assert(blockObj.header.no === prevBlock.header.no + 1)
+    assert(blockObj.header.prevHash.length === 44)
+    assert(blockObj.header.txCount === txs.length)
+    if (txs.length) {
+      assert(blockObj.header.merkleRoot.length === 44)
+    } else {
+      assert(blockObj.header.merkleRoot === '')
+    }
+    assert(blockObj.header.time.getTime() <= (new Date()).getTime())
+    assert(blockObj.data.length === txs.length)
+
+    if (blockObj.sig) {
+      assert(blockObj.sig.length === 96)
+      assert(crypto.verifyObj(blockObj.header, blockObj.sig))
+      assert(blockObj.header.difficulty === 0)
+      assert(blockObj.header.nonce === 0)
+    } else {
+      assert(blockObj.header.difficulty > 0)
+      assert(blockObj.header.nonce > 0)
+    }
+  }
 
   test('createSignedBlock', () => {
     const blockObj = block.createSignedBlock(txs, genBlock)
@@ -57,8 +62,8 @@ suite('block', () => {
 
   test('mineBlock', () => {
     const blockObj = block.createSignedBlock(txs, genBlock)
-    const minedBlock = block.mineBlock(blockObj)
-    assert(minedBlock.header.difficulty > 0)
-    assert(minedBlock.header.nonce > 0)
+    block.mineBlock(blockObj)
+    assert(blockObj.header.difficulty > 0)
+    assert(blockObj.header.nonce > 0)
   })
 })
