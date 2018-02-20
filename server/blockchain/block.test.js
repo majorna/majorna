@@ -22,6 +22,7 @@ suite('block', () => {
     assert(blockObj.header.txCount === txs.length)
     assert(blockObj.header.merkleRoot.length === 44)
     assert(blockObj.header.time.getTime() <= (new Date()).getTime())
+
     if (blockObj.sig) {
       assert(blockObj.sig.length === 96)
       assert(crypto.verifyObj(blockObj.header, blockObj.sig))
@@ -34,5 +35,18 @@ suite('block', () => {
 
     // todo: verify merkle tree, root, and proof
     // todo: verify nonce, difficulty, and hash
+  })
+
+  test('verifyBlock', () => {})
+
+  test('getTxProof', () => {})
+
+  test('verifyTxInBlock', () => {})
+
+  test('mineBlock', () => {
+    const blockObj = block.createBlock(txs, genBlock)
+    const minedBlock = block.mineBlock(blockObj)
+    assert(minedBlock.header.difficulty > 0)
+    assert(minedBlock.header.nonce > 0)
   })
 })

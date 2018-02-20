@@ -13,8 +13,8 @@ exports.genesisBlock = {
     txCount: 0,
     merkleRoot: '0',
     time: Date.parse('01 Jan 2018 00:00:00 GMT'),
-    difficulty: 0,
-    nonce: 0
+    difficulty: 0, // optional: if sig is not present, should be > 0
+    nonce: 0 // optional: if sig is not present, should be > 0
   },
   data: []
 }
@@ -33,16 +33,16 @@ exports.createMerkle = arr => {
  * Creates a block with given txs and previous block data.
  */
 exports.createBlock = (txs, prevBlock) => {
-  const merkle = exports.createMerkle(txs)
   const header = {
     no: prevBlock.header.no + 1,
     prevHash: crypto.hashObj(prevBlock),
     txCount: txs.length,
-    merkleRoot: merkle.getMerkleRoot().toString('base64'),
+    merkleRoot: exports.createMerkle(txs).getMerkleRoot().toString('base64'),
     time: new Date(),
     difficulty: 0,
     nonce: 0
   }
+
   return {
     sig: crypto.signObj(header),
     header,
@@ -53,7 +53,11 @@ exports.createBlock = (txs, prevBlock) => {
 /**
  * Verifies a given block header and data (if given).
  */
-exports.verifyBlock = block => {}
+exports.verifyBlock = block => {
+  // verify signature if present
+
+  // verify PoW otherwise
+}
 
 /**
  * Returns a merkle proof for a given tx and the merkle tree.
@@ -64,3 +68,23 @@ exports.getTxProof = (tx, merkle) => {}
  * Verifies a tx given a block header and merkle proof for that tx.
  */
 exports.verifyTxInBlock = (tx, blockHeader, merkleProof) => {}
+
+/**
+ * Calculates nonce (mines) until a hash of required difficulty is found for the block.
+ */
+exports.mineBlock = block => {
+  const header = block.header
+  header.difficulty = 1
+  const hashPrefix = '0'
+
+  let hash
+  while (true) {
+    header.nonce++
+    hash = crypto.hashObj(header)
+    if (hash.substring(0, header.difficulty) === hashPrefix) {
+      console.log(`mined block with nonce: ${header.nonce}, hash: ${hash}`)
+      block.sig && delete block.sig // remove signature in favor of PoW
+      return block
+    }
+  }
+}
