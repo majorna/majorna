@@ -25,7 +25,7 @@ suite('block', () => {
 
     function verifyBlock (blockObj) {
       assert(blockObj.header.no === genBlock.header.no + 1)
-      assert(blockObj.header.prevHash)
+      assert(blockObj.header.prevHash.length === 44)
       assert(blockObj.header.txCount === txs.length)
       assert(blockObj.header.merkleRoot.length === 44)
       assert(blockObj.header.time.getTime() <= (new Date()).getTime())

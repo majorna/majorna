@@ -30,12 +30,13 @@ exports.createMerkle = arr => {
 }
 
 /**
- * Creates a block with given txs and previous block data.
+ * Creates a block with given txs and previous block or block header.
  */
 exports.createSignedBlock = (txs, prevBlock, mine = false) => {
+  const prevHeader = prevBlock.header || prevBlock
   const header = {
-    no: prevBlock.header.no + 1,
-    prevHash: crypto.hashObj(prevBlock),
+    no: prevHeader.no + 1,
+    prevHash: crypto.hashObj(prevHeader),
     txCount: txs.length,
     merkleRoot: exports.createMerkle(txs).getMerkleRoot().toString('base64'),
     time: new Date(),
