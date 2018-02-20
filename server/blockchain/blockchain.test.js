@@ -2,8 +2,9 @@ const assert = require('assert')
 const blockchain = require('./blockchain')
 const github = require('../data/github')
 const crypto = require('./crypto')
+const block = require('./block')
 
-suite('blockchain', () => {
+suite.only('blockchain', () => {
   test('getBlockPath', () => {
     const now = new Date()
     const path = blockchain.getBlockPath(now)
@@ -19,20 +20,20 @@ suite('blockchain', () => {
     const yesterday = new Date()
     yesterday.setDate(yesterday.getDate() - 1)
     const path = blockchain.getBlockPath(now) + '-' + Math.random()
-    await blockchain.insertBlock(now, yesterday, path)
+    await blockchain.insertBlock(now, yesterday, path, block.genesisBlock)
 
     const blockFile = await github.getFileContent(path)
     assert(blockFile.includes('"data":'))
-    const block = JSON.parse(blockFile)
-    assert(crypto.verifyObj(block.data, block.sig))
+    const blockObj = JSON.parse(blockFile)
+    assert(crypto.verifyObj(blockObj.header, blockObj.sig))
   })
 
   test('insertBlockIfRequired', async () => {
     const path = blockchain.getBlockPath(new Date()) + '-' + Math.random()
     const inserted = await blockchain.insertBlockIfRequired(path)
     assert(inserted)
-    const block = await github.getFileContent(path)
-    assert(block.includes('"data":'))
+    const blockFile = await github.getFileContent(path)
+    assert(blockFile.includes('"data":'))
 
     // not required
     const inserted2 = await blockchain.insertBlockIfRequired(path)

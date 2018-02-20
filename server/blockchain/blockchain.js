@@ -1,5 +1,5 @@
 const db = require('../data/db')
-const crypto = require('./crypto')
+const block = require('./block')
 const github = require('../data/github')
 
 /**
@@ -22,14 +22,15 @@ exports.getBlockTimeRange = now => {
 /**
  * Creates and inserts a new block into the blockchain git repo, asynchronously.
  * Two separate files are created for the block header and data.
- * @param blockPath - Full path of the block to create. i.e. "dir/sub_dir/filename".
  * @param startTime - Time to start including txs from.
  * @param endTime - Time to stop including txs from.
+ * @param blockPath - Full path of the block to create. i.e. "dir/sub_dir/filename".
+ * @param prevBlock - Full path of the previous block. i.e. "dir/sub_dir/filename".
  */
-exports.insertBlock = async (startTime, endTime, blockPath) => {
+exports.insertBlock = async (startTime, endTime, blockPath, prevBlock) => {
   const txs = await db.getTxsByTimeRange(startTime, endTime)
-  const signedBlock = crypto.signAndWrapObj(txs)
-  await github.createFile(JSON.stringify(signedBlock), blockPath)
+  const signedBlock = block.createSignedBlock(txs, prevBlock, true)
+  await github.createFile(JSON.stringify(signedBlock, null, 2), blockPath)
 }
 
 /**
