@@ -15,11 +15,11 @@ suite('block', () => {
     // console.log(JSON.parse(JSON.stringify(merkle.getTree())))
   })
 
-  test('createBlock', () => {
-    const blockObj = block.createBlock(txs, genBlock)
+  test('createSignedBlock', () => {
+    const blockObj = block.createSignedBlock(txs, genBlock)
     verifyBlock(blockObj)
 
-    const minedBlockObj = block.createBlock(txs, genBlock, true)
+    const minedBlockObj = block.createSignedBlock(txs, genBlock, true)
     delete minedBlockObj.sig
     verifyBlock(minedBlockObj)
 
@@ -49,7 +49,7 @@ suite('block', () => {
   test('verifyTxInBlock', () => {})
 
   test('mineBlock', () => {
-    const blockObj = block.createBlock(txs, genBlock)
+    const blockObj = block.createSignedBlock(txs, genBlock)
     const minedBlock = block.mineBlock(blockObj)
     assert(minedBlock.header.difficulty > 0)
     assert(minedBlock.header.nonce > 0)

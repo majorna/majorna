@@ -32,7 +32,7 @@ exports.createMerkle = arr => {
 /**
  * Creates a block with given txs and previous block data.
  */
-exports.createBlock = (txs, prevBlock, mine = false) => {
+exports.createSignedBlock = (txs, prevBlock, mine = false) => {
   const header = {
     no: prevBlock.header.no + 1,
     prevHash: crypto.hashObj(prevBlock),
