@@ -17,24 +17,29 @@ suite('block', () => {
 
   test('createBlock', () => {
     const blockObj = block.createBlock(txs, genBlock)
-    assert(blockObj.header.no === genBlock.header.no + 1)
-    assert(blockObj.header.prevHash)
-    assert(blockObj.header.txCount === txs.length)
-    assert(blockObj.header.merkleRoot.length === 44)
-    assert(blockObj.header.time.getTime() <= (new Date()).getTime())
+    verifyBlock(blockObj)
 
-    if (blockObj.sig) {
-      assert(blockObj.sig.length === 96)
-      assert(crypto.verifyObj(blockObj.header, blockObj.sig))
-      assert(blockObj.header.difficulty === 0)
-      assert(blockObj.header.nonce === 0)
-    } else {
-      assert(blockObj.header.difficulty > 0)
-      assert(blockObj.header.nonce > 0)
+    const minedBlockObj = block.createBlock(txs, genBlock, true)
+    delete minedBlockObj.sig
+    verifyBlock(minedBlockObj)
+
+    function verifyBlock (blockObj) {
+      assert(blockObj.header.no === genBlock.header.no + 1)
+      assert(blockObj.header.prevHash)
+      assert(blockObj.header.txCount === txs.length)
+      assert(blockObj.header.merkleRoot.length === 44)
+      assert(blockObj.header.time.getTime() <= (new Date()).getTime())
+
+      if (blockObj.sig) {
+        assert(blockObj.sig.length === 96)
+        assert(crypto.verifyObj(blockObj.header, blockObj.sig))
+        assert(blockObj.header.difficulty === 0)
+        assert(blockObj.header.nonce === 0)
+      } else {
+        assert(blockObj.header.difficulty > 0)
+        assert(blockObj.header.nonce > 0)
+      }
     }
-
-    // todo: verify merkle tree, root, and proof
-    // todo: verify nonce, difficulty, and hash
   })
 
   test('verifyBlock', () => {})

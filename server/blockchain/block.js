@@ -32,7 +32,7 @@ exports.createMerkle = arr => {
 /**
  * Creates a block with given txs and previous block data.
  */
-exports.createBlock = (txs, prevBlock) => {
+exports.createBlock = (txs, prevBlock, mine = false) => {
   const header = {
     no: prevBlock.header.no + 1,
     prevHash: crypto.hashObj(prevBlock),
@@ -43,11 +43,13 @@ exports.createBlock = (txs, prevBlock) => {
     nonce: 0
   }
 
-  return {
+  const block = {
     sig: crypto.signObj(header),
     header,
     data: txs
   }
+
+  return mine ? exports.mineBlock(block) : block
 }
 
 /**
@@ -83,7 +85,6 @@ exports.mineBlock = block => {
     hash = crypto.hashObj(header)
     if (hash.substring(0, header.difficulty) === hashPrefix) {
       console.log(`mined block with nonce: ${header.nonce}, hash: ${hash}`)
-      block.sig && delete block.sig // remove signature in favor of PoW
       return block
     }
   }
