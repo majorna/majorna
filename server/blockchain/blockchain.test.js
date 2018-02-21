@@ -4,15 +4,24 @@ const github = require('../data/github')
 const crypto = require('./crypto')
 const block = require('./block')
 
-suite.only('blockchain', () => {
+suite('blockchain', () => {
   test('getBlockPath', () => {
     const now = new Date()
     const path = blockchain.getBlockPath(now)
     assert(path)
   })
 
-  test('getBlockTimeRange', () => {
-    // todo: write me
+  test.only('getBlockTimeRange', () => {
+    const now = new Date('2018-02-15T10:00:00.000Z')
+    console.log(now)
+    const goBackDays = 5
+    const range = blockchain.getBlockTimeRange(now, goBackDays)
+
+    // time between {now} and {end} is 10 hours
+    assert(range.end.getTime() === (now.getTime() - 1000 * 60 * 60 * 10))
+
+    // time between {start} and {end} is xxx hours
+    assert(range.start.getTime() === (range.end.getTime() - 1000 * 60 * 60 * 24 * 5))
   })
 
   test('insertBlock', async () => {
