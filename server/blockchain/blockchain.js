@@ -56,15 +56,16 @@ exports.insertBlockIfRequired = async prevBlockPath => {
     console.log('not time to create a block yet')
     return false
   } catch (e) {
-    if (e.code === 404) {
-      const blockTimeRange = exports.getBlockTimeRange(now)
-      // todo: move logic somewhere else and keep this function "if-block-required" only
-      await exports.insertBlock(blockTimeRange.start, blockTimeRange.end, prevBlockPath, null /* todo: ... */)
-      console.log(`inserted block ${prevBlockPath}`)
-      return true
-    } else {
+    if (e.code !== 404) {
       throw e
     }
+
+    // todo: move logic somewhere else and keep this function "if-block-required" only
+    const blockTimeRange = exports.getBlockTimeRange(now, 1)
+    const prevPrevBlockPath = exports.getBlockPath(now, -1)
+    await exports.insertBlock(blockTimeRange.start, blockTimeRange.end, prevBlockPath, prevPrevBlockPath)
+    console.log(`inserted block ${prevBlockPath}`)
+    return true
   }
 }
 

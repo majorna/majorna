@@ -11,7 +11,7 @@ suite('blockchain', () => {
     assert(path)
   })
 
-  test.only('getBlockTimeRange', () => {
+  test('getBlockTimeRange', () => {
     const now = new Date('2018-02-15T10:00:00.000Z')
     console.log(now)
     const goBackDays = 5
