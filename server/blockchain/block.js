@@ -12,7 +12,7 @@ exports.genesisBlock = {
     prevHash: '',
     txCount: 0,
     merkleRoot: '',
-    time: Date.parse('01 Jan 2018 00:00:00 GMT'),
+    time: new Date('01 Jan 2018 00:00:00 UTC'),
     difficulty: 0, // optional: if sig is not present, should be > 0
     nonce: 0 // optional: if sig is not present, should be > 0
   },

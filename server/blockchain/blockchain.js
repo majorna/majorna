@@ -2,6 +2,8 @@ const db = require('../data/db')
 const block = require('./block')
 const github = require('../data/github')
 
+const lastBlockPath = 'lastblock'
+
 /**
  * Retrieves the full path of a block in a git repo with respect to given time and day shift.
  * @param time - 'Date' object instance.
@@ -39,7 +41,7 @@ exports.insertBlock = async (startTime, endTime, blockPath, prevBlock) => {
   const txs = await db.getTxsByTimeRange(startTime, endTime)
   const signedBlock = block.createSignedBlock(txs, prevBlock, true)
   await github.createFile(JSON.stringify(signedBlock, null, 2), blockPath)
-  await github.upsertFile(JSON.stringify(signedBlock.header, null, 2), 'lastblock')
+  await github.upsertFile(JSON.stringify(signedBlock.header, null, 2), lastBlockPath)
 }
 
 /**
@@ -48,30 +50,37 @@ exports.insertBlock = async (startTime, endTime, blockPath, prevBlock) => {
  */
 exports.insertBlockSinceLastOne = async now => {
   // get latest block file
+  let lastBlock
+  try {
+    const lastBlockFile = await github.getFileContent(lastBlockPath)
+    lastBlock = JSON.parse(lastBlockFile)
+  } catch (e) {
+    if (e.code === 404) {
+      lastBlock = block.genesisBlock
+    } else {
+      throw e
+    }
+  }
 
-  // if this is the first block every, start with inserting genesis
-
-  const blockTimeRange = exports.getBlockTimeRange(now, 1)
-  const prevBlockPath = exports.getBlockPath(now, -1)
-  const prevPrevBlockPath = exports.getBlockPath(now, -2)
-  const prevPrevBlock = github.getFileContent(prevPrevBlockPath)
-  await exports.insertBlock(blockTimeRange.start, blockTimeRange.end, prevBlockPath, prevPrevBlock)
-  console.log(`inserted block ${prevBlockPath}`)
+  const blockTimeRange = exports.getBlockTimeRange(now, 1) // todo: start by last block date
+  const blockPath = exports.getBlockPath(now, -1)
+  await exports.insertBlock(blockTimeRange.start, blockTimeRange.end, blockPath, lastBlock)
+  console.log(`inserted block ${blockPath}`)
 }
 
 /**
  * Checks if it is time then creates the required block in blockchain, asynchronously.
  * Returns true if a block was inserted. False otherwise.
- * @param prevBlockPath - Only used for testing. Automatically calculated otherwise.
+ * @param blockPath - Only used for testing. Automatically calculated otherwise.
  */
-exports.insertBlockIfRequired = async prevBlockPath => {
+exports.insertBlockIfRequired = async blockPath => {
   // check if it is time to create a block
   const now = new Date()
   now.setMinutes(now.getMinutes() - 15 /* some latency to let ongoing txs to complete */)
-  prevBlockPath = prevBlockPath || exports.getBlockPath(now, -1)
+  blockPath = blockPath || exports.getBlockPath(now, -1)
   try {
-    await github.getFileContent(prevBlockPath)
-    console.log('not time to create a block yet')
+    await github.getFileContent(blockPath)
+    console.log('not the time to create a block yet')
     return false
   } catch (e) {
     if (e.code !== 404) {
