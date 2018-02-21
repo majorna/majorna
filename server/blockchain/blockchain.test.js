@@ -37,20 +37,20 @@ suite('blockchain', () => {
     assert(crypto.verifyObj(blockObj.header, blockObj.sig))
   })
 
-  test('insertBlockIfRequired', async () => {
-    const path = blockchain.getBlockPath(new Date()) + '-' + Math.random()
-    const inserted = await blockchain.insertBlockIfRequired(path)
-    assert(inserted)
-    const blockFile = await github.getFileContent(path)
-    assert(blockFile.includes('"data":'))
-
-    // not required
-    const inserted2 = await blockchain.insertBlockIfRequired(path)
-    assert(!inserted2)
-  })
-
-  test('startBlockchainInsertTimer', () => {
-    const timer = blockchain.startBlockchainInsertTimer(1)
-    clearInterval(timer)
-  })
+  // test('insertBlockIfRequired', async () => {
+  //   const path = blockchain.getBlockPath(new Date()) + '-' + Math.random()
+  //   const inserted = await blockchain.insertBlockIfRequired(path)
+  //   assert(inserted)
+  //   const blockFile = await github.getFileContent(path)
+  //   assert(blockFile.includes('"data":'))
+  //
+  //   // not required
+  //   const inserted2 = await blockchain.insertBlockIfRequired(path)
+  //   assert(!inserted2)
+  // })
+  //
+  // test('startBlockchainInsertTimer', () => {
+  //   const timer = blockchain.startBlockchainInsertTimer(1)
+  //   clearInterval(timer)
+  // })
 })

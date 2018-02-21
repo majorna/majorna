@@ -8,7 +8,7 @@ const crypto = require('./crypto')
 exports.genesisBlock = {
   sig: '', // optional: if given, difficulty and nonce are not required
   header: {
-    no: 0,
+    no: 1,
     prevHash: '',
     txCount: 0,
     merkleRoot: '',

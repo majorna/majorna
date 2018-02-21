@@ -13,7 +13,7 @@ exports.getBlockPath = (time, dayShift) => `${time.getFullYear()}/${time.getMont
  * Provides a time range for a block:
  * Start: Midnight of {now} minus the {goBackDays} days.
  * End: Midnight of {now}.
- * @param now - Required just in case day changes right before the call to this function.
+ * @param now - Required just in case day changes right before the call to this function, so not using new Date().
  * @param goBackDays - No of days to go back in time as the start date.
  */
 exports.getBlockTimeRange = (now, goBackDays = 1) => {
@@ -39,6 +39,24 @@ exports.insertBlock = async (startTime, endTime, blockPath, prevBlock) => {
   const txs = await db.getTxsByTimeRange(startTime, endTime)
   const signedBlock = block.createSignedBlock(txs, prevBlock, true)
   await github.createFile(JSON.stringify(signedBlock, null, 2), blockPath)
+  await github.upsertFile(JSON.stringify(signedBlock.header, null, 2), 'lastblock')
+}
+
+/**
+ * Looks for the latest block then creates a new block with all the txs since then, asynchronously.
+ * @param now - Required just in case day changes right before the call to this function, so not using new Date().
+ */
+exports.insertBlockSinceLastOne = async now => {
+  // get latest block file
+
+  // if this is the first block every, start with genesis
+
+  const blockTimeRange = exports.getBlockTimeRange(now, 1)
+  const prevBlockPath = exports.getBlockPath(now, -1)
+  const prevPrevBlockPath = exports.getBlockPath(now, -2)
+  const prevPrevBlock = github.getFileContent(prevPrevBlockPath)
+  await exports.insertBlock(blockTimeRange.start, blockTimeRange.end, prevBlockPath, prevPrevBlock)
+  console.log(`inserted block ${prevBlockPath}`)
 }
 
 /**
@@ -60,11 +78,7 @@ exports.insertBlockIfRequired = async prevBlockPath => {
       throw e
     }
 
-    // todo: move logic somewhere else and keep this function "if-block-required" only
-    const blockTimeRange = exports.getBlockTimeRange(now, 1)
-    const prevPrevBlockPath = exports.getBlockPath(now, -1)
-    await exports.insertBlock(blockTimeRange.start, blockTimeRange.end, prevBlockPath, prevPrevBlockPath)
-    console.log(`inserted block ${prevBlockPath}`)
+    await exports.insertMissingBlocks(now)
     return true
   }
 }
