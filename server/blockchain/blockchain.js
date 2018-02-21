@@ -2,7 +2,7 @@ const db = require('../data/db')
 const block = require('./block')
 const github = require('../data/github')
 
-const lastBlockPath = 'lastblock'
+const lastBlockHeaderPath = 'lastblock'
 
 /**
  * Retrieves the full path of a block in a git repo with respect to given time and day shift.
@@ -13,17 +13,14 @@ exports.getBlockPath = (time, dayShift) => `${time.getFullYear()}/${time.getMont
 
 /**
  * Provides a time range for a block:
- * Start: Midnight of {now} minus the {goBackDays} days.
- * End: Midnight of {now}.
- * @param now - Required just in case day changes right before the call to this function, so not using new Date().
- * @param goBackDays - No of days to go back in time as the start date.
+ * Start: Midnight of {start}.
+ * End: Midnight of {end}.
  */
-exports.getBlockTimeRange = (now, goBackDays = 1) => {
-  const start = new Date(now.getTime())
+exports.getBlockTimeRange = (start, end) => {
+  start = new Date(start)
   start.setUTCHours(0, 0, 0, 0)
-  start.setDate(start.getDate() - goBackDays)
 
-  const end = new Date(now.getTime())
+  end = new Date(end.getTime())
   end.setUTCHours(0, 0, 0, 0)
 
   return {start, end}
@@ -41,30 +38,30 @@ exports.insertBlock = async (startTime, endTime, blockPath, prevBlock) => {
   const txs = await db.getTxsByTimeRange(startTime, endTime)
   const signedBlock = block.createSignedBlock(txs, prevBlock, true)
   await github.createFile(JSON.stringify(signedBlock, null, 2), blockPath)
-  await github.upsertFile(JSON.stringify(signedBlock.header, null, 2), lastBlockPath)
+  await github.upsertFile(JSON.stringify(signedBlock.header, null, 2), lastBlockHeaderPath)
 }
 
 /**
  * Looks for the latest block then creates a new block with all the txs since then, asynchronously.
  * @param now - Required just in case day changes right before the call to this function, so not using new Date().
+ * @param blockPath - Full path of the block to create. i.e. "dir/sub_dir/filename".
  */
-exports.insertBlockSinceLastOne = async now => {
+exports.insertBlockSinceLastOne = async (now, blockPath) => {
   // get latest block file
-  let lastBlock
+  let lastBlockHeader
   try {
-    const lastBlockFile = await github.getFileContent(lastBlockPath)
-    lastBlock = JSON.parse(lastBlockFile)
+    const lastBlockHeaderFile = await github.getFileContent(lastBlockHeaderPath)
+    lastBlockHeader = JSON.parse(lastBlockHeaderFile)
   } catch (e) {
     if (e.code === 404) {
-      lastBlock = block.genesisBlock
+      lastBlockHeader = block.genesisBlock
     } else {
       throw e
     }
   }
 
-  const blockTimeRange = exports.getBlockTimeRange(now, 1) // todo: start by last block date
-  const blockPath = exports.getBlockPath(now, -1)
-  await exports.insertBlock(blockTimeRange.start, blockTimeRange.end, blockPath, lastBlock)
+  const blockTimeRange = exports.getBlockTimeRange(lastBlockHeader.time, now)
+  await exports.insertBlock(blockTimeRange.start, blockTimeRange.end, blockPath, lastBlockHeader)
   console.log(`inserted block ${blockPath}`)
 }
 
@@ -87,7 +84,7 @@ exports.insertBlockIfRequired = async blockPath => {
       throw e
     }
 
-    await exports.insertMissingBlocks(now)
+    await exports.insertBlockSinceLastOne(now, blockPath)
     return true
   }
 }

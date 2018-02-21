@@ -19,7 +19,6 @@ suite('github', () => {
     const text = 'some-text-' + Math.random()
     await github.createFile(text, path)
     const file = await github.getFileContent(path)
-    console.log(file)
     assert(file === text)
 
     // verify that it is not overwritten by calling create again

@@ -12,16 +12,13 @@ suite('blockchain', () => {
   })
 
   test('getBlockTimeRange', () => {
-    const now = new Date('2018-02-15T10:00:00.000Z')
-    console.log(now)
-    const goBackDays = 5
-    const range = blockchain.getBlockTimeRange(now, goBackDays)
+    const start = new Date('2018-02-15T10:00:00.000Z')
+    const end = new Date('2018-02-20T11:00:00.000Z')
+    const range = blockchain.getBlockTimeRange(start, end)
 
-    // time between {now} and {end} is 10 hours
-    assert(range.end.getTime() === (now.getTime() - 1000 * 60 * 60 * 10))
-
-    // time between {start} and {end} is xxx hours
     assert(range.start.getTime() === (range.end.getTime() - 1000 * 60 * 60 * 24 * 5))
+    assert(range.start.getTime() === (start.getTime() - 1000 * 60 * 60 * 10))
+    assert(range.end.getTime() === (end.getTime() - 1000 * 60 * 60 * 11))
   })
 
   test('insertBlock', async () => {
@@ -35,6 +32,15 @@ suite('blockchain', () => {
     assert(blockFile.includes('"data":'))
     const blockObj = JSON.parse(blockFile)
     assert(crypto.verifyObj(blockObj.header, blockObj.sig))
+  })
+
+  test('insertBlockSinceLastOne', async () => {
+    const now = new Date()
+    const path = blockchain.getBlockPath(now) + '-' + Math.random()
+    await blockchain.insertBlockSinceLastOne(now, path)
+
+    // todo: first run genesis, second, third run incremental (with or without txs)
+    // todo: get and verify
   })
 
   // test('insertBlockIfRequired', async () => {
