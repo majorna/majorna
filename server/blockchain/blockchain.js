@@ -49,7 +49,7 @@ exports.insertBlock = async (startTime, endTime, blockPath, prevBlock) => {
 exports.insertBlockSinceLastOne = async now => {
   // get latest block file
 
-  // if this is the first block every, start with genesis
+  // if this is the first block every, start with inserting genesis
 
   const blockTimeRange = exports.getBlockTimeRange(now, 1)
   const prevBlockPath = exports.getBlockPath(now, -1)
