@@ -3,7 +3,7 @@ const block = require('./block')
 const crypto = require('./crypto')
 
 const genBlock = block.genesisBlock
-const txs = ['lorem', 'ipsum', 'dolor']
+const txs = ['lorem', {data: 'ipsum'}, 'dolor']
 
 suite('block', () => {
   test('createMerkle', () => {

@@ -20,11 +20,13 @@ exports.genesisBlock = {
 }
 
 /**
- * Creates a merkle tree out of given array of objects.
+ * Creates a merkle tree out of given array of objects or strings.
+ * Objects are serialized to json before merkling.
  */
 exports.createMerkle = arr => {
+  const strArr = arr.map(i => typeof i === 'string' ? i : JSON.stringify(i))
   const merkleTools = new MerkleTools({hashType: 'sha256'})
-  merkleTools.addLeaves(arr, true)
+  merkleTools.addLeaves(strArr, true)
   merkleTools.makeTree()
   return merkleTools
 }

@@ -45,18 +45,20 @@ exports.insertBlock = async (startTime, endTime, blockPath, prevBlock) => {
  * Looks for the latest block then creates a new block with all the txs since then, asynchronously.
  * @param now - Required just in case day changes right before the call to this function, so not using new Date().
  * @param blockPath - Full path of the block to create. i.e. "dir/sub_dir/filename".
+ * @param lastBlockHeader - Only used for testing. Automatically retrieved from GitHub otherwise.
  */
-exports.insertBlockSinceLastOne = async (now, blockPath) => {
+exports.insertBlockSinceLastOne = async (now, blockPath, lastBlockHeader) => {
   // get latest block file
-  let lastBlockHeader
-  try {
-    const lastBlockHeaderFile = await github.getFileContent(lastBlockHeaderPath)
-    lastBlockHeader = JSON.parse(lastBlockHeaderFile)
-  } catch (e) {
-    if (e.code === 404) {
-      lastBlockHeader = block.genesisBlock
-    } else {
-      throw e
+  if (!lastBlockHeader) {
+    try {
+      const lastBlockHeaderFile = await github.getFileContent(lastBlockHeaderPath)
+      lastBlockHeader = JSON.parse(lastBlockHeaderFile)
+    } catch (e) {
+      if (e.code === 404) {
+        lastBlockHeader = block.genesisBlock
+      } else {
+        throw e
+      }
     }
   }
 

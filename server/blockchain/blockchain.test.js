@@ -34,12 +34,18 @@ suite('blockchain', () => {
     assert(crypto.verifyObj(blockObj.header, blockObj.sig))
   })
 
-  test('insertBlockSinceLastOne', async () => {
-    const now = new Date()
-    const path = blockchain.getBlockPath(now) + '-' + Math.random()
-    await blockchain.insertBlockSinceLastOne(now, path)
+  test.only('insertBlockSinceLastOne', async () => {
+    // create a block of all txs since genesis
+    const tomorrow = new Date() // tomorrow so we can pick up test txs from the database
+    tomorrow.setDate(tomorrow.getDate() + 1)
+    const path = blockchain.getBlockPath(tomorrow) + '-' + Math.random()
+    await blockchain.insertBlockSinceLastOne(tomorrow, path, block.genesisBlock.header)
+    // todo: get and verify
 
-    // todo: first run genesis, second, third run incremental (with or without txs)
+    // create the consecutive block with no txs in it
+    const now = new Date()
+    const path2 = blockchain.getBlockPath(now) + '-' + Math.random()
+    await blockchain.insertBlockSinceLastOne(now, path2)
     // todo: get and verify
   })
 
