@@ -9,7 +9,13 @@ const lastBlockHeaderPath = 'lastblock'
  * @param time - 'Date' object instance.
  * @param dayShift - No of days to shift the time, if any. i.e. +5, -3, etc.
  */
-exports.getBlockPath = (time, dayShift) => `${time.getFullYear()}/${time.getMonth() + 1}/${time.getDate() + (dayShift || 0)}`
+exports.getBlockPath = (time, dayShift) => {
+  time = new Date(time.getTime()) // don't modify original
+  if (dayShift) {
+    time.setDate(time.getDate() + dayShift)
+  }
+  return `${time.getFullYear()}/${time.getMonth() + 1}/${time.getDate()}`
+}
 
 /**
  * Provides a time range for a block:
