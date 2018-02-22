@@ -34,7 +34,6 @@ exports.getBlockTimeRange = (start, end) => {
 
 /**
  * Creates and inserts a new block into the blockchain git repo, asynchronously.
- * Two separate files are created for the block header and data.
  * @param startTime - Time to start including txs from.
  * @param endTime - Time to stop including txs from.
  * @param blockPath - Full path of the block to create. i.e. "dir/sub_dir/filename".
@@ -42,14 +41,20 @@ exports.getBlockTimeRange = (start, end) => {
  */
 exports.insertBlock = async (startTime, endTime, blockPath, prevBlock) => {
   const txs = await db.getTxsByTimeRange(startTime, endTime)
-  const signedBlock = block.createSignedBlock(txs, prevBlock, true)
-  await github.createFile(JSON.stringify(signedBlock, null, 2), blockPath)
-  await github.upsertFile(JSON.stringify(signedBlock.header, null, 2), lastBlockHeaderPath)
+  if (txs.length) {
+    const signedBlock = block.createSignedBlock(txs, prevBlock, true)
+    // todo: below two should be a single operation editing multiple files so they won't fail separately
+    await github.createFile(JSON.stringify(signedBlock, null, 2), blockPath)
+    await github.upsertFile(JSON.stringify(signedBlock.header, null, 2), lastBlockHeaderPath)
+    console.log(`inserted block ${blockPath}`)
+  }
 }
 
 /**
- * Looks for the latest block then creates a new block with all the txs since then, asynchronously.
- * @param now - Required just in case day changes right before the call to this function, so not using new Date().
+ * Looks for the latest block then creates a new block with matching txs (if any), asynchronously.
+ * Start time will be the very beginning of the day that the last block was created.
+ * End date will be the very beginning of {now}.
+ * @param now - Required just in case day changes right before the call to this function (so not using new Date()).
  * @param blockPath - Full path of the block to create. i.e. "dir/sub_dir/filename".
  * @param lastBlockHeader - Only used for testing. Automatically retrieved from GitHub otherwise.
  */
@@ -70,17 +75,17 @@ exports.insertBlockSinceLastOne = async (now, blockPath, lastBlockHeader) => {
 
   const blockTimeRange = exports.getBlockTimeRange(lastBlockHeader.time, now)
   await exports.insertBlock(blockTimeRange.start, blockTimeRange.end, blockPath, lastBlockHeader)
-  console.log(`inserted block ${blockPath}`)
 }
 
 /**
  * Checks if it is time then creates the required block in blockchain, asynchronously.
  * Returns true if a block was inserted. False otherwise.
  * @param blockPath - Only used for testing. Automatically calculated otherwise.
+ * @param now - Only used for testing. Automatically calculated otherwise.
  */
-exports.insertBlockIfRequired = async blockPath => {
+exports.insertBlockIfRequired = async (blockPath, now) => {
   // check if it is time to create a block
-  const now = new Date()
+  now = now || new Date()
   now.setMinutes(now.getMinutes() - 15 /* some latency to let ongoing txs to complete */)
   blockPath = blockPath || exports.getBlockPath(now, -1)
   try {

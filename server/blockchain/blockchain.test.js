@@ -32,31 +32,17 @@ suite('blockchain', () => {
   })
 
   test('insertBlock', async () => {
+    const twoDaysAgo = new Date()
     const now = new Date()
-    const yesterday = new Date()
-    yesterday.setDate(yesterday.getDate() - 1)
+    twoDaysAgo.setDate(twoDaysAgo.getDate() - 2)
     const path = blockchain.getBlockPath(now) + '-' + Math.random()
-    await blockchain.insertBlock(now, yesterday, path, block.genesisBlock)
-
-    const blockFile = await github.getFileContent(path)
-    assert(blockFile.includes('"data":'))
-    const blockObj = JSON.parse(blockFile)
-    assert(crypto.verifyObj(blockObj.header, blockObj.sig))
-  })
-
-  test('insertBlockSinceLastOne', async () => {
-    const now = new Date()
-
-    // create a block of all txs since genesis
-    const tomorrow = new Date() // tomorrow so we can pick up test txs from the database
-    tomorrow.setDate(tomorrow.getDate() + 1)
-    const path = blockchain.getBlockPath(tomorrow) + '-' + Math.random()
-    await blockchain.insertBlockSinceLastOne(tomorrow, path, block.genesisBlock.header)
+    await blockchain.insertBlock(twoDaysAgo, now, path, block.genesisBlock)
 
     const blockFile = await github.getFileContent(path)
     const blockObj = JSON.parse(blockFile)
 
     assert(blockObj.sig.length === 96)
+    assert(crypto.verifyObj(blockObj.header, blockObj.sig))
 
     assert(blockObj.header.no === 2)
     assert(blockObj.header.prevHash.length === 44)
@@ -72,29 +58,47 @@ suite('blockchain', () => {
     assert(blockObj.data[0].from)
     assert(blockObj.data[0].time)
     assert(blockObj.data[0].amount)
+  })
 
-    // create the consecutive block with no txs in it
-    const today = new Date()
-    const path2 = blockchain.getBlockPath(today) + '-' + Math.random()
-    await blockchain.insertBlockSinceLastOne(today, path2)
+  test('insertBlockSinceLastOne', async () => {
+    // create a block of all txs since genesis
+    const tomorrow = new Date() // end search in tomorrow so we can pick up test txs from the database
+    tomorrow.setDate(tomorrow.getDate() + 1)
+    const path = blockchain.getBlockPath(tomorrow) + '-' + Math.random()
+    await blockchain.insertBlockSinceLastOne(tomorrow, path, block.genesisBlock.header)
+
+    const blockFile = await github.getFileContent(path)
+    const blockObj = JSON.parse(blockFile)
+
+    assert(blockObj.sig.length === 96)
+    assert(blockObj.header.no === 2)
+    assert(blockObj.data.length >= testData.txs.length)
+
+    // create the consecutive block with same txs in it
+    // same txs will be picked up since blocks include txs up to last block creation day's midnight
+    // (which will still include today in this test case)
+    const path2 = blockchain.getBlockPath(tomorrow) + '-' + Math.random()
+    await blockchain.insertBlockSinceLastOne(tomorrow, path2)
 
     const blockFile2 = await github.getFileContent(path2)
     const blockObj2 = JSON.parse(blockFile2)
 
     assert(blockObj2.sig.length === 96)
-    assert(blockObj2.header)
-    assert(blockObj2.data.length === 0)
+    assert(blockObj2.header.no === 3)
+    assert(blockObj2.data.length === blockObj.data.length)
   })
 
   test('insertBlockIfRequired', async () => {
+    const tomorrow = new Date() // end search in tomorrow so we can pick up test txs from the database
+    tomorrow.setDate(tomorrow.getDate() + 1)
     const path = blockchain.getBlockPath(new Date()) + '-' + Math.random()
-    const inserted = await blockchain.insertBlockIfRequired(path)
+    const inserted = await blockchain.insertBlockIfRequired(path, tomorrow)
     assert(inserted)
     const blockFile = await github.getFileContent(path)
     assert(blockFile.includes('"data":'))
 
     // not required
-    const inserted2 = await blockchain.insertBlockIfRequired(path)
+    const inserted2 = await blockchain.insertBlockIfRequired(path, tomorrow)
     assert(!inserted2)
   })
 
