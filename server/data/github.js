@@ -34,12 +34,14 @@ exports.getFileContent = async path => {
 exports.createFile = (text, path) => octokit.repos.createFile({owner, repo, path, message, committer, content: Buffer.from(text).toString('base64')})
 
 /**
- * Creates a file with given data if it does not exist. Updates the file with the data if it exists.
+ * Creates a file with given text if it does not exist.
+ * Overwrites the file with the given text if it exists.
  * Concurrent updates to the same file will throw an error.
  * @param text - Text to be appended at the end of the file.
  * @param path - Path of the file in git repo.
+ * @param append - Instead of overwriting the file with the given text, append to text to the end of the file with a newline.
  */
-exports.upsertFile = async (text, path) => {
+exports.upsertFile = async (text, path, append) => {
   let res
   try {
     res = await octokit.repos.getContent({owner, repo, path})
@@ -59,7 +61,7 @@ exports.upsertFile = async (text, path) => {
     path,
     message,
     committer,
-    content: Buffer.concat([Buffer.from(res.data.content, 'base64'), Buffer.from('\n' + text)]).toString('base64'),
+    content: append ? Buffer.concat([Buffer.from(res.data.content, 'base64'), Buffer.from('\n' + text)]).toString('base64') : Buffer.from(text).toString('base64'),
     sha: res.data.sha
   })
 }
