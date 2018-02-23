@@ -54,7 +54,8 @@ export default () => (
       <i className="flex-order-1 m-l-m fas fa-credit-card" style={{width: 110, height: 120}}/>
       <div className="flex-column flex-grow-1">
         <div className="is-size-5">Open Business Model</div>
-        Majorna team intents to fund development via providing services around the cryptocurrency, as well as through the initial distribution of the currency.
+        Majorna team intents to fund development via providing services around the cryptocurrency.
+        The team is also responsible for monitoring and insuring the safety of the system.
       </div>
     </div>
 
