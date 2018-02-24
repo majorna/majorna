@@ -61,7 +61,7 @@ suite('db', () => {
     const tx0 = testData.txs[0]
     const tx = await db.getTx('0')
     assert(tx.id === tx0.id)
-    assert(tx.from === tx0.from)
+    assert(tx.from.id === tx0.from.id)
 
     // inexisting tx
     let err = null
@@ -76,7 +76,7 @@ suite('db', () => {
     yesterday.setDate(yesterday.getDate() - 1)
     const txs = await db.getTxsByTimeRange(yesterday, now)
     assert(txs.length >= testData.txs.length)
-    assert(txs[0].from === testData.txs[0].from)
+    assert(txs[0].from.id === testData.txs[0].from.id)
   })
 
   test('makeTx', async () => {
