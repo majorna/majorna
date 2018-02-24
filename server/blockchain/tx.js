@@ -1,26 +1,29 @@
 const crypto = require('.crypto')
 
-/**
- *
- * @param id - ID of the transaction.
- * @param fromId - ID of the sender.
- * @param fromBalance - Balance of sender before transaction.
- * @param toId - ID of receiver.
- * @param toBalance - Balance of receiver before transaction.
- * @param time - Unix timestamp of the transaction.
- * @param amount - Amount being sent.
- */
-exports.getCryptoStr = (id, fromId, fromBalance, toId, toBalance, time, amount) =>
-  '' + id + fromId + fromBalance + toId + toBalance + time.getTime() + amount
+exports.txSchema = {
+  id: 'string', // ID of the transaction
+  from: {
+    id: 'string', // ID of the sender
+    balance: 0 // balance of sender before transaction
+  },
+  to: {
+    id: 'string', // ID of the receiver
+    balance: 0 // balance of receiver before transaction
+  },
+  time: 0, // Unix timestamp of the transaction
+  amount: 0 // amount being sent
+}
 
-exports.sign = (id, fromId, fromBalance, toId, toBalance, time, amount) =>
-  ({id,
-    sig: crypto.signText(exports.getCryptoStr(id, fromId, fromBalance, toId, toBalance, time, amount)),
-    from: {id: fromId, balance: fromBalance},
-    to: {id: toId, balance: toBalance},
-    time,
-    amount
+exports.getCryptoStr = tx =>
+  '' + tx.id + tx.from.id + tx.from.balance + tx.to.id + tx.to.balance + tx.time.getTime() + tx.amount
+
+exports.sign = tx =>
+  ({id: tx.id,
+    sig: crypto.signText(exports.getCryptoStr(tx)),
+    from: {id: tx.from.id, balance: tx.from.balance},
+    to: {id: tx.to.id, balance: tx.to.balance},
+    time: tx.time,
+    amount: tx.amount
   })
 
-exports.hash = (id, fromId, fromBalance, toId, toBalance, time, amount) =>
-  crypto.hashText(exports.getCryptoStr(id, fromId, fromBalance, toId, toBalance, time, amount))
+exports.hash = tx => crypto.hashText(exports.getCryptoStr(tx))
