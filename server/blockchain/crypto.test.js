@@ -22,9 +22,6 @@ suite('crypto', () => {
     const calcHash = crypto.hashText(text)
     assert(calcHash === hash)
     assert(calcHash.length === 44)
-
-    const calcHash2 = crypto.hashObj(obj)
-    assert(calcHash2 === hash)
   })
 
   test('signAndWrapObj', () => {
