@@ -46,8 +46,8 @@ suite('db', () => {
 
     // verify tx in txs collection
     const tx = await db.getTx(userDoc.txs[0].id)
-    assert(tx.from === 'majorna')
-    assert(tx.to === uid)
+    assert(tx.from.id === 'majorna')
+    assert(tx.to.id === uid)
     assert(tx.time.getTime() === userDoc.created.getTime())
     assert(tx.amount === 500)
 
@@ -89,8 +89,8 @@ suite('db', () => {
 
     // validate tx in txs col
     const tx = await db.getTx(newTx.id)
-    assert(tx.from === from)
-    assert(tx.to === to)
+    assert(tx.from.id === from)
+    assert(tx.to.id === to)
     assert(tx.time.getTime() === newTx.time.getTime())
     assert(tx.amount === amount)
 

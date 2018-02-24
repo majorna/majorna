@@ -1,4 +1,5 @@
 const assert = require('assert')
+const tx = require('../blockchain/tx')
 const utils = require('./utils')
 const firebaseConfig = require('../config/firebase')
 const firestore = firebaseConfig.firestore
@@ -64,7 +65,8 @@ exports.createUserDoc = (user, uid) => firestore.runTransaction(async t => {
 
   // create the first transaction for the user
   const txRef = txsColRef.doc()
-  t.create(txRef, {from: 'majorna', to: uid, time, amount: initBalance})
+  const signedTx = tx.sign({id: txRef.id, from: {id: 'majorna', balance: 0}, to: {id: uid, balance: 0}, time, amount: initBalance})
+  t.create(txRef, signedTx)
 
   // create user doc
   const userData = {
@@ -148,7 +150,8 @@ exports.makeTx = (from, to, amount) => firestore.runTransaction(async t => {
 
   // add tx to txs collection
   const txRef = txsColRef.doc()
-  t.create(txRef, {from, to, time, amount})
+  const signedTx = tx.sign({id: txRef.id, from: {id: from, balance: sender.balance}, to: {id: to, balance: receiver.balance}, time, amount})
+  t.create(txRef, signedTx)
 
   // update user docs with tx and updated balances
   sender.txs.unshift({id: txRef.id, to, toName, time, amount})
@@ -156,7 +159,7 @@ exports.makeTx = (from, to, amount) => firestore.runTransaction(async t => {
   receiver.txs.unshift({id: txRef.id, from, fromName, time, amount})
   t.update(receiverDocRef, {balance: receiver.balance + amount, txs: receiver.txs})
 
-  return {id: txRef.id, from: {id: from, balance: sender.balance}, to: {id: to, balance: receiver.balance}, time, amount}
+  return signedTx
 })
 
 /**

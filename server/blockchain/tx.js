@@ -1,4 +1,4 @@
-const crypto = require('.crypto')
+const crypto = require('./crypto')
 
 exports.txSchema = {
   id: 'string', // ID of the transaction
@@ -10,7 +10,7 @@ exports.txSchema = {
     id: 'string', // ID of the receiver
     balance: 0 // balance of receiver before transaction
   },
-  time: 0, // Unix timestamp of the transaction
+  time: new Date(), // time of the transaction
   amount: 0 // amount being sent
 }
 
@@ -26,4 +26,8 @@ exports.sign = tx =>
     amount: tx.amount
   })
 
+exports.verifySignature = () => {}
+
 exports.hash = tx => crypto.hashText(exports.getCryptoStr(tx))
+
+exports.verifyHash = () => {}
