@@ -20,28 +20,31 @@ exports.genesisBlock = {
   data: []
 }
 
-exports.getStr = block => {
-  let str = '' + block.no + block.prevHash + block.txCount + block.merkleRoot + block.time.getTime() + block.difficulty + block.nonce
-  block.date.forEach(t => { str += tx.getStr(t) })
-  return str
-}
+exports.getHeaderStr = blockHeader =>
+  '' + blockHeader.no + blockHeader.prevHash + blockHeader.txCount + blockHeader.merkleRoot + blockHeader.time.getTime() + blockHeader.difficulty + blockHeader.nonce
 
 exports.sign = block => {
   const sigBlock = {
     header: {
-      no: block.no,
-      prevHash: block.prevHash,
-      txCount: block.txCount,
-      merkleRoot: block.merkleRoot,
-      time: block.time,
-      difficulty: block.difficulty,
-      nonce: block.nonce
+      no: block.header.no,
+      prevHash: block.header.prevHash,
+      txCount: block.header.txCount,
+      merkleRoot: block.header.merkleRoot,
+      time: block.header.time,
+      difficulty: block.header.difficulty,
+      nonce: block.header.nonce
     },
     data: block.data.map(t => tx.getObj(t))
   }
-  sigBlock.sig = crypto.signText(exports.getStr(sigBlock.header))
+  sigBlock.sig = crypto.signText(exports.getHeaderStr(sigBlock.header))
   return sigBlock
 }
+
+exports.verifySignature = () => true
+
+exports.hashHeader = blockHeader => crypto.hashText(exports.getHeaderStr(blockHeader))
+
+exports.verifyHash = () => {}
 
 /**
  * Creates a merkle tree out of given txs.
@@ -57,11 +60,11 @@ exports.createMerkle = txs => {
 /**
  * Creates a block with given txs and previous block or block header.
  */
-exports.createSignedBlock = (txs, prevBlock, mine = false) => {
-  const prevHeader = prevBlock.header || prevBlock
+exports.createSignedBlock = (txs, prevBlockOrHeader, mine = false) => {
+  const prevHeader = prevBlockOrHeader.header || prevBlockOrHeader
   const header = {
     no: prevHeader.no + 1,
-    prevHash: crypto.hashObj(prevHeader),
+    prevHash: exports.hashHeader(prevHeader),
     txCount: txs.length,
     merkleRoot: (txs.length && exports.createMerkle(txs).getMerkleRoot().toString('base64')) || '',
     time: new Date(),
@@ -74,8 +77,7 @@ exports.createSignedBlock = (txs, prevBlock, mine = false) => {
     data: txs
   }
   mine && exports.mineBlock(block)
-  block.sig = crypto.signObj(header)
-  return block
+  return exports.sign(block)
 }
 
 /**
@@ -100,15 +102,15 @@ exports.verifyTxInBlock = (tx, blockHeader, merkleProof) => {}
 /**
  * Calculates nonce (mines) until a hash of required difficulty is found for the block.
  */
-exports.mineBlock = block => {
-  const header = block.header
+exports.mineBlock = blockOrHeader => {
+  const header = blockOrHeader.header || blockOrHeader
   header.difficulty = 1 // todo: difficulty should depend on average block timer
   const hashPrefix = '0'.repeat(header.difficulty) // todo: this is exponential like growth!
 
   let hash
   while (true) {
     header.nonce++
-    hash = crypto.hashObj(header)
+    hash = exports.hashHeader(header)
     if (hash.substring(0, header.difficulty) === hashPrefix) {
       console.log(`mined block with nonce: ${header.nonce}, hash: ${hash}`)
       return
