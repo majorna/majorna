@@ -1,5 +1,6 @@
 const MerkleTools = require('merkle-tools')
 const crypto = require('./crypto')
+const tx = require('./tx')
 
 /**
  * The very first block of the blockchain (no = 0).
@@ -19,14 +20,36 @@ exports.genesisBlock = {
   data: []
 }
 
+exports.getStr = block => {
+  let str = '' + block.no + block.prevHash + block.txCount + block.merkleRoot + block.time.getTime() + block.difficulty + block.nonce
+  block.date.forEach(t => str += tx.getStr(t))
+  return str
+}
+
+exports.sign = block => {
+  const sigBlock = {
+    header: {
+      no: block.no,
+      prevHash: block.prevHash,
+      txCount: block.txCount,
+      merkleRoot: block.merkleRoot,
+      time: block.time,
+      difficulty: block.difficulty,
+      nonce: block.nonce
+    },
+    data: block.data.map(t => tx.getObj(t))
+  }
+  sigBlock.sig = crypto.signText(exports.getStr(sigBlock.header))
+  return sigBlock
+}
+
 /**
- * Creates a merkle tree out of given array of objects or strings.
- * Objects are serialized to json before merkling.
+ * Creates a merkle tree out of given txs.
  */
-exports.createMerkle = arr => {
-  const strArr = arr.map(i => typeof i === 'string' ? i : JSON.stringify(i))
-  const merkleTools = new MerkleTools({hashType: 'sha256'})
-  merkleTools.addLeaves(strArr, true)
+exports.createMerkle = txs => {
+  const hashes = txs.map(t => tx.hash(t))
+  const merkleTools = new MerkleTools({hashType: crypto.algo})
+  merkleTools.addLeaves(hashes)
   merkleTools.makeTree()
   return merkleTools
 }
