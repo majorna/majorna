@@ -1,9 +1,10 @@
 const assert = require('assert')
 const block = require('./block')
 const crypto = require('./crypto')
+const testData = require('../config/test').data
 
 const genBlock = block.genesisBlock
-const txs = ['lorem', {data: 'ipsum'}, 'dolor']
+const txs = testData.txs
 
 suite('block', () => {
   test('createMerkle', () => {

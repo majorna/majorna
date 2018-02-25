@@ -22,7 +22,7 @@ exports.genesisBlock = {
 
 exports.getStr = block => {
   let str = '' + block.no + block.prevHash + block.txCount + block.merkleRoot + block.time.getTime() + block.difficulty + block.nonce
-  block.date.forEach(t => str += tx.getStr(t))
+  block.date.forEach(t => { str += tx.getStr(t) })
   return str
 }
 
@@ -47,9 +47,9 @@ exports.sign = block => {
  * Creates a merkle tree out of given txs.
  */
 exports.createMerkle = txs => {
-  const hashes = txs.map(t => tx.hash(t))
+  const strs = txs.map(t => tx.getStr(t))
   const merkleTools = new MerkleTools({hashType: crypto.algo})
-  merkleTools.addLeaves(hashes)
+  merkleTools.addLeaves(strs, true)
   merkleTools.makeTree()
   return merkleTools
 }
