@@ -23,7 +23,8 @@ exports.getBlockPath = (time, dayShift) => {
  * End: Midnight of {end}.
  */
 exports.getBlockTimeRange = (start, end) => {
-  start = new Date(start)
+  // make copies of date object not to modify originals
+  start = new Date(start.getTime())
   start.setUTCHours(0, 0, 0, 0)
 
   end = new Date(end.getTime())
@@ -72,6 +73,7 @@ exports.insertBlockSinceLastOne = async (now, blockPath, lastBlockHeader) => {
       }
     }
   }
+  lastBlockHeader.time = typeof lastBlockHeader.time === 'object' ? lastBlockHeader.time : new Date(lastBlockHeader.time)
 
   const blockTimeRange = exports.getBlockTimeRange(lastBlockHeader.time, now)
   await exports.insertBlock(blockTimeRange.start, blockTimeRange.end, blockPath, lastBlockHeader)
