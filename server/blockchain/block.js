@@ -20,8 +20,10 @@ exports.genesisBlock = {
   data: []
 }
 
+// nonce first to prevent internal hash state from being reused
+// in future we can add more memory intensive prefixes
 exports.getHeaderStr = blockHeader =>
-  '' + blockHeader.no + blockHeader.prevHash + blockHeader.txCount + blockHeader.merkleRoot + blockHeader.time.getTime() + blockHeader.difficulty + blockHeader.nonce
+  '' + blockHeader.nonce + blockHeader.no + blockHeader.prevHash + blockHeader.txCount + blockHeader.merkleRoot + blockHeader.time.getTime() + blockHeader.difficulty
 
 exports.sign = block => {
   const sigBlock = {
@@ -102,17 +104,22 @@ exports.verifyTxInBlock = (tx, blockHeader, merkleProof) => {}
 /**
  * Calculates nonce (mines) until a hash of required difficulty is found for the block.
  */
-exports.mineBlock = blockOrHeader => {
+exports.mineBlock = (blockOrHeader, difficulty) => {
   const header = blockOrHeader.header || blockOrHeader
-  header.difficulty = 1 // todo: difficulty should depend on average block timer
-  const hashPrefix = '0'.repeat(header.difficulty) // todo: this is exponential like growth!
+  difficulty = difficulty || 1 // todo: difficulty should depend on average block timer
+  const hashPrefix = '0'.repeat(difficulty) // todo: this is exponential like growth!
 
   let hash
+  let nonce = 0
+  header.nonce = null
+  const str = exports.getHeaderStr(header) // store header string without nonce as an optimization
   while (true) {
-    header.nonce++
-    hash = exports.hashHeader(header)
-    if (hash.substring(0, header.difficulty) === hashPrefix) {
-      console.log(`mined block with nonce: ${header.nonce}, hash: ${hash}`)
+    nonce++
+    hash = crypto.hashText(nonce + str)
+    if (hash.substring(0, difficulty) === hashPrefix) {
+      header.nonce = nonce
+      header.difficulty = difficulty
+      console.log(`mined block with difficulty: ${header.difficulty}, nonce: ${header.nonce}, hash: ${hash}`)
       return
     }
   }
