@@ -35,6 +35,7 @@ exports.getBlockTimeRange = (start, end) => {
 
 /**
  * Creates and inserts a new block into the blockchain git repo, asynchronously.
+ * Returns true if a block was inserted. False if there were no txs found to create a block with.
  * @param startTime - Time to start including txs from.
  * @param endTime - Time to stop including txs from.
  * @param blockPath - Full path of the block to create. i.e. "dir/sub_dir/filename".
@@ -48,6 +49,10 @@ exports.insertBlock = async (startTime, endTime, blockPath, prevBlock) => {
     await github.createFile(JSON.stringify(signedBlock, null, 2), blockPath)
     await github.upsertFile(JSON.stringify(signedBlock.header, null, 2), lastBlockHeaderPath)
     console.log(`inserted block ${blockPath}`)
+    return true
+  } else {
+    console.log(`no txs found to create block with`)
+    return false
   }
 }
 
