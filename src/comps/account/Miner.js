@@ -1,19 +1,25 @@
 import React, { Component } from 'react'
 
-export default props => (
-  <React.Fragment>
-    <div className="mj-box flex-column">
-      <div className="is-size-5 has-text-centered">Mine mj</div>
-    </div>
-  </React.Fragment>
-)
+export default class extends Component {
+  state = {
+    paymentLimit: 10,
+    earning: 0
+  }
 
-// exports.receiveTxs = () => {
-//   // no duplicates
-//   // no balance below 0
-//   // valid signatures
-// }
-//
-// exports.receiveBlock = () => {
-//   // validate each tx signature unless block is signed by a trusted key
-// }
+  componentDidMount() {
+    // get txs and start mining
+  }
+
+  handlePause = () => {}
+  handleStop = () => this.props.history.goBack()
+
+  render() {
+    return (
+      <React.Fragment>
+        <div className="mj-box flex-column">
+          <div className="is-size-5 has-text-centered">Mining mj</div>
+        </div>
+      </React.Fragment>
+    )
+  }
+}
