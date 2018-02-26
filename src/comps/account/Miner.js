@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 
 export default props => (
-  <div>
-    <span>Wow</span>
-  </div>
+  <React.Fragment>
+    <div className="mj-box flex-column">
+      <div className="is-size-5 has-text-centered">Mine mj</div>
+    </div>
+  </React.Fragment>
 )
 
 // exports.receiveTxs = () => {
