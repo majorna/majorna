@@ -86,7 +86,7 @@ export default withRouter(class App extends Component {
         this.fbUnsubMeta = this.db.collection('mj').doc('meta').onSnapshot(doc => this.setState({mjDoc: {meta: doc.data()}}))
         config.server.token = await u.getIdToken()
       } else {
-        this.setState(this.nullState) // logged out
+        this.setState(this.nullState) // logged out or token expired and was not renewed
         this.props.location.pathname !== '/login' && this.props.history.push('/')
       }
     })
