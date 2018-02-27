@@ -102,7 +102,7 @@ suite('blockchain', () => {
   })
 
   test('startBlockchainInsertTimer', () => {
-    const timer = blockchain.startBlockchainInsertTimer(1)
+    const timer = blockchain.startBlockchainInsertTimer(30)
     clearInterval(timer)
   })
 })
