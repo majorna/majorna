@@ -15,13 +15,14 @@ export default class extends Component {
     const miningParams = await res.json()
 
     let nonce = 0
+    console.log(`starting mining loop with difficulty ${miningParams.difficulty}`)
     while (true) {
       nonce++
       const strBuffer = new TextEncoder('utf-8').encode(nonce + miningParams.str)
       const hashBuffer = await crypto.subtle.digest('SHA-256', strBuffer)
       const hashArray = new Uint8Array(hashBuffer)
       if (hashArray[0] === 0 && hashArray[1] === 0) {
-        const base64String = btoa(String.fromCharCode(...hashArray)) // todo; don't use btoa
+        const base64String = btoa(String.fromCharCode(...hashArray))
         console.log(`mined block with difficulty: ${miningParams.difficulty}, nonce: ${nonce}, hash: ${base64String}`)
         break
       }
