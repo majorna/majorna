@@ -10,9 +10,9 @@ service cloud.firestore {
       allow read;
     }
 
-    // transactions are public
-    match /txs/{tx} {
-      allow read;
+    // transactions are only accessible to involved parties
+    match /txs/{txId} {
+      allow read: if resource.data.from == request.auth.uid || resource.data.to == request.auth.uid;
     }
   }
 }
