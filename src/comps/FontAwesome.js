@@ -1,7 +1,13 @@
 import fontawesome from '@fortawesome/fontawesome'
-import faCreditCard from '@fortawesome/fontawesome-free-solid/faCreditCard'
-import faGlobe from '@fortawesome/fontawesome-free-solid/faGlobe'
-import faGithub from '@fortawesome/fontawesome-free-brands/faGithub'
-fontawesome.library.add(faCreditCard)
-fontawesome.library.add(faGlobe)
-fontawesome.library.add(faGithub)
+
+import fasCreditCard from '@fortawesome/fontawesome-free-solid/faCreditCard'
+import fasGlobe from '@fortawesome/fontawesome-free-solid/faGlobe'
+import fabGithub from '@fortawesome/fontawesome-free-brands/faGithub'
+import fasPaperPlane from '@fortawesome/fontawesome-free-solid/faPaperPlane'
+import fasQrcode from '@fortawesome/fontawesome-free-solid/faQrcode'
+
+fontawesome.library.add(fasCreditCard)
+fontawesome.library.add(fasGlobe)
+fontawesome.library.add(fabGithub)
+fontawesome.library.add(fasPaperPlane)
+fontawesome.library.add(fasQrcode)

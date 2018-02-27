@@ -18,6 +18,9 @@ export default class extends Component {
       <React.Fragment>
         <div className="mj-box flex-column">
           <div className="is-size-5 has-text-centered">Mining mj</div>
+
+          <strong>Progress</strong>
+          <progress className="progress is-large is-info" value="15" max="100">15.69%</progress>
         </div>
       </React.Fragment>
     )

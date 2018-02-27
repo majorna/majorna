@@ -33,8 +33,9 @@ export default props => {
       </div>
 
       <div className="mj-box">
-        <Link to="/send" className="button is-info">Send</Link>
-        <Link to="/receive" className="button m-l-m">Receive</Link>
+        <Link to="/send" className="button is-info"><i className="fas fa-paper-plane m-r-s"/>Send</Link>
+        <Link to="/receive" className="button m-l-m"><i className="fas fa-qrcode m-r-s"/>Receive</Link>
+        <Link to="/mine" className="button m-l-xl">Mine</Link>
       </div>
 
       <div className="mj-box flex-column">

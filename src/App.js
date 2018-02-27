@@ -16,6 +16,7 @@ import Dashboard from './comps/account/Dashboard'
 import Footer from './comps/global/Footer'
 import Send from './comps/account/Send'
 import Receive from './comps/account/Receive'
+import Mine from './comps/account/Mine'
 
 export default withRouter(class App extends Component {
   constructor(props) {
@@ -23,11 +24,13 @@ export default withRouter(class App extends Component {
     this.state = this.nullState = {
       user: null, // firebase auth user
       acctQr: null, // data:image/png;base64,iVBORw0KG.......kJggg==,
-      userDoc: null, /* firestore docs */
+      /* firestore docs */
+      userDoc: null,
       mjDoc: {
         meta: {
           val: null, // usd
           cap: null, // mj
+          userCount: null,
           monthly: null // usd per day, for last 1 month
         }
       }
@@ -109,6 +112,7 @@ export default withRouter(class App extends Component {
           <Route path='/dashboard' render={routeProps => <Dashboard {...routeProps} user={this.state.user} acctQr={this.state.acctQr} userDoc={this.state.userDoc} mjDoc={this.state.mjDoc}/>} />
           <Route path='/send' render={routeProps => <Send {...routeProps} userDoc={this.state.userDoc}/>} />
           <Route path='/receive' render={routeProps => <Receive {...routeProps} user={this.state.user} acctQr={this.state.acctQr}/>} />
+          <Route path='/mine' render={routeProps => <Mine {...routeProps} user={this.state.user}/>} />
           <Redirect from='*' to='/'/>
         </Switch>
 
