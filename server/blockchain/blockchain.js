@@ -5,6 +5,17 @@ const github = require('../data/github')
 const lastBlockHeaderPath = 'lastblock'
 
 /**
+ * Retrieves last block's header as an object from github, asynchronously.
+ * Will throw an error with {code=404} property if last block is not found.
+ */
+exports.getLastBlockHeader = async () => {
+  const lastBlockHeaderFile = await github.getFileContent(lastBlockHeaderPath)
+  const header = JSON.parse(lastBlockHeaderFile)
+  if (typeof header.time === 'string') header.time = new Date(header.time)
+  return header
+}
+
+/**
  * Retrieves the full path of a block in a git repo with respect to given time and day shift.
  * @param time - 'Date' object instance.
  * @param dayShift - No of days to shift the time, if any. i.e. +5, -3, etc.
@@ -68,8 +79,7 @@ exports.insertBlockSinceLastOne = async (now, blockPath, lastBlockHeader) => {
   // get latest block file
   if (!lastBlockHeader) {
     try {
-      const lastBlockHeaderFile = await github.getFileContent(lastBlockHeaderPath)
-      lastBlockHeader = JSON.parse(lastBlockHeaderFile)
+      lastBlockHeader = await exports.getLastBlockHeader()
     } catch (e) {
       if (e.code === 404) {
         lastBlockHeader = block.genesisBlock
@@ -78,7 +88,6 @@ exports.insertBlockSinceLastOne = async (now, blockPath, lastBlockHeader) => {
       }
     }
   }
-  lastBlockHeader.time = typeof lastBlockHeader.time === 'object' ? lastBlockHeader.time : new Date(lastBlockHeader.time)
 
   const blockTimeRange = exports.getBlockTimeRange(lastBlockHeader.time, now)
   await exports.insertBlock(blockTimeRange.start, blockTimeRange.end, blockPath, lastBlockHeader)
