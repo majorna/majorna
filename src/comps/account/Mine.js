@@ -4,9 +4,9 @@ import server from '../../data/server'
 
 export default class extends Component {
   state = {
-    progress: 0,
     reward: 10, // todo: read this from mj/meta
-    minedBlocks: 0
+    minedBlocks: 0,
+    hashRate: 0
   }
 
   async componentDidMount() {
@@ -17,23 +17,34 @@ export default class extends Component {
     const enc = new TextEncoder('utf-8')
     const strBuffer = enc.encode(miningParams.str)
     let nonce = 0
-    let nonceBuffer, fullStrBuffer, hashBuffer, hashArray, base64String
+    let lastNonce = 0
+    let nonceBuffer, fullStrArr, hashBuffer, hashArray, base64String
+
+    this.interval = setInterval(() => {
+      this.setState({hashRate: nonce - lastNonce})
+      lastNonce = nonce
+    }, 1000)
 
     console.log(`starting mining loop with difficulty ${miningParams.difficulty}`)
     while (true) {
       nonce++
       nonceBuffer = enc.encode(nonce.toString())
-      fullStrBuffer = new Uint8Array(nonceBuffer.length + strBuffer.length)
-      fullStrBuffer.set(nonceBuffer);
-      fullStrBuffer.set(strBuffer, nonceBuffer.length)
-      hashBuffer = await crypto.subtle.digest(alg, fullStrBuffer)
+      fullStrArr = new Uint8Array(nonceBuffer.length + strBuffer.length)
+      fullStrArr.set(nonceBuffer);
+      fullStrArr.set(strBuffer, nonceBuffer.length)
+      hashBuffer = await crypto.subtle.digest(alg, fullStrArr.buffer)
       hashArray = new Uint8Array(hashBuffer)
-      if (hashArray[0] === 0 && hashArray[1] === 0) {
+      if (hashArray[0] === 0 && hashArray[1] === 0 && hashArray[2] === 0) {
+        console.log(hashArray)
         base64String = btoa(String.fromCharCode(...hashArray))
         console.log(`mined block with difficulty: ${miningParams.difficulty}, nonce: ${nonce}, hash: ${base64String}`)
         break
       }
     }
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval)
   }
 
   handleStop = () => this.props.history.goBack()
@@ -42,10 +53,9 @@ export default class extends Component {
     return (
       <div className="mj-box flex-column">
         <div className="is-size-5 has-text-centered">Mining mj</div>
+        <div className="flex-row center-all spinner m-t-l"/>
 
-        <div><strong>Progress:</strong> {this.state.progress}%</div>
-        <progress className="progress is-large is-info" value={this.state.progress} max="100"/>
-
+        <div><strong>Progress:</strong> {this.state.hashRate}H/s</div>
         <div><strong>Earnings:</strong> mj{fm(this.state.reward * this.state.minedBlocks)}</div>
         <div><strong>Mined Blocks:</strong> {this.state.minedBlocks}</div>
         <div><strong>Reward per Block:</strong> mj{fm(this.state.reward)}</div>
