@@ -106,7 +106,6 @@ exports.getTx = async id => {
 exports.getTxsByTimeRange = async (startTime, endTime) => {
   const txsSnap = await txsColRef.where('time', '>=', startTime).where('time', '<', endTime).get()
   return txsSnap.docs.map(doc => doc.data())
-  // todo: create several close txs and do precise time range get and make sure that we only get the right one
 }
 
 /**

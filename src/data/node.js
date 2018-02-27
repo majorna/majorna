@@ -9,3 +9,5 @@ exports.receiveBlock = () => {
 }
 
 exports.initSimplePeer = () => {}
+
+exports.mineBlock = () => {}

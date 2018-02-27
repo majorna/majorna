@@ -112,7 +112,7 @@ export default withRouter(class App extends Component {
           <Route path='/dashboard' render={routeProps => <Dashboard {...routeProps} user={this.state.user} acctQr={this.state.acctQr} userDoc={this.state.userDoc} mjDoc={this.state.mjDoc}/>} />
           <Route path='/send' render={routeProps => <Send {...routeProps} userDoc={this.state.userDoc}/>} />
           <Route path='/receive' render={routeProps => <Receive {...routeProps} user={this.state.user} acctQr={this.state.acctQr}/>} />
-          <Route path='/mine' render={routeProps => <Mine {...routeProps} user={this.state.user}/>} />
+          <Route path='/mine' render={routeProps => <Mine {...routeProps} db={this.db}/>} />
           <Redirect from='*' to='/'/>
         </Switch>
 

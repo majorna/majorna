@@ -77,6 +77,8 @@ suite('db', () => {
     const txs = await db.getTxsByTimeRange(yesterday, now)
     assert(txs.length >= testData.txs.length)
     assert(txs[0].from.id === testData.txs[0].from.id)
+
+    // todo: create several close txs and do precise time range get and make sure that we only get the right one
   })
 
   test('makeTx', async () => {
