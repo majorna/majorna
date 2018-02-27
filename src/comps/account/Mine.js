@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { fm } from '../../data/utils'
+import server from '../../data/server'
 
 export default class extends Component {
   state = {
@@ -10,6 +11,21 @@ export default class extends Component {
 
   async componentDidMount() {
     // call server and get last block header to start mining that block
+    const res = await server.blocks.mine()
+    const miningParams = await res.json()
+
+    let nonce = 0
+    while (true) {
+      nonce++
+      const strBuffer = new TextEncoder('utf-8').encode(nonce + miningParams.str)
+      const hashBuffer = await crypto.subtle.digest('SHA-256', strBuffer)
+      const hashArray = new Uint8Array(hashBuffer)
+      if (hashArray[0] === 0 && hashArray[1] === 0) {
+        const base64String = btoa(String.fromCharCode(...hashArray)) // todo; don't use btoa
+        console.log(`mined block with difficulty: ${miningParams.difficulty}, nonce: ${nonce}, hash: ${base64String}`)
+        break
+      }
+    }
   }
 
   handleStop = () => this.props.history.goBack()

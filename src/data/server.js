@@ -14,6 +14,9 @@ export default {
   },
   txs: {
     make: (to, amount) => postJson('/txs', {to, amount})
+  },
+  blocks: {
+    mine: () => get('/blocks/mine')
   }
 }
 

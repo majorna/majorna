@@ -8,7 +8,6 @@ const block = require('../blockchain/block')
  */
 exports.mine = route.get('/blocks/mine', async ctx => {
   const lastBlockHeader = await blockchain.getLastBlockHeader()
-  console.log(lastBlockHeader)
   const str = block.getHeaderStr(lastBlockHeader)
 
   ctx.body = {str, difficulty: 5}

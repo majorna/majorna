@@ -116,6 +116,7 @@ exports.mineBlock = (blockOrHeader, difficulty) => {
   while (true) {
     nonce++
     hash = crypto.hashText(nonce + str)
+    // todo: base64str conversion (and object reinits) hugely slows down this loop
     if (hash.substring(0, difficulty) === hashPrefix) {
       header.nonce = nonce
       header.difficulty = difficulty
