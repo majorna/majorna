@@ -13,16 +13,23 @@ export default class extends Component {
     // call server and get last block header to start mining that block
     const res = await server.blocks.mine()
     const miningParams = await res.json()
-
+    const alg = 'SHA-256'
+    const enc = new TextEncoder('utf-8')
+    const strBuffer = enc.encode(miningParams.str)
     let nonce = 0
+    let nonceBuffer, fullStrBuffer, hashBuffer, hashArray, base64String
+
     console.log(`starting mining loop with difficulty ${miningParams.difficulty}`)
     while (true) {
       nonce++
-      const strBuffer = new TextEncoder('utf-8').encode(nonce + miningParams.str)
-      const hashBuffer = await crypto.subtle.digest('SHA-256', strBuffer)
-      const hashArray = new Uint8Array(hashBuffer)
+      nonceBuffer = enc.encode(nonce.toString())
+      fullStrBuffer = new Uint8Array(nonceBuffer.length + strBuffer.length)
+      fullStrBuffer.set(nonceBuffer);
+      fullStrBuffer.set(strBuffer, nonceBuffer.length)
+      hashBuffer = await crypto.subtle.digest(alg, fullStrBuffer)
+      hashArray = new Uint8Array(hashBuffer)
       if (hashArray[0] === 0 && hashArray[1] === 0) {
-        const base64String = btoa(String.fromCharCode(...hashArray))
+        base64String = btoa(String.fromCharCode(...hashArray))
         console.log(`mined block with difficulty: ${miningParams.difficulty}, nonce: ${nonce}, hash: ${base64String}`)
         break
       }
