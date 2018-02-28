@@ -44,7 +44,7 @@ export default class extends Component {
       // alternatively we can increase the input text size to make async call overhead negligible / or just sha3 or PoS variant
       hashBuffer = await crypto.subtle.digest(alg, fullStrArr.buffer)
       hashArray = new Uint8Array(hashBuffer)
-      if (hashArray[0] === 0 && hashArray[1] === 0 && hashArray[2] === 0) {
+      if (hashArray[0] === 0 && hashArray[1] === 0) {
         base64String = btoa(String.fromCharCode(...hashArray))
         console.log(`mined block with difficulty: ${miningParams.difficulty}, nonce: ${nonce}, hash: ${base64String}`)
         break
@@ -72,6 +72,7 @@ export default class extends Component {
         <div><strong>Reward per Block:</strong> mj{fm(this.state.reward)}</div>
 
         <div className="flex-row center-h m-t-l">
+          {/*<button className="button" onClick={this.handleBackground}>Background</button>*/}
           <button className="button" onClick={this.handleStop}>Stop</button>
         </div>
       </div>
