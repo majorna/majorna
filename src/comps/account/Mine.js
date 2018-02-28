@@ -20,8 +20,10 @@ export default class extends Component {
     const alg = 'SHA-256'
     let nonce = 0
     let lastNonce = 0
+    let i, found
     const enc = new TextEncoder('utf-8')
     const strBuffer = enc.encode(miningParams.str)
+    const difficulty = miningParams.difficulty
     let nonceBuffer, fullStrArr, hashBuffer, hashArray, base64String
 
     this.interval = setInterval(() => {
@@ -44,9 +46,14 @@ export default class extends Component {
       // alternatively we can increase the input text size to make async call overhead negligible / or just sha3 or PoS variant
       hashBuffer = await crypto.subtle.digest(alg, fullStrArr.buffer)
       hashArray = new Uint8Array(hashBuffer)
-      if (hashArray[0] === 0 && hashArray[1] === 0) {
+      i = 0
+      found = true
+      for (;i < difficulty; i++) {
+        if (hashArray[i] !== 0) found = false
+      }
+      if (found) {
         base64String = btoa(String.fromCharCode(...hashArray))
-        console.log(`mined block with difficulty: ${miningParams.difficulty}, nonce: ${nonce}, hash: ${base64String}`)
+        console.log(`mined block with difficulty: ${difficulty}, nonce: ${nonce}, hash: ${base64String}`)
         break
       }
     }
