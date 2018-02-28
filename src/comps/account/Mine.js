@@ -32,6 +32,9 @@ export default class extends Component {
       fullStrArr = new Uint8Array(nonceBuffer.length + strBuffer.length)
       fullStrArr.set(nonceBuffer);
       fullStrArr.set(strBuffer, nonceBuffer.length)
+      // todo: since data to be hashed is so small, async/await cycle takes a lot longer than actual hashing
+      // node-forge is about 10x faster here (but needs to be background since loop blocks the thread)
+      // alternatively we can increase the text size artificially (i.e. via calculating a complex string based on the text)
       hashBuffer = await crypto.subtle.digest(alg, fullStrArr.buffer)
       hashArray = new Uint8Array(hashBuffer)
       if (hashArray[0] === 0 && hashArray[1] === 0 && hashArray[2] === 0) {
