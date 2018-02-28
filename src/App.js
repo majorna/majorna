@@ -106,15 +106,24 @@ export default withRouter(class App extends Component {
       <React.Fragment>
         <Navbar logout={this.logout} user={this.state.user}/>
 
-        <Switch>
-          <Route exact path='/' component={Home} />
-          <Route path='/login' render={routeProps => <Login {...routeProps} uiConfig={this.firebaseUIConfig} firebaseAuth={this.firebaseAuth}/>} />
-          <Route path='/dashboard' render={routeProps => <Dashboard {...routeProps} user={this.state.user} acctQr={this.state.acctQr} userDoc={this.state.userDoc} mjDoc={this.state.mjDoc}/>} />
-          <Route path='/send' render={routeProps => <Send {...routeProps} userDoc={this.state.userDoc}/>} />
-          <Route path='/receive' render={routeProps => <Receive {...routeProps} user={this.state.user} acctQr={this.state.acctQr}/>} />
-          <Route path='/mine' component={Mine} />
-          <Redirect from='*' to='/'/>
-        </Switch>
+        {!this.state.user ? (
+          <Switch>
+            <Route exact path='/' component={Home} />
+            <Route path='/login' render={routeProps => <Login {...routeProps} uiConfig={this.firebaseUIConfig} firebaseAuth={this.firebaseAuth}/>} />
+            <Route path='/dashboard' render={routeProps => <Dashboard {...routeProps} user={this.state.user} acctQr={this.state.acctQr} userDoc={this.state.userDoc} mjDoc={this.state.mjDoc}/>} />
+            <Redirect from='*' to='/'/>
+          </Switch>
+        ) : (
+          <Switch>
+            <Route exact path='/' component={Home} />
+            <Route path='/login' render={routeProps => <Login {...routeProps} uiConfig={this.firebaseUIConfig} firebaseAuth={this.firebaseAuth}/>} />
+            <Route path='/dashboard' render={routeProps => <Dashboard {...routeProps} user={this.state.user} acctQr={this.state.acctQr} userDoc={this.state.userDoc} mjDoc={this.state.mjDoc}/>} />
+            <Route path='/send' render={routeProps => <Send {...routeProps} userDoc={this.state.userDoc}/>} />
+            <Route path='/receive' render={routeProps => <Receive {...routeProps} user={this.state.user} acctQr={this.state.acctQr}/>} />
+            <Route path='/mine' component={Mine} />
+            <Redirect from='*' to='/'/>
+          </Switch>
+        )}
 
         <Footer/>
       </React.Fragment>
