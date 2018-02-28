@@ -33,7 +33,7 @@ export default class extends Component {
     }, 1000)
 
     console.log(`starting mining loop with difficulty ${miningParams.difficulty}`)
-    while (true) {
+    while (this.interval) {
       nonce++
       nonceBuffer = enc.encode(nonce.toString())
       fullStrArr = new Uint8Array(nonceBuffer.length + strBuffer.length)
@@ -54,6 +54,7 @@ export default class extends Component {
 
   componentWillUnmount() {
     clearInterval(this.interval)
+    this.interval = null
   }
 
   handleStop = () => this.props.history.goBack()
