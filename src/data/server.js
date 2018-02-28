@@ -20,6 +20,8 @@ export default {
   }
 }
 
+// todo: upon 401, refresh idToken (if not possible, user will be auto-redirected to home page anyway)
+
 const get = url => fetch(config.server.url + url, {
   method: 'GET',
   headers: new Headers({Authorization: `Bearer ${config.server.token}`})
