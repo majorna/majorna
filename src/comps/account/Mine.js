@@ -8,7 +8,8 @@ export default class extends Component {
     reward: 10, // todo: read this from mj/meta
     minedBlocks: 0,
     hashRate: 0,
-    time: null
+    time: null,
+    difficulty: 0
   }
 
   componentDidMount = async () => {
@@ -18,6 +19,7 @@ export default class extends Component {
 
     // start mining that block
     await mineBlock(miningParams.str, miningParams.difficulty, s => this.setState(s))
+    this.setState({difficulty: miningParams.difficulty})
   }
 
   componentWillUnmount = () => stopMining()
@@ -26,14 +28,18 @@ export default class extends Component {
 
   render = () =>
     <div className="mj-box flex-column">
+      {/* todo: conditional spinner */}
       <div className="is-size-5 has-text-centered">Mining mj</div>
       <div className="flex-row center-all spinner m-t-l"/>
 
       <div><strong>Time:</strong> {this.state.time ? Math.round(this.state.time.getTime() / 1000) : 0}s</div>
       <div><strong>Rate:</strong> {this.state.hashRate} Hash/s</div>
-      <div><strong>Reward:</strong> mj{fm(this.state.reward * this.state.minedBlocks)}</div>
+
+      <div className="m-t-m"><strong>Reward:</strong> mj{fm(this.state.reward * this.state.minedBlocks)}</div>
       <div><strong>Mined Blocks:</strong> {this.state.minedBlocks}</div>
-      <div><strong>Reward per Block:</strong> mj{fm(this.state.reward)}</div>
+
+      <div className="m-t-m"><strong>Reward per Block:</strong> mj{fm(this.state.reward)}</div>
+      <div><strong>Difficulty:</strong> {this.state.difficulty}</div>
 
       <div className="flex-row center-h m-t-l">
         {/*<button className="button" onClick={this.handleBackground}>Background</button>*/}
