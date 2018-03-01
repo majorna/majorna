@@ -124,7 +124,7 @@ exports.makeTx = (from, to, amount) => firestore.runTransaction(async t => {
   assert(Number.isInteger(amount), 'amount must be an integer')
   assert(amount > 0, 'amount should be > 0')
 
-  // verify sender's funds
+  // check if sender exists
   const senderDocRef = usersColRef.doc(from)
   const senderDoc = await t.get(senderDocRef)
   if (!senderDoc.exists) {
@@ -132,6 +132,8 @@ exports.makeTx = (from, to, amount) => firestore.runTransaction(async t => {
   }
   const sender = senderDoc.data()
   const fromName = sender.name
+
+  // verify sender's funds
   if (sender.balance < amount) {
     throw new utils.UserVisibleError(`sender ID:${from} has insufficient funds`)
   }
