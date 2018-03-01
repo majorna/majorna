@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import mj from '../res/mj.png'
 
-export default () => (
+export default () =>
   <React.Fragment>
     {/* Intro text with "Get Started" button */}
     <div className="hero is-medium is-light">
@@ -63,4 +63,3 @@ export default () => (
       Still not decided? <Link to='/login'>Give Majorna a go for free and get +mj500 as starter balance.</Link>
     </div>
   </React.Fragment>
-)

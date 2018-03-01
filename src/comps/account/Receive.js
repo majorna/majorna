@@ -1,7 +1,7 @@
 import React from 'react'
 import { toClipboard } from '../../data/utils'
 
-export default props => (
+export default props =>
   <div className="mj-box flex-column center-all">
     <div className="is-size-5">Account Address</div>
 
@@ -14,4 +14,3 @@ export default props => (
 
     <button className="button m-t-l" onClick={props.history.goBack}>Close</button>
   </div>
-)

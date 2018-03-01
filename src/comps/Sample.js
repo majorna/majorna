@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
 
-export default props => (
+export default props =>
   <div>
     <span>Wow</span>
   </div>
-)
 
 const OneLiner = props => <div>Wow</div>
 
@@ -15,17 +14,12 @@ const OneLiner = props => <div>Wow</div>
 //     abc: ''
 //   }
 //
-//   componentDidMount() {
-//     // start network requests here
-//   }
+//   componentDidMount = () => {/*start network requests here*/}
 //
 //   handleCancel = () => this.props.history.goBack()
 //
-//   render() {
-//     return (
-//       <React.Fragment>
-//         abc
-//       </React.Fragment>
-//     )
-//   }
+//   render = () =>
+//     <React.Fragment>
+//       abc
+//     </React.Fragment>
 // }
