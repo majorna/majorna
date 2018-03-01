@@ -13,10 +13,14 @@ export const initSimplePeer = () => {}
 let interval
 export const stopMining = () => {
   interval && clearInterval(interval)
-  interval = 0
+  interval = null
 }
 
-export const mineBlock = async (headerStr, difficulty, progressCb) => {
+/**
+ * Returned promise is not resolved until a block is found.
+ * Awaiting this function will block until a block is found or {stopMining} is called.
+ */
+export const mineBlock = async (headerStr, difficulty, progressCb, minedCb) => {
   const alg = 'SHA-256'
   const start = new Date().getTime()
   let nonce = 0
@@ -55,6 +59,7 @@ export const mineBlock = async (headerStr, difficulty, progressCb) => {
     if (found) {
       base64String = btoa(String.fromCharCode(...hashArray))
       console.log(`mined block with difficulty: ${difficulty}, nonce: ${nonce}, hash: ${base64String}`)
+      minedCb()
       stopMining(interval)
       break
     }

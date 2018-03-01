@@ -16,10 +16,15 @@ export default class extends Component {
     // call server and get last block header
     const res = await server.blocks.mine()
     const miningParams = await res.json()
+    this.setState({difficulty: miningParams.difficulty})
 
     // start mining that block
-    await mineBlock(miningParams.str, miningParams.difficulty, s => this.setState(s))
-    this.setState({difficulty: miningParams.difficulty})
+    await mineBlock(miningParams.str, miningParams.difficulty, s => this.setState(s), () => this.setState({
+      // minedBlocks: (this.setState.minedBlocks + 1),
+      hashRate: 0,
+      time: null,
+      difficulty: 0
+    }))
   }
 
   componentWillUnmount = () => stopMining()
@@ -28,7 +33,6 @@ export default class extends Component {
 
   render = () =>
     <div className="mj-box flex-column">
-      {/* todo: conditional spinner */}
       <div className="is-size-5 has-text-centered">Mining mj</div>
       <div className="flex-row center-all spinner m-t-l"/>
 
@@ -38,8 +42,8 @@ export default class extends Component {
       <div className="m-t-m"><strong>Reward:</strong> mj{fm(this.state.reward * this.state.minedBlocks)}</div>
       <div><strong>Mined Blocks:</strong> {this.state.minedBlocks}</div>
 
-      <div className="m-t-m"><strong>Reward per Block:</strong> mj{fm(this.state.reward)}</div>
-      <div><strong>Difficulty:</strong> {this.state.difficulty}</div>
+      <div className="m-t-m"><strong>Difficulty:</strong> {this.state.difficulty}</div>
+      <div><strong>Reward per Block:</strong> mj{fm(this.state.reward)}</div>
 
       <div className="flex-row center-h m-t-l">
         {/*<button className="button" onClick={this.handleBackground}>Background</button>*/}
