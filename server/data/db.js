@@ -164,6 +164,44 @@ exports.makeTx = (from, to, amount) => firestore.runTransaction(async t => {
 })
 
 /**
+ * Sends funds to given user from majorna, asynchronously.
+ * Returned promise resolves to completed transaction data -or- to an error if transaction fails.
+ * @param to - Receiver ID.
+ * @param amount - Transaction amount as integer.
+ */
+exports.makeMajornaTx = (to, amount) => firestore.runTransaction(async t => {
+  assert(to, 'to parameters is required')
+  assert(amount, 'amount ID parameters is required')
+  assert(Number.isInteger(amount), 'amount must be an integer')
+  assert(amount > 0, 'amount should be > 0')
+
+  const time = new Date()
+
+  // sender is majorna
+  const sender = 'majorna'
+  const fromName = 'Majorna'
+
+  // check if receiver exists
+  const receiverDocRef = usersColRef.doc(to)
+  const receiverDoc = await t.get(receiverDocRef)
+  if (!receiverDoc.exists) {
+    throw new utils.UserVisibleError(`receiver ID:${to} does not exist`)
+  }
+  const receiver = receiverDoc.data()
+
+  // add tx to txs collection
+  const txRef = txsColRef.doc()
+  const signedTx = tx.sign({id: txRef.id, from: {id: from, balance: 0}, to: {id: to, balance: receiver.balance}, time, amount})
+  t.create(txRef, signedTx)
+
+  // update user docs with tx and updated balances
+  receiver.txs.unshift({id: txRef.id, from: from, fromName, time, amount})
+  t.update(receiverDocRef, {balance: receiver.balance + amount, txs: receiver.txs})
+
+  return signedTx
+})
+
+/**
  * Deletes all the data and seeds the database with dummy data for testing, asynchronously.
  */
 exports.initTest = async () => {
