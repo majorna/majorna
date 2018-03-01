@@ -10,6 +10,12 @@ export const receiveBlock = () => {
 
 export const initSimplePeer = () => {}
 
+let interval
+export const stopMining = () => {
+  interval && clearInterval(interval)
+  interval = 0
+}
+
 export const mineBlock = async (headerStr, difficulty, progressCb) => {
   const alg = 'SHA-256'
   const start = new Date().getTime()
@@ -19,7 +25,7 @@ export const mineBlock = async (headerStr, difficulty, progressCb) => {
   const headerStrBuffer = enc.encode(headerStr)
   let nonceBuffer, fullStrArr, hashBuffer, hashArray, base64String
 
-  const interval = setInterval(() => {
+  interval = setInterval(() => {
     progressCb({
       hashRate: nonce - lastNonce,
       time: new Date(new Date().getTime() - start)
@@ -49,10 +55,10 @@ export const mineBlock = async (headerStr, difficulty, progressCb) => {
     if (found) {
       base64String = btoa(String.fromCharCode(...hashArray))
       console.log(`mined block with difficulty: ${difficulty}, nonce: ${nonce}, hash: ${base64String}`)
-      clearInterval(interval)
+      stopMining(interval)
       break
     }
   }
 
-  return interval
+  console.log(`stopped or finished mining`)
 }

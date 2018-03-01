@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { fm } from '../../data/utils'
 import server from '../../data/server'
-import { mineBlock } from '../../data/node'
+import { mineBlock, stopMining } from '../../data/node'
 
 export default class extends Component {
   state = {
@@ -17,10 +17,10 @@ export default class extends Component {
     const miningParams = await res.json()
 
     // start mining that block
-    this.interval = await mineBlock(miningParams.str, miningParams.difficulty, s => this.setState(s))
+    await mineBlock(miningParams.str, miningParams.difficulty, s => this.setState(s))
   }
 
-  componentWillUnmount = () => clearInterval(this.interval)
+  componentWillUnmount = () => stopMining()
 
   handleStop = () => this.props.history.goBack()
 
