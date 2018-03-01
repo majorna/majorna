@@ -15,7 +15,7 @@ exports.mine = route.get('/blocks/mine', async ctx => {
   ctx.body = {
     no: lastBlockHeader.no,
     str,
-    reward: lastBlockHeader.difficulty * 10,
+    reward: Math.pow(5, lastBlockHeader.difficulty),
     difficulty: lastBlockHeader.difficulty + 1
   }
 })
@@ -28,7 +28,10 @@ exports.create = route.post('/blocks', async ctx => {
   // todo: get reward from block.js (see above todo)
   // replace existing block with this one if hash is valid and is bigger
   // if hash is smaller, still give reward based on difficulty (minedBlock.difficulty * 10)
-  // await db.makeTx('majorna', ctx.state.user.uid, 10)
+  const lastBlockHeader = await blockchain.getLastBlockHeader()
+  const reward = Math.pow(5, lastBlockHeader.difficulty)
+  await db.makeMajornaTx(ctx.state.user.uid, reward)
 
+  ctx.body = {reward}
   ctx.status = 201
 })

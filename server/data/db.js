@@ -178,7 +178,7 @@ exports.makeMajornaTx = (to, amount) => firestore.runTransaction(async t => {
   const time = new Date()
 
   // sender is majorna
-  const sender = 'majorna'
+  const from = 'majorna'
   const fromName = 'Majorna'
 
   // check if receiver exists
