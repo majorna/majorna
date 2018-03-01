@@ -46,8 +46,8 @@ suite('db', () => {
 
     // verify tx in txs collection
     const tx = await db.getTx(userDoc.txs[0].id)
-    assert(tx.from === 'majorna')
-    assert(tx.to === uid)
+    assert(tx.from.id === 'majorna')
+    assert(tx.to.id === uid)
     assert(tx.time.getTime() === userDoc.created.getTime())
     assert(tx.amount === 500)
 
@@ -61,7 +61,7 @@ suite('db', () => {
     const tx0 = testData.txs[0]
     const tx = await db.getTx('0')
     assert(tx.id === tx0.id)
-    assert(tx.from === tx0.from)
+    assert(tx.from.id === tx0.from.id)
 
     // inexisting tx
     let err = null
@@ -76,7 +76,9 @@ suite('db', () => {
     yesterday.setDate(yesterday.getDate() - 1)
     const txs = await db.getTxsByTimeRange(yesterday, now)
     assert(txs.length >= testData.txs.length)
-    assert(txs[0].from === testData.txs[0].from)
+    assert(txs[0].from.id === testData.txs[0].from.id)
+
+    // todo: create several close txs and do precise time range get and make sure that we only get the right one
   })
 
   test('makeTx', async () => {
@@ -89,8 +91,8 @@ suite('db', () => {
 
     // validate tx in txs col
     const tx = await db.getTx(newTx.id)
-    assert(tx.from === from)
-    assert(tx.to === to)
+    assert(tx.from.id === from)
+    assert(tx.to.id === to)
     assert(tx.time.getTime() === newTx.time.getTime())
     assert(tx.amount === amount)
 

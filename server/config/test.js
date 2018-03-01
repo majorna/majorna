@@ -1,6 +1,7 @@
 const assert = require('assert')
 const axios = require('axios')
 const db = require('../data/db')
+const tx = require('../blockchain/tx')
 const server = require('./server')
 const config = require('./config')
 const firebaseConfig = require('./firebase') // firebase admin sdk config
@@ -129,9 +130,9 @@ const testData = exports.data = {
     u4Request: null
   },
   txs: [
-    {from, to: '1', time, amount: initBalance},
-    {from, to: '2', time, amount: initBalance},
-    {from, to: '3', time, amount: initBalance}
+    tx.sign({id: '0', from: {id: from, balance: 0}, to: {id: '1', balance: 0}, time, amount: initBalance}),
+    tx.sign({id: '1', from: {id: from, balance: 0}, to: {id: '2', balance: 0}, time, amount: initBalance}),
+    tx.sign({id: '2', from: {id: from, balance: 0}, to: {id: '3', balance: 0}, time, amount: initBalance})
   ],
   // Firebase authentication ID token (JWT) content when decoded
   decodedIdTokenSample: {

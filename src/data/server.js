@@ -14,8 +14,14 @@ export default {
   },
   txs: {
     make: (to, amount) => postJson('/txs', {to, amount})
+  },
+  blocks: {
+    mine: () => get('/blocks/mine'),
+    create: (no, hash) => postJson('/blocks', {no, hash})
   }
 }
+
+// todo: upon 401, refresh idToken (if not possible, user will be auto-redirected to home page anyway)
 
 const get = url => fetch(config.server.url + url, {
   method: 'GET',

@@ -5,6 +5,17 @@ const github = require('../data/github')
 const lastBlockHeaderPath = 'lastblock'
 
 /**
+ * Retrieves last block's header as an object from github, asynchronously.
+ * Will throw an error with {code=404} property if last block is not found.
+ */
+exports.getLastBlockHeader = async () => {
+  const lastBlockHeaderFile = await github.getFileContent(lastBlockHeaderPath)
+  const header = JSON.parse(lastBlockHeaderFile)
+  if (typeof header.time === 'string') header.time = new Date(header.time)
+  return header
+}
+
+/**
  * Retrieves the full path of a block in a git repo with respect to given time and day shift.
  * @param time - 'Date' object instance.
  * @param dayShift - No of days to shift the time, if any. i.e. +5, -3, etc.
@@ -23,7 +34,8 @@ exports.getBlockPath = (time, dayShift) => {
  * End: Midnight of {end}.
  */
 exports.getBlockTimeRange = (start, end) => {
-  start = new Date(start)
+  // make copies of date object not to modify originals
+  start = new Date(start.getTime())
   start.setUTCHours(0, 0, 0, 0)
 
   end = new Date(end.getTime())
@@ -34,6 +46,7 @@ exports.getBlockTimeRange = (start, end) => {
 
 /**
  * Creates and inserts a new block into the blockchain git repo, asynchronously.
+ * Returns true if a block was inserted. False if there were no txs found to create a block with.
  * @param startTime - Time to start including txs from.
  * @param endTime - Time to stop including txs from.
  * @param blockPath - Full path of the block to create. i.e. "dir/sub_dir/filename".
@@ -47,6 +60,10 @@ exports.insertBlock = async (startTime, endTime, blockPath, prevBlock) => {
     await github.createFile(JSON.stringify(signedBlock, null, 2), blockPath)
     await github.upsertFile(JSON.stringify(signedBlock.header, null, 2), lastBlockHeaderPath)
     console.log(`inserted block ${blockPath}`)
+    return true
+  } else {
+    console.log(`no txs found to create block with`)
+    return false
   }
 }
 
@@ -62,8 +79,7 @@ exports.insertBlockSinceLastOne = async (now, blockPath, lastBlockHeader) => {
   // get latest block file
   if (!lastBlockHeader) {
     try {
-      const lastBlockHeaderFile = await github.getFileContent(lastBlockHeaderPath)
-      lastBlockHeader = JSON.parse(lastBlockHeaderFile)
+      lastBlockHeader = await exports.getLastBlockHeader()
     } catch (e) {
       if (e.code === 404) {
         lastBlockHeader = block.genesisBlock
@@ -102,6 +118,10 @@ exports.insertBlockIfRequired = async (blockPath, now) => {
   }
 }
 
+function failSafeInsertBlockIfRequired () {
+  exports.insertBlockIfRequired().catch(e => console.error(e))
+}
+
 let timerStarted = false
 /**
  * Starts the the blockchain insert timer.
@@ -115,11 +135,11 @@ exports.startBlockchainInsertTimer = interval => {
   }
   timerStarted = true
 
+  // do initial block check immediately
+  // skip on testing since ongoing promise can do conflicting data changes
+  !interval && failSafeInsertBlockIfRequired()
+
   // start timer
   interval = interval || 1000/* ms */ * 60/* s */ * 15/* min */
-  return setInterval(async () => {
-    try {
-      await exports.insertBlockIfRequired()
-    } catch (e) { console.error(e) }
-  }, interval)
+  return setInterval(() => failSafeInsertBlockIfRequired(), interval)
 }

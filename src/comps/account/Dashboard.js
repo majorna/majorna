@@ -13,7 +13,7 @@ export default props => {
       <div className="mj-box flex-column p-s">
         <div className="is-size-5 has-text-centered"><span className="faded">Majorna Price:</span> ${props.mjDoc.meta.val}*</div>
         <div className="is-size-5 has-text-centered">
-          <span className="faded">Market Cap:</span> ${fm(props.mjDoc.meta.cap * props.mjDoc.meta.val)} <small>mj{fm(props.mjDoc.meta.cap)}</small>
+          <span className="faded">Market Cap:</span> ${fm(props.mjDoc.meta.cap * props.mjDoc.meta.val)} <small>(mj{fm(props.mjDoc.meta.cap)})</small>
         </div>
         <ResponsiveContainer width="100%" height={300}>
           <AreaChart data={getChartData(props.mjDoc.meta)}>
@@ -27,14 +27,15 @@ export default props => {
       </div>
 
       <div className="mj-box flex-column">
-        <div><strong>Balance</strong>: mj<strong>{props.userDoc.balance}</strong> (${props.userDoc.balance * props.mjDoc.meta.val})</div>
+        <div><strong>Balance</strong>: mj<strong>{fm(props.userDoc.balance)}</strong> (${fm(props.userDoc.balance * props.mjDoc.meta.val)})</div>
         <div><strong>Address</strong>: <small>{props.user.uid}</small></div>
         <img width="72" src={props.acctQr} alt={props.user.uid}/>
       </div>
 
       <div className="mj-box">
-        <Link to="/send" className="button is-info">Send</Link>
-        <Link to="/receive" className="button m-l-m">Receive</Link>
+        <Link to="/send" className="button is-info"><i className="fas fa-paper-plane m-r-s"/>Send</Link>
+        <Link to="/receive" className="button m-l-m"><i className="fas fa-qrcode m-r-s"/>Receive</Link>
+        <Link to="/mine" className="button m-l-xl"><i className="fas fa-th m-r-s"/>Mine</Link>
       </div>
 
       <div className="mj-box flex-column">

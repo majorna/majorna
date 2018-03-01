@@ -1,7 +1,6 @@
 const assert = require('assert')
 const blockchain = require('./blockchain')
 const github = require('../data/github')
-const crypto = require('./crypto')
 const block = require('./block')
 const testData = require('../config/test').data
 
@@ -42,7 +41,7 @@ suite('blockchain', () => {
     const blockObj = JSON.parse(blockFile)
 
     assert(blockObj.sig.length === 96)
-    assert(crypto.verifyObj(blockObj.header, blockObj.sig))
+    assert(block.verifySignature(blockObj.header, blockObj.sig))
 
     assert(blockObj.header.no === 2)
     assert(blockObj.header.prevHash.length === 44)
@@ -103,7 +102,7 @@ suite('blockchain', () => {
   })
 
   test('startBlockchainInsertTimer', () => {
-    const timer = blockchain.startBlockchainInsertTimer(1)
+    const timer = blockchain.startBlockchainInsertTimer(30)
     clearInterval(timer)
   })
 })

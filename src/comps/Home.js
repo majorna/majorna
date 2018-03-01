@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import mj from '../res/mj.png'
 
-export default () => (
+export default () =>
   <React.Fragment>
     {/* Intro text with "Get Started" button */}
     <div className="hero is-medium is-light">
@@ -54,7 +54,8 @@ export default () => (
       <i className="flex-order-1 m-l-m fas fa-credit-card" style={{width: 110, height: 120}}/>
       <div className="flex-column flex-grow-1">
         <div className="is-size-5">Open Business Model</div>
-        Majorna team intents to fund development via providing services around the cryptocurrency, as well as through the initial distribution of the currency.
+        Majorna team intents to fund development via providing services around the cryptocurrency.
+        The team is also responsible for monitoring and insuring the safety of the system.
       </div>
     </div>
 
@@ -62,4 +63,3 @@ export default () => (
       Still not decided? <Link to='/login'>Give Majorna a go for free and get +mj500 as starter balance.</Link>
     </div>
   </React.Fragment>
-)

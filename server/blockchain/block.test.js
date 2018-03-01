@@ -1,9 +1,9 @@
 const assert = require('assert')
 const block = require('./block')
-const crypto = require('./crypto')
+const testData = require('../config/test').data
 
 const genBlock = block.genesisBlock
-const txs = ['lorem', {data: 'ipsum'}, 'dolor']
+const txs = testData.txs
 
 suite('block', () => {
   test('createMerkle', () => {
@@ -29,7 +29,7 @@ suite('block', () => {
 
     if (blockObj.sig) {
       assert(blockObj.sig.length === 96)
-      assert(crypto.verifyObj(blockObj.header, blockObj.sig))
+      assert(block.verifySignature(blockObj.header, blockObj.sig))
       assert(blockObj.header.difficulty === 0)
       assert(blockObj.header.nonce === 0)
     } else {
