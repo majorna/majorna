@@ -9,7 +9,8 @@ export default class extends Component {
     minedBlocks: 0,
     hashRate: 0,
     time: 0,
-    difficulty: 0
+    difficulty: 0,
+    blockNo: 0
   }
 
   minerLoop = true
@@ -22,6 +23,7 @@ export default class extends Component {
       const res = await server.blocks.mine()
       const params = await res.json()
       this.setState({
+        blockNo: params.no,
         reward: params.reward,
         difficulty: params.difficulty
       })
@@ -30,13 +32,16 @@ export default class extends Component {
       await mineBlock(
         params.str,
         params.difficulty,
-        s => this.setState(s),
-        () => this.setState((preState, props) => ({
-          minedBlocks: (preState.minedBlocks + 1),
-          hashRate: 0,
-          time: 0,
-          difficulty: 0
-        })))
+        s => this.setState(s), // progress update
+        async hash => { // mined a block
+          await server.blocks.create(this.state.blockNo, hash) // todo: error cases?
+          this.setState((preState, props) => ({
+            minedBlocks: (preState.minedBlocks + 1),
+            hashRate: 0,
+            time: 0,
+            difficulty: 0
+          }))
+        })
     }
 
     console.log('stopped miner loop')

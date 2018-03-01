@@ -22,8 +22,8 @@ exports.genesisBlock = {
 
 // nonce first to prevent internal hash state from being reused
 // in future we can add more memory intensive prefixes
-exports.getHeaderStr = blockHeader =>
-  '' + blockHeader.nonce + blockHeader.no + blockHeader.prevHash + blockHeader.txCount + blockHeader.merkleRoot + blockHeader.time.getTime() + blockHeader.difficulty
+exports.getHeaderStr = (blockHeader, skipNonce) =>
+  '' + skipNonce ? '' : blockHeader.nonce + blockHeader.no + blockHeader.prevHash + blockHeader.txCount + blockHeader.merkleRoot + blockHeader.time.getTime() + blockHeader.difficulty
 
 exports.sign = block => {
   const sigBlock = {
@@ -111,8 +111,7 @@ exports.mineBlock = (blockOrHeader, difficulty) => {
 
   let hash
   let nonce = 0
-  header.nonce = null
-  const str = exports.getHeaderStr(header) // store header string without nonce as an optimization
+  const str = exports.getHeaderStr(header, true) // store header string without nonce as an optimization
   while (true) {
     nonce++
     hash = crypto.hashText(nonce + str)
