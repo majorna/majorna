@@ -22,12 +22,16 @@ export default class extends Component {
     })
 
     // start mining that block
-    await mineBlock(params.str, params.difficulty, s => this.setState(s), () => this.setState({
-      // minedBlocks: (this.setState.minedBlocks + 1),
+    await mineBlock(
+      params.str,
+      params.difficulty,
+      s => this.setState(s),
+      () => this.setState((preState, props) => ({
+      minedBlocks: (preState.minedBlocks + 1),
       hashRate: 0,
       time: null,
       difficulty: 0
-    }))
+    })))
   }
 
   componentWillUnmount = () => stopMining()

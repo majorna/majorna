@@ -37,6 +37,10 @@ export const mineBlock = async (headerStr, difficulty, progressCb, minedCb) => {
     lastNonce = nonce
   }, 1000)
 
+  // todo: since data to be hashed is so small, async/await cycle takes a lot longer than actual hashing
+  // (note: since it is async, we can massively parallelize this)
+  // node-forge is about 10x faster here (but needs breaks in the loop with setImmediate not to block the event loop forever)
+  // alternatively we can increase the input text size to make async call overhead negligible / or just sha3 or PoS variant
   let i, found
   console.log(`starting mining loop with difficulty ${difficulty}`)
   while (interval) {
@@ -45,10 +49,6 @@ export const mineBlock = async (headerStr, difficulty, progressCb, minedCb) => {
     fullStrArr = new Uint8Array(nonceBuffer.length + headerStrBuffer.length)
     fullStrArr.set(nonceBuffer)
     fullStrArr.set(headerStrBuffer, nonceBuffer.length)
-    // todo: since data to be hashed is so small, async/await cycle takes a lot longer than actual hashing
-    // (note: since it is async, we can massively parallelize this)
-    // node-forge is about 10x faster here (but needs breaks in the loop with setImmediate not to block the event loop forever)
-    // alternatively we can increase the input text size to make async call overhead negligible / or just sha3 or PoS variant
     hashBuffer = await crypto.subtle.digest(alg, fullStrArr.buffer)
     hashArray = new Uint8Array(hashBuffer)
     i = 0
