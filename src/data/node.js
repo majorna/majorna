@@ -20,7 +20,7 @@ export const stopMining = () => {
  * Returned promise is not resolved until a block is found.
  * Awaiting this function will block until a block is found or {stopMining} is called.
  */
-export const mineBlock = async (headerStr, difficulty, progressCb, minedCb) => {
+export const mineBlock = async (headerStr, difficulty, progressCb, minedBlockCb) => {
   const alg = 'SHA-256'
   const start = new Date().getTime()
   let nonce = 0
@@ -56,11 +56,11 @@ export const mineBlock = async (headerStr, difficulty, progressCb, minedCb) => {
     for (;i < difficulty; i++) {
       if (hashArray[i] !== 0) found = false
     }
-    if (found) {
+    if (found && interval) {
       base64String = btoa(String.fromCharCode(...hashArray))
       console.log(`mined block with difficulty: ${difficulty}, nonce: ${nonce}, hash: ${base64String}`)
-      minedCb()
       stopMining(interval)
+      minedBlockCb()
       break
     }
   }

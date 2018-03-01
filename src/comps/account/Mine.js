@@ -27,11 +27,11 @@ export default class extends Component {
       params.difficulty,
       s => this.setState(s),
       () => this.setState((preState, props) => ({
-      minedBlocks: (preState.minedBlocks + 1),
-      hashRate: 0,
-      time: null,
-      difficulty: 0
-    })))
+        minedBlocks: (preState.minedBlocks + 1),
+        hashRate: 0,
+        time: null,
+        difficulty: 0
+      })))
   }
 
   componentWillUnmount = () => stopMining()
