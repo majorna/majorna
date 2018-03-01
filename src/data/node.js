@@ -23,6 +23,7 @@ export const stopMining = () => {
 export const mineBlock = async (headerStr, difficulty, progressCb, minedBlockCb) => {
   const alg = 'SHA-256'
   const start = new Date().getTime()
+  let elapsedTime
   let nonce = 0
   let lastNonce = 0
   const enc = new TextEncoder('utf-8')
@@ -30,9 +31,10 @@ export const mineBlock = async (headerStr, difficulty, progressCb, minedBlockCb)
   let nonceBuffer, fullStrArr, hashBuffer, hashArray, base64String
 
   interval = setInterval(() => {
+    elapsedTime = Math.round(new Date(new Date().getTime() - start).getTime() / 1000)
     progressCb({
       hashRate: nonce - lastNonce,
-      time: new Date(new Date().getTime() - start)
+      time: elapsedTime
     })
     lastNonce = nonce
   }, 1000)
@@ -42,7 +44,7 @@ export const mineBlock = async (headerStr, difficulty, progressCb, minedBlockCb)
   // node-forge is about 10x faster here (but needs breaks in the loop with setImmediate not to block the event loop forever)
   // alternatively we can increase the input text size to make async call overhead negligible / or just sha3 or PoS variant
   let i, found
-  console.log(`starting mining loop with difficulty ${difficulty}`)
+  console.log(`starting hash loop with difficulty ${difficulty}`)
   while (interval) {
     nonce++
     nonceBuffer = enc.encode(nonce.toString())
@@ -58,12 +60,12 @@ export const mineBlock = async (headerStr, difficulty, progressCb, minedBlockCb)
     }
     if (found && interval) {
       base64String = btoa(String.fromCharCode(...hashArray))
-      console.log(`mined block with difficulty: ${difficulty}, nonce: ${nonce}, hash: ${base64String}`)
+      console.log(`mined block with difficulty: ${difficulty}, time: ${elapsedTime}s, nonce: ${nonce}, hash: ${base64String}`)
       stopMining(interval)
       minedBlockCb()
       break
     }
   }
 
-  console.log(`stopped or finished mining`)
+  console.log(`stopped or finished mining a block`)
 }
