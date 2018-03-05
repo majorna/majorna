@@ -67,8 +67,21 @@ suite('block', () => {
     assert(blockObj.header.nonce > 0)
   })
 
-  test.only('getHashDifficulty', () => {
-    const difficulty = block.getHashDifficulty()
-    assert(difficulty)
+  test('getHashDifficulty', () => {
+    const hash = new Uint8Array(3)
+    hash[0] = 0
+    hash[1] = 0
+    hash[2] = 16
+    const difficulty = block.getHashDifficulty(hash)
+    assert(difficulty === 19)
+
+    const hash2 = new Uint8Array(0)
+    const difficulty2 = block.getHashDifficulty(hash2)
+    assert(difficulty2 === 0)
+
+    const hash3 = new Uint8Array(1)
+    hash3[0] = 128
+    const difficulty3 = block.getHashDifficulty(hash3)
+    assert(difficulty3 === 0)
   })
 })

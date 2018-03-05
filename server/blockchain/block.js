@@ -126,7 +126,30 @@ exports.mineBlock = (blockOrHeader, difficulty) => {
 }
 
 /**
- * Returns the difficulty as an integer, of a given hash.
+ * Accepts a hash as an Uint8Array array, returns the difficulty as an integer.
  */
 exports.getHashDifficulty = hash => {
+  let difficulty = 0
+  for (let i = 0; i < hash.length; i++) {
+    if (hash[i] === 0) {
+      difficulty += 8
+      continue
+    } else if (hash[i] === 1) {
+      difficulty += 7
+    } else if (hash[i] < 4) {
+      difficulty += 6
+    } else if (hash[i] < 8) {
+      difficulty += 5
+    } else if (hash[i] < 16) {
+      difficulty += 4
+    } else if (hash[i] < 32) {
+      difficulty += 3
+    } else if (hash[i] < 64) {
+      difficulty += 2
+    } else if (hash[i] < 128) {
+      difficulty += 1
+    }
+    break
+  }
+  return difficulty
 }
