@@ -129,5 +129,4 @@ exports.mineBlock = (blockOrHeader, difficulty) => {
  * Returns the difficulty as an integer, of a given hash.
  */
 exports.getHashDifficulty = hash => {
-
 }

@@ -66,4 +66,9 @@ suite('block', () => {
     assert(blockObj.header.difficulty > 0)
     assert(blockObj.header.nonce > 0)
   })
+
+  test.only('getHashDifficulty', () => {
+    const difficulty = block.getHashDifficulty()
+    assert(difficulty)
+  })
 })

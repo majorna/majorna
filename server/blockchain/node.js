@@ -20,4 +20,5 @@ exports.collectMiningReward = async (blockNo, nonce) => {
   }
 
   const hash = crypto.hashText(nonce + mineableBlock.headerAsString)
+  return block.getHashDifficulty(hash)
 }

@@ -113,11 +113,11 @@ suite('db', () => {
   })
 
   test('makeTx: invalid', async () => {
-    err = null // insufficient funds
+    let err = null // insufficient funds
     try { await db.makeTx('1', '2', 6000) } catch (e) { err = e }
     assert(err)
 
-    let err = null // missing args
+    err = null // missing args
     try { await db.makeTx() } catch (e) { err = e }
     assert(err)
 
