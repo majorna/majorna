@@ -23,7 +23,7 @@ exports.genesisBlock = {
 // nonce first to prevent internal hash state from being reused
 // in future we can add more memory intensive prefixes
 exports.getHeaderStr = (blockHeader, skipNonce) =>
-  '' + skipNonce ? '' : blockHeader.nonce + blockHeader.no + blockHeader.prevHash + blockHeader.txCount + blockHeader.merkleRoot + blockHeader.time.getTime() + blockHeader.difficulty
+  '' + (skipNonce ? '' : blockHeader.nonce) + blockHeader.no + blockHeader.prevHash + blockHeader.txCount + blockHeader.merkleRoot + blockHeader.time.getTime() + blockHeader.difficulty
 
 exports.sign = block => {
   const sigBlock = {
