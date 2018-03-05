@@ -3,14 +3,22 @@ const block = require('../blockchain/block')
 const utils = require('../data/utils')
 const crypto = require('./crypto')
 
+exports.getBlockReward = difficulty => Math.pow(2, difficulty)
+
 /**
  * Retrieves last last mineable block for peers that choose to trust the majorna server.
- * In most cases, one honest peer is enough to get the longest blockchain since it's so hard to craft a fake one.
+ * In most cases, one honest peer is enough to get the longest blockchain since it's so hard to fake an entire chain.
  */
 exports.getMineableBlock = async () => {
   const lastBlockHeader = await blockchain.getLastBlockHeader()
   const str = block.getHeaderStr(lastBlockHeader, true)
-  return {header: lastBlockHeader, headerAsString: str}
+  const difficulty = lastBlockHeader.difficulty + 1 // always need to work on a greater difficulty than existing
+  return {
+    blockNo: lastBlockHeader.no,
+    difficulty,
+    reward: exports.getBlockReward(difficulty),
+    headerAsString: str
+  }
 }
 
 exports.collectMiningReward = async (blockNo, nonce) => {
@@ -20,5 +28,8 @@ exports.collectMiningReward = async (blockNo, nonce) => {
   }
 
   const hash = crypto.hashText(nonce + mineableBlock.headerAsString)
-  return block.getHashDifficulty(hash)
+  const difficulty = block.getHashDifficulty(hash)
+  if (difficulty < mineableBlock.header.difficulty) {
+    throw utils.UserVisibleError('Given nonce difficulty is less than the target difficulty.')
+  }
 }
