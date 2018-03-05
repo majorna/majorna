@@ -68,6 +68,7 @@ suite('block', () => {
   })
 
   test('getHashDifficulty', () => {
+    // using Uint8Array
     const hash = new Uint8Array(3)
     hash[0] = 0
     hash[1] = 0
@@ -83,5 +84,12 @@ suite('block', () => {
     hash3[0] = 128
     const difficulty3 = block.getHashDifficulty(hash3)
     assert(difficulty3 === 0)
+
+    // using Buffer
+    const hash4 = Buffer.alloc(2)
+    hash4[0] = 1
+    hash4[1] = 200
+    const difficulty4 = block.getHashDifficulty(hash4)
+    assert(difficulty4 === 7)
   })
 })

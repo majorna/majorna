@@ -127,9 +127,11 @@ exports.mineBlock = (blockOrHeader, difficulty) => {
 
 /**
  * Accepts a hash as an Uint8Array array, returns the difficulty as an integer.
+ * Node.js Buffer implement Uint8Array API so buffer instances are also acceptable.
  */
 exports.getHashDifficulty = hash => {
   let difficulty = 0
+
   for (let i = 0; i < hash.length; i++) {
     if (hash[i] === 0) {
       difficulty += 8
@@ -151,5 +153,6 @@ exports.getHashDifficulty = hash => {
     }
     break
   }
+
   return difficulty
 }
