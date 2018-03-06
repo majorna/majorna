@@ -2,7 +2,7 @@ const assert = require('assert')
 const txs = require('./txs')
 const testData = require('../config/test').data
 
-suite.only('block', () => {
+suite('block', () => {
   test('createMerkle', () => {
     const merkle = txs.createMerkle(testData.txs)
     assert(merkle.getMerkleRoot().toString('base64').length === 44)

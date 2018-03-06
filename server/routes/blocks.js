@@ -20,6 +20,9 @@ exports.mine = route.get('/blocks/mine', async ctx => {
   }
 })
 
+/**
+ * Creates a new block (or updates existing one) with discovered nonce.
+ */
 exports.create = route.post('/blocks', async ctx => {
   const minedBlock = ctx.request.body
   ctx.assert(minedBlock.no, 400, '"no" field is required.')

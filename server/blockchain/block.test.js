@@ -4,11 +4,7 @@ const testData = require('../config/test').data
 
 const txs = testData.txs
 
-function getGenesisBlockClone () {
-  const gen = JSON.parse(JSON.stringify(block.genesisBlock))
-  gen.header.time = new Date(gen.header.time)
-  return gen
-}
+const getGenesisBlockClone = () => block.getFromJson(JSON.stringify(block.genesisBlock))
 
 function verifyBlock (blockObj, prevBlock, txs) {
   assert(blockObj.header.no === prevBlock.header.no + 1)

@@ -43,6 +43,16 @@ exports.createBlock = (txs, prevBlockOrBlockHeader) => {
 }
 
 /**
+ * Deserialize a JSON serialized block or block header into an object.
+ */
+exports.getFromJson = blockOrBlockHeaderJson => {
+  const blockOrHeader = JSON.parse(blockOrBlockHeaderJson)
+  const header = blockOrHeader.header || blockOrHeader
+  header.time = new Date(header.time)
+  return blockOrHeader
+}
+
+/**
  * Concatenates the the given block header into a regular string, fit for hashing.
  * Puts the nonce first to prevent internal hash state from being reused. In future we can add more memory intensive prefixes.
  * @param blockHeader - Block header object.

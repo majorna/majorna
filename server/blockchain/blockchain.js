@@ -10,9 +10,7 @@ const lastBlockHeaderPath = 'lastblock'
  */
 exports.getLastBlockHeader = async () => {
   const lastBlockHeaderFile = await github.getFileContent(lastBlockHeaderPath)
-  const header = JSON.parse(lastBlockHeaderFile)
-  if (typeof header.time === 'string') header.time = new Date(header.time)
-  return header
+  return block.getFromJson(lastBlockHeaderFile)
 }
 
 /**
@@ -55,10 +53,11 @@ exports.getBlockTimeRange = (start, end) => {
 exports.insertBlock = async (startTime, endTime, blockPath, prevBlock) => {
   const txs = await db.getTxsByTimeRange(startTime, endTime)
   if (txs.length) {
-    const signedBlock = block.createSignedBlock(txs, prevBlock, true)
+    const newBlock = block.createBlock(txs, prevBlock, true)
+    block.sign(newBlock)
     // todo: below two should be a single operation editing multiple files so they won't fail separately
-    await github.createFile(JSON.stringify(signedBlock, null, 2), blockPath)
-    await github.upsertFile(JSON.stringify(signedBlock.header, null, 2), lastBlockHeaderPath)
+    await github.createFile(JSON.stringify(newBlock, null, 2), blockPath)
+    await github.upsertFile(JSON.stringify(newBlock.header, null, 2), lastBlockHeaderPath)
     console.log(`inserted block ${blockPath}`)
     return true
   } else {

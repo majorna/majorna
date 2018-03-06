@@ -38,17 +38,17 @@ suite('blockchain', () => {
     await blockchain.insertBlock(twoDaysAgo, now, path, block.genesisBlock)
 
     const blockFile = await github.getFileContent(path)
-    const blockObj = JSON.parse(blockFile)
+    const blockObj = block.getFromJson(blockFile)
 
     assert(blockObj.sig.length === 96)
-    assert(block.verifySignature(blockObj.header, blockObj.sig))
+    assert(block.verifySignature(blockObj))
 
     assert(blockObj.header.no === 2)
     assert(blockObj.header.prevHash.length === 44)
     assert(blockObj.header.txCount >= testData.txs.length)
     assert(blockObj.header.merkleRoot.length === 44)
     // block gets a fresh date object during creation, which should be slightly later than now
-    assert(Date.parse(blockObj.header.time) >= now.getTime())
+    assert(blockObj.header.time.getTime() >= now.getTime())
     assert(blockObj.header.difficulty > 0)
     assert(blockObj.header.nonce > 0)
 
@@ -67,11 +67,11 @@ suite('blockchain', () => {
     await blockchain.insertBlockSinceLastOne(tomorrow, path, block.genesisBlock.header)
 
     const blockFile = await github.getFileContent(path)
-    const blockObj = JSON.parse(blockFile)
+    const blockObj = block.getFromJson(blockFile)
 
     assert(blockObj.sig.length === 96)
     assert(blockObj.header.no === 2)
-    assert(blockObj.data.length >= testData.txs.length)
+    assert(blockObj.txs.length >= testData.txs.length)
 
     // create the consecutive block with same txs in it
     // same txs will be picked up since blocks include txs up to last block creation day's midnight
@@ -80,7 +80,7 @@ suite('blockchain', () => {
     await blockchain.insertBlockSinceLastOne(tomorrow, path2)
 
     const blockFile2 = await github.getFileContent(path2)
-    const blockObj2 = JSON.parse(blockFile2)
+    const blockObj2 = block.getFromJson(blockFile2)
 
     assert(blockObj2.sig.length === 96)
     assert(blockObj2.header.no === 3)
@@ -94,7 +94,7 @@ suite('blockchain', () => {
     const inserted = await blockchain.insertBlockIfRequired(path, tomorrow)
     assert(inserted)
     const blockFile = await github.getFileContent(path)
-    assert(blockFile.includes('"data":'))
+    assert(blockFile.includes('"txs":'))
 
     // not required
     const inserted2 = await blockchain.insertBlockIfRequired(path, tomorrow)
