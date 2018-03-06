@@ -4,7 +4,7 @@ const utils = require('../data/utils')
 const crypto = require('./crypto')
 
 /**
- * Retrieves last last mineable block for peers that choose to trust the majorna server.
+ * Retrieves last last mineable block for peers that choose to trust the majorna server, asynchronously.
  * In most cases, one honest peer is enough to get the longest blockchain since it's so hard to fake an entire chain.
  */
 exports.getMineableBlock = async () => {
@@ -20,10 +20,8 @@ exports.getMineableBlock = async () => {
 }
 
 /**
- *
- * @param blockNo
- * @param nonce
- * @returns {Promise.<void>}
+ * Collects mining reward for a given block number and nonce, asynchronously.
+ * Mined block must be the latest, and the nonce must be greater than or equal to the target difficulty.
  */
 exports.collectMiningReward = async (blockNo, nonce) => {
   const mineableBlock = await exports.getMineableBlock()
