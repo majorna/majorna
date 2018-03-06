@@ -21,7 +21,7 @@ exports.getObj = tx => ({
   id: tx.id,
   from: {id: tx.from.id, balance: tx.from.balance},
   to: {id: tx.to.id, balance: tx.to.balance},
-  time: tx.time,
+  time: new Date(tx.time.getTime()),
   amount: tx.amount
 })
 

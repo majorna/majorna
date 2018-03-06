@@ -2,10 +2,15 @@ const assert = require('assert')
 const block = require('./block')
 const testData = require('../config/test').data
 
-const genBlock = block.genesisBlock
 const txs = testData.txs
 
-suite('block', () => {
+function getGenesisBlockClone () {
+  const gen = JSON.parse(JSON.stringify(block.genesisBlock))
+  gen.header.time = new Date(gen.header.time)
+  return gen
+}
+
+suite.only('block', () => {
   test('createMerkle', () => {
     const merkle = block.createMerkle(txs)
     assert(merkle.getMerkleRoot().toString('base64').length === 44)
@@ -40,24 +45,24 @@ suite('block', () => {
   }
 
   test('createSignedBlock', () => {
-    const blockObj = block.createSignedBlock(txs, genBlock)
-    verifyBlock(blockObj, genBlock, txs)
+    const blockObj = block.createSignedBlock(txs, getGenesisBlockClone())
+    verifyBlock(blockObj, getGenesisBlockClone(), txs)
 
-    const minedBlockObj = block.createSignedBlock(txs, genBlock, true)
+    const minedBlockObj = block.createSignedBlock(txs, getGenesisBlockClone(), true)
     delete minedBlockObj.sig
-    verifyBlock(minedBlockObj, genBlock, txs)
+    verifyBlock(minedBlockObj, getGenesisBlockClone(), txs)
 
     // sign same thing twice and make sure that signatures turn out different (ec signing uses a random number)
-    const sameSig1 = block.createSignedBlock(txs, genBlock)
-    const sameSig2 = block.createSignedBlock(txs, genBlock)
+    const sameSig1 = block.createSignedBlock(txs, getGenesisBlockClone())
+    const sameSig2 = block.createSignedBlock(txs, getGenesisBlockClone())
     assert(sameSig1.sig !== sameSig2.sig)
   })
 
   test('createSignedBlock with empy txs', () => {
     const emptyTxs = []
-    const minedBlockObj = block.createSignedBlock(emptyTxs, genBlock, true)
+    const minedBlockObj = block.createSignedBlock(emptyTxs, getGenesisBlockClone(), true)
     delete minedBlockObj.sig
-    verifyBlock(minedBlockObj, genBlock, emptyTxs)
+    verifyBlock(minedBlockObj, getGenesisBlockClone(), emptyTxs)
   })
 
   test('verifyBlock', () => {})
@@ -94,7 +99,7 @@ suite('block', () => {
 
   test('mineBlock', () => {
     const targetDifficulty = 8
-    const blockObj = block.createSignedBlock(txs, genBlock)
+    const blockObj = block.createSignedBlock(txs, getGenesisBlockClone())
     const hash = block.mineBlock(blockObj, targetDifficulty)
     assert(blockObj.header.difficulty >= targetDifficulty)
     assert(hash.substring(0, 1) === 'A')

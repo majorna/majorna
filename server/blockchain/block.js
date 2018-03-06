@@ -4,10 +4,12 @@ const tx = require('./tx')
 
 /**
  * The very first block of the blockchain (no = 0).
+ *
+ * This is also the block schema:
  * Either trust (signature) or PoW (difficulty and nonce) are required.
  */
 exports.genesisBlock = {
-  sig: null, // optional: if given, difficulty and nonce are not required
+  sig: '', // optional: if given, difficulty and nonce are not required
   header: {
     no: 1,
     prevHash: '',
@@ -17,7 +19,36 @@ exports.genesisBlock = {
     difficulty: 0, // optional: if sig is not present, should be > 0
     nonce: 0 // optional: if sig is not present, should be > 0
   },
-  data: []
+  txs: []
+}
+
+/**
+ * Creates a block with given txs and previous block or block header.
+ */
+exports.createBlock = (txs, prevBlockOrBlockHeader) => {
+  const prevHeader = prevBlockOrBlockHeader.header || prevBlockOrBlockHeader
+  return {
+    sig: '',
+    header: {
+      no: prevHeader.no + 1,
+      prevHash: exports.hashBlockHeader(prevHeader),
+      txCount: txs.length,
+      merkleRoot: (txs.length && exports.createMerkle(txs).getMerkleRoot().toString('base64')) || '', // block are allowed to have no txs in them
+      time: new Date(),
+      difficulty: 0,
+      nonce: 0
+    },
+    txs: txs.map(t => tx.getObj(t))
+  }
+}
+
+/**
+ * Verifies a given block header and data (if given).
+ */
+exports.verifyBlock = block => {
+  // verify signature if present
+
+  // verify PoW otherwise
 }
 
 /**
@@ -27,36 +58,18 @@ exports.genesisBlock = {
  * @param skipNonce - Don't include nonce in the string. Useful for mining. False by default.
  */
 exports.getHeaderStr = (blockHeader, skipNonce) =>
-  '' + (skipNonce ? '' : blockHeader.nonce) + blockHeader.no + blockHeader.prevHash + blockHeader.txCount + blockHeader.merkleRoot + blockHeader.time.getTime() + blockHeader.difficulty
-
-/**
- * Returns the mining reward for a block given the difficulty.
- */
-exports.getBlockReward = difficulty => Math.pow(2, difficulty)
+  '' + (skipNonce ? '' : blockHeader.nonce) +
+  blockHeader.no + blockHeader.prevHash + blockHeader.txCount +
+  blockHeader.merkleRoot + blockHeader.time.getTime() + blockHeader.difficulty
 
 /**
  * Signs a block with majorna certificate.
  */
-exports.sign = block => {
-  const sigBlock = {
-    header: {
-      no: block.header.no,
-      prevHash: block.header.prevHash,
-      txCount: block.header.txCount,
-      merkleRoot: block.header.merkleRoot,
-      time: block.header.time,
-      difficulty: block.header.difficulty,
-      nonce: block.header.nonce
-    },
-    data: block.data.map(t => tx.getObj(t))
-  }
-  sigBlock.sig = crypto.signText(exports.getHeaderStr(sigBlock.header))
-  return sigBlock
-}
+exports.sign = block => { block.sig = crypto.signText(exports.getHeaderStr(block.header)) }
 
-exports.verifySignature = () => true
+exports.verifySignature = () => {}
 
-exports.hashHeader = blockHeader => crypto.hashText(exports.getHeaderStr(blockHeader))
+exports.hashBlockHeader = blockHeader => crypto.hashText(exports.getHeaderStr(blockHeader))
 
 exports.verifyHash = () => {}
 
@@ -69,38 +82,6 @@ exports.createMerkle = txs => {
   merkleTools.addLeaves(strs, true)
   merkleTools.makeTree()
   return merkleTools
-}
-
-/**
- * Creates a block with given txs and previous block or block header.
- */
-exports.createSignedBlock = (txs, prevBlockOrHeader, mine = false) => {
-  const prevHeader = prevBlockOrHeader.header || prevBlockOrHeader
-  const header = {
-    no: prevHeader.no + 1,
-    prevHash: exports.hashHeader(prevHeader),
-    txCount: txs.length,
-    merkleRoot: (txs.length && exports.createMerkle(txs).getMerkleRoot().toString('base64')) || '',
-    time: new Date(),
-    difficulty: 0,
-    nonce: 0
-  }
-  let block = {
-    sig: '',
-    header,
-    data: txs
-  }
-  mine && exports.mineBlock(block)
-  return exports.sign(block)
-}
-
-/**
- * Verifies a given block header and data (if given).
- */
-exports.verifyBlock = block => {
-  // verify signature if present
-
-  // verify PoW otherwise
 }
 
 /**
@@ -171,3 +152,8 @@ exports.mineBlock = (blockOrHeader, targetDifficulty) => {
     }
   }
 }
+
+/**
+ * Returns the mining reward for a block given the difficulty.
+ */
+exports.getBlockReward = difficulty => Math.pow(2, difficulty)
