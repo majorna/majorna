@@ -10,40 +10,31 @@ function getGenesisBlockClone () {
   return gen
 }
 
-suite.only('block', () => {
-  test('createMerkle', () => {
-    const merkle = block.createMerkle(txs)
-    assert(merkle.getMerkleRoot().toString('base64').length === 44)
-
-    // nice representation of the merkle tree blocks in tree.levels as demonstrated in:
-    // https://github.com/Tierion/merkle-tools#about-tree-generation-using-maketree
-    // console.log(JSON.parse(JSON.stringify(merkle.getTree())))
-  })
-
-  function verifyBlock (blockObj, prevBlock, txs) {
-    assert(blockObj.header.no === prevBlock.header.no + 1)
-    assert(blockObj.header.prevHash.length === 44)
-    assert(blockObj.header.txCount === txs.length)
-    if (txs.length) {
-      assert(blockObj.header.merkleRoot.length === 44)
-    } else {
-      assert(blockObj.header.merkleRoot === '')
-    }
-    assert(blockObj.header.time.getTime() <= (new Date()).getTime())
-    assert(blockObj.data.length === txs.length)
-
-    if (blockObj.sig) {
-      assert(blockObj.sig.length === 96)
-      assert(block.verifySignature(blockObj.header, blockObj.sig))
-      assert(blockObj.header.difficulty === 0)
-      assert(blockObj.header.nonce === 0)
-    } else {
-      assert(!blockObj.sig)
-      assert(blockObj.header.difficulty > 0)
-      assert(blockObj.header.nonce > 0)
-    }
+function verifyBlock (blockObj, prevBlock, txs) {
+  assert(blockObj.header.no === prevBlock.header.no + 1)
+  assert(blockObj.header.prevHash.length === 44)
+  assert(blockObj.header.txCount === txs.length)
+  if (txs.length) {
+    assert(blockObj.header.merkleRoot.length === 44)
+  } else {
+    assert(blockObj.header.merkleRoot === '')
   }
+  assert(blockObj.header.time.getTime() <= (new Date()).getTime())
+  assert(blockObj.data.length === txs.length)
 
+  if (blockObj.sig) {
+    assert(blockObj.sig.length === 96)
+    assert(block.verifySignature(blockObj.header, blockObj.sig))
+    assert(blockObj.header.difficulty === 0)
+    assert(blockObj.header.nonce === 0)
+  } else {
+    assert(!blockObj.sig)
+    assert(blockObj.header.difficulty > 0)
+    assert(blockObj.header.nonce > 0)
+  }
+}
+
+suite.only('block', () => {
   test('createSignedBlock', () => {
     const blockObj = block.createSignedBlock(txs, getGenesisBlockClone())
     verifyBlock(blockObj, getGenesisBlockClone(), txs)
@@ -64,10 +55,6 @@ suite.only('block', () => {
     delete minedBlockObj.sig
     verifyBlock(minedBlockObj, getGenesisBlockClone(), emptyTxs)
   })
-
-  test('getTxProof', () => {})
-
-  test('verifyTxInBlock', () => {})
 
   test('getHashDifficulty', () => {
     // using Uint8Array

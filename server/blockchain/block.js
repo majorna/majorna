@@ -1,5 +1,6 @@
 const MerkleTools = require('merkle-tools')
 const crypto = require('./crypto')
+const txs = require('./txs')
 const tx = require('./tx')
 
 /**
@@ -33,7 +34,7 @@ exports.createBlock = (txs, prevBlockOrBlockHeader) => {
       no: prevHeader.no + 1,
       prevHash: exports.hashBlockHeader(prevHeader),
       txCount: txs.length,
-      merkleRoot: (txs.length && exports.createMerkle(txs).getMerkleRoot().toString('base64')) || '', // block are allowed to have no txs in them
+      merkleRoot: (txs.length && txs.createMerkle(txs).getMerkleRoot().toString('base64')) || '', // block are allowed to have no txs in them
       time: new Date(),
       difficulty: 0,
       nonce: 0
@@ -61,27 +62,6 @@ exports.sign = block => { block.sig = crypto.signText(exports.getHeaderStr(block
 exports.verifySignature = block => crypto.verifyText(block.sig, exports.getHeaderStr(block.header))
 
 exports.hashBlockHeader = blockHeader => crypto.hashText(exports.getHeaderStr(blockHeader))
-
-/**
- * Creates a merkle tree out of given txs.
- */
-exports.createMerkle = txs => {
-  const strs = txs.map(t => tx.getStr(t))
-  const merkleTools = new MerkleTools({hashType: crypto.algo})
-  merkleTools.addLeaves(strs, true)
-  merkleTools.makeTree()
-  return merkleTools
-}
-
-/**
- * Returns a merkle proof for a given tx and the merkle tree.
- */
-exports.getTxProof = (tx, merkle) => {}
-
-/**
- * Verifies a tx given a block header and merkle proof for that tx.
- */
-exports.verifyTxInBlock = (tx, blockHeader, merkleProof) => {}
 
 /**
  * Accepts a hash as an Uint8Array array, returns the difficulty as an integer.
