@@ -1,6 +1,5 @@
-const MerkleTools = require('merkle-tools')
 const crypto = require('./crypto')
-const txs = require('./txs')
+const txTools = require('./txs')
 const tx = require('./tx')
 
 /**
@@ -34,7 +33,7 @@ exports.createBlock = (txs, prevBlockOrBlockHeader) => {
       no: prevHeader.no + 1,
       prevHash: exports.hashBlockHeader(prevHeader),
       txCount: txs.length,
-      merkleRoot: (txs.length && txs.createMerkle(txs).getMerkleRoot().toString('base64')) || '', // block are allowed to have no txs in them
+      merkleRoot: (txs.length && txTools.createMerkle(txs).getMerkleRoot().toString('base64')) || '', // block are allowed to have no txs in them
       time: new Date(),
       difficulty: 0,
       nonce: 0
