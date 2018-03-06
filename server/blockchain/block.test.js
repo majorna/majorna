@@ -45,6 +45,11 @@ suite('block', () => {
     const minedBlockObj = block.createSignedBlock(txs, genBlock, true)
     delete minedBlockObj.sig
     verifyBlock(minedBlockObj, genBlock, txs)
+
+    // sign same thing twice and make sure that signatures turn out different (ec signing uses a random number)
+    const sameSig1 = block.createSignedBlock(txs, genBlock)
+    const sameSig2 = block.createSignedBlock(txs, genBlock)
+    assert(sameSig1.sig !== sameSig2.sig)
   })
 
   test('createSignedBlock with empy txs', () => {

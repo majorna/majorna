@@ -19,6 +19,12 @@ exports.getMineableBlock = async () => {
   }
 }
 
+/**
+ *
+ * @param blockNo
+ * @param nonce
+ * @returns {Promise.<void>}
+ */
 exports.collectMiningReward = async (blockNo, nonce) => {
   const mineableBlock = await exports.getMineableBlock()
   if (blockNo !== mineableBlock.header.no) {
