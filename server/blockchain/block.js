@@ -43,15 +43,6 @@ exports.createBlock = (txs, prevBlockOrBlockHeader) => {
 }
 
 /**
- * Verifies a given block header and data (if given).
- */
-exports.verifyBlock = block => {
-  // verify signature if present
-
-  // verify PoW otherwise
-}
-
-/**
  * Concatenates the the given block header into a regular string, fit for hashing.
  * Puts the nonce first to prevent internal hash state from being reused. In future we can add more memory intensive prefixes.
  * @param blockHeader - Block header object.
@@ -67,11 +58,9 @@ exports.getHeaderStr = (blockHeader, skipNonce) =>
  */
 exports.sign = block => { block.sig = crypto.signText(exports.getHeaderStr(block.header)) }
 
-exports.verifySignature = () => {}
+exports.verifySignature = block => crypto.verifyText(block.sig, exports.getHeaderStr(block.header))
 
 exports.hashBlockHeader = blockHeader => crypto.hashText(exports.getHeaderStr(blockHeader))
-
-exports.verifyHash = () => {}
 
 /**
  * Creates a merkle tree out of given txs.

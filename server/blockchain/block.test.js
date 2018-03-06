@@ -65,8 +65,6 @@ suite.only('block', () => {
     verifyBlock(minedBlockObj, getGenesisBlockClone(), emptyTxs)
   })
 
-  test('verifyBlock', () => {})
-
   test('getTxProof', () => {})
 
   test('verifyTxInBlock', () => {})

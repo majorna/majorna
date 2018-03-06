@@ -30,9 +30,3 @@ exports.sign = tx => {
   sigTx.sig = crypto.signText(exports.getStr(sigTx))
   return sigTx
 }
-
-exports.verifySignature = () => {}
-
-exports.hash = tx => crypto.hashText(exports.getStr(tx))
-
-exports.verifyHash = () => {}

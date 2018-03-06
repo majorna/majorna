@@ -11,4 +11,4 @@ exports.hashText = text => exports.hashTextToBuffer(text).toString(exports.encod
 
 exports.signText = text => crypto.createSign(exports.algo).update(text).sign(config.crypto.privateKey, exports.encoding)
 
-exports.verifyText = (text, sig) => crypto.createVerify(exports.algo).update(text).verify(config.crypto.publicKey, sig, exports.encoding)
+exports.verifyText = (sig, text) => crypto.createVerify(exports.algo).update(text).verify(config.crypto.publicKey, sig, exports.encoding)
