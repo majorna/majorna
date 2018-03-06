@@ -7,7 +7,7 @@ const tx = require('./tx')
  * Either trust (signature) or PoW (difficulty and nonce) are required.
  */
 exports.genesisBlock = {
-  sig: '', // optional: if given, difficulty and nonce are not required
+  sig: null, // optional: if given, difficulty and nonce are not required
   header: {
     no: 1,
     prevHash: '',
@@ -114,30 +114,6 @@ exports.getTxProof = (tx, merkle) => {}
 exports.verifyTxInBlock = (tx, blockHeader, merkleProof) => {}
 
 /**
- * Calculates nonce (mines) until a hash of required difficulty is found for the block.
- */
-exports.mineBlock = (blockOrHeader, difficulty) => {
-  const header = blockOrHeader.header || blockOrHeader
-  difficulty = difficulty || 1 // todo: difficulty should depend on average block timer
-  const hashPrefix = '0'.repeat(difficulty) // todo: this is exponential like growth!
-
-  let hash
-  let nonce = 0
-  const str = exports.getHeaderStr(header, true) // store header string without nonce as an optimization
-  while (true) {
-    nonce++
-    hash = crypto.hashText(nonce + str)
-    // todo: base64str conversion (and object reinits) hugely slows down this loop
-    if (hash.substring(0, difficulty) === hashPrefix) {
-      header.nonce = nonce
-      header.difficulty = difficulty
-      console.log(`mined block with difficulty: ${header.difficulty}, nonce: ${header.nonce}, hash: ${hash}`)
-      return
-    }
-  }
-}
-
-/**
  * Accepts a hash as an Uint8Array array, returns the difficulty as an integer.
  * Node.js Buffer implement Uint8Array API so buffer instances are also acceptable.
  */
@@ -167,4 +143,31 @@ exports.getHashDifficulty = hash => {
   }
 
   return difficulty
+}
+
+/**
+ * Calculates nonce (mines) until a hash of required difficulty is found for the block.
+ * @param blockOrHeader - Block or block header (as object) to mine.
+ * @param targetDifficulty - Used for testing only. Otherwise difficulty field in the block header is used.
+ */
+exports.mineBlock = (blockOrHeader, targetDifficulty) => {
+  const header = blockOrHeader.header || blockOrHeader
+  targetDifficulty = targetDifficulty || header.difficulty
+
+  let difficulty
+  let hash
+  let nonce = 0
+  const str = exports.getHeaderStr(header, true) // store header string without nonce as an optimization
+  while (true) {
+    nonce++
+    hash = crypto.hashTextToBuffer(nonce + str)
+    difficulty = exports.getHashDifficulty(hash)
+    if (difficulty >= targetDifficulty) {
+      header.nonce = nonce
+      header.difficulty = targetDifficulty
+      const hashBase64 = hash.toString('base64')
+      console.log(`mined block with difficulty: ${difficulty}, nonce: ${header.nonce}, hash: ${hashBase64}`)
+      return hashBase64
+    }
+  }
 }

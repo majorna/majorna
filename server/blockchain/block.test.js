@@ -33,6 +33,7 @@ suite('block', () => {
       assert(blockObj.header.difficulty === 0)
       assert(blockObj.header.nonce === 0)
     } else {
+      assert(!blockObj.sig)
       assert(blockObj.header.difficulty > 0)
       assert(blockObj.header.nonce > 0)
     }
@@ -65,13 +66,6 @@ suite('block', () => {
 
   test('verifyTxInBlock', () => {})
 
-  test('mineBlock', () => {
-    const blockObj = block.createSignedBlock(txs, genBlock)
-    block.mineBlock(blockObj)
-    assert(blockObj.header.difficulty > 0)
-    assert(blockObj.header.nonce > 0)
-  })
-
   test('getHashDifficulty', () => {
     // using Uint8Array
     const hash = new Uint8Array(3)
@@ -96,5 +90,14 @@ suite('block', () => {
     hash4[1] = 200
     const difficulty4 = block.getHashDifficulty(hash4)
     assert(difficulty4 === 7)
+  })
+
+  test('mineBlock', () => {
+    const targetDifficulty = 8
+    const blockObj = block.createSignedBlock(txs, genBlock)
+    const hash = block.mineBlock(blockObj, targetDifficulty)
+    assert(blockObj.header.difficulty >= targetDifficulty)
+    assert(hash.substring(0, 1) === 'A')
+    assert(blockObj.header.nonce > 0)
   })
 })
