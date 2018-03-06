@@ -20,11 +20,23 @@ exports.genesisBlock = {
   data: []
 }
 
-// nonce first to prevent internal hash state from being reused
-// in future we can add more memory intensive prefixes
+/**
+ * Concatenates the the given block header into a regular string, fit for hashing.
+ * Puts the nonce first to prevent internal hash state from being reused. In future we can add more memory intensive prefixes.
+ * @param blockHeader - Block header object.
+ * @param skipNonce - Don't include nonce in the string. Useful for mining. False by default.
+ */
 exports.getHeaderStr = (blockHeader, skipNonce) =>
   '' + (skipNonce ? '' : blockHeader.nonce) + blockHeader.no + blockHeader.prevHash + blockHeader.txCount + blockHeader.merkleRoot + blockHeader.time.getTime() + blockHeader.difficulty
 
+/**
+ * Returns the mining reward for a block given the difficulty.
+ */
+exports.getBlockReward = difficulty => Math.pow(2, difficulty)
+
+/**
+ * Signs a block with majorna certificate.
+ */
 exports.sign = block => {
   const sigBlock = {
     header: {

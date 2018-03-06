@@ -3,8 +3,6 @@ const block = require('../blockchain/block')
 const utils = require('../data/utils')
 const crypto = require('./crypto')
 
-exports.getBlockReward = difficulty => Math.pow(2, difficulty)
-
 /**
  * Retrieves last last mineable block for peers that choose to trust the majorna server.
  * In most cases, one honest peer is enough to get the longest blockchain since it's so hard to fake an entire chain.
@@ -16,7 +14,7 @@ exports.getMineableBlock = async () => {
   return {
     blockNo: lastBlockHeader.no,
     difficulty,
-    reward: exports.getBlockReward(difficulty),
+    reward: block.getBlockReward(difficulty),
     headerAsString: str
   }
 }
