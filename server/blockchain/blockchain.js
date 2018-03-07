@@ -4,7 +4,8 @@ const github = require('../data/github')
 const crypto = require('./crypto')
 const utils = require('../data/utils')
 
-const lastBlockHeaderPath = 'lastblockheader'
+// a file with this name at the root of the git repo
+const lastBlockHeaderFilePath = 'lastblockheader'
 
 /**
  * Retrieves last block's header as an object from github, asynchronously.
@@ -12,7 +13,7 @@ const lastBlockHeaderPath = 'lastblockheader'
  */
 exports.getLastBlockHeader = async () => {
   try {
-    const lastBlockHeaderFile = await github.getFileContent(lastBlockHeaderPath)
+    const lastBlockHeaderFile = await github.getFileContent(lastBlockHeaderFilePath)
     return block.fromJson(lastBlockHeaderFile)
   } catch (e) {
     if (e.code === 404) {
@@ -66,7 +67,8 @@ exports.insertBlock = async (startTime, endTime, blockPath, prevBlock) => {
     block.sign(newBlock)
     // todo: below two should be a single operation editing multiple files so they won't fail separately
     await github.createFile(block.toJson(newBlock), blockPath)
-    await github.upsertFile(block.toJson(newBlock.header), lastBlockHeaderPath)
+    newBlock.header.path = blockPath
+    await github.upsertFile(block.toJson(newBlock.header), lastBlockHeaderFilePath)
     console.log(`inserted block ${blockPath}`)
     return true
   } else {
@@ -152,7 +154,8 @@ exports.getMineableBlockHeader = async () => {
     no: lastBlockHeader.no,
     difficulty,
     reward: block.getBlockReward(difficulty),
-    headerString: str
+    headerString: str,
+    headerObject: lastBlockHeader
   }
 }
 
@@ -174,7 +177,14 @@ exports.collectMiningReward = async (blockNo, nonce, uid) => {
     throw new utils.UserVisibleError('Given nonce difficulty is less than the target difficulty.')
   }
 
-  // todo: update the last block with the new and more difficult nonce
+  // update the last block with the new and more difficult nonce
+  const lastBlockHeader = mineableBlockHeader.headerObject // this has header.path
+  const lastBlockFile = await github.getFileContent(lastBlockHeader.path)
+  const lastBlock = block.fromJson(lastBlockFile) // this does not have header.path
+  lastBlockHeader.difficulty = lastBlock.header.difficulty = difficulty
+  lastBlockHeader.nonce = lastBlock.header.nonce = nonce
+  await github.upsertFile(block.toJson(lastBlock), lastBlockHeader.path)
+  await github.upsertFile(block.toJson(lastBlockHeader), lastBlockHeaderFilePath)
 
   // give reward to the user
   await db.makeMajornaTx(uid, mineableBlockHeader.reward)
