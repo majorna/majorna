@@ -16,7 +16,7 @@ exports.getLastBlockHeader = async () => {
     return block.fromJson(lastBlockHeaderFile)
   } catch (e) {
     if (e.code === 404) {
-      return block.genesisBlock.header
+      return block.getGenesisBlock().header
     }
     throw e
   }

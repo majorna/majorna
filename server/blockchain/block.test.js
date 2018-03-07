@@ -4,8 +4,6 @@ const testData = require('../config/test').data
 
 const txs = testData.txs
 
-const getGenesisBlockClone = () => block.fromJson(block.toJson(block.genesisBlock))
-
 function verifyBlock (blockObj, prevBlock, txs) {
   assert(blockObj.header.no === prevBlock.header.no + 1)
   assert(blockObj.header.prevHash.length === 44)
@@ -32,7 +30,7 @@ function verifyBlock (blockObj, prevBlock, txs) {
 
 suite('block', () => {
   test('toJson, fromJson', () => {
-    const newBlock = block.createBlock(txs, getGenesisBlockClone())
+    const newBlock = block.createBlock(txs, block.getGenesisBlock())
     const blockJson = block.toJson(newBlock)
     const parsedBlock = block.fromJson(blockJson)
     assert(parsedBlock.header.time.getTime() === newBlock.header.time.getTime())
@@ -40,14 +38,14 @@ suite('block', () => {
   })
 
   test('sign', () => {
-    const signedBlock = block.createBlock(txs, getGenesisBlockClone())
+    const signedBlock = block.createBlock(txs, block.getGenesisBlock())
     block.sign(signedBlock)
-    verifyBlock(signedBlock, getGenesisBlockClone(), txs)
+    verifyBlock(signedBlock, block.getGenesisBlock(), txs)
 
     // sign same thing twice and make sure that signatures turn out different (ec signing uses a random number)
-    const block1 = block.createBlock(txs, getGenesisBlockClone())
+    const block1 = block.createBlock(txs, block.getGenesisBlock())
     block.sign(block1)
-    const block2 = block.createBlock(txs, getGenesisBlockClone())
+    const block2 = block.createBlock(txs, block.getGenesisBlock())
     block.sign(block2)
     assert(block1.sig !== block2.sig)
   })
@@ -80,9 +78,9 @@ suite('block', () => {
 
   test('mineBlock', () => {
     const targetDifficulty = 8
-    const minedBlock = block.createBlock(txs, getGenesisBlockClone())
+    const minedBlock = block.createBlock(txs, block.getGenesisBlock())
     const hash = block.mineBlock(minedBlock, targetDifficulty)
-    verifyBlock(minedBlock, getGenesisBlockClone(), txs)
+    verifyBlock(minedBlock, block.getGenesisBlock(), txs)
 
     assert(minedBlock.header.difficulty >= targetDifficulty)
     assert(hash.substring(0, 1) === 'A')
@@ -91,8 +89,8 @@ suite('block', () => {
 
   test('mineBlock with empty txs', () => {
     const emptyTxs = []
-    const minedBlock = block.createBlock(emptyTxs, getGenesisBlockClone())
+    const minedBlock = block.createBlock(emptyTxs, block.getGenesisBlock())
     block.mineBlock(minedBlock, 4)
-    verifyBlock(minedBlock, getGenesisBlockClone(), emptyTxs)
+    verifyBlock(minedBlock, block.getGenesisBlock(), emptyTxs)
   })
 })

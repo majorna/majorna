@@ -36,7 +36,7 @@ suite('blockchain', () => {
     const now = new Date()
     twoDaysAgo.setDate(twoDaysAgo.getDate() - 2)
     const path = blockchain.getBlockPath(now) + '-' + utils.getRandomStr()
-    await blockchain.insertBlock(twoDaysAgo, now, path, block.genesisBlock)
+    await blockchain.insertBlock(twoDaysAgo, now, path, block.getGenesisBlock())
 
     const blockFile = await github.getFileContent(path)
     const blockObj = block.fromJson(blockFile)
@@ -65,7 +65,7 @@ suite('blockchain', () => {
     const tomorrow = new Date() // end search in tomorrow so we can pick up test txs from the database
     tomorrow.setDate(tomorrow.getDate() + 1)
     const path = blockchain.getBlockPath(tomorrow) + '-' + utils.getRandomStr()
-    await blockchain.insertBlockSinceLastOne(tomorrow, path, block.genesisBlock.header)
+    await blockchain.insertBlockSinceLastOne(tomorrow, path, block.getGenesisBlock().header)
 
     const blockFile = await github.getFileContent(path)
     const blockObj = block.fromJson(blockFile)
@@ -114,4 +114,12 @@ suite('blockchain', () => {
     assert(mineableBlock.reward > 0)
     assert(mineableBlock.headerString.length > 10)
   })
+
+  // test('collectMiningReward', async () => {
+  //   const mineableBlock = await blockchain.getMineableBlock()
+  //   assert(mineableBlock.no > 1)
+  //   assert(mineableBlock.difficulty > 0)
+  //   assert(mineableBlock.reward > 0)
+  //   assert(mineableBlock.headerString.length > 10)
+  // })
 })

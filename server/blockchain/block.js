@@ -3,12 +3,12 @@ const txTools = require('./txs')
 const tx = require('./tx')
 
 /**
- * The very first block of the blockchain (no = 0).
+ * Returns a new copy of the genesis block; the very first block of the blockchain.
  *
  * This is also the block schema:
  * Either trust (signature) or PoW (difficulty and nonce) are required.
  */
-exports.genesisBlock = {
+exports.getGenesisBlock = () => ({
   sig: '', // optional: if given, difficulty and nonce are not required
   header: {
     no: 1,
@@ -20,7 +20,7 @@ exports.genesisBlock = {
     nonce: 0 // optional: if sig is not present, should be > 0
   },
   txs: []
-}
+})
 
 /**
  * Creates a block with given txs and previous block or block header.
