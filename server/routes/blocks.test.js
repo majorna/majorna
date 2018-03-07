@@ -10,12 +10,12 @@ suite('route: blocks', () => {
     assert(res.data.headerString.length > 10)
   })
 
-  test.only('post', async () => {
+  test('post', async () => {
     const res = await testData.users.u1Request.get('/blocks')
     assert(res.status === 200)
     const mineableBlockHeader = res.data
     const lastBlockHeader = mineableBlockHeader.headerObject
-    lastBlockHeader.time = new Date(lastBlockHeader)
+    lastBlockHeader.time = new Date(lastBlockHeader.time)
     block.mineBlock(lastBlockHeader, mineableBlockHeader.difficulty)
 
     const resReward = await testData.users.u1Request.post('/blocks', {no: lastBlockHeader.no, nonce: lastBlockHeader.nonce})
