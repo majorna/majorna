@@ -33,8 +33,8 @@ export default class extends Component {
         params.str,
         params.difficulty,
         s => this.setState(s), // progress update
-        async hash => { // mined a block
-          await server.blocks.create(this.state.blockNo, hash) // todo: error cases?
+        async nonce => { // mined a block
+          await server.blocks.create(this.state.blockNo, nonce) // todo: ignore errors but display error msg
           this.setState((preState, props) => ({
             minedBlocks: (preState.minedBlocks + 1),
             hashRate: 0,
