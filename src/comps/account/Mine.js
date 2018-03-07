@@ -30,7 +30,7 @@ export default class extends Component {
 
       // start mining that block
       await mineBlock(
-        params.str,
+        params.headerString,
         params.difficulty,
         s => this.setState(s), // progress update
         async nonce => { // mined a block
