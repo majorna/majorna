@@ -9,7 +9,7 @@ export default class extends Component {
     minedBlocks: 0,
     hashRate: 0,
     time: 0,
-    difficulty: 0,
+    targetDifficulty: 0,
     blockNo: 0
   }
 
@@ -25,13 +25,13 @@ export default class extends Component {
       this.setState({
         blockNo: mineableBlock.no,
         reward: mineableBlock.reward,
-        difficulty: mineableBlock.difficulty
+        targetDifficulty: mineableBlock.targetDifficulty
       })
 
       // start mining that block
       await mineBlock(
         mineableBlock.headerString,
-        mineableBlock.difficulty,
+        mineableBlock.targetDifficulty,
         s => this.setState(s), // progress update
         async nonce => { // mined a block
           await server.blocks.create(this.state.blockNo, nonce) // todo: ignore errors (except auth) but display error msg
@@ -39,7 +39,7 @@ export default class extends Component {
             minedBlocks: (preState.minedBlocks + 1),
             hashRate: 0,
             time: 0,
-            difficulty: 0
+            targetDifficulty: 0
           }))
         })
     }
@@ -65,8 +65,11 @@ export default class extends Component {
       <div className="m-t-m"><strong>Mined Blocks:</strong> {this.state.minedBlocks}</div>
       <div><strong>Collected Rewards:</strong> mj{fm(this.state.reward * this.state.minedBlocks)}</div>
 
-      <div className="m-t-m"><strong>Difficulty:</strong> {this.state.difficulty}</div>
-      <div><strong>Reward per Block:</strong> mj{fm(this.state.reward)}</div>
+      <strong className="m-t-m">Details:</strong>
+      <small className="flex-column">
+        <div className="m-t-s"><strong>Target Difficulty:</strong> {this.state.targetDifficulty}</div>
+        <div><strong>Reward per Block:</strong> mj{fm(this.state.reward)}</div>
+      </small>
 
       <div className="flex-row center-h m-t-l">
         <button className="button" onClick={this.handleStop}>Stop</button>

@@ -136,5 +136,7 @@ suite('blockchain', () => {
       assert(reward > lastReward)
       lastReward = reward
     }
+
+    // todo: verify user balance
   })
 })
