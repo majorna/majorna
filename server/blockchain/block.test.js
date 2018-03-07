@@ -4,7 +4,7 @@ const testData = require('../config/test').data
 
 const txs = testData.txs
 
-const getGenesisBlockClone = () => block.getFromJson(JSON.stringify(block.genesisBlock))
+const getGenesisBlockClone = () => block.fromJson(block.toJson(block.genesisBlock))
 
 function verifyBlock (blockObj, prevBlock, txs) {
   assert(blockObj.header.no === prevBlock.header.no + 1)
@@ -31,6 +31,14 @@ function verifyBlock (blockObj, prevBlock, txs) {
 }
 
 suite('block', () => {
+  test('toJson, fromJson', () => {
+    const newBlock = block.createBlock(txs, getGenesisBlockClone())
+    const blockJson = block.toJson(newBlock)
+    const parsedBlock = block.fromJson(blockJson)
+    assert(parsedBlock.header.time.getTime() === newBlock.header.time.getTime())
+    assert(parsedBlock.txs[0].time.getTime() === newBlock.txs[0].time.getTime())
+  })
+
   test('sign', () => {
     const signedBlock = block.createBlock(txs, getGenesisBlockClone())
     block.sign(signedBlock)

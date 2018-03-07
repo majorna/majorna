@@ -39,7 +39,7 @@ suite('blockchain', () => {
     await blockchain.insertBlock(twoDaysAgo, now, path, block.genesisBlock)
 
     const blockFile = await github.getFileContent(path)
-    const blockObj = block.getFromJson(blockFile)
+    const blockObj = block.fromJson(blockFile)
 
     assert(blockObj.sig.length === 96)
     assert(block.verifySignature(blockObj))
@@ -68,7 +68,7 @@ suite('blockchain', () => {
     await blockchain.insertBlockSinceLastOne(tomorrow, path, block.genesisBlock.header)
 
     const blockFile = await github.getFileContent(path)
-    const blockObj = block.getFromJson(blockFile)
+    const blockObj = block.fromJson(blockFile)
 
     assert(blockObj.sig.length === 96)
     assert(blockObj.header.no === 2)
@@ -81,7 +81,7 @@ suite('blockchain', () => {
     await blockchain.insertBlockSinceLastOne(tomorrow, path2)
 
     const blockFile2 = await github.getFileContent(path2)
-    const blockObj2 = block.getFromJson(blockFile2)
+    const blockObj2 = block.fromJson(blockFile2)
 
     assert(blockObj2.sig.length === 96)
     assert(blockObj2.header.no === 3)

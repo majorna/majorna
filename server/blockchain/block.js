@@ -43,12 +43,23 @@ exports.createBlock = (txs, prevBlockOrBlockHeader) => {
 }
 
 /**
+ * Serializes block or block header into indented JSON.
+ */
+exports.toJson = blockOrBlockHeader => JSON.stringify(blockOrBlockHeader, null, 2)
+
+/**
  * Deserialize a JSON serialized block or block header into an object.
  */
-exports.getFromJson = blockOrBlockHeaderJson => {
+exports.fromJson = blockOrBlockHeaderJson => {
   const blockOrHeader = JSON.parse(blockOrBlockHeaderJson)
+
+  // fix block header time
   const header = blockOrHeader.header || blockOrHeader
   header.time = new Date(header.time)
+
+  // fix individual tx times
+  blockOrHeader.header && blockOrHeader.txs.forEach(tx => { tx.time = new Date(tx.time) })
+
   return blockOrHeader
 }
 
