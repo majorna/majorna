@@ -13,12 +13,12 @@ export default class extends Component {
     blockNo: 0
   }
 
-  minerLoop = true
+  runMinerLoop = true
 
   componentDidMount = async () => {
-    this.minerLoop = true
+    this.runMinerLoop = true
 
-    while (this.minerLoop) {
+    while (this.runMinerLoop) {
       // call server and get last block header
       const res = await server.blocks.mine()
       const params = await res.json()
@@ -34,7 +34,7 @@ export default class extends Component {
         params.difficulty,
         s => this.setState(s), // progress update
         async nonce => { // mined a block
-          await server.blocks.create(this.state.blockNo, nonce) // todo: ignore errors but display error msg
+          await server.blocks.create(this.state.blockNo, nonce) // todo: ignore errors (except auth) but display error msg
           this.setState((preState, props) => ({
             minedBlocks: (preState.minedBlocks + 1),
             hashRate: 0,
@@ -48,7 +48,7 @@ export default class extends Component {
   }
 
   componentWillUnmount = () => {
-    this.minerLoop = false
+    this.runMinerLoop = false
     stopMining()
   }
 
