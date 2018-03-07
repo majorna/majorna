@@ -11,11 +11,10 @@ exports.mine = route.get('/blocks/mine', async ctx => {
   const lastBlockHeader = await blockchain.getLastBlockHeader()
   const str = block.getHeaderStr(lastBlockHeader, true)
 
-  // todo: difficulty & reward must be calculated by block.js to have it centrally
   ctx.body = {
     no: lastBlockHeader.no,
     str,
-    reward: Math.pow(5, lastBlockHeader.difficulty),
+    reward: block.getBlockReward(lastBlockHeader.difficulty),
     difficulty: lastBlockHeader.difficulty + 1
   }
 })

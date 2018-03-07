@@ -49,14 +49,14 @@ suite('blockchain', () => {
     assert(blockObj.header.merkleRoot.length === 44)
     // block gets a fresh date object during creation, which should be slightly later than now
     assert(blockObj.header.time.getTime() >= now.getTime())
-    assert(blockObj.header.difficulty > 0)
-    assert(blockObj.header.nonce > 0)
+    assert(blockObj.header.difficulty === 0)
+    assert(blockObj.header.nonce === 0)
 
-    assert(blockObj.data.length >= testData.txs.length)
-    assert(blockObj.data[0].to)
-    assert(blockObj.data[0].from)
-    assert(blockObj.data[0].time)
-    assert(blockObj.data[0].amount)
+    assert(blockObj.txs.length >= testData.txs.length)
+    assert(blockObj.txs[0].to)
+    assert(blockObj.txs[0].from)
+    assert(blockObj.txs[0].time)
+    assert(blockObj.txs[0].amount)
   })
 
   test('insertBlockSinceLastOne', async () => {
@@ -84,7 +84,7 @@ suite('blockchain', () => {
 
     assert(blockObj2.sig.length === 96)
     assert(blockObj2.header.no === 3)
-    assert(blockObj2.data.length === blockObj.data.length)
+    assert(blockObj2.txs.length === blockObj.txs.length)
   })
 
   test('insertBlockIfRequired', async () => {
