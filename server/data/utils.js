@@ -6,6 +6,8 @@ exports.isCloseToDate = (date, closeToDate = new Date(), varianceSeconds = 30) =
 
 exports.getRandomInt = max => Math.floor(Math.random() * Math.floor(max))
 
+exports.getRandomStr = () => Math.random().toString(36).replace('0.', '') // len=11
+
 exports.getWeekNumber = date => {
   const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()))
   const dayNum = d.getUTCDay() || 7
