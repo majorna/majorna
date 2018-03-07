@@ -109,6 +109,9 @@ suite('blockchain', () => {
 
   test('getMineableBlock', async () => {
     const mineableBlock = await blockchain.getMineableBlock()
-    assert(mineableBlock)
+    assert(mineableBlock.no > 1)
+    assert(mineableBlock.difficulty > 0)
+    assert(mineableBlock.reward > 0)
+    assert(mineableBlock.headerString.length > 10)
   })
 })

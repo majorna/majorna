@@ -149,10 +149,10 @@ exports.getMineableBlock = async () => {
   const str = block.getHeaderStr(lastBlockHeader, true)
   const difficulty = lastBlockHeader.difficulty + 1 // always need to work on a greater difficulty than existing
   return {
-    blockNo: lastBlockHeader.no,
+    no: lastBlockHeader.no,
     difficulty,
     reward: block.getBlockReward(difficulty),
-    headerAsString: str
+    headerString: str
   }
 }
 

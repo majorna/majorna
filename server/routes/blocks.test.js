@@ -5,7 +5,7 @@ suite('route: blocks', () => {
   test('mine', async () => {
     const res = await testData.users.u1Request.get('/blocks/mine')
     assert(res.status === 200)
-    assert(res.data.difficulty >= 1)
-    assert(res.data.headerAsString.length > 50)
+    assert(res.data.difficulty > 0)
+    assert(res.data.headerString.length > 10)
   })
 })
