@@ -121,12 +121,13 @@ suite('blockchain', () => {
 
     for (let i = 0; i < 4; i++) {
       // get minable block
-      const lastBlockHeader = await blockchain.getLastBlockHeader()
       const mineableBlockHeader = await blockchain.getMineableBlockHeader()
+      const lastBlockHeader = mineableBlockHeader.headerObject
 
       // mine the block
-      const hash = block.mineBlock(lastBlockHeader, mineableBlockHeader.difficulty)
-      const difficulty = block.getHashDifficulty(Buffer.from(hash, 'base64'))
+      const hashBase64 = block.mineBlock(lastBlockHeader, mineableBlockHeader.difficulty)
+      const hashBuffer = Buffer.from(hashBase64, 'base64')
+      const difficulty = block.getHashDifficulty(hashBuffer)
       assert(difficulty > lastDifficulty)
       lastDifficulty = difficulty
 

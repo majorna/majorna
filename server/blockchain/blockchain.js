@@ -167,14 +167,14 @@ exports.collectMiningReward = async (blockNo, nonce, uid) => {
   // block must be latest
   const mineableBlockHeader = await exports.getMineableBlockHeader()
   if (blockNo !== mineableBlockHeader.no) {
-    throw new utils.UserVisibleError('Mined block is not the latest.')
+    throw new utils.UserVisibleError(`Mined block: ${blockNo} is not the latest: ${mineableBlockHeader.no}.`)
   }
 
   // nonce must be of required difficulty
-  const hash = crypto.hashTextToBuffer(nonce + mineableBlockHeader.headerString)
+  const hash = crypto.hashTextToBuffer('' + nonce + mineableBlockHeader.headerString)
   const difficulty = block.getHashDifficulty(hash)
   if (difficulty < mineableBlockHeader.difficulty) {
-    throw new utils.UserVisibleError('Given nonce difficulty is less than the target difficulty.')
+    throw new utils.UserVisibleError(`Given nonce: ${nonce} (difficulty: ${difficulty}, hash: ${hash.toString('base64')}) is less than the target difficulty: ${mineableBlockHeader.difficulty}.`)
   }
 
   // update the last block with the new and more difficult nonce

@@ -4,7 +4,7 @@ const blockchain = require('../blockchain/blockchain')
 /**
  * Get last block's header as a hashable string along with mining parameters so clients can start mining the latest block immediately.
  */
-exports.mine = route.get('/blocks/mine', async ctx => {
+exports.mine = route.get('/blocks', async ctx => {
   ctx.body = await blockchain.getMineableBlockHeader()
 })
 
