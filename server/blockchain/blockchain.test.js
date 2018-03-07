@@ -110,7 +110,7 @@ suite('blockchain', () => {
   test('getMineableBlockHeader', async () => {
     const mineableBlockHeader = await blockchain.getMineableBlockHeader()
     assert(mineableBlockHeader.no > 1)
-    assert(mineableBlockHeader.difficulty > 0)
+    assert(mineableBlockHeader.targetDifficulty > 0)
     assert(mineableBlockHeader.reward > 0)
     assert(mineableBlockHeader.headerString.length > 10)
   })
@@ -125,7 +125,7 @@ suite('blockchain', () => {
       const lastBlockHeader = mineableBlockHeader.headerObject
 
       // mine the block
-      const hashBase64 = block.mineBlock(lastBlockHeader, mineableBlockHeader.difficulty)
+      const hashBase64 = block.mineBlock(lastBlockHeader, mineableBlockHeader.targetDifficulty)
       const hashBuffer = Buffer.from(hashBase64, 'base64')
       const difficulty = block.getHashDifficulty(hashBuffer)
       assert(difficulty > lastDifficulty)

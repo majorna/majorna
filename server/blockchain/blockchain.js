@@ -149,11 +149,11 @@ exports.startBlockchainInsertTimer = interval => {
 exports.getMineableBlockHeader = async () => {
   const lastBlockHeader = await exports.getLastBlockHeader()
   const str = block.getHeaderStr(lastBlockHeader, true)
-  const difficulty = lastBlockHeader.difficulty + 1 // always need to work on a greater difficulty than existing
+  const targetDifficulty = lastBlockHeader.difficulty + 1 // always need to work on a greater difficulty than existing
   return {
     no: lastBlockHeader.no,
-    difficulty,
-    reward: block.getBlockReward(difficulty),
+    targetDifficulty,
+    reward: block.getBlockReward(targetDifficulty),
     headerString: str,
     headerObject: lastBlockHeader
   }
@@ -173,8 +173,8 @@ exports.collectMiningReward = async (blockNo, nonce, uid) => {
   // nonce must be of required difficulty
   const hash = crypto.hashTextToBuffer('' + nonce + mineableBlockHeader.headerString)
   const difficulty = block.getHashDifficulty(hash)
-  if (difficulty < mineableBlockHeader.difficulty) {
-    throw new utils.UserVisibleError(`Given nonce: ${nonce} (difficulty: ${difficulty}, hash: ${hash.toString('base64')}) is less than the target difficulty: ${mineableBlockHeader.difficulty}.`)
+  if (difficulty < mineableBlockHeader.targetDifficulty) {
+    throw new utils.UserVisibleError(`Given nonce: ${nonce} (difficulty: ${difficulty}, hash: ${hash.toString('base64')}) is less than the target difficulty: ${mineableBlockHeader.targetDifficulty}.`)
   }
 
   // update the last block with the new and more difficult nonce
