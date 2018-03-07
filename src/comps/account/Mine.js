@@ -20,18 +20,18 @@ export default class extends Component {
 
     while (this.runMinerLoop) {
       // call server and get last block header
-      const res = await server.blocks.mine()
-      const params = await res.json()
+      const blockRes = await server.blocks.get()
+      const mineableBlock = await blockRes.json()
       this.setState({
-        blockNo: params.no,
-        reward: params.reward,
-        difficulty: params.difficulty
+        blockNo: mineableBlock.no,
+        reward: mineableBlock.reward,
+        difficulty: mineableBlock.difficulty
       })
 
       // start mining that block
       await mineBlock(
-        params.headerString,
-        params.difficulty,
+        mineableBlock.headerString,
+        mineableBlock.difficulty,
         s => this.setState(s), // progress update
         async nonce => { // mined a block
           await server.blocks.create(this.state.blockNo, nonce) // todo: ignore errors (except auth) but display error msg
