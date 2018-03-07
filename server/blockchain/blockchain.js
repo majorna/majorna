@@ -168,7 +168,7 @@ exports.collectMiningReward = async (blockNo, nonce, uid) => {
   }
 
   // nonce must be of required difficulty
-  const hash = crypto.hashText(nonce + mineableBlockHeader.headerString)
+  const hash = crypto.hashTextToBuffer(nonce + mineableBlockHeader.headerString)
   const difficulty = block.getHashDifficulty(hash)
   if (difficulty < mineableBlockHeader.difficulty) {
     throw new utils.UserVisibleError('Given nonce difficulty is less than the target difficulty.')

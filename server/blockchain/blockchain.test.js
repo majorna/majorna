@@ -116,18 +116,22 @@ suite('blockchain', () => {
   })
 
   test.only('collectMiningReward', async () => {
+    let lastDifficulty = 0
+    let lastReward = 0
+
+    // get minable block
     const lastBlockHeader = await blockchain.getLastBlockHeader()
     const mineableBlockHeader = await blockchain.getMineableBlockHeader()
 
-    block.mineBlock(lastBlockHeader, mineableBlockHeader.difficulty)
+    // mine the block
+    const hash = block.mineBlock(lastBlockHeader, mineableBlockHeader.difficulty)
+    const difficulty = block.getHashDifficulty(Buffer.from(hash))
+    assert(difficulty > lastDifficulty)
+    lastDifficulty = difficulty
 
+    // collect reward
     const reward = await blockchain.collectMiningReward(lastBlockHeader.no, lastBlockHeader.nonce, testData.users.u1Auth.uid)
-    assert(reward > 0)
-
-    const reward2 = await blockchain.collectMiningReward(lastBlockHeader.no, lastBlockHeader.nonce, testData.users.u1Auth.uid)
-    assert(reward2 > reward)
-
-    const reward3 = await blockchain.collectMiningReward(lastBlockHeader.no, lastBlockHeader.nonce, testData.users.u1Auth.uid)
-    assert(reward3 > reward2)
+    assert(reward > lastReward)
+    lastReward = reward
   })
 })

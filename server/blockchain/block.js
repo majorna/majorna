@@ -136,7 +136,7 @@ exports.mineBlock = (blockOrHeader, targetDifficulty) => {
       header.nonce = nonce
       header.difficulty = targetDifficulty
       const hashBase64 = hash.toString('base64')
-      console.log(`mined block with difficulty: ${difficulty}, nonce: ${header.nonce}, hash: ${hashBase64}`)
+      console.log(`mined block with difficulty: ${difficulty} (target: ${targetDifficulty}), nonce: ${header.nonce}, hash: ${hashBase64}`)
       return hashBase64
     }
   }
