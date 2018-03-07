@@ -174,7 +174,7 @@ exports.collectMiningReward = async (blockNo, nonce, uid) => {
     throw new utils.UserVisibleError('Given nonce difficulty is less than the target difficulty.')
   }
 
-  // todo: update the latest block with the new and more difficult nonce
+  // todo: update the last block with the new and more difficult nonce
 
   // give reward to the user
   await db.makeMajornaTx(uid, mineableBlockHeader.reward)
