@@ -119,7 +119,7 @@ suite('blockchain', () => {
     let lastDifficulty = 0
     let lastReward = 0
 
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 3; i++) {
       // get minable block
       const mineableBlockHeader = await blockchain.getMineableBlockHeader()
       const lastBlockHeader = mineableBlockHeader.headerObject

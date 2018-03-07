@@ -145,4 +145,4 @@ exports.mineBlock = (blockOrHeader, targetDifficulty) => {
 /**
  * Returns the mining reward for a block given the difficulty.
  */
-exports.getBlockReward = difficulty => Math.pow(2, difficulty)
+exports.getBlockReward = difficulty => 2 * difficulty

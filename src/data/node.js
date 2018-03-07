@@ -55,7 +55,7 @@ export const mineBlock = async (headerStr, difficulty, progressCb, minedBlockCb)
     hashArray = new Uint8Array(hashBuffer)
     i = 0
     found = true
-    for (;i < difficulty; i++) {
+    for (;i < difficulty; i++) { // todo: use shared code lib here
       if (hashArray[i] !== 0) found = false
     }
     if (found && interval) {
