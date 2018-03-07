@@ -1,6 +1,8 @@
 const db = require('../data/db')
 const block = require('./block')
 const github = require('../data/github')
+const crypto = require('./crypto')
+const utils = require('../data/utils')
 
 const lastBlockHeaderPath = 'lastblock'
 
@@ -141,4 +143,45 @@ exports.startBlockchainInsertTimer = interval => {
   // start timer
   interval = interval || 1000/* ms */ * 60/* s */ * 15/* min */
   return setInterval(() => failSafeInsertBlockIfRequired(), interval)
+}
+
+/**
+ * Retrieves last last mineable block for peers that choose to trust the majorna server, asynchronously.
+ * In most cases, one honest peer is enough to get the longest blockchain since it's so hard to fake an entire chain.
+ */
+exports.getMineableBlock = async () => {
+  const lastBlockHeader = await exports.getLastBlockHeader()
+  const str = block.getHeaderStr(lastBlockHeader, true)
+  const difficulty = lastBlockHeader.difficulty + 1 // always need to work on a greater difficulty than existing
+  return {
+    blockNo: lastBlockHeader.no,
+    difficulty,
+    reward: block.getBlockReward(difficulty),
+    headerAsString: str
+  }
+}
+
+/**
+ * Collects mining reward for a given block number and nonce, asynchronously.
+ * Mined block must be the latest, and the nonce must be greater than or equal to the target difficulty.
+ */
+exports.collectMiningReward = async (blockNo, nonce, uid) => {
+  // block must be latest
+  const mineableBlock = await exports.getMineableBlock()
+  if (blockNo !== mineableBlock.header.no) {
+    throw utils.UserVisibleError('Mined block is not the latest.')
+  }
+
+  // nonce must be of required difficulty
+  const hash = crypto.hashText(nonce + mineableBlock.headerAsString)
+  const difficulty = block.getHashDifficulty(hash)
+  if (difficulty < mineableBlock.header.difficulty) {
+    throw utils.UserVisibleError('Given nonce difficulty is less than the target difficulty.')
+  }
+
+  // update the latest block with the new and more difficult nonce
+
+  // give reward to the user
+  await db.makeMajornaTx(uid, mineableBlock.reward)
+  return mineableBlock.reward
 }

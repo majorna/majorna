@@ -1,38 +1,22 @@
 const route = require('koa-route')
 const blockchain = require('../blockchain/blockchain')
-const block = require('../blockchain/block')
-const db = require('../data/db')
 
 /**
- * Get last block's header as a hashable string along with mining parameters
- * so clients can start mining the latest block immediately.
+ * Get last block's header as a hashable string along with mining parameters so clients can start mining the latest block immediately.
  */
 exports.mine = route.get('/blocks/mine', async ctx => {
-  const lastBlockHeader = await blockchain.getLastBlockHeader()
-  const str = block.getHeaderStr(lastBlockHeader, true)
-
-  ctx.body = {
-    no: lastBlockHeader.no,
-    str,
-    reward: block.getBlockReward(lastBlockHeader.difficulty),
-    difficulty: lastBlockHeader.difficulty + 1
-  }
+  ctx.body = await blockchain.getMineableBlock()
 })
 
 /**
- * Creates a new block (or updates existing one) with discovered nonce.
+ * Creates a new block (or updates existing one) with discovered nonce that is fit for the required difficulty.
  */
 exports.create = route.post('/blocks', async ctx => {
   const minedBlock = ctx.request.body
   ctx.assert(minedBlock.no, 400, '"no" field is required.')
-  ctx.assert(minedBlock.hash, 400, '"hash" field is required.')
+  ctx.assert(minedBlock.nonce, 400, '"nonce" field is required.')
 
-  // todo: get reward from block.js (see above todo)
-  // replace existing block with this one if hash is valid and is bigger
-  // if hash is smaller, still give reward based on difficulty (minedBlock.difficulty * 10)
-  const lastBlockHeader = await blockchain.getLastBlockHeader()
-  const reward = Math.pow(5, lastBlockHeader.difficulty)
-  await db.makeMajornaTx(ctx.state.user.uid, reward)
+  const reward = await blockchain.collectMiningReward(minedBlock.no, minedBlock.nonce, ctx.state.user.uid)
 
   ctx.body = {reward}
   ctx.status = 201
