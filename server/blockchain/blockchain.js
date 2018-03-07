@@ -141,10 +141,10 @@ exports.startBlockchainInsertTimer = interval => {
 }
 
 /**
- * Retrieves last last mineable block for peers that choose to trust the majorna server, asynchronously.
+ * Retrieves last last mineable block's header for peers that choose to trust the majorna server, asynchronously.
  * In most cases, one honest peer is enough to get the longest blockchain since it's so hard to fake an entire chain.
  */
-exports.getMineableBlock = async () => {
+exports.getMineableBlockHeader = async () => {
   const lastBlockHeader = await exports.getLastBlockHeader()
   const str = block.getHeaderStr(lastBlockHeader, true)
   const difficulty = lastBlockHeader.difficulty + 1 // always need to work on a greater difficulty than existing
@@ -162,21 +162,21 @@ exports.getMineableBlock = async () => {
  */
 exports.collectMiningReward = async (blockNo, nonce, uid) => {
   // block must be latest
-  const mineableBlock = await exports.getMineableBlock()
-  if (blockNo !== mineableBlock.header.no) {
-    throw utils.UserVisibleError('Mined block is not the latest.')
+  const mineableBlockHeader = await exports.getMineableBlockHeader()
+  if (blockNo !== mineableBlockHeader.no) {
+    throw new utils.UserVisibleError('Mined block is not the latest.')
   }
 
   // nonce must be of required difficulty
-  const hash = crypto.hashText(nonce + mineableBlock.headerAsString)
+  const hash = crypto.hashText(nonce + mineableBlockHeader.headerString)
   const difficulty = block.getHashDifficulty(hash)
-  if (difficulty < mineableBlock.header.difficulty) {
-    throw utils.UserVisibleError('Given nonce difficulty is less than the target difficulty.')
+  if (difficulty < mineableBlockHeader.difficulty) {
+    throw new utils.UserVisibleError('Given nonce difficulty is less than the target difficulty.')
   }
 
-  // update the latest block with the new and more difficult nonce
+  // todo: update the latest block with the new and more difficult nonce
 
   // give reward to the user
-  await db.makeMajornaTx(uid, mineableBlock.reward)
-  return mineableBlock.reward
+  await db.makeMajornaTx(uid, mineableBlockHeader.reward)
+  return mineableBlockHeader.reward
 }

@@ -107,19 +107,27 @@ suite('blockchain', () => {
     clearInterval(timer)
   })
 
-  test('getMineableBlock', async () => {
-    const mineableBlock = await blockchain.getMineableBlock()
-    assert(mineableBlock.no > 1)
-    assert(mineableBlock.difficulty > 0)
-    assert(mineableBlock.reward > 0)
-    assert(mineableBlock.headerString.length > 10)
+  test('getMineableBlockHeader', async () => {
+    const mineableBlockHeader = await blockchain.getMineableBlockHeader()
+    assert(mineableBlockHeader.no > 1)
+    assert(mineableBlockHeader.difficulty > 0)
+    assert(mineableBlockHeader.reward > 0)
+    assert(mineableBlockHeader.headerString.length > 10)
   })
 
-  // test('collectMiningReward', async () => {
-  //   const mineableBlock = await blockchain.getMineableBlock()
-  //   assert(mineableBlock.no > 1)
-  //   assert(mineableBlock.difficulty > 0)
-  //   assert(mineableBlock.reward > 0)
-  //   assert(mineableBlock.headerString.length > 10)
-  // })
+  test.only('collectMiningReward', async () => {
+    const lastBlockHeader = await blockchain.getLastBlockHeader()
+    const mineableBlockHeader = await blockchain.getMineableBlockHeader()
+
+    block.mineBlock(lastBlockHeader, mineableBlockHeader.difficulty)
+
+    const reward = await blockchain.collectMiningReward(lastBlockHeader.no, lastBlockHeader.nonce, testData.users.u1Auth.uid)
+    assert(reward > 0)
+
+    const reward2 = await blockchain.collectMiningReward(lastBlockHeader.no, lastBlockHeader.nonce, testData.users.u1Auth.uid)
+    assert(reward2 > reward)
+
+    const reward3 = await blockchain.collectMiningReward(lastBlockHeader.no, lastBlockHeader.nonce, testData.users.u1Auth.uid)
+    assert(reward3 > reward2)
+  })
 })
