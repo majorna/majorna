@@ -4,15 +4,22 @@ const github = require('../data/github')
 const crypto = require('./crypto')
 const utils = require('../data/utils')
 
-const lastBlockHeaderPath = 'lastblock'
+const lastBlockHeaderPath = 'lastblockheader'
 
 /**
  * Retrieves last block's header as an object from github, asynchronously.
- * Will throw an error with {code=404} property if last block is not found.
+ * Will return genesis block if there is no last block.
  */
 exports.getLastBlockHeader = async () => {
-  const lastBlockHeaderFile = await github.getFileContent(lastBlockHeaderPath)
-  return block.fromJson(lastBlockHeaderFile)
+  try {
+    const lastBlockHeaderFile = await github.getFileContent(lastBlockHeaderPath)
+    return block.fromJson(lastBlockHeaderFile)
+  } catch (e) {
+    if (e.code === 404) {
+      return block.genesisBlock.header
+    }
+    throw e
+  }
 }
 
 /**
@@ -77,19 +84,7 @@ exports.insertBlock = async (startTime, endTime, blockPath, prevBlock) => {
  * @param lastBlockHeader - Only used for testing. Automatically retrieved from GitHub otherwise.
  */
 exports.insertBlockSinceLastOne = async (now, blockPath, lastBlockHeader) => {
-  // get latest block file
-  if (!lastBlockHeader) {
-    try {
-      lastBlockHeader = await exports.getLastBlockHeader()
-    } catch (e) {
-      if (e.code === 404) {
-        lastBlockHeader = block.genesisBlock
-      } else {
-        throw e
-      }
-    }
-  }
-
+  lastBlockHeader = lastBlockHeader || await exports.getLastBlockHeader()
   const blockTimeRange = exports.getBlockTimeRange(lastBlockHeader.time, now)
   await exports.insertBlock(blockTimeRange.start, blockTimeRange.end, blockPath, lastBlockHeader)
 }

@@ -106,4 +106,9 @@ suite('blockchain', () => {
     const timer = blockchain.startBlockchainInsertTimer(30)
     clearInterval(timer)
   })
+
+  test('getMineableBlock', async () => {
+    const mineableBlock = await blockchain.getMineableBlock()
+    assert(mineableBlock)
+  })
 })
