@@ -5,12 +5,14 @@ import { mineBlock, stopMining } from '../../data/node'
 
 export default class extends Component {
   state = {
+    blockHeader: {},
     reward: 0,
     minedBlocks: 0,
     hashRate: 0,
     time: 0,
     targetDifficulty: 0,
-    blockNo: 0
+    blockNo: 0,
+    showDetails: false
   }
 
   runMinerLoop = true
@@ -23,6 +25,7 @@ export default class extends Component {
       const blockRes = await server.blocks.get()
       const mineableBlock = await blockRes.json()
       this.setState({
+        blockHeader: mineableBlock.headerObject,
         blockNo: mineableBlock.no,
         reward: mineableBlock.reward,
         targetDifficulty: mineableBlock.targetDifficulty
@@ -54,6 +57,8 @@ export default class extends Component {
 
   handleStop = () => this.props.history.goBack()
 
+  handleShowDetails = () => this.setState(prevState => ({showDetails: !prevState.showDetails}))
+
   render = () =>
     <div className="mj-box flex-column">
       <div className="is-size-5 has-text-centered">Mining mj</div>
@@ -65,11 +70,33 @@ export default class extends Component {
       <div className="m-t-m"><strong>Mined Blocks:</strong> {this.state.minedBlocks}</div>
       <div><strong>Collected Rewards:</strong> mj{fm(this.state.reward * this.state.minedBlocks)}</div>
 
-      <strong className="m-t-m">Details:</strong>
-      <small className="flex-column">
-        <div className="m-t-s"><strong>Target Difficulty:</strong> {this.state.targetDifficulty}</div>
-        <div><strong>Reward per Block:</strong> mj{fm(this.state.reward)}</div>
-      </small>
+      <div className="m-t-m">
+        <button className="button is-small" onClick={this.handleShowDetails}>
+          {this.state.showDetails ? <i className="far fa-minus-square m-r-s"/> : <i className="far fa-plus-square m-r-s"/>}
+          Details
+        </button>
+      </div>
+      {this.state.showDetails &&
+        <small className="flex-column">
+          <strong className="m-t-m">Miner</strong>
+          <div><strong>Target Difficulty:</strong> {this.state.targetDifficulty}</div>
+          <div><strong>Reward for Block:</strong> mj{fm(this.state.reward)}</div>
+          {/*<div><strong>Expected Reward (per hour):</strong> ?</div>*/}
+
+          <strong className="m-t-m">Block</strong>
+          <div><strong>No:</strong> {this.state.blockHeader.no}</div>
+          <div><strong>Time:</strong> {this.state.blockHeader.time}</div>
+          <div><strong>Transaction Count:</strong> {this.state.blockHeader.txCount}</div>
+          <div><strong>Previous Difficulty:</strong> {this.state.blockHeader.difficulty}</div>
+          <div><strong>Previous Nonce:</strong> {this.state.blockHeader.nonce}</div>
+          <div><strong>Previous Hash:</strong> <small>{this.state.blockHeader.prevHash}</small></div>
+          <div><strong>Merkle Root:</strong> <small>{this.state.blockHeader.merkleRoot}</small></div>
+
+          {/*<strong className="m-t-m">Peers</strong>*/}
+          {/*<div><strong>Online Peers:</strong> ?</div>*/}
+          {/*<div><strong>Global Hash Rate:</strong> ?</div>*/}
+        </small>
+      }
 
       <div className="flex-row center-h m-t-l">
         <button className="button" onClick={this.handleStop}>Stop</button>
