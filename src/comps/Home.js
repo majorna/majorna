@@ -7,7 +7,7 @@ export default () =>
     {/* Intro text with "Get Started" button */}
     <div className="hero is-medium is-light">
       <div className="hero-body has-text-centered">
-        <h1 className="title is-size-1" style={{marginBottom: '3rem'}}>Send and Receive Majorna</h1>
+        <h1 className="title is-size-1" style={{marginBottom: '3rem'}}>Send, Receive, and Mine Majorna</h1>
         <h2 className="subtitle" style={{marginBottom: '3rem'}}>Simple cryptocurrency, in your browser.</h2>
         <div className="field is-grouped is-grouped-centered">
           <p className="control is-hidden-mobile"><input readOnly className="input is-medium" type="text" placeholder="Starter Balance: mj500" /></p>
@@ -25,7 +25,7 @@ export default () =>
       <div className="flex-column flex-grow-1 m-l-m">
         <div className="is-size-5">Simple Cryptocurrency</div>
         Easy to use cryptocurrency in your browser.
-        Log in with your Google, Facebook, or Twitter account to start sending and receiving Majorna.
+        Log in with your Google, Facebook, or Twitter account to start sending, receiving, and mining Majorna.
         <Link to='/login'>+mj500 balance for all new accounts (until fund cap).</Link>
       </div>
     </div>
