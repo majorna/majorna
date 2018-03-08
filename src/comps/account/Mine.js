@@ -67,6 +67,9 @@ export default class extends Component {
       <div><strong>Time:</strong> {this.state.time}s</div>
       <div><strong>Rate:</strong> {this.state.hashRate} Hash/s</div>
 
+      <div className="m-t-m"><strong>Target Difficulty:</strong> {this.state.targetDifficulty}</div>
+      <div><strong>Reward for Block:</strong> mj{fm(this.state.reward)}</div>
+
       <div className="m-t-m"><strong>Mined Blocks:</strong> {this.state.minedBlocks}</div>
       <div><strong>Collected Rewards:</strong> mj{fm(this.state.reward * this.state.minedBlocks)}</div>
 
@@ -78,12 +81,7 @@ export default class extends Component {
       </div>
       {this.state.showDetails &&
         <small className="flex-column">
-          <strong className="m-t-m">Miner</strong>
-          <div><strong>Target Difficulty:</strong> {this.state.targetDifficulty}</div>
-          <div><strong>Reward for Block:</strong> mj{fm(this.state.reward)}</div>
-          {/*<div><strong>Expected Reward (per hour):</strong> ?</div>*/}
-
-          <strong className="m-t-m">Block</strong>
+          <strong className="m-t-m">Current Block</strong>
           <div><strong>No:</strong> {this.state.blockHeader.no}</div>
           <div><strong>Time:</strong> {this.state.blockHeader.time}</div>
           <div><strong>Transaction Count:</strong> {this.state.blockHeader.txCount}</div>
@@ -95,6 +93,8 @@ export default class extends Component {
           {/*<strong className="m-t-m">Peers</strong>*/}
           {/*<div><strong>Online Peers:</strong> ?</div>*/}
           {/*<div><strong>Global Hash Rate:</strong> ?</div>*/}
+
+          {/*<div><strong>Expected Reward (per hour):</strong> ?</div>*/}
         </small>
       }
 

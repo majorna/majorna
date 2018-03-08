@@ -24,7 +24,7 @@ export default () =>
       <img src={mj} width="128" alt="Majorna"/>
       <div className="flex-column flex-grow-1 m-l-m">
         <div className="is-size-5">Simple Cryptocurrency</div>
-        Easy to use cryptocurrency in your browser.
+        Easy to use digital currency in your browser.
         Log in with your Google, Facebook, or Twitter account to start sending, receiving, and mining Majorna.
         <Link to='/login'>+mj500 balance for all new accounts (until fund cap).</Link>
       </div>
