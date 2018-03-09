@@ -33,6 +33,7 @@ export default class extends Component {
       await mineBlock(
         mineableBlock.headerString,
         mineableBlock.targetDifficulty,
+        mineableBlock.headerObject.nonce,
         s => this.setState(s), // progress update
         async nonce => { // mined a block
           await server.blocks.create(this.state.blockNo, nonce) // todo: ignore errors but display error msg
