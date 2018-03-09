@@ -9,6 +9,8 @@ const txsColRef = firestore.collection('txs')
 const usersColRef = firestore.collection('users')
 const metaDocRef = firestore.collection('mj').doc('meta')
 
+const maxTxInUserDoc = 15
+
 /**
  * Initializes database collections if database is empty, asynchronously.
  */
@@ -156,8 +158,10 @@ exports.makeTx = (from, to, amount) => firestore.runTransaction(async t => {
 
   // update user docs with tx and updated balances
   sender.txs.unshift({id: txRef.id, to, toName, time, amount})
+  sender.txs.length > maxTxInUserDoc && (sender.txs.length = maxTxInUserDoc)
   t.update(senderDocRef, {balance: sender.balance - amount, txs: sender.txs})
   receiver.txs.unshift({id: txRef.id, from, fromName, time, amount})
+  receiver.txs.length > maxTxInUserDoc && (receiver.txs.length = maxTxInUserDoc)
   t.update(receiverDocRef, {balance: receiver.balance + amount, txs: receiver.txs})
 
   return signedTx
@@ -196,6 +200,7 @@ exports.makeMajornaTx = (to, amount) => firestore.runTransaction(async t => {
 
   // update user docs with tx and updated balances
   receiver.txs.unshift({id: txRef.id, from: from, fromName, time, amount})
+  receiver.txs.length > maxTxInUserDoc && (receiver.txs.length = maxTxInUserDoc)
   t.update(receiverDocRef, {balance: receiver.balance + amount, txs: receiver.txs})
 
   return signedTx
