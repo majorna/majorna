@@ -61,6 +61,10 @@ UI:
 Server:
 * Node.js: https://nodejs.org/en/download/releases/
 
+## Community
+
+* [/r/majorna](https://www.reddit.com/r/majorna/)
+
 ## License
 
 MIT

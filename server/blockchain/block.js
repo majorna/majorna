@@ -1,12 +1,14 @@
-const MerkleTools = require('merkle-tools')
 const crypto = require('./crypto')
+const txTools = require('./txs')
 const tx = require('./tx')
 
 /**
- * The very first block of the blockchain (no = 0).
+ * Returns a new copy of the genesis block; the very first block of the blockchain.
+ *
+ * This is also the block schema:
  * Either trust (signature) or PoW (difficulty and nonce) are required.
  */
-exports.genesisBlock = {
+exports.getGenesisBlock = () => ({
   sig: '', // optional: if given, difficulty and nonce are not required
   header: {
     no: 1,
@@ -17,110 +19,130 @@ exports.genesisBlock = {
     difficulty: 0, // optional: if sig is not present, should be > 0
     nonce: 0 // optional: if sig is not present, should be > 0
   },
-  data: []
-}
-
-// nonce first to prevent internal hash state from being reused
-// in future we can add more memory intensive prefixes
-exports.getHeaderStr = (blockHeader, skipNonce) =>
-  '' + skipNonce ? '' : blockHeader.nonce + blockHeader.no + blockHeader.prevHash + blockHeader.txCount + blockHeader.merkleRoot + blockHeader.time.getTime() + blockHeader.difficulty
-
-exports.sign = block => {
-  const sigBlock = {
-    header: {
-      no: block.header.no,
-      prevHash: block.header.prevHash,
-      txCount: block.header.txCount,
-      merkleRoot: block.header.merkleRoot,
-      time: block.header.time,
-      difficulty: block.header.difficulty,
-      nonce: block.header.nonce
-    },
-    data: block.data.map(t => tx.getObj(t))
-  }
-  sigBlock.sig = crypto.signText(exports.getHeaderStr(sigBlock.header))
-  return sigBlock
-}
-
-exports.verifySignature = () => true
-
-exports.hashHeader = blockHeader => crypto.hashText(exports.getHeaderStr(blockHeader))
-
-exports.verifyHash = () => {}
-
-/**
- * Creates a merkle tree out of given txs.
- */
-exports.createMerkle = txs => {
-  const strs = txs.map(t => tx.getStr(t))
-  const merkleTools = new MerkleTools({hashType: crypto.algo})
-  merkleTools.addLeaves(strs, true)
-  merkleTools.makeTree()
-  return merkleTools
-}
+  txs: []
+})
 
 /**
  * Creates a block with given txs and previous block or block header.
  */
-exports.createSignedBlock = (txs, prevBlockOrHeader, mine = false) => {
-  const prevHeader = prevBlockOrHeader.header || prevBlockOrHeader
-  const header = {
-    no: prevHeader.no + 1,
-    prevHash: exports.hashHeader(prevHeader),
-    txCount: txs.length,
-    merkleRoot: (txs.length && exports.createMerkle(txs).getMerkleRoot().toString('base64')) || '',
-    time: new Date(),
-    difficulty: 0,
-    nonce: 0
-  }
-  let block = {
+exports.createBlock = (txs, prevBlockOrBlockHeader) => {
+  const prevHeader = prevBlockOrBlockHeader.header || prevBlockOrBlockHeader
+  return {
     sig: '',
-    header,
-    data: txs
+    header: {
+      no: prevHeader.no + 1,
+      prevHash: exports.hashBlockHeader(prevHeader),
+      txCount: txs.length,
+      merkleRoot: (txs.length && txTools.createMerkle(txs).getMerkleRoot().toString('base64')) || '', // block are allowed to have no txs in them
+      time: new Date(),
+      difficulty: 0,
+      nonce: 0
+    },
+    txs: txs.map(t => tx.getObj(t))
   }
-  mine && exports.mineBlock(block)
-  return exports.sign(block)
 }
 
 /**
- * Verifies a given block header and data (if given).
+ * Serializes block or block header into indented JSON.
  */
-exports.verifyBlock = block => {
-  // verify signature if present
+exports.toJson = blockOrBlockHeader => JSON.stringify(blockOrBlockHeader, null, 2)
 
-  // verify PoW otherwise
+/**
+ * Deserialize a JSON serialized block or block header into an object.
+ */
+exports.fromJson = blockOrBlockHeaderJson => {
+  const blockOrHeader = JSON.parse(blockOrBlockHeaderJson)
+
+  // fix block header time
+  const header = blockOrHeader.header || blockOrHeader
+  header.time = new Date(header.time)
+
+  // fix individual tx times
+  blockOrHeader.header && blockOrHeader.txs.forEach(tx => { tx.time = new Date(tx.time) })
+
+  return blockOrHeader
 }
 
 /**
- * Returns a merkle proof for a given tx and the merkle tree.
+ * Concatenates the the given block header into a regular string, fit for hashing.
+ * Puts the nonce first to prevent internal hash state from being reused. In future we can add more memory intensive prefixes.
+ * @param blockHeader - Block header object.
+ * @param skipNonce - Don't include nonce in the string. Useful for mining. False by default.
  */
-exports.getTxProof = (tx, merkle) => {}
+exports.getHeaderStr = (blockHeader, skipNonce) =>
+  '' + (skipNonce ? '' : blockHeader.nonce) +
+  blockHeader.no + blockHeader.prevHash + blockHeader.txCount +
+  blockHeader.merkleRoot + blockHeader.time.getTime() + blockHeader.difficulty
 
 /**
- * Verifies a tx given a block header and merkle proof for that tx.
+ * Signs a block with majorna certificate.
  */
-exports.verifyTxInBlock = (tx, blockHeader, merkleProof) => {}
+exports.sign = block => { block.sig = crypto.signText(exports.getHeaderStr(block.header)) }
+
+exports.verifySignature = block => crypto.verifyText(block.sig, exports.getHeaderStr(block.header))
+
+exports.hashBlockHeader = blockHeader => crypto.hashText(exports.getHeaderStr(blockHeader))
+
+/**
+ * Accepts a hash as an Uint8Array array, returns the difficulty as an integer.
+ * Node.js Buffer implement Uint8Array API so buffer instances are also acceptable.
+ */
+exports.getHashDifficulty = hash => {
+  let difficulty = 0
+
+  for (let i = 0; i < hash.length; i++) {
+    if (hash[i] === 0) {
+      difficulty += 8
+      continue
+    } else if (hash[i] === 1) {
+      difficulty += 7
+    } else if (hash[i] < 4) {
+      difficulty += 6
+    } else if (hash[i] < 8) {
+      difficulty += 5
+    } else if (hash[i] < 16) {
+      difficulty += 4
+    } else if (hash[i] < 32) {
+      difficulty += 3
+    } else if (hash[i] < 64) {
+      difficulty += 2
+    } else if (hash[i] < 128) {
+      difficulty += 1
+    }
+    break
+  }
+
+  return difficulty
+}
 
 /**
  * Calculates nonce (mines) until a hash of required difficulty is found for the block.
+ * @param blockOrHeader - Block or block header (as object) to mine.
+ * @param targetDifficulty - Used for testing only. Otherwise difficulty field in the block header is used.
  */
-exports.mineBlock = (blockOrHeader, difficulty) => {
+exports.mineBlock = (blockOrHeader, targetDifficulty) => {
   const header = blockOrHeader.header || blockOrHeader
-  difficulty = difficulty || 1 // todo: difficulty should depend on average block timer
-  const hashPrefix = '0'.repeat(difficulty) // todo: this is exponential like growth!
+  targetDifficulty = targetDifficulty || header.difficulty
 
+  let difficulty
   let hash
   let nonce = 0
   const str = exports.getHeaderStr(header, true) // store header string without nonce as an optimization
   while (true) {
     nonce++
-    hash = crypto.hashText(nonce + str)
-    // todo: base64str conversion (and object reinits) hugely slows down this loop
-    if (hash.substring(0, difficulty) === hashPrefix) {
+    hash = crypto.hashTextToBuffer(nonce + str)
+    difficulty = exports.getHashDifficulty(hash)
+    if (difficulty >= targetDifficulty) {
       header.nonce = nonce
-      header.difficulty = difficulty
-      console.log(`mined block with difficulty: ${header.difficulty}, nonce: ${header.nonce}, hash: ${hash}`)
-      return
+      header.difficulty = targetDifficulty
+      const hashBase64 = hash.toString('base64')
+      console.log(`mined block with difficulty: ${difficulty} (target: ${targetDifficulty}), nonce: ${header.nonce}, hash: ${hashBase64}`)
+      return hashBase64
     }
   }
 }
+
+/**
+ * Returns the mining reward for a block given the difficulty.
+ */
+exports.getBlockReward = difficulty => 2 * difficulty

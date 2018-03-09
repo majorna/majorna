@@ -110,7 +110,7 @@ export default class extends Component {
     if (this.state.step === 'complete') {
       return (
         <div className="mj-box flex-column">
-          <div className="is-size-5 has-text-centered has-text-info">Successfully Sent</div>
+          <div className="is-size-5 has-text-centered has-text-info"><i className="fas fa-check m-r-s"/>Successfully Sent</div>
 
           <div className="flex-row center-h m-t-l">
             <button className="button" onClick={this.handleCancel}>Close</button>
@@ -133,7 +133,7 @@ export default class extends Component {
         {this.state.error && <strong className="has-text-danger has-text-centered m-t-l">{this.state.error}</strong>}
 
         <div className="flex-row m-t-l">
-          <button className="button is-info" onClick={this.handleSend}>Send</button>
+          <button className="button is-info" onClick={this.handleSend}><i className="fas fa-paper-plane m-r-s"/>Send</button>
           <button className="button m-l-m" onClick={this.handleCancel}>Cancel</button>
         </div>
       </div>

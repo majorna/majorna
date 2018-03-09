@@ -37,7 +37,7 @@ exports.createFile = (text, path) => octokit.repos.createFile({owner, repo, path
  * Creates a file with given text if it does not exist.
  * Overwrites the file with the given text if it exists.
  * Concurrent updates to the same file will throw an error.
- * @param text - Text to be appended at the end of the file.
+ * @param text - Text to be written.
  * @param path - Path of the file in git repo.
  * @param append - Instead of overwriting the file with the given text, append to text to the end of the file with a newline.
  */

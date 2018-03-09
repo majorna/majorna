@@ -2,7 +2,11 @@ import config from './config'
 
 /**
  * Server API client. Uses window.fetch.
- * All functions in this object is asynchronous wince window.fetch uses promises.
+ * All functions in this object is asynchronous since window.fetch uses promises.
+ *
+ * Usage:
+ * const res = await server.blocks.get()
+ * const blockObj = await res.json()
  */
 export default {
   debug: {
@@ -16,17 +20,24 @@ export default {
     make: (to, amount) => postJson('/txs', {to, amount})
   },
   blocks: {
-    mine: () => get('/blocks/mine'),
-    create: (no, hash) => postJson('/blocks', {no, hash})
+    get: () => get('/blocks'),
+    create: (no, nonce) => postJson('/blocks', {no, nonce})
   }
 }
 
-// todo: upon 401, refresh idToken (if not possible, user will be auto-redirected to home page anyway)
+// redirect to login page upon 401
+function handle401 (res) {
+  if (res.status === 401) {
+    window.location.replace('/login')
+  } else {
+    return res
+  }
+}
 
 const get = url => fetch(config.server.url + url, {
   method: 'GET',
   headers: new Headers({Authorization: `Bearer ${config.server.token}`})
-})
+}).then(handle401)
 
 const postJson = (url, data) => fetch(config.server.url + url, {
   method: 'POST',
@@ -35,4 +46,4 @@ const postJson = (url, data) => fetch(config.server.url + url, {
     'Content-Type': 'application/json'
   }),
   body: JSON.stringify(data)
-})
+}).then(handle401)

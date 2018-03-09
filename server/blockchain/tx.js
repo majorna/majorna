@@ -21,7 +21,7 @@ exports.getObj = tx => ({
   id: tx.id,
   from: {id: tx.from.id, balance: tx.from.balance},
   to: {id: tx.to.id, balance: tx.to.balance},
-  time: tx.time,
+  time: new Date(tx.time.getTime()),
   amount: tx.amount
 })
 
@@ -30,9 +30,3 @@ exports.sign = tx => {
   sigTx.sig = crypto.signText(exports.getStr(sigTx))
   return sigTx
 }
-
-exports.verifySignature = () => {}
-
-exports.hash = tx => crypto.hashText(exports.getStr(tx))
-
-exports.verifyHash = () => {}

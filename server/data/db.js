@@ -9,6 +9,8 @@ const txsColRef = firestore.collection('txs')
 const usersColRef = firestore.collection('users')
 const metaDocRef = firestore.collection('mj').doc('meta')
 
+const maxTxInUserDoc = 15
+
 /**
  * Initializes database collections if database is empty, asynchronously.
  */
@@ -124,7 +126,7 @@ exports.makeTx = (from, to, amount) => firestore.runTransaction(async t => {
   assert(Number.isInteger(amount), 'amount must be an integer')
   assert(amount > 0, 'amount should be > 0')
 
-  // verify sender's funds
+  // check if sender exists
   const senderDocRef = usersColRef.doc(from)
   const senderDoc = await t.get(senderDocRef)
   if (!senderDoc.exists) {
@@ -132,6 +134,8 @@ exports.makeTx = (from, to, amount) => firestore.runTransaction(async t => {
   }
   const sender = senderDoc.data()
   const fromName = sender.name
+
+  // verify sender's funds
   if (sender.balance < amount) {
     throw new utils.UserVisibleError(`sender ID:${from} has insufficient funds`)
   }
@@ -154,8 +158,49 @@ exports.makeTx = (from, to, amount) => firestore.runTransaction(async t => {
 
   // update user docs with tx and updated balances
   sender.txs.unshift({id: txRef.id, to, toName, time, amount})
+  sender.txs.length > maxTxInUserDoc && (sender.txs.length = maxTxInUserDoc)
   t.update(senderDocRef, {balance: sender.balance - amount, txs: sender.txs})
   receiver.txs.unshift({id: txRef.id, from, fromName, time, amount})
+  receiver.txs.length > maxTxInUserDoc && (receiver.txs.length = maxTxInUserDoc)
+  t.update(receiverDocRef, {balance: receiver.balance + amount, txs: receiver.txs})
+
+  return signedTx
+})
+
+/**
+ * Sends funds to given user from majorna, asynchronously.
+ * Returned promise resolves to completed transaction data -or- to an error if transaction fails.
+ * @param to - Receiver ID.
+ * @param amount - Transaction amount as integer.
+ */
+exports.makeMajornaTx = (to, amount) => firestore.runTransaction(async t => {
+  assert(to, 'to parameters is required')
+  assert(amount, 'amount ID parameters is required')
+  assert(Number.isInteger(amount), 'amount must be an integer')
+  assert(amount > 0, 'amount should be > 0')
+
+  const time = new Date()
+
+  // sender is majorna
+  const from = 'majorna'
+  const fromName = 'Majorna'
+
+  // check if receiver exists
+  const receiverDocRef = usersColRef.doc(to)
+  const receiverDoc = await t.get(receiverDocRef)
+  if (!receiverDoc.exists) {
+    throw new utils.UserVisibleError(`receiver ID:${to} does not exist`)
+  }
+  const receiver = receiverDoc.data()
+
+  // add tx to txs collection
+  const txRef = txsColRef.doc()
+  const signedTx = tx.sign({id: txRef.id, from: {id: from, balance: 0}, to: {id: to, balance: receiver.balance}, time, amount})
+  t.create(txRef, signedTx)
+
+  // update user docs with tx and updated balances
+  receiver.txs.unshift({id: txRef.id, from: from, fromName, time, amount})
+  receiver.txs.length > maxTxInUserDoc && (receiver.txs.length = maxTxInUserDoc)
   t.update(receiverDocRef, {balance: receiver.balance + amount, txs: receiver.txs})
 
   return signedTx

@@ -85,7 +85,8 @@ suite('db', () => {
     // make a valid tx
     const from = '1'
     const to = '2'
-    const initBalance = (await db.getUser(from)).balance
+    const senderInitBalance = (await db.getUser(from)).balance
+    const receiverInitBalance = (await db.getUser(to)).balance
     const amount = 100
     const newTx = await db.makeTx(from, to, amount)
 
@@ -98,14 +99,14 @@ suite('db', () => {
 
     // validate affected user docs
     const sender = await db.getUser(from)
-    assert(sender.balance === initBalance - amount)
+    assert(sender.balance === senderInitBalance - amount)
     const senderTx = sender.txs[0]
     assert(senderTx.to === to)
     assert(senderTx.time.getTime() === newTx.time.getTime())
     assert(senderTx.amount === amount)
 
     const receiver = await db.getUser(to)
-    assert(receiver.balance === initBalance + amount)
+    assert(receiver.balance === receiverInitBalance + amount)
     const receiverTx = receiver.txs[0]
     assert(receiverTx.from === from)
     assert(receiverTx.time.getTime() === newTx.time.getTime())
@@ -113,7 +114,11 @@ suite('db', () => {
   })
 
   test('makeTx: invalid', async () => {
-    let err = null // missing args
+    let err = null // insufficient funds
+    try { await db.makeTx('1', '2', 500 * 1000) } catch (e) { err = e }
+    assert(err)
+
+    err = null // missing args
     try { await db.makeTx() } catch (e) { err = e }
     assert(err)
 
@@ -123,10 +128,6 @@ suite('db', () => {
 
     err = null // inexistent receiver
     try { await db.makeTx('1', '129807aysdfiopohasdf', 10) } catch (e) { err = e }
-    assert(err)
-
-    err = null // can't send more than what is in user balance
-    try { await db.makeTx('1', '2', 6000) } catch (e) { err = e }
     assert(err)
 
     err = null // amount should be integer
