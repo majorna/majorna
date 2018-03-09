@@ -62,7 +62,7 @@ exports.getBlockTimeRange = (start, end) => {
  */
 exports.insertBlock = async (startTime, endTime, blockPath, prevBlock) => {
   const txs = await db.getTxsByTimeRange(startTime, endTime)
-  if (txs.length) {
+  if (txs.length || prevBlock.no === block.getGenesisBlock().header.no) {
     const newBlock = block.createBlock(txs, prevBlock, true)
     block.sign(newBlock)
     // todo: below two should be a single operation editing multiple files so they won't fail separately
@@ -104,7 +104,7 @@ exports.insertBlockIfRequired = async (blockPath, now) => {
   blockPath = blockPath || exports.getBlockPath(now, -1)
   try {
     await github.getFileContent(blockPath)
-    console.log('not the time to create a block yet')
+    console.log('not enough time elapsed since the last block so skipping block creation')
     return false
   } catch (e) {
     if (e.code !== 404) {
