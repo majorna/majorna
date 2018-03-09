@@ -55,6 +55,7 @@ exports.getBlockTimeRange = (start, end) => {
 /**
  * Creates and inserts a new block into the blockchain git repo, asynchronously.
  * Returns true if a block was inserted. False if there were no txs found to create a block with.
+ * Blocks with empty txs are skipped for the sake of space efficiency but can easily be enabled if required.
  * @param startTime - Time to start including txs from.
  * @param endTime - Time to stop including txs from.
  * @param blockPath - Full path of the block to create. i.e. "dir/sub_dir/filename".
@@ -184,6 +185,7 @@ exports.collectMiningReward = async (blockNo, nonce, uid) => {
   const lastBlock = block.fromJson(lastBlockFile) // this does not have header.path
   lastBlockHeader.difficulty = lastBlock.header.difficulty = difficulty
   lastBlockHeader.nonce = lastBlock.header.nonce = nonce
+  block.sign(lastBlock)
   await github.upsertFile(block.toJson(lastBlock), lastBlockHeader.path)
   await github.upsertFile(block.toJson(lastBlockHeader), lastBlockHeaderFilePath)
 
