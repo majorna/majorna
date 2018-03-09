@@ -68,14 +68,16 @@ export const mineBlock = async (headerStr, targetDifficulty, nonce, progressCb, 
   const headerStrBuffer = enc.encode(headerStr)
   let nonceBuffer, fullStrArr, hashBuffer, hashArray, base64String, difficulty
 
+  const intervalTime = 1000 //ms
   interval = setInterval(() => {
-    elapsedTime = Math.round(new Date(new Date().getTime() - start).getTime() / 1000)
+    elapsedTime = Math.round(new Date(new Date().getTime() - start).getTime() / intervalTime)
     progressCb({
       hashRate: nonce - lastNonce,
-      time: elapsedTime
+      time: elapsedTime,
+      nonce: nonce
     })
     lastNonce = nonce
-  }, 1000)
+  }, intervalTime)
 
   console.log(`starting hash loop with target difficulty ${targetDifficulty}`)
   while (interval) {

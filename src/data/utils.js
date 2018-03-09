@@ -6,6 +6,12 @@ export const fm = new Intl.NumberFormat().format
 // todo: export const fm = new Intl.NumberFormat(undefined, {style: 'currency', currency: 'USD'}).format
 
 /**
+ * Default number formatting function for the whole UI.
+ * Uses same localization as the user's browser.
+ */
+export const fn = new Intl.NumberFormat().format
+
+/**
  * Generate static chart data for a single value (useful for pre-trading price display)
  * @param meta - Meta document.
  * @returns {null}

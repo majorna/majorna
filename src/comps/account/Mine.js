@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
-import { fm } from '../../data/utils'
+import { fm, fn } from '../../data/utils'
 import server from '../../data/server'
 import { mineBlock, stopMining } from '../../data/node'
 
 export default class extends Component {
   state = {
     blockHeader: {},
+    nonce: 0,
     reward: 0,
     minedBlocks: 0,
     hashRate: 0,
@@ -64,7 +65,8 @@ export default class extends Component {
       <div className="flex-row center-all spinner m-t-l"/>
 
       <div><strong>Time:</strong> {this.state.time}s</div>
-      <div><strong>Rate:</strong> {this.state.hashRate} Hash/s</div>
+      <div><strong>Rate:</strong> {fn(this.state.hashRate)} Hash/s</div>
+      <div><strong>Nonce:</strong> {fn(this.state.nonce)}</div>
 
       <div className="m-t-m"><strong>Target Difficulty:</strong> {this.state.targetDifficulty}</div>
       <div><strong>Reward for Block:</strong> mj{fm(this.state.reward)}</div>
@@ -85,7 +87,7 @@ export default class extends Component {
           <div><strong>Time:</strong> {this.state.blockHeader.time}</div>
           <div><strong>Transaction Count:</strong> {this.state.blockHeader.txCount}</div>
           <div><strong>Previous Difficulty:</strong> {this.state.blockHeader.difficulty}</div>
-          <div><strong>Previous Nonce:</strong> {this.state.blockHeader.nonce}</div>
+          <div><strong>Previous Nonce:</strong> {fn(this.state.blockHeader.nonce)}</div>
           <div><strong>Previous Hash:</strong> <small>{this.state.blockHeader.prevHash}</small></div>
           <div><strong>Merkle Root:</strong> <small>{this.state.blockHeader.merkleRoot}</small></div>
 
