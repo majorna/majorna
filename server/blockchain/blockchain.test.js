@@ -138,5 +138,6 @@ suite('blockchain', () => {
     }
 
     // todo: verify user balance
+    // todo: verify that file @github is updated with new signature(verify)/hash/etc. compared to previous one
   })
 })

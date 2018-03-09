@@ -61,6 +61,7 @@ exports.getBlockTimeRange = (start, end) => {
  * @param prevBlock - Full path of the previous block. i.e. "dir/sub_dir/filename".
  */
 exports.insertBlock = async (startTime, endTime, blockPath, prevBlock) => {
+  // todo: validate all txs before inserting (within valid time, signatures, etc.), and entire block after inserting
   const txs = await db.getTxsByTimeRange(startTime, endTime)
   if (txs.length || prevBlock.no === block.getGenesisBlock().header.no) {
     const newBlock = block.createBlock(txs, prevBlock, true)
