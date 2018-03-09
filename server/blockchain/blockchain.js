@@ -59,13 +59,13 @@ exports.getBlockTimeRange = (start, end) => {
  * @param startTime - Time to start including txs from.
  * @param endTime - Time to stop including txs from.
  * @param blockPath - Full path of the block to create. i.e. "dir/sub_dir/filename".
- * @param prevBlock - Full path of the previous block. i.e. "dir/sub_dir/filename".
+ * @param prevBlockHeader - Previous block's header.
  */
-exports.insertBlock = async (startTime, endTime, blockPath, prevBlock) => {
+exports.insertBlock = async (startTime, endTime, blockPath, prevBlockHeader) => {
   // todo: validate all txs before inserting (within valid time, signatures, etc.), and entire block after inserting
   const txs = await db.getTxsByTimeRange(startTime, endTime)
-  if (txs.length || prevBlock.no === block.getGenesisBlock().header.no) {
-    const newBlock = block.createBlock(txs, prevBlock, true)
+  if (txs.length || prevBlockHeader.no === block.getGenesisBlock().header.no) {
+    const newBlock = block.createBlock(txs, prevBlockHeader, true)
     block.sign(newBlock)
     // todo: below two should be a single operation editing multiple files so they won't fail separately
     await github.createFile(block.toJson(newBlock), blockPath)

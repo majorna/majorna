@@ -36,7 +36,7 @@ suite('blockchain', () => {
     const now = new Date()
     twoDaysAgo.setDate(twoDaysAgo.getDate() - 2)
     const path = blockchain.getBlockPath(now) + '-' + utils.getRandomStr()
-    await blockchain.insertBlock(twoDaysAgo, now, path, block.getGenesisBlock())
+    await blockchain.insertBlock(twoDaysAgo, now, path, block.getGenesisBlock().header)
 
     const blockFile = await github.getFileContent(path)
     const blockObj = block.fromJson(blockFile)
