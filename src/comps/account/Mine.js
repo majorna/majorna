@@ -15,8 +15,6 @@ export default class extends Component {
     showDetails: false
   }
 
-  runMinerLoop = true
-
   componentDidMount = async () => {
     this.runMinerLoop = true
 
@@ -37,7 +35,7 @@ export default class extends Component {
         mineableBlock.targetDifficulty,
         s => this.setState(s), // progress update
         async nonce => { // mined a block
-          await server.blocks.create(this.state.blockNo, nonce) // todo: ignore errors (except auth) but display error msg
+          await server.blocks.create(this.state.blockNo, nonce) // todo: ignore errors but display error msg
           this.setState((preState, props) => ({
             minedBlocks: (preState.minedBlocks + 1),
             hashRate: 0,
