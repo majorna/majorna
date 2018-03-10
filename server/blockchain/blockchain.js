@@ -4,8 +4,9 @@ const github = require('../data/github')
 const crypto = require('./crypto')
 const utils = require('../data/utils')
 
-// a file with this name at the root of the git repo
+// files with these names at the root of the git repo
 const lastBlockHeaderFilePath = 'lastblockheader'
+const genesisBlockPath = 'genesisblock'
 
 /**
  * Retrieves last block's header as an object from github, asynchronously.
@@ -64,7 +65,17 @@ exports.getBlockTimeRange = (start, end) => {
 exports.insertBlock = async (startTime, endTime, blockPath, prevBlockHeader) => {
   // todo: validate all txs before inserting (within valid time, signatures, etc.), and entire block after inserting
   const txs = await db.getTxsByTimeRange(startTime, endTime)
-  if (txs.length || prevBlockHeader.no === block.getGenesisBlock().header.no) {
+  const genesis = block.getGenesisBlock()
+  const blockNo2 = prevBlockHeader.no === genesis.header.no // the block after genesis
+
+  if (txs.length || blockNo2) {
+    if (blockNo2) {
+      // write genesis block to git repo
+      block.sign(genesis)
+      await github.createFile(block.toJson(genesis), genesisBlockPath)
+      console.log(`inserted genesis block ${genesisBlockPath}`)
+    }
+
     const newBlock = block.createBlock(txs, prevBlockHeader, true)
     block.sign(newBlock)
     // todo: below two should be a single operation editing multiple files so they won't fail separately
