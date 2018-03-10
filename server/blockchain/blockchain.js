@@ -72,7 +72,7 @@ exports.insertBlock = async (startTime, endTime, blockPath, prevBlockHeader) => 
     if (blockNo2) {
       // write genesis block to git repo
       block.sign(genesis)
-      await github.createFile(block.toJson(genesis), genesisBlockPath)
+      await github.upsertFile(block.toJson(genesis), genesisBlockPath)
       console.log(`inserted genesis block ${genesisBlockPath}`)
     }
 

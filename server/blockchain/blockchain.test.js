@@ -58,6 +58,8 @@ suite('blockchain', () => {
     assert(blockObj.txs[0].from)
     assert(blockObj.txs[0].time)
     assert(blockObj.txs[0].amount)
+
+    // todo: verify genesis in git repo
   })
 
   test('insertBlockSinceLastOne', async () => {
