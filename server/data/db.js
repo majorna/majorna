@@ -193,6 +193,11 @@ exports.makeMajornaTx = (to, amount) => firestore.runTransaction(async t => {
   }
   const receiver = receiverDoc.data()
 
+  // increase market cap
+  const metaDoc = await t.get(metaDocRef)
+  const meta = metaDoc.data()
+  t.update(metaDocRef, {cap: meta.cap + amount})
+
   // add tx to txs collection
   const txRef = txsColRef.doc()
   const signedTx = tx.sign({id: txRef.id, from: {id: from, balance: 0}, to: {id: to, balance: receiver.balance}, time, amount})

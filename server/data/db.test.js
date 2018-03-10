@@ -138,4 +138,8 @@ suite('db', () => {
     try { await db.makeTx('1', '1', 10) } catch (e) { err = e }
     assert(err)
   })
+
+  test('makeMajornaTx', () => {
+    // todo: verify market cap increase
+  })
 })
