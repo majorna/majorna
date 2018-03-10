@@ -93,6 +93,7 @@ export default withRouter(class App extends Component {
         this.props.location.pathname !== '/login' && this.props.history.push('/')
       }
     })
+    setInterval(async () => {config.server.token = await u.getIdToken()}, 15 * 60 * 1000) // id token expires every 60 mins
   }
 
   logout = async () => {
