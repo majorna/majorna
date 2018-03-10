@@ -18,6 +18,7 @@ exports.getStr = tx =>
   '' + tx.id + tx.from.id + tx.from.balance + tx.to.id + tx.to.balance + tx.time.getTime() + tx.amount
 
 exports.getObj = tx => ({
+  sig: tx.sig,
   id: tx.id,
   from: {id: tx.from.id, balance: tx.from.balance},
   to: {id: tx.to.id, balance: tx.to.balance},
