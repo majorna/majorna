@@ -1,15 +1,13 @@
+const assert = require('assert')
 const crypto = require('./crypto')
 const txTools = require('./txs')
 const tx = require('./tx')
 
 /**
  * Returns a new copy of the genesis block; the very first block of the blockchain.
- *
- * This is also the block schema:
- * Either trust (signature) or PoW (difficulty and nonce) are required.
  */
 exports.getGenesisBlock = () => ({
-  sig: '', // optional: if given, difficulty and nonce are not required
+  sig: '', // optional: if given, difficulty and nonce are not obligatory
   header: {
     no: 1,
     prevHash: '',
@@ -25,13 +23,12 @@ exports.getGenesisBlock = () => ({
 /**
  * Creates a block with given txs and previous block or block header.
  */
-exports.createBlock = (txs, prevBlockOrBlockHeader) => {
-  const prevHeader = prevBlockOrBlockHeader.header || prevBlockOrBlockHeader
+exports.createBlock = (txs, prevBlockHeader) => {
   return {
     sig: '',
     header: {
-      no: prevHeader.no + 1,
-      prevHash: exports.hashBlockHeader(prevHeader),
+      no: prevBlockHeader.no + 1,
+      prevHash: exports.hashBlockHeader(prevBlockHeader),
       txCount: txs.length,
       merkleRoot: (txs.length && txTools.createMerkle(txs).getMerkleRoot().toString('base64')) || '', // block are allowed to have no txs in them
       time: new Date(),
@@ -75,6 +72,11 @@ exports.getHeaderStr = (blockHeader, skipNonce) =>
   blockHeader.merkleRoot + blockHeader.time.getTime() + blockHeader.difficulty
 
 /**
+ * Returns the hash of a given block header.
+ */
+exports.hashBlockHeader = blockHeader => crypto.hashText(exports.getHeaderStr(blockHeader))
+
+/**
  * Signs a block with majorna certificate.
  */
 exports.sign = block => { block.sig = crypto.signText(exports.getHeaderStr(block.header)) }
@@ -85,9 +87,31 @@ exports.sign = block => { block.sig = crypto.signText(exports.getHeaderStr(block
 exports.verifySignature = block => crypto.verifyText(block.sig, exports.getHeaderStr(block.header))
 
 /**
- * Returns the hash of a given block header.
+ * Verifies the given block. Requires the previous block header for the verification.
+ * Throws an assert.AssertionError with a relevant message, if the verification fails.
  */
-exports.hashBlockHeader = blockHeader => crypto.hashText(exports.getHeaderStr(blockHeader))
+exports.verifyBlock = (block, prevBlockHeader) => {
+  assert(block.header.no === prevBlockHeader.no + 1)
+  assert(block.header.prevHash.length === 44)
+  assert(block.header.txCount === block.txs.length)
+  if (block.txs.length) {
+    assert(block.header.merkleRoot.length === 44)
+  } else {
+    assert(block.header.merkleRoot === '')
+  }
+  assert(block.header.time.getTime() <= (new Date()).getTime())
+
+  if (block.sig) {
+    assert(block.sig.length === 96)
+    assert(block.verifySignature(block))
+    assert(block.header.difficulty === 0)
+    assert(block.header.nonce === 0)
+  } else {
+    assert(!block.sig)
+    assert(block.header.difficulty > 0)
+    assert(block.header.nonce > 0)
+  }
+}
 
 /**
  * Accepts a hash as an Uint8Array array, returns the difficulty as an integer.

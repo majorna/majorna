@@ -30,7 +30,7 @@ function verifyBlock (blockObj, prevBlock, txs) {
 
 suite('block', () => {
   test('toJson, fromJson', () => {
-    const newBlock = block.createBlock(txs, block.getGenesisBlock())
+    const newBlock = block.createBlock(txs, block.getGenesisBlock().header)
     const blockJson = block.toJson(newBlock)
     const parsedBlock = block.fromJson(blockJson)
     assert(parsedBlock.header.time.getTime() === newBlock.header.time.getTime())
@@ -38,14 +38,14 @@ suite('block', () => {
   })
 
   test('sign', () => {
-    const signedBlock = block.createBlock(txs, block.getGenesisBlock())
+    const signedBlock = block.createBlock(txs, block.getGenesisBlock().header)
     block.sign(signedBlock)
     verifyBlock(signedBlock, block.getGenesisBlock(), txs)
 
     // sign same thing twice and make sure that signatures turn out different (ec signing uses a random number)
-    const block1 = block.createBlock(txs, block.getGenesisBlock())
+    const block1 = block.createBlock(txs, block.getGenesisBlock().header)
     block.sign(block1)
-    const block2 = block.createBlock(txs, block.getGenesisBlock())
+    const block2 = block.createBlock(txs, block.getGenesisBlock().header)
     block.sign(block2)
     assert(block1.sig !== block2.sig)
   })
@@ -78,7 +78,7 @@ suite('block', () => {
 
   test('mineBlock', () => {
     const targetDifficulty = 8
-    const minedBlock = block.createBlock(txs, block.getGenesisBlock())
+    const minedBlock = block.createBlock(txs, block.getGenesisBlock().header)
     const hash = block.mineBlock(minedBlock, targetDifficulty)
     verifyBlock(minedBlock, block.getGenesisBlock(), txs)
 
@@ -89,7 +89,7 @@ suite('block', () => {
 
   test('mineBlock with empty txs', () => {
     const emptyTxs = []
-    const minedBlock = block.createBlock(emptyTxs, block.getGenesisBlock())
+    const minedBlock = block.createBlock(emptyTxs, block.getGenesisBlock().header)
     block.mineBlock(minedBlock, 4)
     verifyBlock(minedBlock, block.getGenesisBlock(), emptyTxs)
   })
