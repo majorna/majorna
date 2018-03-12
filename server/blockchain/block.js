@@ -79,8 +79,14 @@ exports.getHeaderStr = (blockHeader, skipNonce) =>
  */
 exports.sign = block => { block.sig = crypto.signText(exports.getHeaderStr(block.header)) }
 
+/**
+ * Verifies a given block's signature.
+ */
 exports.verifySignature = block => crypto.verifyText(block.sig, exports.getHeaderStr(block.header))
 
+/**
+ * Returns the hash of a given block header.
+ */
 exports.hashBlockHeader = blockHeader => crypto.hashText(exports.getHeaderStr(blockHeader))
 
 /**
