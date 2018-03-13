@@ -76,7 +76,7 @@ exports.insertBlock = async (startTime, endTime, blockPath, prevBlockHeader) => 
       console.log(`inserted genesis block ${genesisBlockPath}`)
     }
 
-    const newBlock = block.createBlock(txs, prevBlockHeader, true)
+    const newBlock = block.create(txs, prevBlockHeader, true)
     block.sign(newBlock)
     // todo: below two should be a single operation editing multiple files so they won't fail separately
     await github.createFile(block.toJson(newBlock), blockPath)

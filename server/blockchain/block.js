@@ -23,7 +23,7 @@ exports.getGenesisBlock = () => ({
 /**
  * Creates a block with given txs and previous block or block header.
  */
-exports.createBlock = (txs, prevBlockHeader) => {
+exports.create = (txs, prevBlockHeader) => {
   return {
     sig: '',
     header: {
