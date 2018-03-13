@@ -88,33 +88,39 @@ exports.verifySignature = block => crypto.verifyText(block.sig, exports.getHeade
 
 /**
  * Verifies the given block. Requires the previous block header for the verification.
- * Throws an assert.AssertionError with a relevant message, if the verification fails.
+ * Returns true if block is valid. Throws an assert.AssertionError with a relevant message, if the verification fails.
  */
-exports.verifyBlock = (block, prevBlockHeader) => {
+exports.verify = (block, prevBlockHeader) => {
   // verify schema
   assert(block.header.no === prevBlockHeader.no + 1, `Block header number is not correct. Expected ${prevBlockHeader.no + 1}, got ${block.header.no}.`)
-  assert(block.header.prevHash)
-  assert(block.header.prevHash.length === 44)
-  assert(block.header.txCount === block.txs.length)
-  if (block.txs.length) {
+  assert(block.header.prevHash, 'Previous block hash should be provided.')
+  assert(block.header.prevHash.length === 44, `Previous block hash length is invalid. Expected ${44}, got ${block.header.prevHash.length}.`)
+  assert(block.header.txCount === block.txs.length, `Tx count in header does not match the actual tx count in block. Expected ${block.txs.length}, got ${block.header.txCount}.`)
+  if (block.header.txCount) {
     assert(block.header.merkleRoot.length === 44)
+    assert(block.header.merkleRoot, 'Merkle root should be provided.')
+    assert(block.header.merkleRoot.length === 44, `Merkle root length is invalid. Expected ${44}, got ${block.header.merkleRoot.length}.`)
   } else {
-    assert(block.header.merkleRoot === '')
+    assert(block.header.merkleRoot === '', 'Merkle root should be an empty string if block contains no txs.')
   }
-  assert(block.header.time.getTime() <= (new Date()).getTime())
-
+  assert(block.header.time, 'Block header does not have a time.')
+  assert(block.header.time.getTime() > exports.getGenesisBlock().header.time.getTime(), 'Block time is invalid or is before the genesis.')
   if (block.sig) {
-    assert(block.sig.length === 96)
-    assert(block.verifySignature(block))
-    assert(block.header.difficulty === 0)
-    assert(block.header.nonce === 0)
+    assert(block.sig.length === 96, `Block signature length is invalid. Expected ${96}, got ${block.sig.length}.`)
+    assert(block.verifySignature(block), 'Block signature verification failed.')
+    block.header.difficulty > 0 && assert(block.header.nonce > 0, 'Nonce should be > 0 if difficulty is > 0.')
   } else {
-    assert(!block.sig)
-    assert(block.header.difficulty > 0)
-    assert(block.header.nonce > 0)
+    assert(block.header.difficulty > 0, 'Block difficulty should be > 0 for unsigned blocks.')
+    assert(block.header.nonce > 0, 'Block nonce should be > 0 for unsigned blocks.')
   }
 
   // verify contents
+  assert(block.header.prevHash === exports.hashBlockHeader(prevBlockHeader),
+    `Given previous block header hash does not match. Expected ${exports.hashBlockHeader(prevBlockHeader)}, got ${block.header.prevHash}.`)
+
+  block.txs.forEach(tx => assert(tx))
+
+  return true
 }
 
 /**

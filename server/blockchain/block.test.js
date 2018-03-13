@@ -5,31 +5,27 @@ const AssertionError = require('assert').AssertionError
 
 const txs = testData.txs
 
-function verifyBlock (blockObj, prevBlock, txs) {
-  assert(blockObj.header.no === prevBlock.header.no + 1)
-  assert(blockObj.header.prevHash.length === 44)
-  assert(blockObj.header.txCount === txs.length)
-  if (txs.length) {
-    assert(blockObj.header.merkleRoot.length === 44)
-  } else {
-    assert(blockObj.header.merkleRoot === '')
-  }
-  assert(blockObj.header.time.getTime() <= (new Date()).getTime())
-  assert(blockObj.txs.length === txs.length)
-
-  if (blockObj.sig) {
-    assert(blockObj.sig.length === 96)
-    assert(block.verifySignature(blockObj))
-    assert(blockObj.header.difficulty === 0)
-    assert(blockObj.header.nonce === 0)
-  } else {
-    assert(!blockObj.sig)
-    assert(blockObj.header.difficulty > 0)
-    assert(blockObj.header.nonce > 0)
-  }
-}
-
 suite('block', () => {
+  test('getGenesisBlock', () => {
+    // verify genesis fields
+    const genesis = block.getGenesisBlock()
+    assert(genesis.sig === '')
+    assert(genesis.header.no === 1)
+    assert(genesis.header.prevHash === '')
+    assert(genesis.header.txCount === 0)
+    assert(genesis.header.merkleRoot === '')
+    assert(genesis.header.time.getTime() === new Date('01 Jan 2018 00:00:00 UTC').getTime())
+    assert(genesis.header.difficulty === 0)
+    assert(genesis.header.nonce === 0)
+    assert(Array.isArray(genesis.txs))
+    assert(genesis.txs.length === 0)
+
+    // verify immutability
+    genesis.header.no = 10
+    const genesis2 = block.getGenesisBlock()
+    assert(genesis2.header.no === 1)
+  })
+
   test('toJson, fromJson', () => {
     const newBlock = block.createBlock(txs, block.getGenesisBlock().header)
     const blockJson = block.toJson(newBlock)
@@ -41,7 +37,7 @@ suite('block', () => {
   test('sign', () => {
     const signedBlock = block.createBlock(txs, block.getGenesisBlock().header)
     block.sign(signedBlock)
-    verifyBlock(signedBlock, block.getGenesisBlock(), txs)
+    block.verify(signedBlock, block.getGenesisBlock(), txs)
 
     // sign same thing twice and make sure that signatures turn out different (ec signing uses a random number)
     const block1 = block.createBlock(txs, block.getGenesisBlock().header)
@@ -51,7 +47,7 @@ suite('block', () => {
     assert(block1.sig !== block2.sig)
   })
 
-  test.only('verifyBlock', () => {
+  test.only('verify', () => {
     // verify the fields of assertion error
     try {
       assert(2 === 4, 'lorem')
@@ -95,7 +91,7 @@ suite('block', () => {
     const targetDifficulty = 8
     const minedBlock = block.createBlock(txs, block.getGenesisBlock().header)
     const hash = block.mineBlock(minedBlock, targetDifficulty)
-    verifyBlock(minedBlock, block.getGenesisBlock(), txs)
+    block.verify(minedBlock, block.getGenesisBlock(), txs)
 
     assert(minedBlock.header.difficulty >= targetDifficulty)
     assert(hash.substring(0, 1) === 'A')
@@ -106,6 +102,6 @@ suite('block', () => {
     const emptyTxs = []
     const minedBlock = block.createBlock(emptyTxs, block.getGenesisBlock().header)
     block.mineBlock(minedBlock, 4)
-    verifyBlock(minedBlock, block.getGenesisBlock(), emptyTxs)
+    block.verify(minedBlock, block.getGenesisBlock(), emptyTxs)
   })
 })

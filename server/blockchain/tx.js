@@ -32,3 +32,5 @@ exports.sign = tx => {
   sigTx.sig = crypto.signText(exports.getStr(sigTx))
   return sigTx
 }
+
+exports.verify = tx => false
