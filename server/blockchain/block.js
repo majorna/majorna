@@ -107,7 +107,7 @@ exports.verify = (block, prevBlockHeader) => {
   assert(block.header.time.getTime() > exports.getGenesisBlock().header.time.getTime(), 'Block time is invalid or is before the genesis.')
   if (block.sig) {
     assert(block.sig.length === 96, `Block signature length is invalid. Expected ${96}, got ${block.sig.length}.`)
-    assert(block.verifySignature(block), 'Block signature verification failed.')
+    assert(exports.verifySignature(block), 'Block signature verification failed.')
     block.header.difficulty > 0 && assert(block.header.nonce > 0, 'Nonce should be > 0 if difficulty is > 0.')
   } else {
     assert(block.header.difficulty > 0, 'Block difficulty should be > 0 for unsigned blocks.')

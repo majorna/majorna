@@ -26,6 +26,15 @@ suite('block', () => {
     assert(genesis2.header.no === 1)
   })
 
+  test('createBlock', () => {
+    const genesisHeader = block.getGenesisBlock().header
+    const blockNo2 = block.createBlock(txs, genesisHeader)
+    assert.throws(() => block.verify(blockNo2, genesisHeader))
+
+    block.sign(blockNo2)
+    assert(block.verify(blockNo2, genesisHeader))
+  })
+
   test('toJson, fromJson', () => {
     const newBlock = block.createBlock(txs, block.getGenesisBlock().header)
     const blockJson = block.toJson(newBlock)
@@ -37,7 +46,7 @@ suite('block', () => {
   test('sign', () => {
     const signedBlock = block.createBlock(txs, block.getGenesisBlock().header)
     block.sign(signedBlock)
-    block.verify(signedBlock, block.getGenesisBlock(), txs)
+    block.verify(signedBlock, block.getGenesisBlock().header)
 
     // sign same thing twice and make sure that signatures turn out different (ec signing uses a random number)
     const block1 = block.createBlock(txs, block.getGenesisBlock().header)
@@ -47,7 +56,7 @@ suite('block', () => {
     assert(block1.sig !== block2.sig)
   })
 
-  test.only('verify', () => {
+  test('verify', () => {
     // verify the fields of assertion error
     try {
       assert(2 === 4, 'lorem')
@@ -91,7 +100,7 @@ suite('block', () => {
     const targetDifficulty = 8
     const minedBlock = block.createBlock(txs, block.getGenesisBlock().header)
     const hash = block.mineBlock(minedBlock, targetDifficulty)
-    block.verify(minedBlock, block.getGenesisBlock(), txs)
+    block.verify(minedBlock, block.getGenesisBlock().header)
 
     assert(minedBlock.header.difficulty >= targetDifficulty)
     assert(hash.substring(0, 1) === 'A')
@@ -102,6 +111,6 @@ suite('block', () => {
     const emptyTxs = []
     const minedBlock = block.createBlock(emptyTxs, block.getGenesisBlock().header)
     block.mineBlock(minedBlock, 4)
-    block.verify(minedBlock, block.getGenesisBlock(), emptyTxs)
+    block.verify(minedBlock, block.getGenesisBlock().header)
   })
 })
