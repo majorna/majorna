@@ -1,6 +1,7 @@
 const assert = require('assert')
 const block = require('./block')
 const testData = require('../config/test').data
+const AssertionError = require('assert').AssertionError
 
 const txs = testData.txs
 
@@ -48,6 +49,20 @@ suite('block', () => {
     const block2 = block.createBlock(txs, block.getGenesisBlock().header)
     block.sign(block2)
     assert(block1.sig !== block2.sig)
+  })
+
+  test.only('verifyBlock', () => {
+    // verify the fields of assertion error
+    try {
+      assert(2 === 4, 'lorem')
+    } catch (e) {
+      assert(e instanceof AssertionError)
+      assert(e.message === 'lorem')
+    }
+
+    // verify a valid signed and mined block
+
+    // invalid blocks
   })
 
   test('getHashDifficulty', () => {

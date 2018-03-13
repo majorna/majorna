@@ -91,7 +91,9 @@ exports.verifySignature = block => crypto.verifyText(block.sig, exports.getHeade
  * Throws an assert.AssertionError with a relevant message, if the verification fails.
  */
 exports.verifyBlock = (block, prevBlockHeader) => {
-  assert(block.header.no === prevBlockHeader.no + 1)
+  // verify schema
+  assert(block.header.no === prevBlockHeader.no + 1, `Block header number is not correct. Expected ${prevBlockHeader.no + 1}, got ${block.header.no}.`)
+  assert(block.header.prevHash)
   assert(block.header.prevHash.length === 44)
   assert(block.header.txCount === block.txs.length)
   if (block.txs.length) {
@@ -111,6 +113,8 @@ exports.verifyBlock = (block, prevBlockHeader) => {
     assert(block.header.difficulty > 0)
     assert(block.header.nonce > 0)
   }
+
+  // verify contents
 }
 
 /**
