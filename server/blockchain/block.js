@@ -1,7 +1,7 @@
 const assert = require('assert')
 const crypto = require('./crypto')
-const txTools = require('./txs')
-const tx = require('./tx')
+const txsUtils = require('./txs')
+const txUtils = require('./tx')
 
 /**
  * Returns a new copy of the genesis block; the very first block of the blockchain.
@@ -28,14 +28,14 @@ exports.create = (txs, prevBlockHeader) => {
     sig: '',
     header: {
       no: prevBlockHeader.no + 1,
-      prevHash: exports.hashBlockHeader(prevBlockHeader),
+      prevHash: exports.hashHeader(prevBlockHeader),
       txCount: txs.length,
-      merkleRoot: (txs.length && txTools.createMerkle(txs).getMerkleRoot().toString('base64')) || '', // block are allowed to have no txs in them
+      merkleRoot: (txs.length && txsUtils.createMerkle(txs).getMerkleRoot().toString('base64')) || '', // block are allowed to have no txs in them
       time: new Date(),
       difficulty: 0,
       nonce: 0
     },
-    txs: txs.map(t => tx.getObj(t))
+    txs: txs.map(t => txUtils.getObj(t))
   }
 }
 
@@ -74,7 +74,8 @@ exports.getHeaderStr = (blockHeader, skipNonce) =>
 /**
  * Returns the hash of a given block header.
  */
-exports.hashBlockHeader = blockHeader => crypto.hashText(exports.getHeaderStr(blockHeader))
+exports.hashHeader = blockHeader => crypto.hashText(exports.getHeaderStr(blockHeader))
+exports.hashHeaderToBuffer = blockHeader => crypto.hashTextToBuffer(exports.getHeaderStr(blockHeader))
 
 /**
  * Signs a block with majorna certificate.
@@ -87,6 +88,11 @@ exports.sign = block => { block.sig = crypto.signText(exports.getHeaderStr(block
 exports.verifySignature = block => crypto.verifyText(block.sig, exports.getHeaderStr(block.header))
 
 /**
+ * Hashes a given block header and checks if the nonce matches the claimed difficulty.
+ */
+exports.verifyHeaderHash = blockHeader => exports.getHashDifficulty(exports.hashHeaderToBuffer(blockHeader)) >= blockHeader.difficulty
+
+/**
  * Verifies the given block. Requires the previous block header for the verification.
  * Returns true if block is valid. Throws an assert.AssertionError with a relevant message, if the verification fails.
  */
@@ -97,7 +103,6 @@ exports.verify = (block, prevBlockHeader) => {
   assert(block.header.prevHash.length === 44, `Previous block hash length is invalid. Expected ${44}, got ${block.header.prevHash.length}.`)
   assert(block.header.txCount === block.txs.length, `Tx count in header does not match the actual tx count in block. Expected ${block.txs.length}, got ${block.header.txCount}.`)
   if (block.header.txCount) {
-    assert(block.header.merkleRoot.length === 44)
     assert(block.header.merkleRoot, 'Merkle root should be provided.')
     assert(block.header.merkleRoot.length === 44, `Merkle root length is invalid. Expected ${44}, got ${block.header.merkleRoot.length}.`)
   } else {
@@ -107,7 +112,6 @@ exports.verify = (block, prevBlockHeader) => {
   assert(block.header.time.getTime() > exports.getGenesisBlock().header.time.getTime(), 'Block time is invalid or is before the genesis.')
   if (block.sig) {
     assert(block.sig.length === 96, `Block signature length is invalid. Expected ${96}, got ${block.sig.length}.`)
-    assert(exports.verifySignature(block), 'Block signature verification failed.')
     block.header.difficulty > 0 && assert(block.header.nonce > 0, 'Nonce should be > 0 if difficulty is > 0.')
   } else {
     assert(block.header.difficulty > 0, 'Block difficulty should be > 0 for unsigned blocks.')
@@ -115,10 +119,21 @@ exports.verify = (block, prevBlockHeader) => {
   }
 
   // verify contents
-  assert(block.header.prevHash === exports.hashBlockHeader(prevBlockHeader),
-    `Given previous block header hash does not match. Expected ${exports.hashBlockHeader(prevBlockHeader)}, got ${block.header.prevHash}.`)
-
-  block.txs.forEach(tx => assert(tx))
+  const prevBlockHash = exports.hashHeader(prevBlockHeader)
+  assert(block.header.prevHash === prevBlockHash, `Given previous block header hash does not match. Expected ${prevBlockHash}, got ${block.header.prevHash}.`)
+  if (block.header.txCount) {
+    const merkleRoot = txsUtils.createMerkle(block.txs).getMerkleRoot().toString('base64')
+    assert(block.header.merkleRoot === merkleRoot, `Merkle root is not valid. Expected ${merkleRoot}, got ${block.header.merkleRoot}`)
+    block.txs.forEach(tx => assert(tx))
+  }
+  if (block.sig) {
+    assert(exports.verifySignature(block), 'Block signature verification failed.')
+  } else {
+    const hash = exports.hashHeaderToBuffer(block.header)
+    const difficulty = exports.getHashDifficulty(hash)
+    assert(difficulty >= block.header.difficulty,
+      `Nonce does not match claimed difficulty. Expected difficulty ${block.header.difficulty}, got ${difficulty} (hash: ${hash.toString('base64')}).`)
+  }
 
   return true
 }

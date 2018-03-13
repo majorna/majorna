@@ -5,7 +5,7 @@ const AssertionError = require('assert').AssertionError
 
 const txs = testData.txs
 
-suite('block', () => {
+suite.only('block', () => {
   test('getGenesisBlock', () => {
     // verify genesis fields
     const genesis = block.getGenesisBlock()
@@ -72,7 +72,7 @@ suite('block', () => {
 
     // verify a valid signed and mined block
 
-    // invalid blocks
+    // invalid blocks (invalid sig, invalid nonce, etc. every field)
   })
 
   test('getHashDifficulty', () => {
@@ -101,21 +101,25 @@ suite('block', () => {
     assert(difficulty4 === 7)
   })
 
-  test('mineBlock', () => {
+  test.only('mineBlock', () => {
+    const genesisHeader = block.getGenesisBlock().header
     const targetDifficulty = 8
-    const minedBlock = block.create(txs, block.getGenesisBlock().header)
+    const minedBlock = block.create(txs, genesisHeader)
     const hash = block.mineBlock(minedBlock, targetDifficulty)
-    block.verify(minedBlock, block.getGenesisBlock().header)
 
     assert(minedBlock.header.difficulty >= targetDifficulty)
     assert(hash.substring(0, 1) === 'A')
     assert(minedBlock.header.nonce > 0)
+
+    block.verify(minedBlock, genesisHeader)
   })
 
   test('mineBlock with empty txs', () => {
+    const genesisHeader = block.getGenesisBlock().header
     const emptyTxs = []
-    const minedBlock = block.create(emptyTxs, block.getGenesisBlock().header)
+    const minedBlock = block.create(emptyTxs, genesisHeader)
     block.mineBlock(minedBlock, 4)
-    block.verify(minedBlock, block.getGenesisBlock().header)
+
+    block.verify(minedBlock, genesisHeader)
   })
 })
