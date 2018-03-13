@@ -36,11 +36,17 @@ suite('block', () => {
   })
 
   test('toJson, fromJson', () => {
-    const newBlock = block.createBlock(txs, block.getGenesisBlock().header)
+    const genesisHeader = block.getGenesisBlock().header
+    const newBlock = block.createBlock(txs, genesisHeader)
+    block.sign(newBlock)
+
     const blockJson = block.toJson(newBlock)
     const parsedBlock = block.fromJson(blockJson)
+
+    assert(block.verify(parsedBlock, genesisHeader))
     assert(parsedBlock.header.time.getTime() === newBlock.header.time.getTime())
     assert(parsedBlock.txs[0].time.getTime() === newBlock.txs[0].time.getTime())
+
   })
 
   test('sign', () => {
