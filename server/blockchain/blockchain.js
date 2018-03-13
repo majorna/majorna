@@ -160,15 +160,15 @@ exports.startBlockchainInsertTimer = interval => {
  * In most cases, one honest peer is enough to get the longest blockchain since it's so hard to fake an entire chain.
  */
 exports.getMineableBlockHeader = async () => {
-  const lastBlockHeader = await exports.getLastBlockHeader()
-  const str = block.getHeaderStr(lastBlockHeader, true)
-  const targetDifficulty = lastBlockHeader.difficulty + 1 // always need to work on a greater difficulty than existing
+  const header = await exports.getLastBlockHeader()
+  const targetDifficulty = header.difficulty = (header.difficulty + 1) // always need to work on a greater difficulty than existing
+  const str = block.getHeaderStr(header, true)
   return {
-    no: lastBlockHeader.no,
+    no: header.no,
     targetDifficulty,
     reward: block.getBlockReward(targetDifficulty),
     headerString: str,
-    headerObject: lastBlockHeader
+    headerObject: header
   }
 }
 

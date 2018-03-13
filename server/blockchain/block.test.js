@@ -5,7 +5,7 @@ const AssertionError = require('assert').AssertionError
 
 const txs = testData.txs
 
-suite.only('block', () => {
+suite('block', () => {
   test('getGenesisBlock', () => {
     // verify genesis fields
     const genesis = block.getGenesisBlock()
@@ -101,13 +101,12 @@ suite.only('block', () => {
     assert(difficulty4 === 7)
   })
 
-  test.only('mineBlock', () => {
+  test('mineBlock', () => {
     const genesisHeader = block.getGenesisBlock().header
-    const targetDifficulty = 8
     const minedBlock = block.create(txs, genesisHeader)
-    const hash = block.mineBlock(minedBlock, targetDifficulty)
+    minedBlock.header.difficulty = 8
+    const hash = block.mineBlock(minedBlock)
 
-    assert(minedBlock.header.difficulty >= targetDifficulty)
     assert(hash.substring(0, 1) === 'A')
     assert(minedBlock.header.nonce > 0)
 
@@ -118,7 +117,8 @@ suite.only('block', () => {
     const genesisHeader = block.getGenesisBlock().header
     const emptyTxs = []
     const minedBlock = block.create(emptyTxs, genesisHeader)
-    block.mineBlock(minedBlock, 4)
+    minedBlock.header.difficulty = 4
+    block.mineBlock(minedBlock)
 
     block.verify(minedBlock, genesisHeader)
   })

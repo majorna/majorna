@@ -16,7 +16,8 @@ suite('route: blocks', () => {
     const mineableBlockHeader = res.data
     const lastBlockHeader = mineableBlockHeader.headerObject
     lastBlockHeader.time = new Date(lastBlockHeader.time)
-    block.mineBlock(lastBlockHeader, mineableBlockHeader.targetDifficulty)
+    lastBlockHeader.difficulty = mineableBlockHeader.targetDifficulty
+    block.mineBlock(lastBlockHeader)
 
     const resReward = await testData.users.u1Request.post('/blocks', {no: lastBlockHeader.no, nonce: lastBlockHeader.nonce})
     assert(resReward.status === 201)

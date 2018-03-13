@@ -173,11 +173,9 @@ exports.getHashDifficulty = hash => {
 /**
  * Calculates nonce (mines) until a hash of required difficulty is found for the block.
  * @param blockOrHeader - Block or block header (as object) to mine.
- * @param targetDifficulty - Used for testing only. Otherwise difficulty field in the block header is used.
  */
-exports.mineBlock = (blockOrHeader, targetDifficulty) => {
+exports.mineBlock = (blockOrHeader) => {
   const header = blockOrHeader.header || blockOrHeader
-  targetDifficulty = targetDifficulty || header.difficulty
 
   let difficulty
   let hash
@@ -187,11 +185,10 @@ exports.mineBlock = (blockOrHeader, targetDifficulty) => {
     nonce++
     hash = crypto.hashTextToBuffer(nonce + str)
     difficulty = exports.getHashDifficulty(hash)
-    if (difficulty >= targetDifficulty) {
+    if (difficulty >= header.difficulty) {
       header.nonce = nonce
-      header.difficulty = targetDifficulty
       const hashBase64 = hash.toString('base64')
-      console.log(`mined block with difficulty: ${difficulty} (target: ${targetDifficulty}), nonce: ${header.nonce}, hash: ${hashBase64}`)
+      console.log(`mined block with difficulty: ${difficulty} (target: ${header.difficulty}), nonce: ${header.nonce}, hash: ${hashBase64}`)
       return hashBase64
     }
   }
