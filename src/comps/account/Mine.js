@@ -86,9 +86,9 @@ export default class extends Component {
           <div><strong>No:</strong> {this.state.blockHeader.no}</div>
           <div><strong>Time:</strong> {this.state.blockHeader.time}</div>
           <div><strong>Transaction Count:</strong> {this.state.blockHeader.txCount}</div>
-          <div><strong>Previous Difficulty:</strong> {this.state.blockHeader.difficulty}</div>
+          <div><strong>Previous Difficulty:</strong> {this.state.blockHeader.difficulty - 1}</div>
           <div><strong>Previous Nonce:</strong> {fn(this.state.blockHeader.nonce)}</div>
-          <div><strong>Previous Hash:</strong> <small>{this.state.blockHeader.prevHash}</small></div>
+          <div><strong>Previous Block Hash:</strong> <small>{this.state.blockHeader.prevHash}</small></div>
           <div><strong>Merkle Root:</strong> <small>{this.state.blockHeader.merkleRoot}</small></div>
 
           {/*<strong className="m-t-m">Peers</strong>*/}

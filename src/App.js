@@ -6,7 +6,7 @@ import 'firebase/auth'
 import 'firebase/firestore'
 import 'bulma/css/bulma.css'
 import './App.css'
-import './comps/FontAwesome'
+import './comps/global/FontAwesome'
 import config from './data/config'
 import server from './data/server'
 import Navbar from './comps/global/Navbar'
@@ -93,6 +93,13 @@ export default withRouter(class App extends Component {
         this.props.location.pathname !== '/login' && this.props.history.push('/')
       }
     })
+
+    // ID token expires every 60 mins so renew it every 15 mins not to send expired token to server
+    setInterval(async () => {
+      if (this.state.user) {
+        config.server.token = await this.state.user.getIdToken()
+      }
+    }, 15 * 60 * 1000)
   }
 
   logout = async () => {

@@ -4,8 +4,9 @@ const github = require('../data/github')
 const crypto = require('./crypto')
 const utils = require('../data/utils')
 
-// a file with this name at the root of the git repo
+// files with these names at the root of the git repo
 const lastBlockHeaderFilePath = 'lastblockheader'
+const genesisBlockPath = 'genesisblock'
 
 /**
  * Retrieves last block's header as an object from github, asynchronously.
@@ -59,14 +60,25 @@ exports.getBlockTimeRange = (start, end) => {
  * @param startTime - Time to start including txs from.
  * @param endTime - Time to stop including txs from.
  * @param blockPath - Full path of the block to create. i.e. "dir/sub_dir/filename".
- * @param prevBlock - Full path of the previous block. i.e. "dir/sub_dir/filename".
+ * @param prevBlockHeader - Previous block's header.
  */
-exports.insertBlock = async (startTime, endTime, blockPath, prevBlock) => {
+exports.insertBlock = async (startTime, endTime, blockPath, prevBlockHeader) => {
   // todo: validate all txs before inserting (within valid time, signatures, etc.), and entire block after inserting
   const txs = await db.getTxsByTimeRange(startTime, endTime)
-  if (txs.length || prevBlock.no === block.getGenesisBlock().header.no) {
-    const newBlock = block.createBlock(txs, prevBlock, true)
+  const genesis = block.getGenesisBlock()
+  const blockNo2 = prevBlockHeader.no === genesis.header.no // the block after genesis
+
+  if (txs.length || blockNo2) {
+    if (blockNo2) {
+      // write genesis block to git repo
+      block.sign(genesis)
+      await github.upsertFile(block.toJson(genesis), genesisBlockPath)
+      console.log(`inserted genesis block ${genesisBlockPath}`)
+    }
+
+    const newBlock = block.create(txs, prevBlockHeader)
     block.sign(newBlock)
+    block.verify(newBlock, prevBlockHeader)
     // todo: below two should be a single operation editing multiple files so they won't fail separately
     await github.createFile(block.toJson(newBlock), blockPath)
     newBlock.header.path = blockPath
@@ -149,15 +161,16 @@ exports.startBlockchainInsertTimer = interval => {
  * In most cases, one honest peer is enough to get the longest blockchain since it's so hard to fake an entire chain.
  */
 exports.getMineableBlockHeader = async () => {
-  const lastBlockHeader = await exports.getLastBlockHeader()
-  const str = block.getHeaderStr(lastBlockHeader, true)
-  const targetDifficulty = lastBlockHeader.difficulty + 1 // always need to work on a greater difficulty than existing
+  const header = await exports.getLastBlockHeader()
+  const targetDifficulty = header.difficulty = (header.difficulty + 1) // always need to work on a greater difficulty than existing
+  const str = block.getHeaderStr(header, true)
+  // todo: can be simplified greatly, can also include reward in header and reward tx in block
   return {
-    no: lastBlockHeader.no,
+    no: header.no,
     targetDifficulty,
     reward: block.getBlockReward(targetDifficulty),
     headerString: str,
-    headerObject: lastBlockHeader
+    headerObject: header
   }
 }
 

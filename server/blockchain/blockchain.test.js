@@ -36,7 +36,7 @@ suite('blockchain', () => {
     const now = new Date()
     twoDaysAgo.setDate(twoDaysAgo.getDate() - 2)
     const path = blockchain.getBlockPath(now) + '-' + utils.getRandomStr()
-    await blockchain.insertBlock(twoDaysAgo, now, path, block.getGenesisBlock())
+    await blockchain.insertBlock(twoDaysAgo, now, path, block.getGenesisBlock().header)
 
     const blockFile = await github.getFileContent(path)
     const blockObj = block.fromJson(blockFile)
@@ -58,6 +58,8 @@ suite('blockchain', () => {
     assert(blockObj.txs[0].from)
     assert(blockObj.txs[0].time)
     assert(blockObj.txs[0].amount)
+
+    // todo: verify genesis in git repo
   })
 
   test('insertBlockSinceLastOne', async () => {
@@ -123,9 +125,10 @@ suite('blockchain', () => {
       // get minable block
       const mineableBlockHeader = await blockchain.getMineableBlockHeader()
       const lastBlockHeader = mineableBlockHeader.headerObject
+      lastBlockHeader.difficulty = mineableBlockHeader.targetDifficulty
 
       // mine the block
-      const hashBase64 = block.mineBlock(lastBlockHeader, mineableBlockHeader.targetDifficulty)
+      const hashBase64 = block.mineBlock(lastBlockHeader)
       const hashBuffer = Buffer.from(hashBase64, 'base64')
       const difficulty = block.getHashDifficulty(hashBuffer)
       assert(difficulty > lastDifficulty)

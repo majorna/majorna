@@ -16,7 +16,7 @@ octokit.authenticate({
 // github api params
 const owner = config.github.owner
 const repo = config.github.repo
-const message = 'tx' // commit msg
+const message = 'majorna' // commit msg
 const committer = {name: 'majorna', email: 'mj@majorna'}
 
 /**
