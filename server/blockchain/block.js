@@ -93,7 +93,7 @@ exports.verifySignature = block => crypto.verifyText(block.sig, exports.getHeade
 /**
  * Hashes a given block header and checks if the nonce matches the claimed difficulty.
  */
-exports.verifyHeaderHash = blockHeader => exports.getHashDifficulty(exports.hashHeaderToBuffer(blockHeader)) >= blockHeader.difficulty
+// exports.verifyHeaderHash = blockHeader => exports.getHashDifficulty(exports.hashHeaderToBuffer(blockHeader)) >= blockHeader.difficulty
 
 /**
  * Verifies the given block. Requires the previous block header for the verification.

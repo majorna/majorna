@@ -76,8 +76,9 @@ exports.insertBlock = async (startTime, endTime, blockPath, prevBlockHeader) => 
       console.log(`inserted genesis block ${genesisBlockPath}`)
     }
 
-    const newBlock = block.create(txs, prevBlockHeader, true)
+    const newBlock = block.create(txs, prevBlockHeader)
     block.sign(newBlock)
+    block.verify(newBlock, prevBlockHeader)
     // todo: below two should be a single operation editing multiple files so they won't fail separately
     await github.createFile(block.toJson(newBlock), blockPath)
     newBlock.header.path = blockPath
@@ -182,8 +183,6 @@ exports.collectMiningReward = async (blockNo, nonce, uid) => {
   if (blockNo !== mineableBlockHeader.no) {
     throw new utils.UserVisibleError(`Mined block: ${blockNo} is not the latest: ${mineableBlockHeader.no}.`)
   }
-
-  // todo: just use new block.verify which verifies difficulty etc.
 
   // nonce must be of required difficulty
   const hash = crypto.hashTextToBuffer('' + nonce + mineableBlockHeader.headerString)
