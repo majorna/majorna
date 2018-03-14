@@ -183,6 +183,8 @@ exports.collectMiningReward = async (blockNo, nonce, uid) => {
     throw new utils.UserVisibleError(`Mined block: ${blockNo} is not the latest: ${mineableBlockHeader.no}.`)
   }
 
+  // todo: just use new block.verify which verifies difficulty etc.
+
   // nonce must be of required difficulty
   const hash = crypto.hashTextToBuffer('' + nonce + mineableBlockHeader.headerString)
   const difficulty = block.getHashDifficulty(hash)

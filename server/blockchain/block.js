@@ -80,7 +80,10 @@ exports.hashHeaderToBuffer = blockHeader => crypto.hashTextToBuffer(exports.getH
 /**
  * Signs a block with majorna certificate.
  */
-exports.sign = block => { block.sig = crypto.signText(exports.getHeaderStr(block.header)) }
+exports.sign = block => {
+  block.sig = crypto.signText(exports.getHeaderStr(block.header))
+  return block
+}
 
 /**
  * Verifies a given block's signature.
@@ -124,7 +127,7 @@ exports.verify = (block, prevBlockHeader) => {
   if (block.header.txCount) {
     const merkleRoot = txsUtils.createMerkle(block.txs).getMerkleRoot().toString('base64')
     assert(block.header.merkleRoot === merkleRoot, `Merkle root is not valid. Expected ${merkleRoot}, got ${block.header.merkleRoot}`)
-    block.txs.forEach(tx => assert(tx))
+    block.txs.forEach(tx => assert(txUtils.verify(tx)))
   }
   if (block.sig) {
     assert(exports.verifySignature(block), 'Block signature verification failed.')
