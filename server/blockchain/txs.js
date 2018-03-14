@@ -21,4 +21,7 @@ exports.getTxProof = (tx, merkle) => {}
 /**
  * Verifies a tx given a block header and merkle proof for that tx.
  */
-exports.verifyTxInBlock = (tx, blockHeader, merkleProof) => {}
+exports.verifyTxInBlock = (tx, blockHeader, merkleProof) => {
+  // todo: merkle-tools checks the proof without checking the tree depth hence enabling: https://en.wikipedia.org/wiki/Merkle_tree#Second_preimage_attack
+  // we already store txCount in header so can easily verify the tree depth ourselves on top of merkle-tools path verification
+}
