@@ -164,6 +164,7 @@ exports.getMineableBlockHeader = async () => {
   const header = await exports.getLastBlockHeader()
   const targetDifficulty = header.difficulty = (header.difficulty + 1) // always need to work on a greater difficulty than existing
   const str = block.getHeaderStr(header, true)
+  // todo: can be simplified greatly, can also include reward in header and reward tx in block
   return {
     no: header.no,
     targetDifficulty,
