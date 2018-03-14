@@ -21,7 +21,13 @@ exports.init = async () => {
   }
 
   const batch = firestore.batch()
-  batch.create(metaDocRef, {val: 0.01, cap: 0, userCount: 0})
+  batch.create(metaDocRef, {
+    val: 0.01,
+    cap: 0,
+    userCount: 0,
+    // monthly: [{t: 'May 12', mj: 0.01}],
+    // lastBlock: {}
+  })
   batch.create(usersColRef.doc('majorna'), {email: 'majorna@majorna', name: 'Majorna', created: new Date(), balance: 0, txs: []})
   await batch.commit()
 }

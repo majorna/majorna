@@ -31,7 +31,7 @@ export default withRouter(class App extends Component {
           val: null, // usd
           cap: null, // mj
           userCount: null,
-          monthly: null // usd per day, for last 1 month
+          monthly: undefined // usd per day, for last 1 month
         }
       }
     }
