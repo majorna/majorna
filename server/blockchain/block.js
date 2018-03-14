@@ -117,6 +117,7 @@ exports.verify = (block, prevBlockHeader) => {
   if (block.sig) {
     assert(block.sig.length === 96, `Block signature length is invalid. Expected ${96}, got ${block.sig.length}.`)
     block.header.difficulty > 0 && assert(block.header.nonce > 0, 'Nonce should be > 0 if difficulty is > 0.')
+    block.header.nonce > 0 && assert(block.header.difficulty > 0, 'Difficulty should be > 0 if nonce is > 0.')
   } else {
     assert(block.header.difficulty > 0, 'Block difficulty should be > 0 for unsigned blocks.')
     assert(block.header.nonce > 0, 'Block nonce should be > 0 for unsigned blocks.')
@@ -132,7 +133,8 @@ exports.verify = (block, prevBlockHeader) => {
   }
   if (block.sig) {
     assert(exports.verifySignature(block), 'Block signature verification failed.')
-  } else {
+  }
+  if (!block.sig || block.header.difficulty > 0 || block.header.nonce > 0) {
     const hash = exports.hashHeaderToBuffer(block.header)
     const difficulty = exports.getHashDifficulty(hash)
     assert(difficulty >= block.header.difficulty,
