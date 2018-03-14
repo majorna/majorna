@@ -48,16 +48,20 @@ suite('block', () => {
     assert(parsedBlock.txs[0].time.getTime() === newBlock.txs[0].time.getTime())
   })
 
-  test('sign', () => {
-    const signedBlock = block.create(txs, block.getGenesisBlock().header)
+  test('sign, verifySignature', () => {
+    // make sure that signing does not invalidate a block
+    const genesisHeader = block.getGenesisBlock().header
+    const signedBlock = block.create(txs, genesisHeader)
     block.sign(signedBlock)
-    block.verify(signedBlock, block.getGenesisBlock().header)
+    block.verify(signedBlock, genesisHeader)
 
-    // sign same thing twice and make sure that signatures turn out different (ec signing uses a random number)
-    const block1 = block.create(txs, block.getGenesisBlock().header)
+    // sign same thing twice and make sure that signatures turn out different (ec signing uses rng) but still valid
+    const block1 = block.create(txs, genesisHeader)
     block.sign(block1)
-    const block2 = block.create(txs, block.getGenesisBlock().header)
+    assert(block.verifySignature(block1))
+    const block2 = block.create(txs, genesisHeader)
     block.sign(block2)
+    assert(block.verifySignature(block2))
     assert(block1.sig !== block2.sig)
   })
 
@@ -70,9 +74,59 @@ suite('block', () => {
       assert(e.message === 'lorem')
     }
 
-    // verify a valid signed and mined block
+    // verify assert.throws validation
+    assert.throws(() => { throw new Error('wow') }, e => e.message.includes('wow'))
 
-    // invalid blocks (invalid sig, invalid nonce, etc. every field)
+    // verify a valid signed and mined block
+    const genesisHeader = block.getGenesisBlock().header
+    const signedBlock = block.create(txs, genesisHeader)
+    block.sign(signedBlock)
+    block.verify(signedBlock, genesisHeader)
+    const minedBlock = block.create(txs, genesisHeader)
+    minedBlock.header.difficulty = 1
+    block.mineBlock(minedBlock)
+    block.verify(minedBlock, genesisHeader)
+
+    // invalid sig
+    const noSigBlock = block.create(txs, genesisHeader)
+    assert.throws(() => block.verify(noSigBlock), e => e.message.includes('previous block'))
+    assert.throws(() => block.verify(noSigBlock, genesisHeader), e => e.message.includes('difficulty'))
+
+    // invalid nonce
+    const invalidNonceBlock = block.create(txs, genesisHeader)
+    invalidNonceBlock.header.difficulty = 60
+    invalidNonceBlock.header.nonce = 100
+    assert.throws(() => block.verify(invalidNonceBlock, genesisHeader), e => e.message.includes('claimed difficulty'))
+
+    // invalid prev hash
+    const invalidPrevHashBlock = block.create(txs, genesisHeader)
+    block.sign(invalidPrevHashBlock)
+    invalidPrevHashBlock.header.prevHash = 'Ypy9HtozxoOUejr7SLdqPbsJsBB39wqdzCcBOv3gaZ2O'
+    assert.throws(() => block.verify(invalidPrevHashBlock, genesisHeader), e => e.message.includes('previous block header hash'))
+
+    // invalid tx count
+    const invalidTxCountBlock = block.create(txs, genesisHeader)
+    block.sign(invalidTxCountBlock)
+    invalidTxCountBlock.header.txCount = 5
+    assert.throws(() => block.verify(invalidTxCountBlock, genesisHeader), e => e.message.includes('count in header'))
+
+    // invalid merkle root
+    const invalidMerkleRootBlock = block.create(txs, genesisHeader)
+    block.sign(invalidMerkleRootBlock)
+    invalidMerkleRootBlock.header.merkleRoot = '4aMCaTeNGYtd9Wgcz4j4X6SNzCtHYhUZQPG9pUG9Xz7T'
+    assert.throws(() => block.verify(invalidMerkleRootBlock, genesisHeader), e => e.message.includes('root is not valid'))
+
+    // invalid time
+    const invalidTimeBlock = block.create(txs, genesisHeader)
+    block.sign(invalidTimeBlock)
+    invalidTimeBlock.header.time = new Date('01 Jan 2010 00:00:00 UTC')
+    assert.throws(() => block.verify(invalidTimeBlock, genesisHeader), e => e.message.includes('time is invalid'))
+
+    // invalid tx
+    const invalidTxBlock = block.create(txs, genesisHeader)
+    block.sign(invalidTxBlock)
+    invalidTxBlock.txs[0].sig = '12234'
+    assert.throws(() => block.verify(invalidTxBlock, genesisHeader), e => e.message.includes('txs in given'))
   })
 
   test('getHashDifficulty', () => {

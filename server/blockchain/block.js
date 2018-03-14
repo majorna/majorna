@@ -101,6 +101,7 @@ exports.verifyHeaderHash = blockHeader => exports.getHashDifficulty(exports.hash
  */
 exports.verify = (block, prevBlockHeader) => {
   // verify schema
+  assert(prevBlockHeader && prevBlockHeader.no, 'Invalid previous block header.')
   assert(block.header.no === prevBlockHeader.no + 1, `Block header number is not correct. Expected ${prevBlockHeader.no + 1}, got ${block.header.no}.`)
   assert(block.header.prevHash, 'Previous block hash should be provided.')
   assert(block.header.prevHash.length === 44, `Previous block hash length is invalid. Expected ${44}, got ${block.header.prevHash.length}.`)
@@ -127,7 +128,7 @@ exports.verify = (block, prevBlockHeader) => {
   if (block.header.txCount) {
     const merkleRoot = txsUtils.createMerkle(block.txs).getMerkleRoot().toString('base64')
     assert(block.header.merkleRoot === merkleRoot, `Merkle root is not valid. Expected ${merkleRoot}, got ${block.header.merkleRoot}`)
-    block.txs.forEach(tx => assert(txUtils.verify(tx)))
+    block.txs.forEach(tx => assert(txUtils.verify(tx), `One of the txs in given block was invalid. Invalid tx: ${tx}`))
   }
   if (block.sig) {
     assert(exports.verifySignature(block), 'Block signature verification failed.')

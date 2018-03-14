@@ -33,4 +33,7 @@ exports.sign = tx => {
   return sigTx
 }
 
-exports.verify = tx => crypto.verifyText(tx.sig, exports.getStr(tx))
+exports.verifySig = tx => crypto.verifyText(tx.sig, exports.getStr(tx))
+
+// todo: verify schema & contents too
+exports.verify = tx => exports.verifySig(tx)
