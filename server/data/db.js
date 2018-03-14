@@ -26,7 +26,7 @@ exports.init = async () => {
     cap: 0,
     userCount: 0,
     // monthly: [{t: 'May 12', mj: 0.01}],
-    // lastBlock: {}
+    lastBlock: {no: 1, difficulty: 0} // genesis
   })
   batch.create(usersColRef.doc('majorna'), {email: 'majorna@majorna', name: 'Majorna', created: new Date(), balance: 0, txs: []})
   await batch.commit()
@@ -178,8 +178,9 @@ exports.makeTx = (from, to, amount) => firestore.runTransaction(async t => {
  * Returned promise resolves to completed transaction data -or- to an error if transaction fails.
  * @param to - Receiver ID.
  * @param amount - Transaction amount as integer.
+ * @param lastBlockHeader - Optional last block header to update mj metadata with.
  */
-exports.makeMajornaTx = (to, amount) => firestore.runTransaction(async t => {
+exports.makeMajornaTx = (to, amount, lastBlockHeader) => firestore.runTransaction(async t => {
   assert(to, 'to parameters is required')
   assert(amount, 'amount ID parameters is required')
   assert(Number.isInteger(amount), 'amount must be an integer')
@@ -202,7 +203,13 @@ exports.makeMajornaTx = (to, amount) => firestore.runTransaction(async t => {
   // increase market cap
   const metaDoc = await t.get(metaDocRef)
   const meta = metaDoc.data()
-  t.update(metaDocRef, {cap: meta.cap + amount})
+  const newMeta = {cap: meta.cap + amount}
+
+  // update last block info if given
+  if (lastBlockHeader) {
+    newMeta.lastBlock = {no: lastBlockHeader.no, difficulty: lastBlockHeader.difficulty}
+  }
+  t.update(metaDocRef, newMeta)
 
   // add tx to txs collection
   const txRef = txsColRef.doc()

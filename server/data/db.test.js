@@ -140,6 +140,6 @@ suite('db', () => {
   })
 
   test('makeMajornaTx', () => {
-    // todo: verify market cap increase
+    // todo: verify market cap increase & optional last block changes
   })
 })

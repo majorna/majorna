@@ -199,10 +199,11 @@ exports.collectMiningReward = async (blockNo, nonce, uid) => {
   lastBlockHeader.difficulty = lastBlock.header.difficulty = difficulty
   lastBlockHeader.nonce = lastBlock.header.nonce = nonce
   block.sign(lastBlock)
+  // todo: these need to be transactional so they fail or succeed at the same time
   await github.upsertFile(block.toJson(lastBlock), lastBlockHeader.path)
   await github.upsertFile(block.toJson(lastBlockHeader), lastBlockHeaderFilePath)
 
   // give reward to the user
-  await db.makeMajornaTx(uid, mineableBlockHeader.reward)
+  await db.makeMajornaTx(uid, mineableBlockHeader.reward, lastBlock.header)
   return mineableBlockHeader.reward
 }
