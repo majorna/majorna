@@ -1,5 +1,6 @@
 const assert = require('assert')
 const db = require('./db')
+const txUtils = require('../blockchain/tx')
 const testData = require('../config/test').data
 
 suite('db', () => {
@@ -47,6 +48,7 @@ suite('db', () => {
 
     // verify tx in txs collection
     const tx = await db.getTx(userDoc.txs[0].id)
+    assert(txUtils.verify(tx))
     assert(tx.from.id === 'majorna')
     assert(tx.to.id === uid)
     assert(tx.time.getTime() === userDoc.created.getTime())
@@ -61,6 +63,7 @@ suite('db', () => {
   test('getTx', async () => {
     const tx0 = testData.txs[0]
     const tx = await db.getTx('0')
+    assert(txUtils.verify(tx))
     assert(tx.id === tx0.id)
     assert(tx.from.id === tx0.from.id)
 
@@ -78,6 +81,7 @@ suite('db', () => {
     const txs = await db.getTxsByTimeRange(yesterday, now)
     assert(txs.length >= testData.txs.length)
     assert(txs[0].from.id === testData.txs[0].from.id)
+    txs.forEach(tx => assert(txUtils.verify(tx)))
 
     // todo: create several close txs and do precise time range get and make sure that we only get the right one
   })
@@ -93,6 +97,7 @@ suite('db', () => {
 
     // validate tx in txs col
     const tx = await db.getTx(newTx.id)
+    assert(txUtils.verify(tx))
     assert(tx.from.id === from)
     assert(tx.to.id === to)
     assert(tx.time.getTime() === newTx.time.getTime())
@@ -148,6 +153,14 @@ suite('db', () => {
     const amount = 100
     const lastBlockHeader = {no: 60, difficulty: 90}
     const majornaTx = await db.makeMajornaTx(to, amount, lastBlockHeader)
+
+    // validate tx in txs col
+    const tx = await db.getTx(majornaTx.id)
+    assert(txUtils.verify(tx))
+    assert(tx.from.id === from)
+    assert(tx.to.id === to)
+    assert(tx.time.getTime() === majornaTx.time.getTime())
+    assert(tx.amount === amount)
 
     // validate affected user doc
     const receiver = await db.getUser(to)
