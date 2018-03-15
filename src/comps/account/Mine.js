@@ -19,7 +19,7 @@ export default class extends Component {
 
   componentWillReceiveProps = async nextProps => {
     // if someone else finds a proper nonce first, don't waste time working on a stale block/difficulty
-    if (nextProps.lastBlock &&
+    if (this.hashing && nextProps.lastBlock &&
       (nextProps.lastBlock.no > this.state.blockHeader.no || nextProps.lastBlock.difficulty > this.state.previousDifficulty)) {
       console.log('someone else found the nonce first for this block/difficulty so skipping')
       this.componentWillUnmount()
@@ -28,6 +28,7 @@ export default class extends Component {
   }
 
   componentDidMount = async () => {
+    this.hashing = false
     this.runMinerLoop = true
 
     while (this.runMinerLoop) {
@@ -43,12 +44,14 @@ export default class extends Component {
       })
 
       // start mining that block
+      this.hashing = true
       await mineBlock(
         mineableBlock.headerString,
         mineableBlock.targetDifficulty,
         mineableBlock.headerObject.nonce,
         s => this.setState(s), // progress update
         async nonce => { // mined a block
+          this.hashing = false
           await server.blocks.create(this.state.blockNo, nonce) // todo: ignore errors but display error msg
           this.setState((preState, props) => ({
             minedBlocks: (preState.minedBlocks + 1),
