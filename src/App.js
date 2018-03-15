@@ -26,13 +26,12 @@ export default withRouter(class App extends Component {
       acctQr: null, // data:image/png;base64,iVBORw0KG.......kJggg==,
       /* firestore docs */
       userDoc: null,
-      mjDoc: {
-        meta: {
-          val: null, // usd
-          cap: null, // mj
-          userCount: null,
-          monthly: undefined // usd per day, for last 1 month
-        }
+      mjMetaDoc: {
+        val: null, // usd
+        cap: null, // mj
+        userCount: null,
+        monthly: undefined, // usd per day, for last 1 month
+        lastBlock: null
       }
     }
 
@@ -86,7 +85,7 @@ export default withRouter(class App extends Component {
               await server.users.init()
             }
           })
-        this.fbUnsubMeta = this.db.collection('mj').doc('meta').onSnapshot(doc => this.setState({mjDoc: {meta: doc.data()}}))
+        this.fbUnsubMeta = this.db.collection('mj').doc('meta').onSnapshot(doc => this.setState({mjMetaDoc: doc.data()}))
         config.server.token = await u.getIdToken()
       } else {
         this.setState(this.nullState) // logged out or token expired and was not renewed
@@ -116,17 +115,17 @@ export default withRouter(class App extends Component {
         <Switch>
           <Route exact path='/' component={Home} />
           <Route path='/login' render={routeProps => <Login {...routeProps} uiConfig={this.firebaseUIConfig} firebaseAuth={this.firebaseAuth}/>} />
-          <Route path='/dashboard' render={routeProps => <Dashboard {...routeProps} user={this.state.user} acctQr={this.state.acctQr} userDoc={this.state.userDoc} mjDoc={this.state.mjDoc}/>} />
+          <Route path='/dashboard' render={routeProps => <Dashboard {...routeProps} user={this.state.user} acctQr={this.state.acctQr} userDoc={this.state.userDoc} mjMetaDoc={this.state.mjMetaDoc}/>} />
           <Redirect from='*' to='/'/>
         </Switch>
       ) : (
         <Switch>
           <Route exact path='/' component={Home} />
           <Route path='/login' render={routeProps => <Login {...routeProps} uiConfig={this.firebaseUIConfig} firebaseAuth={this.firebaseAuth}/>} />
-          <Route path='/dashboard' render={routeProps => <Dashboard {...routeProps} user={this.state.user} acctQr={this.state.acctQr} userDoc={this.state.userDoc} mjDoc={this.state.mjDoc}/>} />
+          <Route path='/dashboard' render={routeProps => <Dashboard {...routeProps} user={this.state.user} acctQr={this.state.acctQr} userDoc={this.state.userDoc} mjMetaDoc={this.state.mjMetaDoc}/>} />
           <Route path='/send' render={routeProps => <Send {...routeProps} userDoc={this.state.userDoc}/>} />
           <Route path='/receive' render={routeProps => <Receive {...routeProps} user={this.state.user} acctQr={this.state.acctQr}/>} />
-          <Route path='/mine' component={Mine} />
+          <Route path='/mine' render={routeProps => <Mine {...routeProps} lastBlock={this.state.mjMetaDoc.lastBlock}/>} />
           <Redirect from='*' to='/'/>
         </Switch>
       )}
