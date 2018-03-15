@@ -12,8 +12,19 @@ export default class extends Component {
     hashRate: 0,
     time: 0,
     targetDifficulty: 0,
+    previousDifficulty: 0,
     blockNo: 0,
     showDetails: false
+  }
+
+  componentWillReceiveProps = async nextProps => {
+    // if someone else finds a proper nonce first, don't waste time working on a stale block/difficulty
+    if (nextProps.lastBlock &&
+      (nextProps.lastBlock.no > this.state.blockHeader.no || nextProps.lastBlock.difficulty > this.state.previousDifficulty)) {
+      console.log('someone else found the nonce first for this block/difficulty so skipping')
+      this.componentWillUnmount()
+      await this.componentDidMount()
+    }
   }
 
   componentDidMount = async () => {
@@ -27,7 +38,8 @@ export default class extends Component {
         blockHeader: mineableBlock.headerObject,
         blockNo: mineableBlock.no,
         reward: mineableBlock.reward,
-        targetDifficulty: mineableBlock.targetDifficulty
+        targetDifficulty: mineableBlock.targetDifficulty,
+        previousDifficulty: mineableBlock.previousDifficulty
       })
 
       // start mining that block
@@ -86,7 +98,7 @@ export default class extends Component {
           <div><strong>No:</strong> {this.state.blockHeader.no}</div>
           <div><strong>Time:</strong> {this.state.blockHeader.time}</div>
           <div><strong>Transaction Count:</strong> {this.state.blockHeader.txCount}</div>
-          <div><strong>Previous Difficulty:</strong> {this.state.blockHeader.difficulty - 1}</div>
+          <div><strong>Previous Difficulty:</strong> {this.state.previousDifficulty}</div>
           <div><strong>Previous Nonce:</strong> {fn(this.state.blockHeader.nonce)}</div>
           <div><strong>Previous Block Hash:</strong> <small>{this.state.blockHeader.prevHash}</small></div>
           <div><strong>Merkle Root:</strong> <small>{this.state.blockHeader.merkleRoot}</small></div>
