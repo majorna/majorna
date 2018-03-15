@@ -202,6 +202,7 @@ exports.collectMiningReward = async (blockNo, nonce, uid) => {
   lastBlockHeader.nonce = lastBlock.header.nonce = nonce
   block.sign(lastBlock)
   // todo: these need to be transactional so they fail or succeed at the same time
+  // could be github.upsertFile() inside the firestore transaction
   await github.upsertFile(block.toJson(lastBlock), lastBlockHeader.path)
   await github.upsertFile(block.toJson(lastBlockHeader), lastBlockHeaderFilePath)
 
