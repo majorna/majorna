@@ -33,6 +33,29 @@ exports.init = async () => {
 }
 
 /**
+ * Deletes all the data and seeds the database with dummy data for testing, asynchronously.
+ */
+exports.initTest = async () => {
+  const testData = require('../config/test').data
+  const batch = firestore.batch()
+
+  // delete all data
+  const txsSnap = await txsColRef.get()
+  txsSnap.forEach(txSnap => batch.delete(txSnap.ref))
+  const usersSnap = await usersColRef.get()
+  usersSnap.forEach(userSnap => batch.delete(userSnap.ref))
+  batch.delete(metaDocRef)
+
+  // add seed data
+  batch.create(metaDocRef, testData.mj.meta)
+  batch.create(usersColRef.doc('1'), testData.users.u1Doc)
+  batch.create(usersColRef.doc('2'), testData.users.u2Doc)
+  testData.txs.forEach((tx, i) => batch.create(txsColRef.doc(i.toString()), tx))
+
+  await batch.commit()
+}
+
+/**
  * Get majorna metadata document asynchronously.
  */
 exports.getMeta = async () => (await metaDocRef.get()).data()
@@ -223,26 +246,3 @@ exports.makeMajornaTx = (to, amount, lastBlockHeader) => firestore.runTransactio
 
   return signedTx
 })
-
-/**
- * Deletes all the data and seeds the database with dummy data for testing, asynchronously.
- */
-exports.initTest = async () => {
-  const testData = require('../config/test').data
-  const batch = firestore.batch()
-
-  // delete all data
-  const txsSnap = await txsColRef.get()
-  txsSnap.forEach(txSnap => batch.delete(txSnap.ref))
-  const usersSnap = await usersColRef.get()
-  usersSnap.forEach(userSnap => batch.delete(userSnap.ref))
-  batch.delete(metaDocRef)
-
-  // add seed data
-  batch.create(metaDocRef, testData.mj.meta)
-  batch.create(usersColRef.doc('1'), testData.users.u1Doc)
-  batch.create(usersColRef.doc('2'), testData.users.u2Doc)
-  testData.txs.forEach((tx, i) => batch.create(txsColRef.doc(i.toString()), tx))
-
-  await batch.commit()
-}

@@ -26,6 +26,7 @@ suite('db', () => {
 
   test('createUserDoc', async () => {
     const uid = '3'
+    const starterBalance = 500
     const testUserData = testData.users.u3Doc
     const meta = await db.getMeta()
 
@@ -33,7 +34,7 @@ suite('db', () => {
 
     // verify market cap increase
     const metaAfter = await db.getMeta()
-    assert(metaAfter.cap === meta.cap + 500)
+    assert(metaAfter.cap === meta.cap + starterBalance)
     assert(metaAfter.userCount === meta.userCount + 1)
 
     // verify user doc fields
@@ -49,7 +50,7 @@ suite('db', () => {
     assert(tx.from.id === 'majorna')
     assert(tx.to.id === uid)
     assert(tx.time.getTime() === userDoc.created.getTime())
-    assert(tx.amount === 500)
+    assert(tx.amount === starterBalance)
 
     // try to create user again and verify error
     let err = null
@@ -139,7 +140,27 @@ suite('db', () => {
     assert(err)
   })
 
-  test('makeMajornaTx', () => {
-    // todo: verify market cap increase & optional last block changes
+  test('makeMajornaTx', async () => {
+    const from = 'majorna'
+    const to = '1'
+    const receiverInitBalance = (await db.getUser(to)).balance
+    const initMeta = await db.getMeta()
+    const amount = 100
+    const lastBlockHeader = {no: 60, difficulty: 90}
+    const majornaTx = await db.makeMajornaTx(to, amount, lastBlockHeader)
+
+    // validate affected user doc
+    const receiver = await db.getUser(to)
+    assert(receiver.balance === receiverInitBalance + amount)
+    const receiverTx = receiver.txs[0]
+    assert(receiverTx.from === from)
+    assert(receiverTx.time.getTime() === majornaTx.time.getTime())
+    assert(receiverTx.amount === amount)
+
+    // verify market cap increase and optional last block changes
+    const metaAfter = await db.getMeta()
+    assert(metaAfter.cap === initMeta.cap + amount)
+    assert(metaAfter.lastBlock.no === lastBlockHeader.no)
+    assert(metaAfter.lastBlock.difficulty === lastBlockHeader.difficulty)
   })
 })
