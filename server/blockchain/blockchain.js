@@ -4,8 +4,10 @@ const github = require('../data/github')
 const crypto = require('./crypto')
 const utils = require('../data/utils')
 
-// files with these names at the root of the git repo
-const lastBlockHeaderFilePath = 'lastblockheader'
+// block difficulty increases by this step every time someone finds and submits a valid nonce
+const blockDifficultyIncrementStep = 1
+
+// a file with this name at the root of the git repo
 const genesisBlockPath = 'genesisblock'
 
 /**
@@ -14,7 +16,7 @@ const genesisBlockPath = 'genesisblock'
  */
 exports.getLastBlockHeader = async () => {
   try {
-    const lastBlockHeaderFile = await github.getFileContent(lastBlockHeaderFilePath)
+    const lastBlockHeaderFile = await db.getBlockchainInfo().lastBlock
     return block.fromJson(lastBlockHeaderFile)
   } catch (e) {
     if (e.code === 404) {
@@ -82,7 +84,7 @@ exports.insertBlock = async (startTime, endTime, blockPath, prevBlockHeader) => 
     // todo: below two should be a single operation editing multiple files so they won't fail separately
     await github.createFile(block.toJson(newBlock), blockPath)
     newBlock.header.path = blockPath
-    await github.upsertFile(block.toJson(newBlock.header), lastBlockHeaderFilePath)
+    await github.upsertFile(block.toJson(newBlock.header), 'lastblock')
     console.log(`inserted block ${blockPath}`)
     return true
   } else {
@@ -161,14 +163,13 @@ exports.startBlockchainInsertTimer = interval => {
  * In most cases, one honest peer is enough to get the longest blockchain since it's so hard to fake an entire chain.
  */
 exports.getMineableBlockHeader = async () => {
-  const difficultyStep = 1
   const header = await exports.getLastBlockHeader()
-  const targetDifficulty = header.difficulty = (header.difficulty + difficultyStep) // always need to work on a greater difficulty than existing
+  const targetDifficulty = header.difficulty = (header.difficulty + blockDifficultyIncrementStep) // always need to work on a greater difficulty than existing
   const str = block.getHeaderStr(header, true)
   // todo: can be simplified greatly, can also include reward in header and reward tx in block
   return {
     no: header.no,
-    previousDifficulty: targetDifficulty - difficultyStep,
+    previousDifficulty: targetDifficulty - blockDifficultyIncrementStep,
     targetDifficulty,
     reward: block.getBlockReward(targetDifficulty),
     headerString: str,
@@ -204,7 +205,7 @@ exports.collectMiningReward = async (blockNo, nonce, uid) => {
   // todo: these need to be transactional so they fail or succeed at the same time
   // could be github.upsertFile() inside the firestore transaction
   await github.upsertFile(block.toJson(lastBlock), lastBlockHeader.path)
-  await github.upsertFile(block.toJson(lastBlockHeader), lastBlockHeaderFilePath)
+  await github.upsertFile(block.toJson(lastBlockHeader), 'lastblock')
 
   // give reward to the user
   await db.makeMajornaTx(uid, mineableBlockHeader.reward, lastBlock.header)

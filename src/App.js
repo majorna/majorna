@@ -30,8 +30,7 @@ export default withRouter(class App extends Component {
         val: null, // usd
         cap: null, // mj
         userCount: null,
-        monthly: undefined, // usd per day, for last 1 month
-        lastBlock: null
+        monthly: undefined // usd per day, for last 1 month
       }
     }
 
@@ -125,7 +124,7 @@ export default withRouter(class App extends Component {
           <Route path='/dashboard' render={routeProps => <Dashboard {...routeProps} user={this.state.user} acctQr={this.state.acctQr} userDoc={this.state.userDoc} mjMetaDoc={this.state.mjMetaDoc}/>} />
           <Route path='/send' render={routeProps => <Send {...routeProps} userDoc={this.state.userDoc}/>} />
           <Route path='/receive' render={routeProps => <Receive {...routeProps} user={this.state.user} acctQr={this.state.acctQr}/>} />
-          <Route path='/mine' render={routeProps => <Mine {...routeProps} lastBlock={this.state.mjMetaDoc.lastBlock}/>} />
+          <Route path='/mine' render={routeProps => <Mine {...routeProps} db={this.db}/>} />
           <Redirect from='*' to='/'/>
         </Switch>
       )}

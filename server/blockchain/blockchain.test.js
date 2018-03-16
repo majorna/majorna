@@ -5,7 +5,7 @@ const block = require('./block')
 const utils = require('../data/utils')
 const testData = require('../config/test').data
 
-suite('blockchain', () => {
+suite.skip('blockchain', () => {
   test('getBlockPath', () => {
     const now = new Date('2018-02-15T10:00:00.000Z')
     const path = blockchain.getBlockPath(now)

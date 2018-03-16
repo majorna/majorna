@@ -19,12 +19,12 @@ export default class extends Component {
 
   componentWillReceiveProps = async nextProps => {
     // if someone else finds a proper nonce first, don't waste time working on a stale block/difficulty
-    if (this.hashing && nextProps.lastBlock &&
-      (nextProps.lastBlock.no > this.state.blockHeader.no || nextProps.lastBlock.difficulty > this.state.previousDifficulty)) {
-      console.log('someone else found the nonce first for this block/difficulty so skipping')
-      this.componentWillUnmount()
-      await this.componentDidMount()
-    }
+    // if (this.hashing && nextProps.lastBlock &&
+    //   (nextProps.lastBlock.no > this.state.blockHeader.no || nextProps.lastBlock.difficulty > this.state.previousDifficulty)) {
+    //   console.log('someone else found the nonce first for this block/difficulty so skipping')
+    //   this.componentWillUnmount()
+    //   await this.componentDidMount()
+    // }
   }
 
   componentDidMount = async () => {
