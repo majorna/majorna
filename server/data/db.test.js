@@ -151,6 +151,7 @@ suite('db', () => {
     const receiverInitBalance = (await db.getUser(to)).balance
     const initMeta = await db.getMeta()
     const amount = 100
+    // const initBlockchainInfo = await db.getBlockchain()
     const lastBlockHeader = {no: 60, difficulty: 90}
     const majornaTx = await db.makeMajornaTx(to, amount, lastBlockHeader)
 
@@ -170,10 +171,13 @@ suite('db', () => {
     assert(receiverTx.time.getTime() === majornaTx.time.getTime())
     assert(receiverTx.amount === amount)
 
-    // verify market cap increase and optional last block changes
+    // verify market cap increase
     const metaAfter = await db.getMeta()
     assert(metaAfter.cap === initMeta.cap + amount)
-    assert(metaAfter.lastBlock.no === lastBlockHeader.no)
-    assert(metaAfter.lastBlock.difficulty === lastBlockHeader.difficulty)
+
+    // verify blockchain info change
+    // const initBlockchainInfo = await db.getBlockchain()
+    // assert(metaAfter.lastBlock.no === lastBlockHeader.no)
+    // assert(metaAfter.lastBlock.difficulty === lastBlockHeader.difficulty)
   })
 })

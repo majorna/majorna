@@ -7,7 +7,9 @@ const firestore = firebaseConfig.firestore
 // collection and doc refs
 const txsColRef = firestore.collection('txs')
 const usersColRef = firestore.collection('users')
-const metaDocRef = firestore.collection('mj').doc('meta')
+const mjColRef = firestore.collection('mj')
+const metaDocRef = mjColRef.doc('meta')
+const blockchainDocRef = mjColRef.doc('blockchain')
 
 const maxTxsInUserDoc = 15
 
@@ -28,6 +30,12 @@ exports.init = async () => {
     // monthly: [{t: 'May 12', mj: 0.01}],
     lastBlock: {no: 1, difficulty: 0} // genesis
   })
+  batch.create(blockchainDocRef, {
+    last: {
+      no: 1,
+      difficulty: 0
+    }
+  })
   batch.create(usersColRef.doc('majorna'), {email: 'majorna@majorna', name: 'Majorna', created: new Date(), balance: 0, txs: []})
   await batch.commit()
 }
@@ -45,9 +53,11 @@ exports.initTest = async () => {
   const usersSnap = await usersColRef.get()
   usersSnap.forEach(userSnap => batch.delete(userSnap.ref))
   batch.delete(metaDocRef)
+  batch.delete(blockchainDocRef)
 
   // add seed data
   batch.create(metaDocRef, testData.mj.meta)
+  batch.create(blockchainDocRef, testData.mj.blockchain)
   batch.create(usersColRef.doc('1'), testData.users.u1Doc)
   batch.create(usersColRef.doc('2'), testData.users.u2Doc)
   testData.txs.forEach((tx, i) => batch.create(txsColRef.doc(i.toString()), tx))
@@ -59,6 +69,11 @@ exports.initTest = async () => {
  * Get majorna metadata document asynchronously.
  */
 exports.getMeta = async () => (await metaDocRef.get()).data()
+
+/**
+ * Get majorna blockchain info asynchronously.
+ */
+exports.getBlockchain = async () => (await blockchainDocRef.get()).data()
 
 /**
  * Get a user by id, asynchronously.
@@ -226,13 +241,10 @@ exports.makeMajornaTx = (to, amount, lastBlockHeader) => firestore.runTransactio
   // increase market cap
   const metaDoc = await t.get(metaDocRef)
   const meta = metaDoc.data()
-  const newMeta = {cap: meta.cap + amount}
+  t.update(metaDocRef, {cap: meta.cap + amount})
 
-  // update last block info if given
-  if (lastBlockHeader) {
-    newMeta.lastBlock = {no: lastBlockHeader.no, difficulty: lastBlockHeader.difficulty}
-  }
-  t.update(metaDocRef, newMeta)
+  // update last block info
+  t.update(blockchainDocRef, {last: {no: lastBlockHeader.no, difficulty: lastBlockHeader.difficulty}})
 
   // add tx to txs collection
   const txRef = txsColRef.doc()
