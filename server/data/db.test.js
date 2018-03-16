@@ -151,7 +151,6 @@ suite('db', () => {
     const receiverInitBalance = (await db.getUser(to)).balance
     const initMeta = await db.getMeta()
     const amount = 100
-    // const initBlockchainInfo = await db.getBlockchain()
     const lastBlockHeader = {no: 60, difficulty: 90}
     const majornaTx = await db.makeMajornaTx(to, amount, lastBlockHeader)
 
@@ -176,8 +175,8 @@ suite('db', () => {
     assert(metaAfter.cap === initMeta.cap + amount)
 
     // verify blockchain info change
-    // const initBlockchainInfo = await db.getBlockchain()
-    // assert(metaAfter.lastBlock.no === lastBlockHeader.no)
-    // assert(metaAfter.lastBlock.difficulty === lastBlockHeader.difficulty)
+    const blockchainInfoAfter = await db.getBlockchainInfo()
+    assert(blockchainInfoAfter.lastBlock.no === lastBlockHeader.no)
+    assert(blockchainInfoAfter.lastBlock.difficulty === lastBlockHeader.difficulty)
   })
 })

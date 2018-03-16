@@ -77,7 +77,7 @@ const testData = exports.data = {
   mj: {
     meta: {val: 0.01, cap: initBalance * 3, userCount: 3},
     blockchain: {
-      last: {no: 1, difficulty: 0}
+      lastBlock: {no: 1, difficulty: 0}
     }
   },
   // u1: User #1

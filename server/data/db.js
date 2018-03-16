@@ -31,7 +31,7 @@ exports.init = async () => {
     lastBlock: {no: 1, difficulty: 0} // genesis
   })
   batch.create(blockchainDocRef, {
-    last: {
+    lastBlock: {
       no: 1,
       difficulty: 0
     }
@@ -73,7 +73,7 @@ exports.getMeta = async () => (await metaDocRef.get()).data()
 /**
  * Get majorna blockchain info asynchronously.
  */
-exports.getBlockchain = async () => (await blockchainDocRef.get()).data()
+exports.getBlockchainInfo = async () => (await blockchainDocRef.get()).data()
 
 /**
  * Get a user by id, asynchronously.
@@ -244,7 +244,7 @@ exports.makeMajornaTx = (to, amount, lastBlockHeader) => firestore.runTransactio
   t.update(metaDocRef, {cap: meta.cap + amount})
 
   // update last block info
-  t.update(blockchainDocRef, {last: {no: lastBlockHeader.no, difficulty: lastBlockHeader.difficulty}})
+  t.update(blockchainDocRef, {lastBlock: {no: lastBlockHeader.no, difficulty: lastBlockHeader.difficulty}})
 
   // add tx to txs collection
   const txRef = txsColRef.doc()
