@@ -1,16 +1,18 @@
 const assert = require('assert')
-const tx = require('../blockchain/tx')
+const txUtils = require('../blockchain/tx')
+const blockUtils = require('../blockchain/block')
 const utils = require('./utils')
 const firebaseConfig = require('../config/firebase')
 const firestore = firebaseConfig.firestore
 
 // collection and doc refs
 const txsColRef = firestore.collection('txs')
-// const blocksColRef = firestore.collection('blocks')
+const blocksColRef = firestore.collection('blocks')
 const usersColRef = firestore.collection('users')
 const metaDocRef = firestore.collection('mj').doc('meta')
 
 const maxTxsInUserDoc = 15
+const genesisBlock = blockUtils.getGenesisBlock()
 
 /**
  * Initializes database collections if database is empty, asynchronously.
@@ -28,6 +30,7 @@ exports.init = async () => {
     userCount: 0
     // monthly: [{t: 'May 12', mj: 0.01}]
   })
+  batch.create(blocksColRef.doc(genesisBlock.header.no), blockUtils.sign(genesisBlock))
   batch.create(usersColRef.doc('majorna'), {email: 'majorna@majorna', name: 'Majorna', created: new Date(), balance: 0, txs: []})
   await batch.commit()
 }
@@ -96,7 +99,7 @@ exports.createUserDoc = (user, uid) => firestore.runTransaction(async t => {
 
   // create the first transaction for the user
   const txRef = txsColRef.doc()
-  const signedTx = tx.sign({id: txRef.id, from: {id: 'majorna', balance: 0}, to: {id: uid, balance: 0}, time, amount: initBalance})
+  const signedTx = txUtils.sign({id: txRef.id, from: {id: 'majorna', balance: 0}, to: {id: uid, balance: 0}, time, amount: initBalance})
   t.create(txRef, signedTx)
 
   // create user doc
@@ -182,7 +185,7 @@ exports.makeTx = (from, to, amount) => firestore.runTransaction(async t => {
 
   // add tx to txs collection
   const txRef = txsColRef.doc()
-  const signedTx = tx.sign({id: txRef.id, from: {id: from, balance: sender.balance}, to: {id: to, balance: receiver.balance}, time, amount})
+  const signedTx = txUtils.sign({id: txRef.id, from: {id: from, balance: sender.balance}, to: {id: to, balance: receiver.balance}, time, amount})
   t.create(txRef, signedTx)
 
   // update user docs with tx and updated balances
@@ -197,13 +200,26 @@ exports.makeTx = (from, to, amount) => firestore.runTransaction(async t => {
 })
 
 /**
+ * Retrieves the very last block (by no), asynchronously
+ */
+exports.getLastBlock = async () => {
+  const blocksSnap = await blocksColRef.orderBy('header.no', 'desc').limit(1).get()
+  return blocksSnap.docs[0].data()
+}
+
+/**
+ * Signs and inserts a given block to blocks collection, asynchronously.
+ */
+exports.signThenInsertBlock = block => blocksColRef.doc(block.header.no.toString()).set(blockUtils.sign(block))
+
+/**
  * Sends funds to given user from majorna, asynchronously.
  * Returned promise resolves to completed transaction data -or- to an error if transaction fails.
  * @param to - Receiver ID.
  * @param amount - Transaction amount as integer.
- * @param lastBlockHeader - Optional last block header to update mj metadata with.
+ * @param lastBlock - Last block info to update the last block with new signature, difficulty, and nonce.
  */
-exports.makeMajornaTx = (to, amount, lastBlockHeader) => firestore.runTransaction(async t => {
+exports.makeMajornaTx = (to, amount, lastBlock) => firestore.runTransaction(async t => {
   assert(to, 'to parameters is required')
   assert(amount, 'amount ID parameters is required')
   assert(Number.isInteger(amount), 'amount must be an integer')
@@ -223,17 +239,21 @@ exports.makeMajornaTx = (to, amount, lastBlockHeader) => firestore.runTransactio
   }
   const receiver = receiverDoc.data()
 
+  // todo: has to be a part of tx
+  const lastBlockRef = await blocksColRef.orderBy('header.no', 'desc').limit(1).get()[0]
+
   // increase market cap
   const metaDoc = await t.get(metaDocRef)
   const meta = metaDoc.data()
   t.update(metaDocRef, {cap: meta.cap + amount})
 
   // update last block info
-  // t.update(blockchainDocRef, {lastBlock: {no: lastBlockHeader.no, difficulty: lastBlockHeader.difficulty}})
+  // todo: resign block
+  t.update(lastBlockRef, {sig: lastBlock.sig, header: {difficulty: lastBlock.difficulty, nonce: lastBlock.nonce}})
 
   // add tx to txs collection
   const txRef = txsColRef.doc()
-  const signedTx = tx.sign({id: txRef.id, from: {id: from, balance: 0}, to: {id: to, balance: receiver.balance}, time, amount})
+  const signedTx = txUtils.sign({id: txRef.id, from: {id: from, balance: 0}, to: {id: to, balance: receiver.balance}, time, amount})
   t.create(txRef, signedTx)
 
   // update user docs with tx and updated balances
