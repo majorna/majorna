@@ -208,6 +208,6 @@ exports.collectMiningReward = async (blockNo, nonce, uid) => {
   await github.upsertFile(block.toJson(lastBlockHeader), 'lastblock')
 
   // give reward to the user
-  await db.makeMajornaTx(uid, mineableBlockHeader.reward, lastBlock.header)
+  await db.giveMiningReward(uid, mineableBlockHeader.reward, lastBlock.header)
   return mineableBlockHeader.reward
 }

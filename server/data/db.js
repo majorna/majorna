@@ -213,13 +213,13 @@ exports.getLastBlock = async () => {
 exports.signThenInsertBlock = block => blocksColRef.doc(block.header.no.toString()).set(blockUtils.sign(block))
 
 /**
- * Sends funds to given user from majorna, asynchronously.
+ * Gives mining reward to a miner, asynchronously.
  * Returned promise resolves to completed transaction data -or- to an error if transaction fails.
  * @param to - Receiver ID.
  * @param amount - Transaction amount as integer.
  * @param lastBlock - Last block info to update the last block with new signature, difficulty, and nonce.
  */
-exports.makeMajornaTx = (to, amount, lastBlock) => firestore.runTransaction(async t => {
+exports.giveMiningReward = (to, amount, lastBlock) => firestore.runTransaction(async t => {
   assert(to, 'to parameters is required')
   assert(amount, 'amount ID parameters is required')
   assert(Number.isInteger(amount), 'amount must be an integer')

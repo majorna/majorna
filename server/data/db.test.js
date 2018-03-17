@@ -152,14 +152,14 @@ suite('db', () => {
     assert(lastBlock.header.no === someBlock.header.no)
   })
 
-  test('makeMajornaTx', async () => {
+  test('giveMiningReward', async () => {
     const from = 'majorna'
     const to = '1'
     const receiverInitBalance = (await db.getUser(to)).balance
     const initMeta = await db.getMeta()
     const amount = 100
     const lastBlockHeader = {no: 60, difficulty: 90}
-    const majornaTx = await db.makeMajornaTx(to, amount, lastBlockHeader)
+    const majornaTx = await db.giveMiningReward(to, amount, lastBlockHeader)
 
     // validate tx in txs col
     const tx = await db.getTx(majornaTx.id)
