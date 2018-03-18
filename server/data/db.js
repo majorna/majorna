@@ -32,7 +32,14 @@ exports.init = async () => {
     userCount: 0
     // monthly: [{t: 'May 12', mj: 0.01}]
   })
-  batch.create(blockInfoDocRef, {})
+  batch.create(blockInfoDocRef, {
+    lastBlockHeader: {},
+    nextBlock: {
+      headerStrWithoutNonce: '',
+      targetDifficulty: 0,
+      reward: 0
+    }
+  })
   batch.create(blocksColRef.doc(genesisBlock.header.no), blockUtils.sign(genesisBlock))
   batch.create(usersColRef.doc('majorna'), {email: 'majorna@majorna', name: 'Majorna', created: new Date(), balance: 0, txs: []})
   await batch.commit()
@@ -225,13 +232,38 @@ exports.signThenInsertBlock = (block, blockInfo) => firestore.runTransaction(asy
  * Returned promise resolves to completed transaction data -or- to an error if transaction fails.
  * @param to - Receiver ID.
  * @param amount - Transaction amount as integer.
- * @param lastBlock - Last block info to update the last block with new signature, difficulty, and nonce.
+ * @param nonce - Nonce that is mined by the miner.
  */
-exports.giveMiningReward = (to, amount, lastBlock) => firestore.runTransaction(async t => {
+exports.giveMiningReward = (to, amount, nonce) => firestore.runTransaction(async t => {
   assert(to, 'to parameters is required')
   assert(amount, 'amount ID parameters is required')
   assert(Number.isInteger(amount), 'amount must be an integer')
   assert(amount > 0, 'amount should be > 0')
+
+  // verify nonce
+  const blockInfoDoc = await t.get(blockInfoDocRef)
+  const blockInfo = blockInfoDoc.data()
+  const difficulty = blockUtils.getHashDifficultyFromStr(nonce, blockInfo.nextBlock.headerStrWithoutNonce)
+  if (difficulty < blockInfo.nextBlock.targetDifficulty) {
+    throw new utils.UserVisibleError(`Given nonce does not belong to the last block or is of insufficient difficulty.`)
+  }
+
+  // update last block
+  const lastBlockRef = blocksColRef.doc(blockInfo.lastBlockHeader.no.toString())
+  const lastBlockDoc = await t.get(lastBlockRef)
+  const lastBlock = lastBlockDoc.data()
+  lastBlock.header.difficulty = difficulty
+  lastBlock.header.nonce = nonce
+  blockUtils.sign(lastBlock)
+  t.update(lastBlockRef, {sig: lastBlock.sig, header: {difficulty, nonce}})
+
+  // update block info
+  blockInfo.lastBlockHeader.difficulty = difficulty
+  blockInfo.lastBlockHeader.nonce = nonce
+  blockInfo.nextBlock.targetDifficulty = difficulty + 1
+  blockInfo.nextBlock.reward = blockUtils.getBlockReward(blockInfo.nextBlock.targetDifficulty)
+  blockInfo.nextBlock.headerStrWithoutNonce = blockUtils.getHeaderStr(lastBlock.header, true, blockInfo.nextBlock.targetDifficulty)
+  t.update(blockInfoDocRef, blockInfo)
 
   const time = new Date()
 
@@ -247,17 +279,10 @@ exports.giveMiningReward = (to, amount, lastBlock) => firestore.runTransaction(a
   }
   const receiver = receiverDoc.data()
 
-  // todo: has to be a part of tx
-  const lastBlockRef = await blocksColRef.orderBy('header.no', 'desc').limit(1).get()[0]
-
   // increase market cap
   const metaDoc = await t.get(metaDocRef)
   const meta = metaDoc.data()
   t.update(metaDocRef, {cap: meta.cap + amount})
-
-  // update last block info
-  // todo: resign block
-  t.update(lastBlockRef, {sig: lastBlock.sig, header: {difficulty: lastBlock.difficulty, nonce: lastBlock.nonce}})
 
   // add tx to txs collection
   const txRef = txsColRef.doc()

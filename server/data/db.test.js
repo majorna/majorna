@@ -145,7 +145,7 @@ suite('db', () => {
     assert(err)
   })
 
-  test.only('signThenInsertBlock, getBlockInfo', async () => {
+  test('signThenInsertBlock, getBlockInfo', async () => {
     const someBlock = {header: {no: 1234, time: new Date()}}
     const initBlockInfo = await db.getBlockInfo()
 
@@ -156,7 +156,7 @@ suite('db', () => {
     assert(lastBlockInfo.no === someBlock.header.no)
   })
 
-  test('giveMiningReward', async () => {
+  test.only('giveMiningReward', async () => {
     const from = 'majorna'
     const to = '1'
     const receiverInitBalance = (await db.getUser(to)).balance

@@ -2,6 +2,7 @@ const assert = require('assert')
 const axios = require('axios')
 const db = require('../data/db')
 const tx = require('../blockchain/tx')
+const block = require('../blockchain/block')
 const server = require('./server')
 const config = require('./config')
 const firebaseConfig = require('./firebase') // firebase admin sdk config
@@ -76,7 +77,10 @@ const initBalance = 500
 const testData = exports.data = {
   mj: {
     meta: {val: 0.01, cap: initBalance * 3, userCount: 3},
-    blockInfo: {}
+    blockInfo: {
+      lastBlockHeader: block.getGenesisBlock().header,
+      nextBlock: {}
+    }
   },
   // u1: User #1
   // u1Doc: Firestore doc seed data

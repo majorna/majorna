@@ -65,11 +65,12 @@ exports.fromJson = blockOrBlockHeaderJson => {
  * Puts the nonce first to prevent internal hash state from being reused. In future we can add more memory intensive prefixes.
  * @param blockHeader - Block header object.
  * @param skipNonce - Don't include nonce in the string. Useful for mining. False by default.
+ * @param difficulty - If specified, this difficulty will be used instead of the one in header.
  */
-exports.getHeaderStr = (blockHeader, skipNonce) =>
+exports.getHeaderStr = (blockHeader, skipNonce, difficulty) =>
   '' + (skipNonce ? '' : blockHeader.nonce) +
   blockHeader.no + blockHeader.prevHash + blockHeader.txCount +
-  blockHeader.merkleRoot + blockHeader.time.getTime() + blockHeader.difficulty
+  blockHeader.merkleRoot + blockHeader.time.getTime() + (difficulty || blockHeader.difficulty)
 
 /**
  * Returns the hash of a given block header.
@@ -175,6 +176,11 @@ exports.getHashDifficulty = hash => {
 
   return difficulty
 }
+
+/**
+ * Hashes given header string with optional nonce and calculates difficulty.
+ */
+exports.getHashDifficultyFromStr = (headerStr, nonce = '') => exports.getHashDifficulty(crypto.hashTextToBuffer('' + nonce + headerStr))
 
 /**
  * Calculates nonce (mines) until a hash of required difficulty is found for the block.
