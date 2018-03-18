@@ -11,7 +11,7 @@ const blocksColRef = firestore.collection('blocks')
 const usersColRef = firestore.collection('users')
 const mjColRef = firestore.collection('mj')
 const metaDocRef = mjColRef.doc('meta')
-const blockRef = mjColRef.doc('mineableBlock')
+const blockInfoDocRef = mjColRef.doc('blockInfo')
 
 const maxTxsInUserDoc = 15
 const genesisBlock = blockUtils.getGenesisBlock()
@@ -32,7 +32,7 @@ exports.init = async () => {
     userCount: 0
     // monthly: [{t: 'May 12', mj: 0.01}]
   })
-  batch.create(blockRef, {})
+  batch.create(blockInfoDocRef, {})
   batch.create(blocksColRef.doc(genesisBlock.header.no), blockUtils.sign(genesisBlock))
   batch.create(usersColRef.doc('majorna'), {email: 'majorna@majorna', name: 'Majorna', created: new Date(), balance: 0, txs: []})
   await batch.commit()
@@ -52,10 +52,12 @@ exports.initTest = async () => {
   usersSnap.forEach(userSnap => batch.delete(userSnap.ref))
   const txsSnap = await txsColRef.get()
   txsSnap.forEach(txSnap => batch.delete(txSnap.ref))
+  const blocksSnap = await blocksColRef.get()
+  blocksSnap.forEach(blockSnap => batch.delete(blockSnap.ref))
 
   // add seed data
   batch.create(metaDocRef, testData.mj.meta)
-  batch.create(blockRef, testData.mj.block)
+  batch.create(blockInfoDocRef, testData.mj.blockInfo)
   batch.create(usersColRef.doc('1'), testData.users.u1Doc)
   batch.create(usersColRef.doc('2'), testData.users.u2Doc)
   testData.txs.forEach((tx, i) => batch.create(txsColRef.doc(i.toString()), tx))
@@ -205,17 +207,18 @@ exports.makeTx = (from, to, amount) => firestore.runTransaction(async t => {
 })
 
 /**
- * Retrieves the very last block (by no), asynchronously
+ * Retrieves the block info document, asynchronously
  */
-exports.getLastBlock = async () => {
-  const blocksSnap = await blocksColRef.orderBy('header.no', 'desc').limit(1).get()
-  return blocksSnap.docs[0].data()
-}
+exports.getBlockInfo = async () => (await blockInfoDocRef.get()).data()
 
 /**
  * Signs and inserts a given block to blocks collection, asynchronously.
  */
-exports.signThenInsertBlock = block => blocksColRef.doc(block.header.no.toString()).set(blockUtils.sign(block))
+exports.signThenInsertBlock = (block, blockInfo) => firestore.runTransaction(async t => {
+  const newBlockRef = blocksColRef.doc(block.header.no.toString())
+  t.create(newBlockRef, blockUtils.sign(block))
+  t.set(blockInfoDocRef, blockInfo)
+})
 
 /**
  * Gives mining reward to a miner, asynchronously.

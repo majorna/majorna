@@ -145,11 +145,15 @@ suite('db', () => {
     assert(err)
   })
 
-  test.only('signThenInsertBlock, getLastBlock', async () => {
+  test.only('signThenInsertBlock, getBlockInfo', async () => {
     const someBlock = {header: {no: 1234, time: new Date()}}
-    await db.signThenInsertBlock(someBlock)
-    const lastBlock = await db.getLastBlock()
-    assert(lastBlock.header.no === someBlock.header.no)
+    const initBlockInfo = await db.getBlockInfo()
+
+    await db.signThenInsertBlock(someBlock, {no: someBlock.header.no})
+    const lastBlockInfo = await db.getBlockInfo()
+
+    assert(initBlockInfo.no !== someBlock.header.no)
+    assert(lastBlockInfo.no === someBlock.header.no)
   })
 
   test('giveMiningReward', async () => {
