@@ -9,7 +9,9 @@ const firestore = firebaseConfig.firestore
 const txsColRef = firestore.collection('txs')
 const blocksColRef = firestore.collection('blocks')
 const usersColRef = firestore.collection('users')
-const metaDocRef = firestore.collection('mj').doc('meta')
+const mjColRef = firestore.collection('mj')
+const metaDocRef = mjColRef.doc('meta')
+const blockRef = mjColRef.doc('mineableBlock')
 
 const maxTxsInUserDoc = 15
 const genesisBlock = blockUtils.getGenesisBlock()
@@ -30,6 +32,7 @@ exports.init = async () => {
     userCount: 0
     // monthly: [{t: 'May 12', mj: 0.01}]
   })
+  batch.create(blockRef, {})
   batch.create(blocksColRef.doc(genesisBlock.header.no), blockUtils.sign(genesisBlock))
   batch.create(usersColRef.doc('majorna'), {email: 'majorna@majorna', name: 'Majorna', created: new Date(), balance: 0, txs: []})
   await batch.commit()
@@ -43,14 +46,16 @@ exports.initTest = async () => {
   const batch = firestore.batch()
 
   // delete all data
-  const txsSnap = await txsColRef.get()
-  txsSnap.forEach(txSnap => batch.delete(txSnap.ref))
+  const mjsSnap = await mjColRef.get()
+  mjsSnap.forEach(mjSnap => batch.delete(mjSnap.ref))
   const usersSnap = await usersColRef.get()
   usersSnap.forEach(userSnap => batch.delete(userSnap.ref))
-  batch.delete(metaDocRef)
+  const txsSnap = await txsColRef.get()
+  txsSnap.forEach(txSnap => batch.delete(txSnap.ref))
 
   // add seed data
   batch.create(metaDocRef, testData.mj.meta)
+  batch.create(blockRef, testData.mj.block)
   batch.create(usersColRef.doc('1'), testData.users.u1Doc)
   batch.create(usersColRef.doc('2'), testData.users.u2Doc)
   testData.txs.forEach((tx, i) => batch.create(txsColRef.doc(i.toString()), tx))

@@ -75,7 +75,8 @@ const fromName = 'Majorna'
 const initBalance = 500
 const testData = exports.data = {
   mj: {
-    meta: {val: 0.01, cap: initBalance * 3, userCount: 3}
+    meta: {val: 0.01, cap: initBalance * 3, userCount: 3},
+    block: {}
   },
   // u1: User #1
   // u1Doc: Firestore doc seed data
