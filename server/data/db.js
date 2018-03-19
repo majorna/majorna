@@ -1,6 +1,7 @@
 const assert = require('assert')
 const txUtils = require('../blockchain/tx')
 const blockUtils = require('../blockchain/block')
+const blockchainUtils = require('../blockchain/blockchain')
 const utils = require('./utils')
 const firebaseConfig = require('../config/firebase')
 const firestore = firebaseConfig.firestore
@@ -260,7 +261,7 @@ exports.giveMiningReward = (to, amount, nonce) => firestore.runTransaction(async
   // update block info
   blockInfo.lastBlockHeader.difficulty = difficulty
   blockInfo.lastBlockHeader.nonce = nonce
-  blockInfo.nextBlock.targetDifficulty = difficulty + 1
+  blockInfo.nextBlock.targetDifficulty = difficulty + blockchainUtils.blockDifficultyIncrementStep
   blockInfo.nextBlock.reward = blockUtils.getBlockReward(blockInfo.nextBlock.targetDifficulty)
   blockInfo.nextBlock.headerStrWithoutNonce = blockUtils.getHeaderStr(lastBlock.header, true, blockInfo.nextBlock.targetDifficulty)
 
