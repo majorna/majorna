@@ -139,6 +139,9 @@ const testData = exports.data = {
     tx.sign({id: '1', from: {id: from, balance: 0}, to: {id: '2', balance: 0}, time, amount: initBalance}),
     tx.sign({id: '2', from: {id: from, balance: 0}, to: {id: '3', balance: 0}, time, amount: initBalance})
   ],
+  blocks: [
+    block.sign(block.getGenesisBlock())
+  ],
   // Firebase authentication ID token (JWT) content when decoded
   decodedIdTokenSample: {
     iss: 'https://securetoken.google.com/majorna-fire',

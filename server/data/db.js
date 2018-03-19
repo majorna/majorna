@@ -68,6 +68,7 @@ exports.initTest = async () => {
   batch.create(usersColRef.doc('1'), testData.users.u1Doc)
   batch.create(usersColRef.doc('2'), testData.users.u2Doc)
   testData.txs.forEach((tx, i) => batch.create(txsColRef.doc(i.toString()), tx))
+  testData.blocks.forEach(block => batch.create(blocksColRef.doc(block.header.no.toString()), block))
 
   await batch.commit()
 }
@@ -255,7 +256,6 @@ exports.giveMiningReward = (to, amount, nonce) => firestore.runTransaction(async
   lastBlock.header.difficulty = difficulty
   lastBlock.header.nonce = nonce
   blockUtils.sign(lastBlock)
-  t.update(lastBlockRef, {sig: lastBlock.sig, header: {difficulty, nonce}})
 
   // update block info
   blockInfo.lastBlockHeader.difficulty = difficulty
@@ -263,7 +263,6 @@ exports.giveMiningReward = (to, amount, nonce) => firestore.runTransaction(async
   blockInfo.nextBlock.targetDifficulty = difficulty + 1
   blockInfo.nextBlock.reward = blockUtils.getBlockReward(blockInfo.nextBlock.targetDifficulty)
   blockInfo.nextBlock.headerStrWithoutNonce = blockUtils.getHeaderStr(lastBlock.header, true, blockInfo.nextBlock.targetDifficulty)
-  t.update(blockInfoDocRef, blockInfo)
 
   const time = new Date()
 
@@ -283,6 +282,10 @@ exports.giveMiningReward = (to, amount, nonce) => firestore.runTransaction(async
   const metaDoc = await t.get(metaDocRef)
   const meta = metaDoc.data()
   t.update(metaDocRef, {cap: meta.cap + amount})
+
+  // block op writes (here to have reads before writes)
+  t.update(lastBlockRef, {sig: lastBlock.sig, header: {difficulty, nonce}})
+  t.update(blockInfoDocRef, blockInfo)
 
   // add tx to txs collection
   const txRef = txsColRef.doc()
