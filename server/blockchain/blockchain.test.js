@@ -32,6 +32,7 @@ suite.only('blockchain', () => {
   })
 
   test('insertBlock', async () => {
+    // todo: validate that all txs are within valid time
     const twoDaysAgo = new Date()
     const now = new Date()
     twoDaysAgo.setDate(twoDaysAgo.getDate() - 2)

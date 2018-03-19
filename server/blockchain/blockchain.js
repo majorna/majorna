@@ -49,7 +49,6 @@ exports.getBlockTimeRange = (start, end) => {
  * @param prevBlockHeader - Previous block's header.
  */
 exports.insertBlock = async (startTime, endTime, blockPath, prevBlockHeader) => {
-  // todo: validate all txs before inserting (within valid time, signatures, etc.), and entire block after inserting
   const txs = await db.getTxsByTimeRange(startTime, endTime)
   const genesis = block.getGenesisBlock()
   const blockNo2 = prevBlockHeader.no === genesis.header.no // the block after genesis
