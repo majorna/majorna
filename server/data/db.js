@@ -227,7 +227,7 @@ exports.setBlockInfo = async () => (await blockInfoDocRef.get()).data()
 
 /**
  * Signs and inserts a given block to blocks collection, asynchronously.
- * todo: use block.verify() in a single transaction
+ * todo: use block.verify() in a single transaction, or move this to blockchain.js
  */
 exports.signThenInsertBlock = (block, blockInfo) => firestore.runTransaction(async t => {
   const newBlockRef = blocksColRef.doc(block.header.no.toString())
@@ -252,6 +252,8 @@ exports.giveMiningReward = (to, amount, nonce) => firestore.runTransaction(async
   const blockInfoDoc = await t.get(blockInfoDocRef)
   const blockInfo = blockInfoDoc.data()
   const difficulty = blockUtils.getHashDifficultyFromStr(nonce, blockInfo.nextBlock.headerStrWithoutNonce)
+  console.log(difficulty)
+  console.log(blockInfo.nextBlock.targetDifficulty)
   if (difficulty < blockInfo.nextBlock.targetDifficulty) {
     throw new utils.UserVisibleError(`Given nonce does not belong to the last block or is of insufficient difficulty.`)
   }
