@@ -2,7 +2,7 @@ const assert = require('assert')
 const block = require('../blockchain/block')
 const testData = require('../config/test').data
 
-suite('route: blocks', () => {
+suite.skip('route: blocks', () => {
   test('get', async () => {
     const res = await testData.users.u1Request.get('/blocks')
     assert(res.status === 200)
