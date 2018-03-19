@@ -11,22 +11,6 @@ exports.blockDifficultyIncrementStep = 1
 const genesisBlockPath = 'genesisblock'
 
 /**
- * Retrieves last block's header as an object from github, asynchronously.
- * Will return genesis block if there is no last block.
- */
-exports.getLastBlockHeader = async () => {
-  try {
-    const lastBlockHeaderFile = await db.getBlockchainInfo().lastBlock
-    return block.fromJson(lastBlockHeaderFile)
-  } catch (e) {
-    if (e.code === 404) {
-      return block.getGenesisBlock().header
-    }
-    throw e
-  }
-}
-
-/**
  * Retrieves the full path of a block in a git repo with respect to given time and day shift.
  * @param time - 'Date' object instance.
  * @param dayShift - No of days to shift the time, if any. i.e. +5, -3, etc.

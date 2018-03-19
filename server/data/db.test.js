@@ -156,7 +156,7 @@ suite('db', () => {
     assert(lastBlockInfo.no === someBlock.header.no)
   })
 
-  // test.only('giveMiningReward', async () => {
+  // test('giveMiningReward', async () => {
   //   const from = 'majorna'
   //   const to = '1'
   //   const receiverInitBalance = (await db.getUser(to)).balance
