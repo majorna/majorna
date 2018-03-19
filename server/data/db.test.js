@@ -3,7 +3,7 @@ const db = require('./db')
 const txUtils = require('../blockchain/tx')
 const testData = require('../config/test').data
 
-suite('db', () => {
+suite.only('db', () => {
   test('init', async () => {
     await db.init()
     await db.init()
@@ -145,6 +145,17 @@ suite('db', () => {
     assert(err)
   })
 
+  // test('signThenInsertBlock, getBlockInfo', async () => {
+  //   const someBlock = {header: {no: 1234, time: new Date()}}
+  //   const initBlockInfo = await db.getBlockInfo()
+  //
+  //   await db.signThenInsertBlock(someBlock, {no: someBlock.header.no})
+  //   const lastBlockInfo = await db.getBlockInfo()
+  //
+  //   assert(initBlockInfo.no !== someBlock.header.no)
+  //   assert(lastBlockInfo.no === someBlock.header.no)
+  // })
+
   test('giveMiningReward', async () => {
     const from = 'majorna'
     const to = '1'
@@ -175,17 +186,5 @@ suite('db', () => {
     assert(metaAfter.cap === initMeta.cap + amount)
 
     // verify last block update
-  })
-
-  // todo: move this above giveMiningReward (but requires flushing block/blockInfo to init state)
-  test('signThenInsertBlock, getBlockInfo', async () => {
-    const someBlock = {header: {no: 1234, time: new Date()}}
-    const initBlockInfo = await db.getBlockInfo()
-
-    await db.signThenInsertBlock(someBlock, {no: someBlock.header.no})
-    const lastBlockInfo = await db.getBlockInfo()
-
-    assert(initBlockInfo.no !== someBlock.header.no)
-    assert(lastBlockInfo.no === someBlock.header.no)
   })
 })

@@ -221,7 +221,13 @@ exports.makeTx = (from, to, amount) => firestore.runTransaction(async t => {
 exports.getBlockInfo = async () => (await blockInfoDocRef.get()).data()
 
 /**
+ * Overwrites the block info document, asynchronously
+ */
+exports.setBlockInfo = async () => (await blockInfoDocRef.get()).data()
+
+/**
  * Signs and inserts a given block to blocks collection, asynchronously.
+ * todo: use block.verify() in a single transaction
  */
 exports.signThenInsertBlock = (block, blockInfo) => firestore.runTransaction(async t => {
   const newBlockRef = blocksColRef.doc(block.header.no.toString())
