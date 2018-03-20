@@ -1,8 +1,6 @@
 const db = require('../data/db')
 const block = require('./block')
 const github = require('../data/github')
-const crypto = require('./crypto')
-const utils = require('../data/utils')
 
 // block difficulty increases by this step every time someone finds and submits a valid nonce
 exports.blockDifficultyIncrementStep = 1
