@@ -89,3 +89,16 @@ exports.insertBlockIfRequired = async (blockPath, now) => {
     return true
   }
 }
+
+/**
+ * Exports all blocks except for the last one to GitHub.
+ * Last block is not written since it will be mined and updated continuously.
+ * Does not overwrite the existing blocks in the git repo for efficiency.
+ */
+exports.exportBlocksToGitHub = async () => {
+
+}
+
+exports.collectMiningReward = async (nonce, userId) => {
+
+}

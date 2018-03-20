@@ -5,7 +5,7 @@ const block = require('./block')
 const utils = require('../data/utils')
 const testData = require('../config/test').data
 
-suite.only('blockchain', () => {
+suite('blockchain', () => {
   test('init', () => {
   })
 

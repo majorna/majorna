@@ -6,10 +6,9 @@ const blockchain = require('../blockchain/blockchain')
  */
 exports.create = route.post('/blocks', async ctx => {
   const minedBlock = ctx.request.body
-  ctx.assert(minedBlock.no, 400, '"no" field is required.')
   ctx.assert(minedBlock.nonce, 400, '"nonce" field is required.')
 
-  const reward = await blockchain.collectMiningReward(minedBlock.no, minedBlock.nonce, ctx.state.user.uid)
+  const reward = await blockchain.collectMiningReward(minedBlock.nonce, ctx.state.user.uid)
 
   ctx.body = {reward}
   ctx.status = 201
