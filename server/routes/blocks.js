@@ -2,13 +2,6 @@ const route = require('koa-route')
 const blockchain = require('../blockchain/blockchain')
 
 /**
- * Get last block's header as a hashable string along with mining parameters so clients can start mining the latest block immediately.
- */
-exports.mine = route.get('/blocks', async ctx => {
-  ctx.body = await blockchain.getMineableBlockHeader()
-})
-
-/**
  * Creates a new block (or updates existing one) with discovered nonce that is fit for the required difficulty.
  */
 exports.create = route.post('/blocks', async ctx => {

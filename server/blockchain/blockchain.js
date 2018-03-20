@@ -37,7 +37,7 @@ exports.getBlockTimeRange = (start, end) => {
 }
 
 /**
- * Creates and inserts a new block into the blockchain git repo, asynchronously.
+ * Creates and inserts a new block into the database, asynchronously.
  * @param startTime - Time to start including txs from.
  * @param endTime - Time to stop including txs from.
  * @param blockPath - Full path of the block to create. i.e. "dir/sub_dir/filename".

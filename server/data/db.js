@@ -222,7 +222,7 @@ exports.getBlockInfo = async () => (await blockInfoDocRef.get()).data()
 
 /**
  * Signs and inserts a given block to blocks collection, asynchronously.
- * todo: use block.verify() in a single transaction, or move this to blockchain.js
+ * todo: use block.verify(), or move this to blockchain.js
  */
 exports.signThenInsertBlock = (block, blockInfo) => firestore.runTransaction(async t => {
   const newBlockRef = blocksColRef.doc(block.header.no.toString())

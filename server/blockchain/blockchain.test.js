@@ -9,6 +9,14 @@ suite.only('blockchain', () => {
   test('init', () => {
   })
 
+  test('getBlockInfo', async () => {
+    // todo: verify mineable block info
+    const res = await testData.users.u1Request.get('/blocks')
+    assert(res.status === 200)
+    assert(res.data.targetDifficulty > 0)
+    assert(res.data.headerString.length > 10)
+  })
+
   test('getBlockPath', () => {
     const now = new Date('2018-02-15T10:00:00.000Z')
     const path = blockchain.getBlockPath(now)

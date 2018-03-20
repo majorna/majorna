@@ -3,13 +3,6 @@ const block = require('../blockchain/block')
 const testData = require('../config/test').data
 
 suite('route: blocks', () => {
-  test('get', async () => {
-    const res = await testData.users.u1Request.get('/blocks')
-    assert(res.status === 200)
-    assert(res.data.targetDifficulty > 0)
-    assert(res.data.headerString.length > 10)
-  })
-
   test('post', async () => {
     const res = await testData.users.u1Request.get('/blocks')
     assert(res.status === 200)
