@@ -301,5 +301,5 @@ exports.giveMiningReward = (to, amount, nonce) => firestore.runTransaction(async
   receiver.txs.length > maxTxsInUserDoc && (receiver.txs.length = maxTxsInUserDoc)
   t.update(receiverDocRef, {balance: receiver.balance + amount, txs: receiver.txs})
 
-  return signedTx
+  return blockInfo.nextBlock.reward
 })

@@ -6,7 +6,6 @@ const cors = require('kcors')
 const config = require('./config')
 const firebaseConfig = require('./firebase')
 const db = require('../data/db')
-const blockchain = require('../blockchain/blockchain')
 const AssertionError = require('assert').AssertionError
 
 function koaConfig () {
@@ -52,7 +51,6 @@ function koaConfig () {
 
 module.exports = async () => {
   await db.init()
-  await blockchain.init()
   console.log('server listening on port ' + config.app.port)
   return koaConfig().listen(config.app.port)
 }

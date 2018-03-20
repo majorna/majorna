@@ -7,7 +7,6 @@ const testData = require('../config/test').data
 
 suite.only('blockchain', () => {
   test('init', () => {
-
   })
 
   test('getBlockPath', () => {
@@ -107,11 +106,6 @@ suite.only('blockchain', () => {
     // not required
     const inserted2 = await blockchain.insertBlockIfRequired(path, tomorrow)
     assert(!inserted2)
-  })
-
-  test('startBlockchainInsertTimer', () => {
-    const timer = blockchain.startBlockchainInsertTimer(30)
-    clearInterval(timer)
   })
 
   test('getMineableBlockHeader', async () => {
