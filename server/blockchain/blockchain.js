@@ -11,6 +11,21 @@ exports.blockDifficultyIncrementStep = 1
 const genesisBlockPath = 'genesisblock'
 
 /**
+ * Inserts genesis block into git repo if it is not already there, asynchronously.
+ */
+exports.init = async () => {
+  try {
+    await github.getFileContent(genesisBlockPath)
+  } catch (e) {
+    if (e.code !== 404) throw e
+    const genesis = block.getGenesisBlock()
+    block.sign(genesis)
+    await github.upsertFile(block.toJson(genesis), genesisBlockPath)
+    console.log(`inserted genesis block to file: ${genesisBlockPath}`)
+  }
+}
+
+/**
  * Retrieves the full path of a block in a git repo with respect to given time and day shift.
  * @param time - 'Date' object instance.
  * @param dayShift - No of days to shift the time, if any. i.e. +5, -3, etc.
@@ -41,8 +56,6 @@ exports.getBlockTimeRange = (start, end) => {
 
 /**
  * Creates and inserts a new block into the blockchain git repo, asynchronously.
- * Returns true if a block was inserted. False if there were no txs found to create a block with.
- * Blocks with empty txs are skipped for the sake of space efficiency but can easily be enabled if required.
  * @param startTime - Time to start including txs from.
  * @param endTime - Time to stop including txs from.
  * @param blockPath - Full path of the block to create. i.e. "dir/sub_dir/filename".
@@ -50,30 +63,11 @@ exports.getBlockTimeRange = (start, end) => {
  */
 exports.insertBlock = async (startTime, endTime, blockPath, prevBlockHeader) => {
   const txs = await db.getTxsByTimeRange(startTime, endTime)
-  const genesis = block.getGenesisBlock()
-  const blockNo2 = prevBlockHeader.no === genesis.header.no // the block after genesis
-
-  if (txs.length || blockNo2) {
-    if (blockNo2) {
-      // write genesis block to git repo
-      block.sign(genesis)
-      await github.upsertFile(block.toJson(genesis), genesisBlockPath)
-      console.log(`inserted genesis block ${genesisBlockPath}`)
-    }
-
-    const newBlock = block.create(txs, prevBlockHeader)
-    block.sign(newBlock)
-    block.verify(newBlock, prevBlockHeader)
-    // todo: below two should be a single operation editing multiple files so they won't fail separately
-    await github.createFile(block.toJson(newBlock), blockPath)
-    newBlock.header.path = blockPath
-    await github.upsertFile(block.toJson(newBlock.header), 'lastblock')
-    console.log(`inserted block ${blockPath}`)
-    return true
-  } else {
-    console.log(`no txs found to create block with`)
-    return false
-  }
+  const newBlock = block.create(txs, prevBlockHeader)
+  block.sign(newBlock)
+  block.verify(newBlock, prevBlockHeader)
+  await github.createFile(block.toJson(newBlock), blockPath)
+  console.log(`inserted block ${blockPath}`)
 }
 
 /**
