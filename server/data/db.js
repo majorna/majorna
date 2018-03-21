@@ -226,8 +226,10 @@ exports.getBlockInfo = async () => (await blockInfoDocRef.get()).data()
 exports.setBlockInfo = blockInfo => blockInfoDocRef.set(blockInfo)
 
 /**
- * Inserts a given block data to blocks collection, asynchronously.
+ * Inserts a given block data to blocks collection and updates the block info document, asynchronously.
  * Does not do any verification or block signing.
+ * @param block - Block object to insert.
+ * @param blockInfo - Accompanying block info object.
  */
 exports.insertBlock = (block, blockInfo) => firestore.runTransaction(async t => {
   t.set(blockInfoDocRef, blockInfo)
