@@ -34,8 +34,8 @@ exports.init = async () => {
     // monthly: [{t: 'May 12', mj: 0.01}]
   })
   batch.create(blockInfoMetaDocRef, {
-    lastBlockHeader: {},
-    nextBlock: {
+    header: {},
+    miner: {
       headerStrWithoutNonce: '',
       targetDifficulty: 0,
       reward: 0
@@ -250,28 +250,28 @@ exports.giveMiningReward = (to, nonce) => firestore.runTransaction(async t => {
   // verify nonce
   const blockInfoDoc = await t.get(blockInfoMetaDocRef)
   const blockInfo = blockInfoDoc.data()
-  const submittedDifficulty = blockUtils.getHashDifficultyFromStr(nonce, blockInfo.nextBlock.headerStrWithoutNonce)
-  if (submittedDifficulty < blockInfo.nextBlock.targetDifficulty) {
+  const givenNonceDifficulty = blockUtils.getHashDifficultyFromStr(nonce, blockInfo.miner.headerStrWithoutNonce)
+  if (givenNonceDifficulty < blockInfo.miner.targetDifficulty) {
     throw new utils.UserVisibleError(`Given nonce does not belong to the last block or is of insufficient difficulty.`)
   }
 
-  const miningReward = blockUtils.getBlockReward(submittedDifficulty)
+  const miningReward = blockUtils.getBlockReward(givenNonceDifficulty)
 
   // update last block
-  const lastBlockRef = blocksColRef.doc(blockInfo.lastBlockHeader.no.toString())
+  const lastBlockRef = blocksColRef.doc(blockInfo.header.no.toString())
   const lastBlockDoc = await t.get(lastBlockRef)
   const lastBlock = lastBlockDoc.data()
-  lastBlock.header.difficulty = submittedDifficulty
+  lastBlock.header.difficulty = givenNonceDifficulty
   lastBlock.header.nonce = nonce
   blockUtils.sign(lastBlock)
 
   // update block info
   // todo: assignments here need simplification or documentation
-  blockInfo.lastBlockHeader.difficulty = submittedDifficulty
-  blockInfo.lastBlockHeader.nonce = nonce
-  blockInfo.nextBlock.targetDifficulty = submittedDifficulty + blockchainUtils.blockDifficultyIncrementStep
-  blockInfo.nextBlock.reward = blockUtils.getBlockReward(blockInfo.nextBlock.targetDifficulty)
-  blockInfo.nextBlock.headerStrWithoutNonce = blockUtils.getHeaderStr(lastBlock.header, true, blockInfo.nextBlock.targetDifficulty)
+  blockInfo.header.difficulty = givenNonceDifficulty
+  blockInfo.header.nonce = nonce
+  blockInfo.miner.targetDifficulty = givenNonceDifficulty + blockchainUtils.blockDifficultyIncrementStep
+  blockInfo.miner.reward = blockUtils.getBlockReward(blockInfo.miner.targetDifficulty)
+  blockInfo.miner.headerStrWithoutNonce = blockUtils.getHeaderStr(lastBlock.header, true, blockInfo.miner.targetDifficulty)
 
   const time = new Date()
 
@@ -293,7 +293,7 @@ exports.giveMiningReward = (to, nonce) => firestore.runTransaction(async t => {
   t.update(mjMetaDocRef, {cap: meta.cap + miningReward})
 
   // block op writes (here to have reads before writes)
-  t.update(lastBlockRef, {sig: lastBlock.sig, header: {difficulty: submittedDifficulty, nonce}})
+  t.update(lastBlockRef, {sig: lastBlock.sig, header: {difficulty: givenNonceDifficulty, nonce}})
   t.update(blockInfoMetaDocRef, blockInfo)
 
   // add tx to txs collection

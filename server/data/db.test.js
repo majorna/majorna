@@ -174,26 +174,23 @@ suite('db', () => {
     // setup block info meta doc
     const initDifficulty = 1
     const genesisBlock = blockUtils.sign(blockUtils.getGenesisBlock())
-    const nextBlock = blockUtils.sign(blockUtils.create([], genesisBlock.header))
-    nextBlock.header.difficulty = initDifficulty
-    const initBlockInfo = {
-      lastBlockHeader: genesisBlock.header,
-      nextBlock: {
-        headerStrWithoutNonce: blockUtils.getHeaderStr(nextBlock.header, true),
+    const blockNo2 = blockUtils.sign(blockUtils.create([], genesisBlock.header))
+    await db.insertBlock(blockNo2, {
+      header: blockNo2.header,
+      miner: {
+        headerStrWithoutNonce: blockUtils.getHeaderStr(blockNo2.header, true, initDifficulty),
         targetDifficulty: initDifficulty,
         reward: blockUtils.getBlockReward(initDifficulty)
       }
-    }
-    await db.setBlockInfo(initBlockInfo)
+    })
 
     for (let i = 0; i < 3; i++) {
-      // get block info
       const blockInfo = await db.getBlockInfo()
 
       // mine the block
       // todo: use blockInfo.headerStrWithoutNonce instead, just like miner UI
-      blockInfo.lastBlockHeader.difficulty = blockInfo.nextBlock.targetDifficulty
-      const hashBase64 = blockUtils.mineBlock(blockInfo.lastBlockHeader)
+      blockInfo.header.difficulty = blockInfo.miner.targetDifficulty
+      const hashBase64 = blockUtils.mineBlock(blockInfo.header)
       const hashBuffer = Buffer.from(hashBase64, 'base64')
       const difficulty = blockUtils.getHashDifficulty(hashBuffer)
       assert(difficulty)
@@ -201,7 +198,7 @@ suite('db', () => {
       // lastDifficulty = difficulty
 
       // collect reward
-      const rewardTx = await db.giveMiningReward(to, blockInfo.lastBlockHeader.nonce)
+      const rewardTx = await db.giveMiningReward(to, blockInfo.header.nonce)
 
       assert(rewardTx)
     }

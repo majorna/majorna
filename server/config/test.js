@@ -78,8 +78,8 @@ const testData = exports.data = {
   meta: {
     mj: {val: 0.01, cap: initBalance * 3, userCount: 3},
     blockInfo: {
-      lastBlockHeader: block.getGenesisBlock().header,
-      nextBlock: {}
+      header: block.getGenesisBlock().header,
+      miner: {}
     }
   },
   // u1: User #1

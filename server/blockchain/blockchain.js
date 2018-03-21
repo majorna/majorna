@@ -62,7 +62,7 @@ exports.insertBlock = async (startTime, endTime, blockPath, prevBlockHeader) => 
 exports.insertBlockSinceLastOne = async (now, blockPath, lastBlockHeader) => {
   if (!lastBlockHeader) {
     const blockInfo = await db.getBlockInfo()
-    lastBlockHeader = blockInfo.lastBlockHeader
+    lastBlockHeader = blockInfo.header
   }
   const blockTimeRange = exports.getBlockTimeRange(lastBlockHeader.time, now)
   await exports.insertBlock(blockTimeRange.start, blockTimeRange.end, blockPath, lastBlockHeader)
