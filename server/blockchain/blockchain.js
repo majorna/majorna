@@ -90,6 +90,32 @@ exports.insertBlockIfRequired = async (blockPath, now) => {
   }
 }
 
+function failSafeInsertBlockIfRequired () {
+  exports.insertBlockIfRequired().catch(e => console.error(e))
+}
+
+let timerStarted = false
+/**
+ * Starts the the blockchain insert timer.
+ * Returns a number that can be used in clearing the interval with "clearInterval(ret)".
+ * @param interval - Only used for testing. Automatically calculated otherwise.
+ */
+exports.startBlockchainInsertTimer = interval => {
+  // prevent duplicate timers
+  if (timerStarted) {
+    return
+  }
+  timerStarted = true
+
+  // do initial block check immediately
+  // skip on testing since ongoing promise can do conflicting data changes
+  !interval && failSafeInsertBlockIfRequired()
+
+  // start timer
+  interval = interval || 1000/* ms */ * 60/* s */ * 15/* min */
+  return setInterval(() => failSafeInsertBlockIfRequired(), interval)
+}
+
 /**
  * Exports all blocks except for the last one to GitHub.
  * Last block is not written since it will be mined and updated continuously.
