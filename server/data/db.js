@@ -238,6 +238,7 @@ exports.signThenInsertBlock = (block, blockInfo) => firestore.runTransaction(asy
  */
 exports.giveMiningReward = (to, nonce) => firestore.runTransaction(async t => {
   assert(to, '"to" parameter is required')
+  assert(nonce, '"nonce" parameter is required')
 
   // verify nonce
   const blockInfoDoc = await t.get(blockInfoDocRef)

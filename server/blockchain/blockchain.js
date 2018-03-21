@@ -123,6 +123,3 @@ exports.startBlockchainInsertTimer = interval => {
  */
 exports.exportBlocksToGitHub = async () => {
 }
-
-exports.collectMiningReward = async (nonce, userId) => {
-}
