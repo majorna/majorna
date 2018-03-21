@@ -1,6 +1,7 @@
 const assert = require('assert')
 const db = require('./db')
 const txUtils = require('../blockchain/tx')
+const blockUtils = require('../blockchain/block')
 const testData = require('../config/test').data
 
 suite('db', () => {
@@ -79,8 +80,7 @@ suite('db', () => {
     // inexisting tx
     let err = null
     try { await db.getTx('sdaf089y097gs') } catch (e) { err = e }
-    assert(err)
-    console.log(err.status === 404)
+    assert(err.status === 404)
   })
 
   test('getTxsByTimeRange', async () => {
@@ -165,35 +165,60 @@ suite('db', () => {
     assert(laterBlockInfo.no === someBlock.header.no)
   })
 
-  // test('giveMiningReward', async () => {
-  //   const from = 'majorna'
-  //   const to = '1'
-  //   const receiverInitBalance = (await db.getUser(to)).balance
-  //   const initMeta = await db.getMjMeta()
-  //   const amount = 100
-  //   const lastBlockHeader = {no: 60, difficulty: 90}
-  //   const majornaTx = await db.giveMiningReward(to, amount, 12304785)
-  //
-  //   // validate tx in txs col
-  //   const tx = await db.getTx(majornaTx.id)
-  //   assert(txUtils.verify(tx))
-  //   assert(tx.from.id === from)
-  //   assert(tx.to.id === to)
-  //   assert(tx.time.getTime() === majornaTx.time.getTime())
-  //   assert(tx.amount === amount)
-  //
-  //   // validate affected user doc
-  //   const receiver = await db.getUser(to)
-  //   assert(receiver.balance === receiverInitBalance + amount)
-  //   const receiverTx = receiver.txs[0]
-  //   assert(receiverTx.from === from)
-  //   assert(receiverTx.time.getTime() === majornaTx.time.getTime())
-  //   assert(receiverTx.amount === amount)
-  //
-  //   // verify market cap increase
-  //   const metaAfter = await db.getMjMeta()
-  //   assert(metaAfter.cap === initMeta.cap + amount)
-  //
-  //   // verify last block update
-  // })
+  test.only('giveMiningReward', async () => {
+    // const from = 'majorna'
+    const to = '1'
+    // const receiverInitBalance = (await db.getUser(to)).balance
+    // const initMeta = await db.getMjMeta()
+
+    // setup block info meta doc
+    const initDifficulty = 1
+    const genesisBlock = blockUtils.sign(blockUtils.getGenesisBlock())
+    const nextBlock = blockUtils.sign(blockUtils.create([], genesisBlock.header))
+    nextBlock.header.difficulty = initDifficulty
+    const blockInfo = {
+      lastBlockHeader: genesisBlock.header,
+      nextBlock: {
+        headerStrWithoutNonce: blockUtils.getHeaderStr(nextBlock.header, true),
+        targetDifficulty: initDifficulty,
+        reward: blockUtils.getBlockReward(initDifficulty)
+      }
+    }
+    await db.setBlockInfo(blockInfo)
+
+    // mine the block
+    const hashBase64 = blockUtils.mineBlock(nextBlock.header)
+    const hashBuffer = Buffer.from(hashBase64, 'base64')
+    const difficulty = blockUtils.getHashDifficulty(hashBuffer)
+    assert(difficulty)
+    // assert(difficulty > lastDifficulty)
+    // lastDifficulty = difficulty
+
+    // collect reward
+    const rewardTx = await db.giveMiningReward(to, nextBlock.header.nonce)
+
+    assert(rewardTx)
+
+    // // validate tx in txs col
+    // const tx = await db.getTx(majornaTx.id)
+    // assert(txUtils.verify(tx))
+    // assert(tx.from.id === from)
+    // assert(tx.to.id === to)
+    // assert(tx.time.getTime() === majornaTx.time.getTime())
+    // assert(tx.amount === amount)
+    //
+    // // validate affected user doc
+    // const receiver = await db.getUser(to)
+    // assert(receiver.balance === receiverInitBalance + amount)
+    // const receiverTx = receiver.txs[0]
+    // assert(receiverTx.from === from)
+    // assert(receiverTx.time.getTime() === majornaTx.time.getTime())
+    // assert(receiverTx.amount === amount)
+    //
+    // // verify market cap increase
+    // const metaAfter = await db.getMjMeta()
+    // assert(metaAfter.cap === initMeta.cap + amount)
+    //
+    // // verify last block update
+  })
 })

@@ -250,27 +250,26 @@ exports.giveMiningReward = (to, nonce) => firestore.runTransaction(async t => {
   // verify nonce
   const blockInfoDoc = await t.get(blockInfoMetaDocRef)
   const blockInfo = blockInfoDoc.data()
-  const difficulty = blockUtils.getHashDifficultyFromStr(nonce, blockInfo.nextBlock.headerStrWithoutNonce)
-  console.log(difficulty)
-  console.log(blockInfo.nextBlock.targetDifficulty)
-  if (difficulty < blockInfo.nextBlock.targetDifficulty) {
+  const submittedDifficulty = blockUtils.getHashDifficultyFromStr(nonce, blockInfo.nextBlock.headerStrWithoutNonce)
+  if (submittedDifficulty < blockInfo.nextBlock.targetDifficulty) {
     throw new utils.UserVisibleError(`Given nonce does not belong to the last block or is of insufficient difficulty.`)
   }
 
-  const miningReward = blockInfo.nextBlock.reward
+  const miningReward = blockUtils.getBlockReward(submittedDifficulty)
 
   // update last block
   const lastBlockRef = blocksColRef.doc(blockInfo.lastBlockHeader.no.toString())
   const lastBlockDoc = await t.get(lastBlockRef)
   const lastBlock = lastBlockDoc.data()
-  lastBlock.header.difficulty = difficulty
+  lastBlock.header.difficulty = submittedDifficulty
   lastBlock.header.nonce = nonce
   blockUtils.sign(lastBlock)
 
   // update block info
-  blockInfo.lastBlockHeader.difficulty = difficulty
+  // todo: assignments here need simplification or documentation
+  blockInfo.lastBlockHeader.difficulty = submittedDifficulty
   blockInfo.lastBlockHeader.nonce = nonce
-  blockInfo.nextBlock.targetDifficulty = difficulty + blockchainUtils.blockDifficultyIncrementStep
+  blockInfo.nextBlock.targetDifficulty = submittedDifficulty + blockchainUtils.blockDifficultyIncrementStep
   blockInfo.nextBlock.reward = blockUtils.getBlockReward(blockInfo.nextBlock.targetDifficulty)
   blockInfo.nextBlock.headerStrWithoutNonce = blockUtils.getHeaderStr(lastBlock.header, true, blockInfo.nextBlock.targetDifficulty)
 
@@ -294,18 +293,18 @@ exports.giveMiningReward = (to, nonce) => firestore.runTransaction(async t => {
   t.update(mjMetaDocRef, {cap: meta.cap + miningReward})
 
   // block op writes (here to have reads before writes)
-  t.update(lastBlockRef, {sig: lastBlock.sig, header: {difficulty, nonce}})
+  t.update(lastBlockRef, {sig: lastBlock.sig, header: {difficulty: submittedDifficulty, nonce}})
   t.update(blockInfoMetaDocRef, blockInfo)
 
   // add tx to txs collection
   const txRef = txsColRef.doc()
-  const signedTx = txUtils.sign({id: txRef.id, from: {id: from, balance: 0}, to: {id: to, balance: receiver.balance}, time, miningReward})
+  const signedTx = txUtils.sign({id: txRef.id, from: {id: from, balance: 0}, to: {id: to, balance: receiver.balance}, time, amount: miningReward})
   t.create(txRef, signedTx)
 
   // update user docs with tx and updated balances
-  receiver.txs.unshift({id: txRef.id, from: from, fromName, time, miningReward})
+  receiver.txs.unshift({id: txRef.id, from: from, fromName, time, amount: miningReward})
   receiver.txs.length > maxTxsInUserDoc && (receiver.txs.length = maxTxsInUserDoc)
   t.update(receiverDocRef, {balance: receiver.balance + miningReward, txs: receiver.txs})
 
-  return blockInfo.nextBlock.reward
+  return signedTx
 })
