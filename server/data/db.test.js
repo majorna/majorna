@@ -145,15 +145,24 @@ suite('db', () => {
     assert(err)
   })
 
-  test('signThenInsertBlock, getBlockInfo', async () => {
-    const someBlock = {header: {no: 1234, time: new Date()}}
+  test('setBlockInfo, getBlockInfo', async () => {
+    const initBlockInfo = await db.getBlockInfo()
+    await db.setBlockInfo({randomField: 'yeah'})
+    const laterBlockInfo = await db.getBlockInfo()
+
+    assert(!initBlockInfo.randomField)
+    assert(laterBlockInfo.randomField === 'yeah')
+  })
+
+  test('insertBlock', async () => {
+    const someBlock = {header: {no: 1234}}
     const initBlockInfo = await db.getBlockInfo()
 
-    await db.signThenInsertBlock(someBlock, {no: someBlock.header.no})
-    const lastBlockInfo = await db.getBlockInfo()
+    await db.insertBlock(someBlock, {no: someBlock.header.no})
+    const laterBlockInfo = await db.getBlockInfo()
 
     assert(initBlockInfo.no !== someBlock.header.no)
-    assert(lastBlockInfo.no === someBlock.header.no)
+    assert(laterBlockInfo.no === someBlock.header.no)
   })
 
   // test('giveMiningReward', async () => {

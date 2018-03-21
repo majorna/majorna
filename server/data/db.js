@@ -216,18 +216,23 @@ exports.makeTx = (from, to, amount) => firestore.runTransaction(async t => {
 })
 
 /**
- * Retrieves the block info document, asynchronously
+ * Retrieves the block info document, asynchronously.
  */
 exports.getBlockInfo = async () => (await blockInfoDocRef.get()).data()
 
 /**
- * Signs and inserts a given block to blocks collection, asynchronously.
- * todo: use block.verify(), or move this to blockchain.js
+ * Overwrite the block info document with the given one, asynchronously.
  */
-exports.signThenInsertBlock = (block, blockInfo) => firestore.runTransaction(async t => {
-  const newBlockRef = blocksColRef.doc(block.header.no.toString())
-  t.create(newBlockRef, blockUtils.sign(block))
+exports.setBlockInfo = blockInfo => blockInfoDocRef.set(blockInfo)
+
+/**
+ * Inserts a given block data to blocks collection, asynchronously.
+ * Does not do any verification or block signing.
+ */
+exports.insertBlock = (block, blockInfo) => firestore.runTransaction(async t => {
   t.set(blockInfoDocRef, blockInfo)
+  const newBlockRef = blocksColRef.doc(block.header.no.toString())
+  t.create(newBlockRef, block)
 })
 
 /**
