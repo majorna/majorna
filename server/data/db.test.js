@@ -176,7 +176,7 @@ suite('db', () => {
     const genesisBlock = blockUtils.sign(blockUtils.getGenesisBlock())
     const nextBlock = blockUtils.sign(blockUtils.create([], genesisBlock.header))
     nextBlock.header.difficulty = initDifficulty
-    const blockInfo = {
+    const initBlockInfo = {
       lastBlockHeader: genesisBlock.header,
       nextBlock: {
         headerStrWithoutNonce: blockUtils.getHeaderStr(nextBlock.header, true),
@@ -184,20 +184,27 @@ suite('db', () => {
         reward: blockUtils.getBlockReward(initDifficulty)
       }
     }
-    await db.setBlockInfo(blockInfo)
+    await db.setBlockInfo(initBlockInfo)
 
-    // mine the block
-    const hashBase64 = blockUtils.mineBlock(nextBlock.header)
-    const hashBuffer = Buffer.from(hashBase64, 'base64')
-    const difficulty = blockUtils.getHashDifficulty(hashBuffer)
-    assert(difficulty)
-    // assert(difficulty > lastDifficulty)
-    // lastDifficulty = difficulty
+    for (let i = 0; i < 3; i++) {
+      // get block info
+      const blockInfo = await db.getBlockInfo()
 
-    // collect reward
-    const rewardTx = await db.giveMiningReward(to, nextBlock.header.nonce)
+      // mine the block
+      // todo: use blockInfo.headerStrWithoutNonce instead, just like miner UI
+      blockInfo.lastBlockHeader.difficulty = blockInfo.nextBlock.targetDifficulty
+      const hashBase64 = blockUtils.mineBlock(blockInfo.lastBlockHeader)
+      const hashBuffer = Buffer.from(hashBase64, 'base64')
+      const difficulty = blockUtils.getHashDifficulty(hashBuffer)
+      assert(difficulty)
+      // assert(difficulty > lastDifficulty)
+      // lastDifficulty = difficulty
 
-    assert(rewardTx)
+      // collect reward
+      const rewardTx = await db.giveMiningReward(to, blockInfo.lastBlockHeader.nonce)
+
+      assert(rewardTx)
+    }
 
     // // validate tx in txs col
     // const tx = await db.getTx(majornaTx.id)
