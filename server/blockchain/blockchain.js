@@ -122,9 +122,7 @@ exports.startBlockchainInsertTimer = interval => {
  * Does not overwrite the existing blocks in the git repo for efficiency.
  */
 exports.exportBlocksToGitHub = async () => {
-
 }
 
 exports.collectMiningReward = async (nonce, userId) => {
-
 }

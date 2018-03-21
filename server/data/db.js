@@ -167,10 +167,10 @@ exports.getTxsByTimeRange = async (startTime, endTime) => {
  * @param amount - Transaction amount as integer.
  */
 exports.makeTx = (from, to, amount) => firestore.runTransaction(async t => {
-  assert(from, 'from parameters is required')
-  assert(to, 'to parameters is required')
-  assert(from !== to, 'from and to parameters cannot be same')
-  assert(amount, 'amount ID parameters is required')
+  assert(from, '"from" parameter is required')
+  assert(to, '"to" parameter is required')
+  assert(from !== to, '"from" and "to" parameters cannot be same')
+  assert(amount, '"amount" parameters is required')
   assert(Number.isInteger(amount), 'amount must be an integer')
   assert(amount > 0, 'amount should be > 0')
 
@@ -234,14 +234,10 @@ exports.signThenInsertBlock = (block, blockInfo) => firestore.runTransaction(asy
  * Gives mining reward to a miner, asynchronously.
  * Returned promise resolves to completed transaction data -or- to an error if transaction fails.
  * @param to - Receiver ID.
- * @param amount - Transaction amount as integer.
  * @param nonce - Nonce that is mined by the miner.
  */
-exports.giveMiningReward = (to, amount, nonce) => firestore.runTransaction(async t => {
-  assert(to, 'to parameters is required')
-  assert(amount, 'amount ID parameters is required')
-  assert(Number.isInteger(amount), 'amount must be an integer')
-  assert(amount > 0, 'amount should be > 0')
+exports.giveMiningReward = (to, nonce) => firestore.runTransaction(async t => {
+  assert(to, '"to" parameter is required')
 
   // verify nonce
   const blockInfoDoc = await t.get(blockInfoDocRef)
@@ -252,6 +248,8 @@ exports.giveMiningReward = (to, amount, nonce) => firestore.runTransaction(async
   if (difficulty < blockInfo.nextBlock.targetDifficulty) {
     throw new utils.UserVisibleError(`Given nonce does not belong to the last block or is of insufficient difficulty.`)
   }
+
+  const miningReward = blockInfo.nextBlock.reward
 
   // update last block
   const lastBlockRef = blocksColRef.doc(blockInfo.lastBlockHeader.no.toString())
@@ -285,7 +283,7 @@ exports.giveMiningReward = (to, amount, nonce) => firestore.runTransaction(async
   // increase market cap
   const metaDoc = await t.get(metaDocRef)
   const meta = metaDoc.data()
-  t.update(metaDocRef, {cap: meta.cap + amount})
+  t.update(metaDocRef, {cap: meta.cap + miningReward})
 
   // block op writes (here to have reads before writes)
   t.update(lastBlockRef, {sig: lastBlock.sig, header: {difficulty, nonce}})
@@ -293,13 +291,13 @@ exports.giveMiningReward = (to, amount, nonce) => firestore.runTransaction(async
 
   // add tx to txs collection
   const txRef = txsColRef.doc()
-  const signedTx = txUtils.sign({id: txRef.id, from: {id: from, balance: 0}, to: {id: to, balance: receiver.balance}, time, amount})
+  const signedTx = txUtils.sign({id: txRef.id, from: {id: from, balance: 0}, to: {id: to, balance: receiver.balance}, time, miningReward})
   t.create(txRef, signedTx)
 
   // update user docs with tx and updated balances
-  receiver.txs.unshift({id: txRef.id, from: from, fromName, time, amount})
+  receiver.txs.unshift({id: txRef.id, from: from, fromName, time, miningReward})
   receiver.txs.length > maxTxsInUserDoc && (receiver.txs.length = maxTxsInUserDoc)
-  t.update(receiverDocRef, {balance: receiver.balance + amount, txs: receiver.txs})
+  t.update(receiverDocRef, {balance: receiver.balance + miningReward, txs: receiver.txs})
 
   return blockInfo.nextBlock.reward
 })
