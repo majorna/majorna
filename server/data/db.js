@@ -10,9 +10,9 @@ const firestore = firebaseConfig.firestore
 const txsColRef = firestore.collection('txs')
 const blocksColRef = firestore.collection('blocks')
 const usersColRef = firestore.collection('users')
-const mjColRef = firestore.collection('mj')
-const metaDocRef = mjColRef.doc('meta')
-const blockInfoDocRef = mjColRef.doc('blockInfo')
+const metaColRef = firestore.collection('meta')
+const mjMetaDocRef = metaColRef.doc('mj')
+const blockInfoMetaDocRef = metaColRef.doc('blockInfo')
 
 const maxTxsInUserDoc = 15
 const genesisBlock = blockUtils.getGenesisBlock()
@@ -21,19 +21,19 @@ const genesisBlock = blockUtils.getGenesisBlock()
  * Initializes database collections if database is empty, asynchronously.
  */
 exports.init = async () => {
-  const metaDoc = await metaDocRef.get()
+  const metaDoc = await mjMetaDocRef.get()
   if (metaDoc.exists) {
     return
   }
 
   const batch = firestore.batch()
-  batch.create(metaDocRef, {
+  batch.create(mjMetaDocRef, {
     val: 0.01,
     cap: 0,
     userCount: 0
     // monthly: [{t: 'May 12', mj: 0.01}]
   })
-  batch.create(blockInfoDocRef, {
+  batch.create(blockInfoMetaDocRef, {
     lastBlockHeader: {},
     nextBlock: {
       headerStrWithoutNonce: '',
@@ -54,8 +54,8 @@ exports.initTest = async () => {
   const batch = firestore.batch()
 
   // delete all data
-  const mjsSnap = await mjColRef.get()
-  mjsSnap.forEach(mjSnap => batch.delete(mjSnap.ref))
+  const metasSnap = await metaColRef.get()
+  metasSnap.forEach(metaSnap => batch.delete(metaSnap.ref))
   const usersSnap = await usersColRef.get()
   usersSnap.forEach(userSnap => batch.delete(userSnap.ref))
   const txsSnap = await txsColRef.get()
@@ -64,8 +64,8 @@ exports.initTest = async () => {
   blocksSnap.forEach(blockSnap => batch.delete(blockSnap.ref))
 
   // add seed data
-  batch.create(metaDocRef, testData.mj.meta)
-  batch.create(blockInfoDocRef, testData.mj.blockInfo)
+  batch.create(mjMetaDocRef, testData.meta.mj)
+  batch.create(blockInfoMetaDocRef, testData.meta.blockInfo)
   batch.create(usersColRef.doc('1'), testData.users.u1Doc)
   batch.create(usersColRef.doc('2'), testData.users.u2Doc)
   testData.txs.forEach((tx, i) => batch.create(txsColRef.doc(i.toString()), tx))
@@ -77,7 +77,17 @@ exports.initTest = async () => {
 /**
  * Get majorna metadata document asynchronously.
  */
-exports.getMeta = async () => (await metaDocRef.get()).data()
+exports.getMjMeta = async () => (await mjMetaDocRef.get()).data()
+
+/**
+ * Retrieves the block info document, asynchronously.
+ */
+exports.getBlockInfo = async () => (await blockInfoMetaDocRef.get()).data()
+
+/**
+ * Overwrite the block info document with the given one, asynchronously.
+ */
+exports.setBlockInfo = blockInfo => blockInfoMetaDocRef.set(blockInfo)
 
 /**
  * Get a user by id, asynchronously.
@@ -109,9 +119,9 @@ exports.createUserDoc = (user, uid) => firestore.runTransaction(async t => {
   console.log(`creating user: ${uid} - ${email} - ${name}`)
 
   // increase market cap
-  const metaDoc = await t.get(metaDocRef)
+  const metaDoc = await t.get(mjMetaDocRef)
   const meta = metaDoc.data()
-  t.update(metaDocRef, {cap: meta.cap + initBalance, userCount: meta.userCount + 1})
+  t.update(mjMetaDocRef, {cap: meta.cap + initBalance, userCount: meta.userCount + 1})
 
   // create the first transaction for the user
   const txRef = txsColRef.doc()
@@ -216,23 +226,13 @@ exports.makeTx = (from, to, amount) => firestore.runTransaction(async t => {
 })
 
 /**
- * Retrieves the block info document, asynchronously.
- */
-exports.getBlockInfo = async () => (await blockInfoDocRef.get()).data()
-
-/**
- * Overwrite the block info document with the given one, asynchronously.
- */
-exports.setBlockInfo = blockInfo => blockInfoDocRef.set(blockInfo)
-
-/**
  * Inserts a given block data to blocks collection and updates the block info document, asynchronously.
  * Does not do any verification or block signing.
  * @param block - Block object to insert.
  * @param blockInfo - Accompanying block info object.
  */
 exports.insertBlock = (block, blockInfo) => firestore.runTransaction(async t => {
-  t.set(blockInfoDocRef, blockInfo)
+  t.set(blockInfoMetaDocRef, blockInfo)
   const newBlockRef = blocksColRef.doc(block.header.no.toString())
   t.create(newBlockRef, block)
 })
@@ -248,7 +248,7 @@ exports.giveMiningReward = (to, nonce) => firestore.runTransaction(async t => {
   assert(nonce, '"nonce" parameter is required')
 
   // verify nonce
-  const blockInfoDoc = await t.get(blockInfoDocRef)
+  const blockInfoDoc = await t.get(blockInfoMetaDocRef)
   const blockInfo = blockInfoDoc.data()
   const difficulty = blockUtils.getHashDifficultyFromStr(nonce, blockInfo.nextBlock.headerStrWithoutNonce)
   console.log(difficulty)
@@ -289,13 +289,13 @@ exports.giveMiningReward = (to, nonce) => firestore.runTransaction(async t => {
   const receiver = receiverDoc.data()
 
   // increase market cap
-  const metaDoc = await t.get(metaDocRef)
+  const metaDoc = await t.get(mjMetaDocRef)
   const meta = metaDoc.data()
-  t.update(metaDocRef, {cap: meta.cap + miningReward})
+  t.update(mjMetaDocRef, {cap: meta.cap + miningReward})
 
   // block op writes (here to have reads before writes)
   t.update(lastBlockRef, {sig: lastBlock.sig, header: {difficulty, nonce}})
-  t.update(blockInfoDocRef, blockInfo)
+  t.update(blockInfoMetaDocRef, blockInfo)
 
   // add tx to txs collection
   const txRef = txsColRef.doc()

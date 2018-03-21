@@ -9,11 +9,20 @@ suite('db', () => {
     await db.init()
   })
 
-  test('getMeta', async () => {
-    const meta = await db.getMeta()
+  test('getMjMeta', async () => {
+    const meta = await db.getMjMeta()
     assert(meta.cap >= 500)
     assert(meta.val >= 0)
     assert(meta.userCount >= 0)
+  })
+
+  test('setBlockInfo, getBlockInfo', async () => {
+    const initBlockInfo = await db.getBlockInfo()
+    await db.setBlockInfo({randomField: 'yeah'})
+    const laterBlockInfo = await db.getBlockInfo()
+
+    assert(!initBlockInfo.randomField)
+    assert(laterBlockInfo.randomField === 'yeah')
   })
 
   test('getUser', async () => {
@@ -29,12 +38,12 @@ suite('db', () => {
     const uid = '3'
     const starterBalance = 500
     const testUserData = testData.users.u3Doc
-    const meta = await db.getMeta()
+    const meta = await db.getMjMeta()
 
     const newUserData = await db.createUserDoc(testUserData, uid)
 
     // verify market cap increase
-    const metaAfter = await db.getMeta()
+    const metaAfter = await db.getMjMeta()
     assert(metaAfter.cap === meta.cap + starterBalance)
     assert(metaAfter.userCount === meta.userCount + 1)
 
@@ -145,15 +154,6 @@ suite('db', () => {
     assert(err)
   })
 
-  test('setBlockInfo, getBlockInfo', async () => {
-    const initBlockInfo = await db.getBlockInfo()
-    await db.setBlockInfo({randomField: 'yeah'})
-    const laterBlockInfo = await db.getBlockInfo()
-
-    assert(!initBlockInfo.randomField)
-    assert(laterBlockInfo.randomField === 'yeah')
-  })
-
   test('insertBlock', async () => {
     const someBlock = {header: {no: 1234}}
     const initBlockInfo = await db.getBlockInfo()
@@ -169,7 +169,7 @@ suite('db', () => {
   //   const from = 'majorna'
   //   const to = '1'
   //   const receiverInitBalance = (await db.getUser(to)).balance
-  //   const initMeta = await db.getMeta()
+  //   const initMeta = await db.getMjMeta()
   //   const amount = 100
   //   const lastBlockHeader = {no: 60, difficulty: 90}
   //   const majornaTx = await db.giveMiningReward(to, amount, 12304785)
@@ -191,7 +191,7 @@ suite('db', () => {
   //   assert(receiverTx.amount === amount)
   //
   //   // verify market cap increase
-  //   const metaAfter = await db.getMeta()
+  //   const metaAfter = await db.getMjMeta()
   //   assert(metaAfter.cap === initMeta.cap + amount)
   //
   //   // verify last block update

@@ -5,8 +5,11 @@ service cloud.firestore {
       allow get: if request.auth.uid == userId;
     }
 
-    // metadata is public
-    match /mj/meta {
+    // these metadata are public
+    match /meta/mj {
+      allow read;
+    }
+    match /meta/blockInfo {
       allow read;
     }
 

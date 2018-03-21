@@ -75,8 +75,8 @@ const from = 'majorna'
 const fromName = 'Majorna'
 const initBalance = 500
 const testData = exports.data = {
-  mj: {
-    meta: {val: 0.01, cap: initBalance * 3, userCount: 3},
+  meta: {
+    mj: {val: 0.01, cap: initBalance * 3, userCount: 3},
     blockInfo: {
       lastBlockHeader: block.getGenesisBlock().header,
       nextBlock: {}
