@@ -2,6 +2,7 @@ const assert = require('assert')
 const db = require('./db')
 const txUtils = require('../blockchain/tx')
 const blockUtils = require('../blockchain/block')
+const blockchainUtils = require('../blockchain/blockchain')
 const testData = require('../config/test').data
 
 suite('db', () => {
@@ -165,7 +166,7 @@ suite('db', () => {
     assert(laterBlockInfo.no === someBlock.header.no)
   })
 
-  test.only('giveMiningReward', async () => {
+  test('giveMiningReward', async () => {
     const from = 'majorna'
     const to = '1'
     let receiverInitBalance = (await db.getUser(to)).balance
@@ -189,6 +190,7 @@ suite('db', () => {
     let totalReward = 0
     for (let i = 0; i < 7; i++) {
       const blockInfo = await db.getBlockInfo()
+      assert(blockInfo.miner.targetDifficulty === lastDifficulty + blockchainUtils.blockDifficultyIncrementStep)
 
       // mine the block
       const miningRes = blockUtils.mineHeaderStr(blockInfo.miner.headerStrWithoutNonce, blockInfo.miner.targetDifficulty)
@@ -221,6 +223,9 @@ suite('db', () => {
       assert(metaAfter.cap === initMeta.cap + totalReward)
 
       // verify last block update
+      const lastBlock = await db.getBlock(blockNo2.header.no)
+      assert(lastBlock.header.difficulty === miningRes.difficulty)
+      assert(lastBlock.header.nonce === miningRes.nonce)
     }
   })
 })

@@ -90,6 +90,11 @@ exports.getBlockInfo = async () => (await blockInfoMetaDocRef.get()).data()
 exports.setBlockInfo = blockInfo => blockInfoMetaDocRef.set(blockInfo)
 
 /**
+ * Retrieves a block by its no.
+ */
+exports.getBlock = async no => (await blocksColRef.doc(no.toString()).get()).data()
+
+/**
  * Get a user by id, asynchronously.
  */
 exports.getUser = async id => {
