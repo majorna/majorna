@@ -250,7 +250,7 @@ exports.giveMiningReward = (to, nonce) => firestore.runTransaction(async t => {
   // verify nonce
   const blockInfoDoc = await t.get(blockInfoMetaDocRef)
   const blockInfo = blockInfoDoc.data()
-  const givenNonceDifficulty = blockUtils.getHashDifficultyFromStr(nonce, blockInfo.miner.headerStrWithoutNonce)
+  const givenNonceDifficulty = blockUtils.getHashDifficultyFromStr(blockInfo.miner.headerStrWithoutNonce, nonce)
   if (givenNonceDifficulty < blockInfo.miner.targetDifficulty) {
     throw new utils.UserVisibleError(`Given nonce does not belong to the last block or is of insufficient difficulty.`)
   }
