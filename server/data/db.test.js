@@ -165,7 +165,7 @@ suite('db', () => {
     assert(laterBlockInfo.no === someBlock.header.no)
   })
 
-  test.only('giveMiningReward', async () => {
+  test('giveMiningReward', async () => {
     // const from = 'majorna'
     const to = '1'
     // const receiverInitBalance = (await db.getUser(to)).balance
@@ -184,7 +184,7 @@ suite('db', () => {
       }
     })
 
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 7; i++) {
       const blockInfo = await db.getBlockInfo()
 
       // mine the block
