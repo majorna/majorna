@@ -123,31 +123,4 @@ suite('blockchain', () => {
     assert(mineableBlockHeader.reward > 0)
     assert(mineableBlockHeader.headerString.length > 10)
   })
-
-  test('collectMiningReward', async () => {
-    let lastDifficulty = 0
-    let lastReward = 0
-
-    for (let i = 0; i < 3; i++) {
-      // get minable block
-      const mineableBlockHeader = await blockchain.getMineableBlockHeader()
-      const lastBlockHeader = mineableBlockHeader.headerObject
-      lastBlockHeader.difficulty = mineableBlockHeader.targetDifficulty
-
-      // mine the block
-      const miningRes = block.mineBlock(lastBlockHeader)
-      const hashBuffer = Buffer.from(miningRes.hashBase64, 'base64')
-      const difficulty = block.getHashDifficulty(hashBuffer)
-      assert(difficulty > lastDifficulty)
-      lastDifficulty = difficulty
-
-      // collect reward
-      const reward = await blockchain.collectMiningReward(lastBlockHeader.no, lastBlockHeader.nonce, testData.users.u1Auth.uid)
-      assert(reward > lastReward)
-      lastReward = reward
-    }
-
-    // todo: verify user balance
-    // todo: verify that file @github is updated with new signature(verify)/hash/etc. compared to previous one
-  })
 })
