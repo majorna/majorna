@@ -169,7 +169,7 @@ suite('db', () => {
     const from = 'majorna'
     const to = '1'
     let receiverInitBalance = (await db.getUser(to)).balance
-    // const initMeta = await db.getMjMeta()
+    const initMeta = await db.getMjMeta()
 
     // setup block info meta doc
     const initDifficulty = 1
@@ -186,6 +186,7 @@ suite('db', () => {
 
     // mine->reward->mine->reward loop
     let lastDifficulty = 0
+    let totalReward = 0
     for (let i = 0; i < 7; i++) {
       const blockInfo = await db.getBlockInfo()
 
@@ -206,18 +207,20 @@ suite('db', () => {
       assert(retrievedRewardTx.amount === blockUtils.getBlockReward(miningRes.difficulty))
 
       // validate affected user doc
-      // const receiver = await db.getUser(to)
-      // assert(receiver.balance === receiverInitBalance + amount)
-      // const receiverTx = receiver.txs[0]
-      // assert(receiverTx.from === from)
-      // assert(receiverTx.time.getTime() === majornaTx.time.getTime())
-      // assert(receiverTx.amount === amount)
+      const receiver = await db.getUser(to)
+      assert(receiver.balance === receiverInitBalance + retrievedRewardTx.amount)
+      receiverInitBalance = receiver.balance
+      const receiverTx = receiver.txs[0]
+      assert(receiverTx.from === from)
+      assert(receiverTx.time.getTime() === retrievedRewardTx.time.getTime())
+      assert(receiverTx.amount === retrievedRewardTx.amount)
+      totalReward += retrievedRewardTx.amount
 
-      // // verify market cap increase
-      // const metaAfter = await db.getMjMeta()
-      // assert(metaAfter.cap === initMeta.cap + amount)
-      //
-      // // verify last block update
+      // verify market cap increase
+      const metaAfter = await db.getMjMeta()
+      assert(metaAfter.cap === initMeta.cap + totalReward)
+
+      // verify last block update
     }
   })
 })
