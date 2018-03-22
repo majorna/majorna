@@ -165,7 +165,7 @@ suite('db', () => {
     assert(laterBlockInfo.no === someBlock.header.no)
   })
 
-  test.only('giveMiningReward', async () => {
+  test('giveMiningReward', async () => {
     // const from = 'majorna'
     const to = '1'
     // const receiverInitBalance = (await db.getUser(to)).balance
@@ -188,9 +188,7 @@ suite('db', () => {
       const blockInfo = await db.getBlockInfo()
 
       // mine the block
-      // todo: use blockInfo.headerStrWithoutNonce instead, just like miner UI
-      blockInfo.header.difficulty = blockInfo.miner.targetDifficulty
-      const hashBase64 = blockUtils.mineBlock(blockInfo.header)
+      const hashBase64 = blockUtils.mineHeaderStr(blockInfo.miner.headerStrWithoutNonce, blockInfo.miner.targetDifficulty)
       const hashBuffer = Buffer.from(hashBase64, 'base64')
       const difficulty = blockUtils.getHashDifficulty(hashBuffer)
       assert(difficulty)

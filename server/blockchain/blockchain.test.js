@@ -135,8 +135,8 @@ suite('blockchain', () => {
       lastBlockHeader.difficulty = mineableBlockHeader.targetDifficulty
 
       // mine the block
-      const hashBase64 = block.mineBlock(lastBlockHeader)
-      const hashBuffer = Buffer.from(hashBase64, 'base64')
+      const miningRes = block.mineBlock(lastBlockHeader)
+      const hashBuffer = Buffer.from(miningRes.hashBase64, 'base64')
       const difficulty = block.getHashDifficulty(hashBuffer)
       assert(difficulty > lastDifficulty)
       lastDifficulty = difficulty

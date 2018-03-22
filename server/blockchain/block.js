@@ -188,20 +188,27 @@ exports.getHashDifficultyFromStr = (headerStr, nonce = '') => exports.getHashDif
  */
 exports.mineBlock = (blockOrHeader) => {
   const header = blockOrHeader.header || blockOrHeader
+  const miningRes = exports.mineHeaderStr(exports.getHeaderStr(header, true), header.difficulty)
+  header.nonce = miningRes.nonce
+  // header.difficulty = miningRes.difficulty
+  return miningRes
+}
 
+/**
+ * Calculates nonce (mines) until a hash of required difficulty is found for the given block header string.
+ */
+exports.mineHeaderStr = (blockHeaderStr, targetDifficulty) => {
   let difficulty
   let hash
   let nonce = 0
-  const str = exports.getHeaderStr(header, true) // store header string without nonce as an optimization
   while (true) {
     nonce++
-    hash = crypto.hashTextToBuffer(nonce + str)
+    hash = crypto.hashTextToBuffer(nonce + blockHeaderStr)
     difficulty = exports.getHashDifficulty(hash)
-    if (difficulty >= header.difficulty) {
-      header.nonce = nonce
+    if (difficulty >= targetDifficulty) {
       const hashBase64 = hash.toString('base64')
-      console.log(`mined block with difficulty: ${difficulty} (target: ${header.difficulty}), nonce: ${header.nonce}, hash: ${hashBase64}`)
-      return hashBase64
+      console.log(`mined block with difficulty: ${difficulty} (target: ${targetDifficulty}), nonce: ${nonce}, hash: ${hashBase64}`)
+      return {hashBase64, difficulty, nonce}
     }
   }
 }

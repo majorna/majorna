@@ -159,9 +159,9 @@ suite('block', () => {
     const genesisHeader = block.getGenesisBlock().header
     const minedBlock = block.create(txs, genesisHeader)
     minedBlock.header.difficulty = 8
-    const hash = block.mineBlock(minedBlock)
+    const miningRes = block.mineBlock(minedBlock)
 
-    assert(hash.substring(0, 1) === 'A')
+    assert(miningRes.hashBase64.substring(0, 1) === 'A')
     assert(minedBlock.header.nonce > 0)
 
     block.verify(minedBlock, genesisHeader)
