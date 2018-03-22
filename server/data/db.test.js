@@ -188,8 +188,8 @@ suite('db', () => {
       const blockInfo = await db.getBlockInfo()
 
       // mine the block
-      const hashBase64 = blockUtils.mineHeaderStr(blockInfo.miner.headerStrWithoutNonce, blockInfo.miner.targetDifficulty)
-      const hashBuffer = Buffer.from(hashBase64, 'base64')
+      const miningRes = blockUtils.mineHeaderStr(blockInfo.miner.headerStrWithoutNonce, blockInfo.miner.targetDifficulty)
+      const hashBuffer = Buffer.from(miningRes.hashBase64, 'base64')
       const difficulty = blockUtils.getHashDifficulty(hashBuffer)
       assert(difficulty)
       // assert(difficulty > lastDifficulty)

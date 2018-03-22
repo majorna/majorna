@@ -254,21 +254,18 @@ exports.giveMiningReward = (to, nonce) => firestore.runTransaction(async t => {
   if (givenNonceDifficulty < blockInfo.miner.targetDifficulty) {
     throw new utils.UserVisibleError(`Given nonce does not belong to the last block or is of insufficient difficulty.`)
   }
-
   const miningReward = blockUtils.getBlockReward(givenNonceDifficulty)
 
   // update last block
   const lastBlockRef = blocksColRef.doc(blockInfo.header.no.toString())
   const lastBlockDoc = await t.get(lastBlockRef)
   const lastBlock = lastBlockDoc.data()
-  lastBlock.header.difficulty = givenNonceDifficulty
+  lastBlock.header.difficulty = blockInfo.miner.targetDifficulty
   lastBlock.header.nonce = nonce
   blockUtils.sign(lastBlock)
 
   // update block info
-  // todo: assignments here need simplification or documentation
-  blockInfo.header.difficulty = givenNonceDifficulty
-  blockInfo.header.nonce = nonce
+  blockInfo.header = lastBlock.header
   blockInfo.miner.targetDifficulty = givenNonceDifficulty + blockchainUtils.blockDifficultyIncrementStep
   blockInfo.miner.reward = blockUtils.getBlockReward(blockInfo.miner.targetDifficulty)
   blockInfo.miner.headerStrWithoutNonce = blockUtils.getHeaderStr(lastBlock.header, true, blockInfo.miner.targetDifficulty)

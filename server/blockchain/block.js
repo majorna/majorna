@@ -190,7 +190,6 @@ exports.mineBlock = (blockOrHeader) => {
   const header = blockOrHeader.header || blockOrHeader
   const miningRes = exports.mineHeaderStr(exports.getHeaderStr(header, true), header.difficulty)
   header.nonce = miningRes.nonce
-  // header.difficulty = miningRes.difficulty
   return miningRes
 }
 
@@ -199,16 +198,16 @@ exports.mineBlock = (blockOrHeader) => {
  */
 exports.mineHeaderStr = (blockHeaderStr, targetDifficulty) => {
   let difficulty
-  let hash
+  let hashBuffer
   let nonce = 0
   while (true) {
     nonce++
-    hash = crypto.hashTextToBuffer(nonce + blockHeaderStr)
-    difficulty = exports.getHashDifficulty(hash)
+    hashBuffer = crypto.hashTextToBuffer(nonce + blockHeaderStr)
+    difficulty = exports.getHashDifficulty(hashBuffer)
     if (difficulty >= targetDifficulty) {
-      const hashBase64 = hash.toString('base64')
+      const hashBase64 = hashBuffer.toString('base64')
       console.log(`mined block with difficulty: ${difficulty} (target: ${targetDifficulty}), nonce: ${nonce}, hash: ${hashBase64}`)
-      return {hashBase64, difficulty, nonce}
+      return {hashBuffer: hashBuffer, hashBase64, difficulty, nonce}
     }
   }
 }
