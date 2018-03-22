@@ -165,7 +165,7 @@ suite('db', () => {
     assert(laterBlockInfo.no === someBlock.header.no)
   })
 
-  test('giveMiningReward', async () => {
+  test.only('giveMiningReward', async () => {
     // const from = 'majorna'
     const to = '1'
     // const receiverInitBalance = (await db.getUser(to)).balance
@@ -189,14 +189,12 @@ suite('db', () => {
 
       // mine the block
       const miningRes = blockUtils.mineHeaderStr(blockInfo.miner.headerStrWithoutNonce, blockInfo.miner.targetDifficulty)
-      const hashBuffer = Buffer.from(miningRes.hashBase64, 'base64')
-      const difficulty = blockUtils.getHashDifficulty(hashBuffer)
-      assert(difficulty)
+      assert(miningRes.difficulty)
       // assert(difficulty > lastDifficulty)
       // lastDifficulty = difficulty
 
       // collect reward
-      const rewardTx = await db.giveMiningReward(to, blockInfo.header.nonce)
+      const rewardTx = await db.giveMiningReward(to, miningRes.nonce)
 
       assert(rewardTx)
     }

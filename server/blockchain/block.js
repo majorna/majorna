@@ -207,7 +207,7 @@ exports.mineHeaderStr = (blockHeaderStr, targetDifficulty) => {
     if (difficulty >= targetDifficulty) {
       const hashBase64 = hashBuffer.toString('base64')
       console.log(`mined block with difficulty: ${difficulty} (target: ${targetDifficulty}), nonce: ${nonce}, hash: ${hashBase64}`)
-      return {hashBuffer: hashBuffer, hashBase64, difficulty, nonce}
+      return {hashBuffer, hashBase64, difficulty, nonce}
     }
   }
 }
