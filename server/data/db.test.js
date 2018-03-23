@@ -166,7 +166,7 @@ suite('db', () => {
     assert(laterBlockInfo.no === someBlock.header.no)
   })
 
-  test('giveMiningReward', async () => {
+  test.only('giveMiningReward', async () => {
     const from = 'majorna'
     const to = '1'
     let receiverInitBalance = (await db.getUser(to)).balance
@@ -174,7 +174,8 @@ suite('db', () => {
 
     // setup block info meta doc
     const initDifficulty = 1
-    const newBlock = blockUtils.sign(blockUtils.create([], blockUtils.getGenesisBlock().header))
+    const genesisBlockHeader = blockUtils.getGenesisBlock().header
+    const newBlock = blockUtils.sign(blockUtils.create([], genesisBlockHeader))
     await db.insertBlock(newBlock, {
       header: newBlock.header,
       miner: {
@@ -223,8 +224,9 @@ suite('db', () => {
 
       // verify last block update
       const lastBlock = await db.getBlock(newBlock.header.no)
-      assert(lastBlock.header.difficulty === miningRes.difficulty)
+      assert(lastBlock.header.difficulty === blockInfo.miner.targetDifficulty)
       assert(lastBlock.header.nonce === miningRes.nonce)
+      blockUtils.verify(lastBlock, genesisBlockHeader)
     }
   })
 })
