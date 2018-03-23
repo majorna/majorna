@@ -75,7 +75,7 @@ exports.initTest = async () => {
 }
 
 /**
- * Get majorna metadata document asynchronously.
+ * Get majorna metadata document, asynchronously.
  */
 exports.getMjMeta = async () => (await mjMetaDocRef.get()).data()
 

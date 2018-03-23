@@ -35,10 +35,10 @@ exports.getBlockTimeRange = (start, end) => {
 }
 
 /**
- * Creates and inserts a new block into the database, asynchronously.
+ * Creates and inserts a new block into the database and in git repo (if possible), asynchronously.
  * @param startTime - Time to start including txs from.
  * @param endTime - Time to stop including txs from.
- * @param blockPath - Full path of the block to create. i.e. "dir/sub_dir/filename".
+ * @param blockPath - Full path of the block to create in git repo. i.e. "dir/sub_dir/filename".
  * @param prevBlockHeader - Previous block's header.
  */
 exports.insertBlock = async (startTime, endTime, blockPath, prevBlockHeader) => {
