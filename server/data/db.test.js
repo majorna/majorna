@@ -166,7 +166,7 @@ suite('db', () => {
     assert(laterBlockInfo.no === someBlock.header.no)
   })
 
-  test.only('giveMiningReward', async () => {
+  test('giveMiningReward', async () => {
     const from = 'majorna'
     const to = '1'
     let receiverInitBalance = (await db.getUser(to)).balance
@@ -175,11 +175,11 @@ suite('db', () => {
     // setup block info meta doc
     const initDifficulty = 1
     const genesisBlockHeader = blockUtils.getGenesisBlock().header
-    const newBlock = blockUtils.sign(blockUtils.create([], genesisBlockHeader))
-    await db.insertBlock(newBlock, {
-      header: newBlock.header,
+    const blockToMine = blockUtils.sign(blockUtils.create([], genesisBlockHeader))
+    await db.insertBlock(blockToMine, {
+      header: blockToMine.header,
       miner: {
-        headerStrWithoutNonce: blockUtils.getHeaderStr(newBlock.header, true, initDifficulty),
+        headerStrWithoutNonce: blockUtils.getHeaderStr(blockToMine.header, true, initDifficulty),
         targetDifficulty: initDifficulty,
         reward: blockUtils.getBlockReward(initDifficulty)
       }
@@ -223,10 +223,18 @@ suite('db', () => {
       assert(metaAfter.cap === initMeta.cap + totalReward)
 
       // verify last block update
-      const lastBlock = await db.getBlock(newBlock.header.no)
+      const lastBlock = await db.getBlock(blockToMine.header.no)
       assert(lastBlock.header.difficulty === blockInfo.miner.targetDifficulty)
       assert(lastBlock.header.nonce === miningRes.nonce)
       blockUtils.verify(lastBlock, genesisBlockHeader)
+
+      // verify block info update
+      const updatedBlockInfo = await db.getBlockInfo()
+      lastBlock.header = updatedBlockInfo.header
+      blockUtils.verify(lastBlock, genesisBlockHeader)
+      assert(updatedBlockInfo.miner.targetDifficulty > blockInfo.miner.targetDifficulty)
+      assert(updatedBlockInfo.miner.reward > blockInfo.miner.reward)
+      assert(updatedBlockInfo.miner.headerStrWithoutNonce !== blockInfo.miner.headerStrWithoutNonce)
     }
   })
 })
