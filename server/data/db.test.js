@@ -174,12 +174,11 @@ suite('db', () => {
 
     // setup block info meta doc
     const initDifficulty = 1
-    const genesisBlock = blockUtils.sign(blockUtils.getGenesisBlock())
-    const blockNo2 = blockUtils.sign(blockUtils.create([], genesisBlock.header))
-    await db.insertBlock(blockNo2, {
-      header: blockNo2.header,
+    const newBlock = blockUtils.sign(blockUtils.create([], blockUtils.getGenesisBlock().header))
+    await db.insertBlock(newBlock, {
+      header: newBlock.header,
       miner: {
-        headerStrWithoutNonce: blockUtils.getHeaderStr(blockNo2.header, true, initDifficulty),
+        headerStrWithoutNonce: blockUtils.getHeaderStr(newBlock.header, true, initDifficulty),
         targetDifficulty: initDifficulty,
         reward: blockUtils.getBlockReward(initDifficulty)
       }
@@ -223,7 +222,7 @@ suite('db', () => {
       assert(metaAfter.cap === initMeta.cap + totalReward)
 
       // verify last block update
-      const lastBlock = await db.getBlock(blockNo2.header.no)
+      const lastBlock = await db.getBlock(newBlock.header.no)
       assert(lastBlock.header.difficulty === miningRes.difficulty)
       assert(lastBlock.header.nonce === miningRes.nonce)
     }

@@ -237,6 +237,7 @@ exports.makeTx = (from, to, amount) => firestore.runTransaction(async t => {
  * @param blockInfo - Accompanying block info object.
  */
 exports.insertBlock = (block, blockInfo) => firestore.runTransaction(async t => {
+  // todo: previous hash assignment and signing of the block should be here, in case blockInfo is modified during this operation
   t.set(blockInfoMetaDocRef, blockInfo)
   const newBlockRef = blocksColRef.doc(block.header.no.toString())
   t.create(newBlockRef, block)

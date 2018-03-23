@@ -1,18 +1,30 @@
 const assert = require('assert')
 const block = require('../blockchain/block')
+const db = require('../data/db')
 const testData = require('../config/test').data
 
 suite('route: blocks', () => {
   test('post', async () => {
-    const res = await testData.users.u1Request.get('/blocks')
-    assert(res.status === 200)
-    const mineableBlockHeader = res.data
-    const lastBlockHeader = mineableBlockHeader.headerObject
-    lastBlockHeader.time = new Date(lastBlockHeader.time)
-    lastBlockHeader.difficulty = mineableBlockHeader.targetDifficulty
-    block.mineBlock(lastBlockHeader)
+    // setup block info meta doc
+    const initDifficulty = 1
+    const genesisBlock = block.getGenesisBlock()
+    genesisBlock.header.no = 234
+    const newBlock = block.sign(block.create([], genesisBlock.header))
+    const blockInfo = {
+      header: newBlock.header,
+      miner: {
+        headerStrWithoutNonce: block.getHeaderStr(newBlock.header, true, initDifficulty),
+        targetDifficulty: initDifficulty,
+        reward: block.getBlockReward(initDifficulty)
+      }
+    }
+    await db.insertBlock(newBlock, blockInfo)
 
-    const resReward = await testData.users.u1Request.post('/blocks', {no: lastBlockHeader.no, nonce: lastBlockHeader.nonce})
+    // mine the block
+    const miningRes = block.mineHeaderStr(blockInfo.miner.headerStrWithoutNonce, blockInfo.miner.targetDifficulty)
+
+    // collect reward
+    const resReward = await testData.users.u1Request.post('/blocks', {nonce: miningRes.nonce})
     assert(resReward.status === 201)
     assert(resReward.data.reward > 0)
   })
