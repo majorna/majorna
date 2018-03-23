@@ -89,9 +89,13 @@ suite('db', () => {
     const yesterday = new Date()
     yesterday.setDate(yesterday.getDate() - 1)
     const txs = await db.getTxsByTimeRange(yesterday, now)
+
+    // verify individual txs
     assert(txs.length >= testData.txs.length)
     assert(txs[0].from.id === testData.txs[0].from.id)
     txs.forEach(tx => assert(txUtils.verify(tx)))
+    // note: assumes no txs happened between this test and testdata
+    txs.forEach(tx => assert(tx.time.getTime() > yesterday.getTime() && tx.time.getTime() < now.getTime()))
 
     // todo: create several close txs and do precise time range get and make sure that we only get the right one
   })
