@@ -238,13 +238,21 @@ exports.insertBlock = txs => firestore.runTransaction(async t => {
   const blockInfoDoc = await t.get(blockInfoMetaDocRef)
   const blockInfo = blockInfoDoc.data()
 
+  // create new block with the given txs and with reference to previous block header
   const newBlock = blockUtils.create(txs, blockInfo.header)
   blockUtils.sign(newBlock)
   blockUtils.verify(newBlock, blockInfo.header)
 
+  // insert the new block
+  const newBlockRef = blocksColRef.doc(newBlock.header.no.toString())
+  t.create(newBlockRef, newBlock)
+
+  // update block info doc
+  blockInfo.header = newBlock.header
+  blockInfo.miner.targetDifficulty = blockchainUtils.blockDifficultyIncrementStep
+  blockInfo.miner.reward = blockUtils.getBlockReward(blockInfo.miner.targetDifficulty)
+  blockInfo.miner.headerStrWithoutNonce = blockUtils.getHeaderStr(newBlock.header, true, blockInfo.miner.targetDifficulty)
   t.set(blockInfoMetaDocRef, blockInfo)
-  const newBlockRef = blocksColRef.doc(block.header.no.toString())
-  t.create(newBlockRef, block)
 })
 
 /**
