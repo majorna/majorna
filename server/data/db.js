@@ -15,7 +15,7 @@ const mjMetaDocRef = metaColRef.doc('mj')
 const blockInfoMetaDocRef = metaColRef.doc('blockInfo')
 
 const maxTxsInUserDoc = 15
-const genesisBlock = blockUtils.getGenesisBlock()
+const signedGenesisBlock = blockUtils.sign(blockUtils.getGenesisBlock())
 
 /**
  * Initializes database collections if database is empty, asynchronously.
@@ -34,14 +34,14 @@ exports.init = async () => {
     // monthly: [{t: 'May 12', mj: 0.01}]
   })
   batch.create(blockInfoMetaDocRef, {
-    header: {},
+    header: signedGenesisBlock.header,
     miner: {
       headerStrWithoutNonce: '',
       targetDifficulty: 0,
       reward: 0
     }
   })
-  batch.create(blocksColRef.doc(genesisBlock.header.no), blockUtils.sign(genesisBlock))
+  batch.create(blocksColRef.doc(signedGenesisBlock.header.no), signedGenesisBlock)
   batch.create(usersColRef.doc('majorna'), {email: 'majorna@majorna', name: 'Majorna', created: new Date(), balance: 0, txs: []})
   await batch.commit()
 }
@@ -231,13 +231,17 @@ exports.makeTx = (from, to, amount) => firestore.runTransaction(async t => {
 })
 
 /**
- * Inserts a given block data to blocks collection and updates the block info document, asynchronously.
- * Does not do any verification or block signing.
- * @param block - Block object to insert.
- * @param blockInfo - Accompanying block info object.
+ * Creates and inserts the next block with given txs, asynchronously.
+ * @param txs - Txs to be included in the block.
  */
-exports.insertBlock = (block, blockInfo) => firestore.runTransaction(async t => {
-  // todo: previous hash assignment and signing of the block should be here, in case blockInfo is modified during this operation
+exports.insertBlock = txs => firestore.runTransaction(async t => {
+  const blockInfoDoc = await t.get(blockInfoMetaDocRef)
+  const blockInfo = blockInfoDoc.data()
+
+  const newBlock = blockUtils.create(txs, blockInfo.header)
+  blockUtils.sign(newBlock)
+  blockUtils.verify(newBlock, blockInfo.header)
+
   t.set(blockInfoMetaDocRef, blockInfo)
   const newBlockRef = blocksColRef.doc(block.header.no.toString())
   t.create(newBlockRef, block)

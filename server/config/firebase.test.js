@@ -21,6 +21,10 @@ suite('config: firebase', () => {
     // })
   })
 
+  test('firestoreTransaction', async () => {
+    // todo: test that a transaction fails if an exception is thrown inside it
+  })
+
   test('verifyIdToken', async () => {
     const u1 = testData.users.u1Auth
     const decodedToken = await firebaseConfig.verifyIdToken(testData.users.u1Token)

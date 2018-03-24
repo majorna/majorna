@@ -74,11 +74,12 @@ const time = new Date()
 const from = 'majorna'
 const fromName = 'Majorna'
 const initBalance = 500
+const signedGenesisBlock = block.sign(block.getGenesisBlock())
 const testData = exports.data = {
   meta: {
     mj: {val: 0.01, cap: initBalance * 3, userCount: 3},
     blockInfo: {
-      header: block.getGenesisBlock().header,
+      header: signedGenesisBlock.header,
       miner: {}
     }
   },
@@ -140,7 +141,7 @@ const testData = exports.data = {
     tx.sign({id: '2', from: {id: from, balance: 0}, to: {id: '3', balance: 0}, time, amount: initBalance})
   ],
   blocks: [
-    block.sign(block.getGenesisBlock())
+    signedGenesisBlock
   ],
   // Firebase authentication ID token (JWT) content when decoded
   decodedIdTokenSample: {

@@ -46,7 +46,6 @@ exports.insertBlock = async (startTime, endTime, blockPath, prevBlockHeader) => 
   const newBlock = block.create(txs, prevBlockHeader)
   block.sign(newBlock)
   block.verify(newBlock, prevBlockHeader)
-  // todo: move this inside transaction in db.insertBlock
   await github.createFile(block.toJson(newBlock), blockPath)
   console.log(`inserted block ${blockPath}`)
 }
