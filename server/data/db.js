@@ -253,6 +253,8 @@ exports.insertBlock = txs => firestore.runTransaction(async t => {
   blockInfo.miner.reward = blockUtils.getBlockReward(blockInfo.miner.targetDifficulty)
   blockInfo.miner.headerStrWithoutNonce = blockUtils.getHeaderStr(newBlock.header, true, blockInfo.miner.targetDifficulty)
   t.set(blockInfoMetaDocRef, blockInfo)
+
+  return newBlock
 })
 
 /**

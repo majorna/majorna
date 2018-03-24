@@ -176,18 +176,9 @@ suite('db', () => {
     let receiverInitBalance = (await db.getUser(to)).balance
     const initMeta = await db.getMjMeta()
 
-    // setup block info meta doc
-    const initDifficulty = 1
-    const genesisBlockHeader = blockUtils.getGenesisBlock().header
-    const blockToMine = blockUtils.sign(blockUtils.create([], genesisBlockHeader))
-    await db.insertBlock(blockToMine, {
-      header: blockToMine.header,
-      miner: {
-        headerStrWithoutNonce: blockUtils.getHeaderStr(blockToMine.header, true, initDifficulty),
-        targetDifficulty: initDifficulty,
-        reward: blockUtils.getBlockReward(initDifficulty)
-      }
-    })
+    // create fresh new block to mine
+    const previousBlockHeader = (await db.getBlockInfo()).header
+    const blockToMine = await db.insertBlock([])
 
     // mine->reward->mine->reward loop
     let lastDifficulty = 0
@@ -230,12 +221,12 @@ suite('db', () => {
       const lastBlock = await db.getBlock(blockToMine.header.no)
       assert(lastBlock.header.difficulty === blockInfo.miner.targetDifficulty)
       assert(lastBlock.header.nonce === miningRes.nonce)
-      blockUtils.verify(lastBlock, genesisBlockHeader)
+      blockUtils.verify(lastBlock, previousBlockHeader)
 
       // verify block info update
       const updatedBlockInfo = await db.getBlockInfo()
       lastBlock.header = updatedBlockInfo.header
-      blockUtils.verify(lastBlock, genesisBlockHeader)
+      blockUtils.verify(lastBlock, previousBlockHeader)
       assert(updatedBlockInfo.miner.targetDifficulty > blockInfo.miner.targetDifficulty)
       assert(updatedBlockInfo.miner.reward > blockInfo.miner.reward)
       assert(updatedBlockInfo.miner.headerStrWithoutNonce !== blockInfo.miner.headerStrWithoutNonce)
