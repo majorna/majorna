@@ -6,6 +6,28 @@ const blockchainUtils = require('../blockchain/blockchain')
 const testData = require('../config/test').data
 
 suite('db', () => {
+  test('firestore access rules', async () => {
+    // todo: people can only read their user doc and cannot write to it
+    // todo: people can't read others' transactions
+    // todo: none of the collections/docs are writeable/deleteable/etc.
+
+    const firestore = testData.users.u1FBClient.firestore()
+
+    const userDoc = await firestore.collection('users').doc('1').get()
+    assert(userDoc.exists)
+    assert(userDoc.data().email = testData.users.u1Doc.email)
+
+    // const querySnapshot = await firestore.collection('txs').get()
+    // querySnapshot.forEach(txDoc => {
+    //   const tx = txDoc.data()
+    //   assert(tx.from === '1' || tx.to === '1')
+    // })
+  })
+
+  test('firestoreTransaction', async () => {
+    // todo: test that a transaction fails if an exception is thrown inside it and half committed data does not corrupt the database
+  })
+
   test('init', async () => {
     await db.init()
     await db.init()

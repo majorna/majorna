@@ -3,28 +3,6 @@ const testData = require('./test').data
 const firebaseConfig = require('./firebase')
 
 suite('config: firebase', () => {
-  test('firestore access rules', async () => {
-    // todo: people can only read their user doc and cannot write to it
-    // todo: people can't read others' transactions
-    // todo: none of the collections/docs are writeable/deleteable/etc.
-
-    const firestore = testData.users.u1FBClient.firestore()
-
-    const userDoc = await firestore.collection('users').doc('1').get()
-    assert(userDoc.exists)
-    assert(userDoc.data().email = testData.users.u1Doc.email)
-
-    // const querySnapshot = await firestore.collection('txs').get()
-    // querySnapshot.forEach(txDoc => {
-    //   const tx = txDoc.data()
-    //   assert(tx.from === '1' || tx.to === '1')
-    // })
-  })
-
-  test('firestoreTransaction', async () => {
-    // todo: test that a transaction fails if an exception is thrown inside it
-  })
-
   test('verifyIdToken', async () => {
     const u1 = testData.users.u1Auth
     const decodedToken = await firebaseConfig.verifyIdToken(testData.users.u1Token)
