@@ -6,21 +6,6 @@ const utils = require('../data/utils')
 const testData = require('../config/test').data
 
 suite('blockchain', () => {
-  test('getBlockPath', () => {
-    const now = new Date('2018-02-15T10:00:00.000Z')
-    const path = blockchain.getBlockPath(now)
-    assert(path === '2018/2/15')
-
-    const path2 = blockchain.getBlockPath(now, -1)
-    assert(path2 === '2018/2/14')
-
-    const path3 = blockchain.getBlockPath(now, -30)
-    assert(path3 === '2018/1/16')
-
-    const path4 = blockchain.getBlockPath(now, 30)
-    assert(path4 === '2018/3/17')
-  })
-
   test('getBlockTimeRange', () => {
     const start = new Date('2018-02-15T10:00:00.000Z')
     const end = new Date('2018-02-20T11:00:00.000Z')
@@ -103,13 +88,5 @@ suite('blockchain', () => {
     // not required
     const inserted2 = await blockchain.insertBlockIfRequired(path, tomorrow)
     assert(!inserted2)
-  })
-
-  test('getMineableBlockHeader', async () => {
-    const mineableBlockHeader = await blockchain.getMineableBlockHeader()
-    assert(mineableBlockHeader.no > 1)
-    assert(mineableBlockHeader.targetDifficulty > 0)
-    assert(mineableBlockHeader.reward > 0)
-    assert(mineableBlockHeader.headerString.length > 10)
   })
 })

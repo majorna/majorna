@@ -5,18 +5,12 @@ const github = require('../data/github')
 // block difficulty increases by this step every time someone finds and submits a valid nonce
 exports.blockDifficultyIncrementStep = 1
 
+const blockInterval = 24 * 60 * 60 * 1000 // ms
+
 /**
- * Retrieves the full path of a block in a git repo with respect to given time and day shift.
- * @param time - 'Date' object instance.
- * @param dayShift - No of days to shift the time, if any. i.e. +5, -3, etc.
+ * Retrieves the full path of a block in git repo.
  */
-exports.getBlockPath = (time, dayShift) => {
-  time = new Date(time.getTime()) // don't modify original
-  if (dayShift) {
-    time.setDate(time.getDate() + dayShift)
-  }
-  return `${time.getFullYear()}/${time.getMonth() + 1}/${time.getDate()}`
-}
+exports.getBlockPath = blockHeader => `${blockHeader.time.getUTCFullYear()}/${blockHeader.no}`
 
 /**
  * Provides a time range for a block:
@@ -35,18 +29,17 @@ exports.getBlockTimeRange = (start, end) => {
 }
 
 /**
- * Creates and inserts a new block into the database and in git repo (if possible), asynchronously.
+ * Creates and inserts a new block into the database, asynchronously.
+ * In addition, previous block is exported to git repo.
  * @param startTime - Time to start including txs from.
  * @param endTime - Time to stop including txs from.
- * @param blockPath - Full path of the block to create in git repo. i.e. "dir/sub_dir/filename".
- * @param prevBlockHeader - Previous block's header.
  */
-exports.insertBlock = async (startTime, endTime, blockPath, prevBlockHeader) => {
+exports.insertBlock = async (startTime, endTime) => {
   const txs = await db.getTxsByTimeRange(startTime, endTime)
-  const newBlock = block.create(txs, prevBlockHeader)
-  block.sign(newBlock)
-  block.verify(newBlock, prevBlockHeader)
-  await github.createFile(block.toJson(newBlock), blockPath)
+  const newBlock = await db.insertBlock(txs)
+  const oldBlock = await db.getBlock(newBlock.header.no - 1)
+  const blockPath = exports.getBlockPath(oldBlock.header)
+  await github.createFile(block.toJson(oldBlock), blockPath)
   console.log(`inserted block ${blockPath}`)
 }
 
@@ -55,37 +48,34 @@ exports.insertBlock = async (startTime, endTime, blockPath, prevBlockHeader) => 
  * Start time will be the very beginning of the day that the last block was created.
  * End date will be the very beginning of {now}.
  * @param now - Required just in case day changes right before the call to this function (so not using new Date()).
- * @param blockPath - Full path of the block to create. i.e. "dir/sub_dir/filename".
- * @param lastBlockHeader - Only used for testing. Automatically retrieved from GitHub otherwise.
+ * @param blockInfo - Block info met doc.
  */
-exports.insertBlockSinceLastOne = async (now, blockPath, lastBlockHeader) => {
-  if (!lastBlockHeader) {
-    const blockInfo = await db.getBlockInfo()
-    lastBlockHeader = blockInfo.header
-  }
-  const blockTimeRange = exports.getBlockTimeRange(lastBlockHeader.time, now)
-  await exports.insertBlock(blockTimeRange.start, blockTimeRange.end, blockPath, lastBlockHeader)
+exports.insertBlockSinceLastOne = async (now, blockInfo) => {
+  // start with getting the time of the last tx in the last block
+  const oldBlock = await db.getBlock(blockInfo.header.no - 1)
+
+
+  const blockTimeRange = exports.getBlockTimeRange(blockInfo.header.time, now)
+  await exports.insertBlock(blockTimeRange.start, blockTimeRange.end)
 }
 
 /**
  * Checks if it is time then creates the required block in blockchain, asynchronously.
  * Returns true if a block was inserted. False otherwise.
- * @param blockPath - Only used for testing. Automatically calculated otherwise.
  * @param now - Only used for testing. Automatically calculated otherwise.
  */
-exports.insertBlockIfRequired = async (blockPath, now) => {
+exports.insertBlockIfRequired = async now => {
   // check if it is time to create a block
   now = now || new Date()
   now.setMinutes(now.getMinutes() - 15 /* some latency to let ongoing txs to complete */)
-  blockPath = blockPath || exports.getBlockPath(now, -1)
-  try {
-    await github.getFileContent(blockPath)
+  const blockInfo = await db.getBlockInfo()
+
+  if (blockInfo.header.time.getTime() + blockInterval < now.getTime()) {
+    await exports.insertBlockSinceLastOne(now, blockInfo)
+    return true
+  } else {
     console.log('not enough time elapsed since the last block so skipping block creation')
     return false
-  } catch (e) {
-    if (e.code !== 404) throw e
-    await exports.insertBlockSinceLastOne(now, blockPath)
-    return true
   }
 }
 
@@ -113,12 +103,4 @@ exports.startBlockchainInsertTimer = interval => {
   // start timer
   interval = interval || 1000/* ms */ * 60/* s */ * 15/* min */
   return setInterval(() => failSafeInsertBlockIfRequired(), interval)
-}
-
-/**
- * Exports all blocks except for the last one to GitHub.
- * Last block is not written since it will be mined and updated continuously.
- * Does not overwrite the existing blocks in the git repo for efficiency.
- */
-exports.exportBlocksToGitHub = async () => {
 }
