@@ -85,11 +85,6 @@ exports.getMjMeta = async () => (await mjMetaDocRef.get()).data()
 exports.getBlockInfo = async () => (await blockInfoMetaDocRef.get()).data()
 
 /**
- * Overwrite the block info document with the given one, asynchronously.
- */
-exports.setBlockInfo = blockInfo => blockInfoMetaDocRef.set(blockInfo)
-
-/**
  * Retrieves a block by its no.
  */
 exports.getBlock = async no => (await blocksColRef.doc(no.toString()).get()).data()

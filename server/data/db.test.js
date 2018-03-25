@@ -40,13 +40,10 @@ suite('db', () => {
     assert(meta.userCount >= 0)
   })
 
-  test('setBlockInfo, getBlockInfo', async () => {
-    const initBlockInfo = await db.getBlockInfo()
-    await db.setBlockInfo({randomField: 'yeah'})
-    const laterBlockInfo = await db.getBlockInfo()
-
-    assert(!initBlockInfo.randomField)
-    assert(laterBlockInfo.randomField === 'yeah')
+  test('getBlockInfo', async () => {
+    const blockInfo = await db.getBlockInfo()
+    assert(blockInfo.header)
+    assert(blockInfo.miner)
   })
 
   test('getUser', async () => {

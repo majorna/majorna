@@ -4,21 +4,10 @@ const db = require('../data/db')
 const testData = require('../config/test').data
 
 suite('route: blocks', () => {
-  test('post', async () => {
-    // setup block info meta doc
-    const initDifficulty = 1
-    const genesisBlock = block.getGenesisBlock()
-    genesisBlock.header.no = 234
-    const newBlock = block.sign(block.create([], genesisBlock.header))
-    const blockInfo = {
-      header: newBlock.header,
-      miner: {
-        headerStrWithoutNonce: block.getHeaderStr(newBlock.header, true, initDifficulty),
-        targetDifficulty: initDifficulty,
-        reward: block.getBlockReward(initDifficulty)
-      }
-    }
-    await db.insertBlock(newBlock, blockInfo)
+  test.only('post', async () => {
+    // prepare fresh block to mine
+    await db.insertBlock([])
+    const blockInfo = await db.getBlockInfo()
 
     // mine the block
     const miningRes = block.mineHeaderStr(blockInfo.miner.headerStrWithoutNonce, blockInfo.miner.targetDifficulty)
