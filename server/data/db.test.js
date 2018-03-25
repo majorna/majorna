@@ -182,14 +182,14 @@ suite('db', () => {
   })
 
   test('insertBlock', async () => {
-    const someBlock = {header: {no: 1234}}
     const initBlockInfo = await db.getBlockInfo()
 
-    await db.insertBlock(someBlock, {no: someBlock.header.no})
+    await db.insertBlock(testData.txs)
     const laterBlockInfo = await db.getBlockInfo()
+    const lastBlock = await db.getBlock(laterBlockInfo.header.no)
 
-    assert(initBlockInfo.no !== someBlock.header.no)
-    assert(laterBlockInfo.no === someBlock.header.no)
+    assert(laterBlockInfo.header.no !== initBlockInfo.no)
+    blockUtils.verify(lastBlock, initBlockInfo.header)
   })
 
   test('giveMiningReward', async () => {
