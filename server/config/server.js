@@ -18,8 +18,10 @@ function koaConfig () {
     ctx.assert(ctx.headers.authorization, 401, 'Authorization header cannot be empty.')
     try {
       ctx.state.user = await firebaseConfig.verifyIdToken(ctx.headers.authorization.substring(7)/* strip 'Bearer ' prefix */)
-    } catch (e) {
-      console.error(e)
+    } catch (err) {
+      if (config.app.debugMode) {
+        console.debug(err)
+      }
       ctx.throw(401, 'Invalid authorization token.')
     }
     return next()

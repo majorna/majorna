@@ -4,7 +4,7 @@ const db = require('../data/db')
 const testData = require('../config/test').data
 
 suite('route: blocks', () => {
-  test.only('post', async () => {
+  test('post', async () => {
     // prepare fresh block to mine
     await db.insertBlock([])
     const blockInfo = await db.getBlockInfo()

@@ -278,7 +278,6 @@ exports.giveMiningReward = (to, nonce) => firestore.runTransaction(async t => {
   lastBlock.header.difficulty = blockInfo.miner.targetDifficulty
   lastBlock.header.nonce = nonce
   blockUtils.sign(lastBlock)
-  blockUtils.verify(lastBlock)
 
   // update block info
   blockInfo.header = lastBlock.header
