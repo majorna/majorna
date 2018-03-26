@@ -70,7 +70,7 @@ export default withRouter(class App extends Component {
       if (u) {
         this.props.history.push('/dashboard')
         this.setState({user: u})
-        this.fbUnsubUsers = this.db.collection('users').doc(u.uid).onSnapshot(async doc => {
+        this.fbUnsubUserSelfDocSnapshot = this.db.collection('users').doc(u.uid).onSnapshot(async doc => {
             if (doc.exists) {
               const userData = doc.data()
               !doc.metadata.hasPendingWrites && this.setState({userDoc: userData})
@@ -83,7 +83,7 @@ export default withRouter(class App extends Component {
               await server.users.init()
             }
           })
-        this.fbUnsubMeta = this.db.collection('meta').doc('mj').onSnapshot(doc => this.setState({mjMetaDoc: doc.data()}))
+        this.fbUnsubMjMetaDocSnapshot = this.db.collection('meta').doc('mj').onSnapshot(doc => this.setState({mjMetaDoc: doc.data()}))
         config.server.token = await u.getIdToken()
       } else {
         this.setState(this.nullState) // logged out or token expired and was not renewed
@@ -100,8 +100,9 @@ export default withRouter(class App extends Component {
   }
 
   logout = async () => {
-    this.fbUnsubUsers && this.fbUnsubUsers()
-    this.fbUnsubMeta && this.fbUnsubMeta()
+    // unsub from firestore realtime document updates
+    this.fbUnsubUserSelfDocSnapshot && this.fbUnsubUserSelfDocSnapshot()
+    this.fbUnsubMjMetaDocSnapshot && this.fbUnsubMjMetaDocSnapshot()
     await this.firebaseAuth.signOut()
   }
 
