@@ -13,50 +13,19 @@ const blockInterval = 24 * 60 * 60 * 1000 // ms
 exports.getBlockPath = blockHeader => `${blockHeader.time.getUTCFullYear()}/${blockHeader.no}`
 
 /**
- * Provides a time range for a block:
- * Start: Midnight of {start}.
- * End: Midnight of {end}.
+ * Looks for the latest block then creates a new block with matching txs (if any), asynchronously.
+ * Start time will be the very beginning of the day that the last block was created.
+ * End date will be the very beginning of {now}.
+ * @param now - Required just in case day changes right before the call to this function (so not using new Date()).
+ * @param blockInfo - Block info meta document.
  */
-exports.getBlockTimeRange = (start, end) => {
-  // make copies of date object not to modify originals
-  start = new Date(start.getTime())
-  start.setUTCHours(0, 0, 0, 0)
-
-  end = new Date(end.getTime())
-  end.setUTCHours(0, 0, 0, 0)
-
-  return {start, end}
-}
-
-/**
- * Creates and inserts a new block into the database, asynchronously.
- * In addition, previous block is exported to git repo.
- * @param startTime - Time to start including txs from.
- * @param endTime - Time to stop including txs from.
- */
-exports.insertBlock = async (startTime, endTime) => {
-  const txs = await db.getTxsByTimeRange(startTime, endTime)
+exports.insertBlockSinceLastOne = async (now, blockInfo) => {
+  const txs = await db.getTxsByTimeRange(blockInfo.header.time, now)
   const newBlock = await db.insertBlock(txs)
   const oldBlock = await db.getBlock(newBlock.header.no - 1)
   const blockPath = exports.getBlockPath(oldBlock.header)
   await github.createFile(block.toJson(oldBlock), blockPath)
   console.log(`inserted block ${blockPath}`)
-}
-
-/**
- * Looks for the latest block then creates a new block with matching txs (if any), asynchronously.
- * Start time will be the very beginning of the day that the last block was created.
- * End date will be the very beginning of {now}.
- * @param now - Required just in case day changes right before the call to this function (so not using new Date()).
- * @param blockInfo - Block info met doc.
- */
-exports.insertBlockSinceLastOne = async (now, blockInfo) => {
-  // start with getting the time of the last tx in the last block
-  const oldBlock = await db.getBlock(blockInfo.header.no - 1)
-
-
-  const blockTimeRange = exports.getBlockTimeRange(blockInfo.header.time, now)
-  await exports.insertBlock(blockTimeRange.start, blockTimeRange.end)
 }
 
 /**
