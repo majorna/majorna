@@ -3,7 +3,6 @@ const blockchain = require('./blockchain')
 const github = require('../data/github')
 const db = require('../data/db')
 const block = require('./block')
-// const testData = require('../config/test').data
 
 suite('blockchain', () => {
   test('insertBlockSinceLastOne', async () => {
@@ -28,15 +27,24 @@ suite('blockchain', () => {
 
   test('insertBlockIfRequired', async () => {
     const tomorrow = new Date() // end search in tomorrow so we can pick up test txs from the database
-    tomorrow.setDate(tomorrow.getDate() + 1)
-    const path = blockchain.getBlockPath(new Date()) + '-' + new Date().getTime()
-    const inserted = await blockchain.insertBlockIfRequired(path, tomorrow)
+    tomorrow.setDate(tomorrow.getDate() + 2)
+    const blockPath = new Date().getTime()
+
+    const inserted = await blockchain.insertBlockIfRequired(tomorrow, blockPath)
     assert(inserted)
-    const blockFile = await github.getFileContent(path)
-    assert(blockFile.includes('"txs":'))
+
+    // git repo has previous block file
+    const blockFile = await github.getFileContent(blockPath)
+    assert(blockFile.includes('"header":'))
+    const blockObj = block.fromJson(blockFile)
+
+    // verify newly created block from database with the header form the old one in git repo
+    const blockInfo = await db.getBlockInfo()
+    const newBlock = await db.getBlock(blockInfo.header.no)
+    block.verify(newBlock, blockObj.header)
 
     // not required
-    const inserted2 = await blockchain.insertBlockIfRequired(path, tomorrow)
+    const inserted2 = await blockchain.insertBlockIfRequired(tomorrow, new Date().getTime())
     assert(!inserted2)
   })
 })

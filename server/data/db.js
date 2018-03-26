@@ -228,13 +228,14 @@ exports.makeTx = (from, to, amount) => firestore.runTransaction(async t => {
 /**
  * Creates and inserts the next block with given txs, asynchronously.
  * @param txs - Txs to be included in the block.
+ * @param now - Optional creation time for the block.
  */
-exports.insertBlock = txs => firestore.runTransaction(async t => {
+exports.insertBlock = (txs, now) => firestore.runTransaction(async t => {
   const blockInfoDoc = await t.get(blockInfoMetaDocRef)
   const blockInfo = blockInfoDoc.data()
 
   // create new block with the given txs and with reference to previous block header
-  const newBlock = blockUtils.create(txs, blockInfo.header)
+  const newBlock = blockUtils.create(txs, blockInfo.header, now)
   blockUtils.sign(newBlock)
   blockUtils.verify(newBlock, blockInfo.header)
 

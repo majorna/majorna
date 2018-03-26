@@ -23,7 +23,7 @@ exports.getGenesisBlock = () => ({
 /**
  * Creates a block with given txs and previous block or block header.
  */
-exports.create = (txs, prevBlockHeader) => {
+exports.create = (txs, prevBlockHeader, now) => {
   return {
     sig: '',
     header: {
@@ -31,7 +31,7 @@ exports.create = (txs, prevBlockHeader) => {
       prevHash: exports.hashHeader(prevBlockHeader),
       txCount: txs.length,
       merkleRoot: (txs.length && txsUtils.createMerkle(txs).getMerkleRoot().toString('base64')) || '', // block are allowed to have no txs in them
-      time: new Date(),
+      time: now || new Date(),
       difficulty: 0,
       nonce: 0
     },

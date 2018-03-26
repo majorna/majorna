@@ -22,7 +22,7 @@ exports.getBlockPath = blockHeader => `${blockHeader.time.getUTCFullYear()}/${bl
  */
 exports.insertBlockSinceLastOne = async (now, blockInfo, customOldBlockPath) => {
   const txs = await db.getTxsByTimeRange(blockInfo.header.time, now)
-  const newBlock = await db.insertBlock(txs)
+  const newBlock = await db.insertBlock(txs, now)
   const oldBlock = await db.getBlock(newBlock.header.no - 1)
   const oldBlockPath = customOldBlockPath || exports.getBlockPath(oldBlock.header)
   await github.createFile(block.toJson(oldBlock), oldBlockPath)
@@ -33,20 +33,21 @@ exports.insertBlockSinceLastOne = async (now, blockInfo, customOldBlockPath) => 
  * Checks if it is time then creates the required block in blockchain, asynchronously.
  * Returns true if a block was inserted. False otherwise.
  * @param now - Only used for testing. Automatically calculated otherwise.
+ * @param customOldBlockPath - Only used for testing. Useful for creating same block in git repo without overwriting the same one.
  */
-exports.insertBlockIfRequired = async now => {
+exports.insertBlockIfRequired = async (now, customOldBlockPath) => {
   // check if it is time to create a block
   now = now || new Date()
   now.setMinutes(now.getMinutes() - 5 /* some latency to let ongoing tx insert operations to complete */)
   const blockInfo = await db.getBlockInfo()
 
-  if (blockInfo.header.time.getTime() + blockInterval < now.getTime()) {
-    await exports.insertBlockSinceLastOne(now, blockInfo)
+  if (now.getTime() > blockInfo.header.time.getTime() + blockInterval) {
+    await exports.insertBlockSinceLastOne(now, blockInfo, customOldBlockPath)
     return true
-  } else {
-    console.log('not enough time elapsed since the last block so skipping block creation')
-    return false
   }
+
+  console.log('not enough time elapsed since the last block so skipping block creation')
+  return false
 }
 
 function failSafeInsertBlockIfRequired () {
