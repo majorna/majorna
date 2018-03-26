@@ -2,7 +2,6 @@ const assert = require('assert')
 const blockchain = require('./blockchain')
 const github = require('../data/github')
 const block = require('./block')
-const utils = require('../data/utils')
 const testData = require('../config/test').data
 
 suite('blockchain', () => {
@@ -10,7 +9,7 @@ suite('blockchain', () => {
     // create a block of all txs since genesis
     const tomorrow = new Date() // end search in tomorrow so we can pick up test txs from the database
     tomorrow.setDate(tomorrow.getDate() + 1)
-    const path = blockchain.getBlockPath(tomorrow) + '-' + utils.getRandomStr()
+    const path = blockchain.getBlockPath(tomorrow) + '-' + new Date().getTime()
     await blockchain.insertBlockSinceLastOne(tomorrow, path, block.getGenesisBlock().header)
 
     const blockFile = await github.getFileContent(path)
@@ -23,7 +22,7 @@ suite('blockchain', () => {
     // create the consecutive block with same txs in it
     // same txs will be picked up since blocks include txs up to last block creation day's midnight
     // (which will still include today in this test case)
-    const path2 = blockchain.getBlockPath(tomorrow) + '-' + utils.getRandomStr()
+    const path2 = blockchain.getBlockPath(tomorrow) + '-' + new Date().getTime()
     await blockchain.insertBlockSinceLastOne(tomorrow, path2)
 
     const blockFile2 = await github.getFileContent(path2)
@@ -37,7 +36,7 @@ suite('blockchain', () => {
   test('insertBlockIfRequired', async () => {
     const tomorrow = new Date() // end search in tomorrow so we can pick up test txs from the database
     tomorrow.setDate(tomorrow.getDate() + 1)
-    const path = blockchain.getBlockPath(new Date()) + '-' + utils.getRandomStr()
+    const path = blockchain.getBlockPath(new Date()) + '-' + new Date().getTime()
     const inserted = await blockchain.insertBlockIfRequired(path, tomorrow)
     assert(inserted)
     const blockFile = await github.getFileContent(path)

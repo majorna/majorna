@@ -1,6 +1,5 @@
 const assert = require('assert')
 const github = require('./github')
-const utils = require('./utils')
 
 const testFilePath = 'testfile'
 const readmePath = 'README.md'
@@ -16,8 +15,8 @@ suite('github', () => {
   })
 
   test('createFile', async () => {
-    const path = 'testfiles/testfile-' + utils.getRandomStr()
-    const text = 'some-text-' + utils.getRandomStr()
+    const path = 'testfiles/testfile-' + new Date().getTime()
+    const text = 'some-text-' + new Date().getTime()
     await github.createFile(text, path)
     const file = await github.getFileContent(path)
     assert(file === text)
@@ -29,7 +28,7 @@ suite('github', () => {
   })
 
   test('upsertFile', async () => {
-    const appendText = 'some-text-' + utils.getRandomStr()
+    const appendText = 'some-text-' + new Date().getTime()
     await github.upsertFile(appendText, testFilePath)
     const updatedFile = await github.getFileContent(testFilePath)
     assert(updatedFile.endsWith(updatedFile))
