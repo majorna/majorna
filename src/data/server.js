@@ -20,7 +20,6 @@ export default {
     make: (to, amount) => postJson('/txs', {to, amount})
   },
   blocks: {
-    get: () => get('/blocks'),
     create: (no, nonce) => postJson('/blocks', {no, nonce})
   }
 }
