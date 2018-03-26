@@ -18,12 +18,13 @@ exports.getBlockPath = blockHeader => `${blockHeader.time.getUTCFullYear()}/${bl
  * End date will be the very beginning of {now}.
  * @param now - Required just in case day changes right before the call to this function (so not using new Date()).
  * @param blockInfo - Block info meta document.
+ * @param githubPathSuffix - Only used for testing. Useful for creating same block in git repo without overwriting the same one.
  */
-exports.insertBlockSinceLastOne = async (now, blockInfo) => {
+exports.insertBlockSinceLastOne = async (now, blockInfo, githubPathSuffix = '') => {
   const txs = await db.getTxsByTimeRange(blockInfo.header.time, now)
   const newBlock = await db.insertBlock(txs)
   const oldBlock = await db.getBlock(newBlock.header.no - 1)
-  const blockPath = exports.getBlockPath(oldBlock.header)
+  const blockPath = exports.getBlockPath(oldBlock.header) + githubPathSuffix
   await github.createFile(block.toJson(oldBlock), blockPath)
   console.log(`inserted block ${blockPath}`)
 }
@@ -36,7 +37,7 @@ exports.insertBlockSinceLastOne = async (now, blockInfo) => {
 exports.insertBlockIfRequired = async now => {
   // check if it is time to create a block
   now = now || new Date()
-  now.setMinutes(now.getMinutes() - 15 /* some latency to let ongoing txs to complete */)
+  now.setMinutes(now.getMinutes() - 5 /* some latency to let ongoing tx insert operations to complete */)
   const blockInfo = await db.getBlockInfo()
 
   if (blockInfo.header.time.getTime() + blockInterval < now.getTime()) {
@@ -50,6 +51,7 @@ exports.insertBlockIfRequired = async now => {
 
 function failSafeInsertBlockIfRequired () {
   exports.insertBlockIfRequired().catch(e => console.error(e))
+  // todo: also verify blocks for last 1 week or so to make sure that all txs are in blocks, and all blocks are valid
 }
 
 let timerStarted = false
