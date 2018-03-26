@@ -29,7 +29,6 @@ export default withRouter(class App extends Component {
       mjMetaDoc: {
         val: null, // usd
         cap: null, // mj
-        userCount: null,
         monthly: undefined // usd per day, for last 1 month
       }
     }
@@ -84,7 +83,7 @@ export default withRouter(class App extends Component {
               await server.users.init()
             }
           })
-        this.fbUnsubMeta = this.db.collection('mj').doc('meta').onSnapshot(doc => this.setState({mjMetaDoc: doc.data()}))
+        this.fbUnsubMeta = this.db.collection('meta').doc('mj').onSnapshot(doc => this.setState({mjMetaDoc: doc.data()}))
         config.server.token = await u.getIdToken()
       } else {
         this.setState(this.nullState) // logged out or token expired and was not renewed
