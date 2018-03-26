@@ -14,19 +14,19 @@ exports.getBlockPath = blockHeader => `${blockHeader.time.getUTCFullYear()}/${bl
 
 /**
  * Looks for the latest block then creates a new block with matching txs (if any), asynchronously.
- * Start time will be the very beginning of the day that the last block was created.
- * End date will be the very beginning of {now}.
+ * Start time will be the very beginning of the day that the last block was created. End date will be the very beginning of {now}.
+ * Also the previous block is inserted into the git repo, since it cannot be updated any more.
  * @param now - Required just in case day changes right before the call to this function (so not using new Date()).
  * @param blockInfo - Block info meta document.
- * @param githubPathSuffix - Only used for testing. Useful for creating same block in git repo without overwriting the same one.
+ * @param customOldBlockPath - Only used for testing. Useful for creating same block in git repo without overwriting the same one.
  */
-exports.insertBlockSinceLastOne = async (now, blockInfo, githubPathSuffix = '') => {
+exports.insertBlockSinceLastOne = async (now, blockInfo, customOldBlockPath) => {
   const txs = await db.getTxsByTimeRange(blockInfo.header.time, now)
   const newBlock = await db.insertBlock(txs)
   const oldBlock = await db.getBlock(newBlock.header.no - 1)
-  const blockPath = exports.getBlockPath(oldBlock.header) + githubPathSuffix
-  await github.createFile(block.toJson(oldBlock), blockPath)
-  console.log(`inserted block ${blockPath}`)
+  const oldBlockPath = customOldBlockPath || exports.getBlockPath(oldBlock.header)
+  await github.createFile(block.toJson(oldBlock), oldBlockPath)
+  console.log(`inserted new block`)
 }
 
 /**
@@ -72,6 +72,6 @@ exports.startBlockchainInsertTimer = interval => {
   !interval && failSafeInsertBlockIfRequired()
 
   // start timer
-  interval = interval || 1000/* ms */ * 60/* s */ * 15/* min */
+  interval = interval || 1000/* ms */ * 60/* s */ * 5/* min */
   return setInterval(() => failSafeInsertBlockIfRequired(), interval)
 }
