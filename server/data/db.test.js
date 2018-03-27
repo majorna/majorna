@@ -251,4 +251,22 @@ suite('db', () => {
       assert(updatedBlockInfo.miner.headerStrWithoutNonce !== blockInfo.miner.headerStrWithoutNonce)
     }
   })
+
+  test('giveMiningReward, concurrently', async () => {
+    const to = '1'
+    const receiverInitBalance = (await db.getUser(to)).balance
+
+    await db.insertBlock([])
+    const blockInfo = await db.getBlockInfo()
+    const miningRes = blockUtils.mineHeaderStr(blockInfo.miner.headerStrWithoutNonce, blockInfo.miner.targetDifficulty)
+
+    let err
+    try {
+      await Promise.all([db.giveMiningReward(to, miningRes.nonce), db.giveMiningReward(to, miningRes.nonce)])
+    } catch (e) { err = e }
+    assert(err.message.includes('contention') || err.message.includes('nonce'))
+
+    const receiverAfterBalance = (await db.getUser(to)).balance
+    assert(receiverAfterBalance === receiverInitBalance + blockUtils.getBlockReward(miningRes.difficulty))
+  })
 })
