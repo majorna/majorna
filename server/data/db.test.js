@@ -238,7 +238,7 @@ suite('db', () => {
 
       // verify last block update
       const lastBlock = await db.getBlock(blockToMine.header.no)
-      assert(lastBlock.header.difficulty === blockInfo.miner.targetDifficulty)
+      assert(lastBlock.header.minDifficulty === blockInfo.miner.targetDifficulty)
       assert(lastBlock.header.nonce === miningRes.nonce)
       blockUtils.verify(lastBlock, previousBlockHeader)
 

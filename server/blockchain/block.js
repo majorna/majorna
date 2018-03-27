@@ -14,7 +14,7 @@ exports.getGenesisBlock = () => ({
     txCount: 0,
     merkleRoot: '',
     time: new Date('01 Jan 2018 00:00:00 UTC'),
-    difficulty: 0, // optional: if sig is not present, should be > 0
+    minDifficulty: 0, // optional: if sig is not present, should be > 0
     nonce: 0 // optional: if sig is not present, should be > 0
   },
   txs: []
@@ -32,7 +32,7 @@ exports.create = (txs, prevBlockHeader, now) => {
       txCount: txs.length,
       merkleRoot: (txs.length && txsUtils.createMerkle(txs).getMerkleRoot().toString('base64')) || '', // block are allowed to have no txs in them
       time: now || new Date(),
-      difficulty: 0,
+      minDifficulty: 0,
       nonce: 0
     },
     txs: txs.map(t => txUtils.getObj(t))
@@ -70,7 +70,7 @@ exports.fromJson = blockOrBlockHeaderJson => {
 exports.getHeaderStr = (blockHeader, skipNonce, difficulty) =>
   '' + (skipNonce ? '' : blockHeader.nonce) +
   blockHeader.no + blockHeader.prevHash + blockHeader.txCount +
-  blockHeader.merkleRoot + blockHeader.time.getTime() + (difficulty || blockHeader.difficulty)
+  blockHeader.merkleRoot + blockHeader.time.getTime() + (difficulty || blockHeader.minDifficulty)
 
 /**
  * Returns the hash of a given block header.
@@ -94,7 +94,7 @@ exports.verifySignature = block => crypto.verifyText(block.sig, exports.getHeade
 /**
  * Hashes a given block header and checks if the nonce matches the claimed difficulty.
  */
-// exports.verifyHeaderHash = blockHeader => exports.getHashDifficulty(exports.hashHeaderToBuffer(blockHeader)) >= blockHeader.difficulty
+// exports.verifyHeaderHash = blockHeader => exports.getHashDifficulty(exports.hashHeaderToBuffer(blockHeader)) >= blockHeader.minDifficulty
 
 /**
  * Verifies the given block. Requires the previous block header for the verification.
@@ -117,10 +117,10 @@ exports.verify = (block, prevBlockHeader) => {
   assert(block.header.time.getTime() > exports.getGenesisBlock().header.time.getTime(), 'Block time is invalid or is before the genesis.')
   if (block.sig) {
     assert(block.sig.length === 96, `Block signature length is invalid. Expected ${96}, got ${block.sig.length}.`)
-    block.header.difficulty > 0 && assert(block.header.nonce > 0, 'Nonce should be > 0 if difficulty is > 0.')
-    block.header.nonce > 0 && assert(block.header.difficulty > 0, 'Difficulty should be > 0 if nonce is > 0.')
+    block.header.minDifficulty > 0 && assert(block.header.nonce > 0, 'Nonce should be > 0 if difficulty is > 0.')
+    block.header.nonce > 0 && assert(block.header.minDifficulty > 0, 'Difficulty should be > 0 if nonce is > 0.')
   } else {
-    assert(block.header.difficulty > 0, 'Block difficulty should be > 0 for unsigned blocks.')
+    assert(block.header.minDifficulty > 0, 'Block difficulty should be > 0 for unsigned blocks.')
     assert(block.header.nonce > 0, 'Block nonce should be > 0 for unsigned blocks.')
   }
 
@@ -135,11 +135,11 @@ exports.verify = (block, prevBlockHeader) => {
   if (block.sig) {
     assert(exports.verifySignature(block), 'Block signature verification failed.')
   }
-  if (!block.sig || block.header.difficulty > 0 || block.header.nonce > 0) {
+  if (!block.sig || block.header.minDifficulty > 0 || block.header.nonce > 0) {
     const hash = exports.hashHeaderToBuffer(block.header)
     const difficulty = exports.getHashDifficulty(hash)
-    assert(difficulty >= block.header.difficulty,
-      `Nonce does not match claimed difficulty. Expected difficulty ${block.header.difficulty}, got ${difficulty} (hash: ${hash.toString('base64')}).`)
+    assert(difficulty >= block.header.minDifficulty,
+      `Nonce does not match claimed difficulty. Expected difficulty ${block.header.minDifficulty}, got ${difficulty} (hash: ${hash.toString('base64')}).`)
   }
 
   return true
@@ -188,7 +188,7 @@ exports.getHashDifficultyFromStr = (headerStr, nonce = '') => exports.getHashDif
  */
 exports.mineBlock = (blockOrHeader) => {
   const header = blockOrHeader.header || blockOrHeader
-  const miningRes = exports.mineHeaderStr(exports.getHeaderStr(header, true), header.difficulty)
+  const miningRes = exports.mineHeaderStr(exports.getHeaderStr(header, true), header.minDifficulty)
   header.nonce = miningRes.nonce
   return miningRes
 }

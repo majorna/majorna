@@ -276,7 +276,7 @@ exports.giveMiningReward = (to, nonce) => firestore.runTransaction(async t => {
   const lastBlockRef = blocksColRef.doc(blockInfo.header.no.toString())
   const lastBlockDoc = await t.get(lastBlockRef)
   const lastBlock = lastBlockDoc.data()
-  lastBlock.header.difficulty = blockInfo.miner.targetDifficulty
+  lastBlock.header.minDifficulty = blockInfo.miner.targetDifficulty
   lastBlock.header.nonce = nonce
   blockUtils.sign(lastBlock)
 
@@ -306,7 +306,7 @@ exports.giveMiningReward = (to, nonce) => firestore.runTransaction(async t => {
   t.update(mjMetaDocRef, {cap: meta.cap + miningReward})
 
   // block op writes (here to have reads before writes)
-  t.update(lastBlockRef, {sig: lastBlock.sig, 'header.difficulty': lastBlock.header.difficulty, 'header.nonce': lastBlock.header.nonce})
+  t.update(lastBlockRef, {sig: lastBlock.sig, 'header.minDifficulty': lastBlock.header.minDifficulty, 'header.nonce': lastBlock.header.nonce})
   t.set(blockInfoMetaDocRef, blockInfo) // '.set' not to use dot notation for all nested fields
 
   // add tx to txs collection

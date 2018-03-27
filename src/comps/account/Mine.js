@@ -83,7 +83,7 @@ export default class extends Component {
           <div><strong>No:</strong> {this.state.blockInfo.header.no}</div>
           <div><strong>Time:</strong> {this.state.blockInfo.header.time.toLocaleString()}</div>
           <div><strong>Transaction Count:</strong> {this.state.blockInfo.header.txCount}</div>
-          <div><strong>Difficulty:</strong> {this.state.blockInfo.header.difficulty}</div>
+          <div><strong>Min Difficulty:</strong> {this.state.blockInfo.header.minDifficulty}</div>
           <div><strong>Nonce:</strong> {fn(this.state.blockInfo.header.nonce)}</div>
           <div><strong>Block Hash:</strong> <small>{this.state.blockInfo.header.prevHash}</small></div>
           <div><strong>Merkle Root:</strong> <small>{this.state.blockInfo.header.merkleRoot}</small></div>
