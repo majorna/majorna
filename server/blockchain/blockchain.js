@@ -1,11 +1,7 @@
+const config = require('../config/config')
 const db = require('../data/db')
 const block = require('./block')
 const github = require('../data/github')
-
-// block difficulty increases by this step every time someone finds and submits a valid nonce
-exports.blockDifficultyIncrementStep = 1
-
-const blockInterval = 24 * 60 * 60 * 1000 // ms
 
 /**
  * Retrieves the full path of a block in git repo.
@@ -41,7 +37,7 @@ exports.insertBlockIfRequired = async (now, customOldBlockPath) => {
   now.setMinutes(now.getMinutes() - 5 /* some latency to let ongoing tx insert operations to complete */)
   const blockInfo = await db.getBlockInfo()
 
-  if (now.getTime() > blockInfo.header.time.getTime() + blockInterval) {
+  if (now.getTime() > blockInfo.header.time.getTime() + config.blockchain.blockInterval) {
     await exports.insertBlockSinceLastOne(now, blockInfo, customOldBlockPath)
     return true
   }

@@ -1,8 +1,8 @@
 const assert = require('assert')
+const config = require('../config/config')
 const db = require('./db')
 const txUtils = require('../blockchain/tx')
 const blockUtils = require('../blockchain/block')
-const blockchainUtils = require('../blockchain/blockchain')
 const testData = require('../config/test').data
 
 suite('db', () => {
@@ -204,7 +204,7 @@ suite('db', () => {
     let totalReward = 0
     for (let i = 0; i < 7; i++) {
       const blockInfo = await db.getBlockInfo()
-      assert(blockInfo.miner.targetDifficulty === lastDifficulty + blockchainUtils.blockDifficultyIncrementStep)
+      assert(blockInfo.miner.targetDifficulty === lastDifficulty + config.blockchain.blockDifficultyIncrementStep)
 
       // mine the block
       const miningRes = blockUtils.mineHeaderStr(blockInfo.miner.headerStrWithoutNonce, blockInfo.miner.targetDifficulty)

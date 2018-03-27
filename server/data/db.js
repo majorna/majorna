@@ -1,7 +1,7 @@
 const assert = require('assert')
+const config = require('../config/config')
 const txUtils = require('../blockchain/tx')
 const blockUtils = require('../blockchain/block')
-const blockchainUtils = require('../blockchain/blockchain')
 const utils = require('./utils')
 const firebaseConfig = require('../config/firebase')
 const firestore = firebaseConfig.firestore
@@ -245,7 +245,7 @@ exports.insertBlock = (txs, now) => firestore.runTransaction(async t => {
 
   // update block info doc
   blockInfo.header = newBlock.header
-  blockInfo.miner.targetDifficulty = blockchainUtils.blockDifficultyIncrementStep
+  blockInfo.miner.targetDifficulty = config.blockchain.blockDifficultyIncrementStep
   blockInfo.miner.reward = blockUtils.getBlockReward(blockInfo.miner.targetDifficulty)
   blockInfo.miner.headerStrWithoutNonce = blockUtils.getHeaderStr(newBlock.header, true, blockInfo.miner.targetDifficulty)
   t.set(blockInfoMetaDocRef, blockInfo)
@@ -282,7 +282,7 @@ exports.giveMiningReward = (to, nonce) => firestore.runTransaction(async t => {
 
   // update block info
   blockInfo.header = lastBlock.header
-  blockInfo.miner.targetDifficulty = givenNonceDifficulty + blockchainUtils.blockDifficultyIncrementStep
+  blockInfo.miner.targetDifficulty = givenNonceDifficulty + config.blockchain.blockDifficultyIncrementStep
   blockInfo.miner.reward = blockUtils.getBlockReward(blockInfo.miner.targetDifficulty)
   blockInfo.miner.headerStrWithoutNonce = blockUtils.getHeaderStr(lastBlock.header, true, blockInfo.miner.targetDifficulty)
 
