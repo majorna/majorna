@@ -21,19 +21,20 @@ export default class extends Component {
     showDetails: false
   }
 
-  startMinerLoop = async blockInfo => {
-    // start mining loop
-    this.hashing = false
-    this.runMinerLoop = true
+  componentDidMount = async () => {
+    // start network requests
+    this.fbUnsubBlockInfoMetaDocSnapshot = this.props.db.collection('meta').doc('blockInfo').onSnapshot(async doc => {
+      stopMining()
 
-    while (this.runMinerLoop) {
-      this.hashing = true
+      const blockInfo = doc.data()
+      this.setState({blockInfo})
+
       await mineBlock(
         blockInfo.miner.headerStrWithoutNonce,
         blockInfo.miner.targetDifficulty,
         blockInfo.header.nonce,
-        s => this.setState(s), // progress update
-        async nonce => { // mined a block
+        s => this.setState(s), // callback: progress update
+        async nonce => { // callback: mined a block
           this.hashing = false
           await server.blocks.create(nonce) // todo: ignore errors but display error msg
           this.setState((preState, props) => ({
@@ -43,39 +44,12 @@ export default class extends Component {
             targetDifficulty: 0
           }))
         })
-    }
-
-    console.log('stopped miner loop')
-  }
-
-  stopMinerLoop = () => {
-    this.runMinerLoop = false
-    stopMining()
-  }
-
-  componentDidMount = async () => {
-    // start network requests
-    this.fbUnsubBlockInfoMetaDocSnapshot = this.props.db.collection('meta').doc('blockInfo').onSnapshot(async doc => {
-      const blockInfoSnap = doc.data()
-
-      // if someone else finds the nonce first, don't waste time working on a stale block/difficulty
-      if (this.hashing && this.state.blockInfo.miner.targetDifficulty
-        && blockInfoSnap.miner.headerStrWithoutNonce !== this.state.blockInfo.miner.headerStrWithoutNonce) {
-        console.log('block was mined by someone else or is old so restarting miner')
-        this.stopMinerLoop()
-        await this.startMinerLoop(blockInfoSnap)
-        return
-      }
-
-      // start mining
-      this.setState({blockInfo: blockInfoSnap})
-      await this.startMinerLoop(blockInfoSnap)
     })
   }
 
   componentWillUnmount = () => {
     this.fbUnsubBlockInfoMetaDocSnapshot()
-    this.stopMinerLoop()
+    stopMining()
   }
 
   handleStop = () => this.props.history.goBack()
