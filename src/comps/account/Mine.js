@@ -18,58 +18,62 @@ export default class extends Component {
     showDetails: false
   }
 
-  componentDidMount = async () => {
-    // start network requests
-    this.fbUnsubBlockInfoMetaDocSnapshot = this.props.db.collection('meta').doc('blockInfo').onSnapshot(async doc => {
-      const blockInfo = doc.data()
-      this.setState({blockInfo})
+  startMinerLoop = async blockInfo => {
+    // start mining loop
+    this.hashing = false
+    this.runMinerLoop = true
 
-      // if someone else finds a proper nonce first, don't waste time working on a stale block/difficulty
-      if (this.hashing && nextProps.lastBlock &&
-        (nextProps.lastBlock.no > this.state.blockHeader.no || nextProps.lastBlock.difficulty > this.state.previousDifficulty)) {
-        console.log('someone else found the nonce first for this block/difficulty so skipping')
-        this.componentWillUnmount()
-        await this.componentDidMount()
-        return
-      }
+    while (this.runMinerLoop) {
+      this.hashing = true
+      await mineBlock(
+        blockInfo.miner.headerStrWithoutNonce,
+        blockInfo.miner.targetDifficulty,
+        blockInfo.header.nonce,
+        s => this.setState(s), // progress update
+        async nonce => { // mined a block
+          this.hashing = false
+          await server.blocks.create(blockInfo.header.no, nonce) // todo: ignore errors but display error msg
+          this.setState((preState, props) => ({
+            minedBlocks: (preState.minedBlocks + 1),
+            hashRate: 0,
+            time: 0,
+            targetDifficulty: 0
+          }))
+        })
+    }
 
-      // start mining loop
-      this.hashing = false
-      this.runMinerLoop = true
-
-      while (this.runMinerLoop) {
-        this.hashing = true
-        await mineBlock(
-          mineableBlock.headerString,
-          mineableBlock.targetDifficulty,
-          mineableBlock.headerObject.nonce,
-          s => this.setState(s), // progress update
-          async nonce => { // mined a block
-            this.hashing = false
-            await server.blocks.create(this.state.blockNo, nonce) // todo: ignore errors but display error msg
-            this.setState((preState, props) => ({
-              minedBlocks: (preState.minedBlocks + 1),
-              hashRate: 0,
-              time: 0,
-              targetDifficulty: 0
-            }))
-          })
-      }
-
-      console.log('stopped miner loop')
-    })
+    console.log('stopped miner loop')
   }
 
-  componentWillUpdate = async (nextProps, nextState) => {
-
-  }
-
-  componentWillUnmount = () => {
+  stopMinerLoop = () => {
     this.runMinerLoop = false
     stopMining()
   }
 
-  handleStop = () => this.props.history.goBack()
+  componentDidMount = async () => {
+    // start network requests
+    this.fbUnsubBlockInfoMetaDocSnapshot = this.props.db.collection('meta').doc('blockInfo').onSnapshot(async doc => {
+      const blockInfoSnap = doc.data()
+
+      // if someone else finds the nonce first, don't waste time working on a stale block/difficulty
+      if (this.hashing && this.state.blockInfo && blockInfoSnap.miner.headerStrWithoutNonce !== this.state.blockInfo.miner.headerStrWithoutNonce) {
+        console.log('block was mined by someone else or is old so restarting miner')
+        this.stopMinerLoop()
+        await this.startMinerLoop(blockInfoSnap)
+        return
+      }
+
+      // start mining
+      this.setState({blockInfo: blockInfoSnap})
+    })
+  }
+
+  componentWillUnmount = () => {
+    this.fbUnsubBlockInfoMetaDocSnapshot()
+    this.stopMinerLoop()
+  }
+
+  handleStop = () => this.props.history.goBack() // todo: does this fire componentWillUnmount?
 
   handleShowDetails = () => this.setState(prevState => ({showDetails: !prevState.showDetails}))
 
