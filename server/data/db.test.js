@@ -258,7 +258,8 @@ suite('db', () => {
 
     await db.insertBlock([])
     const blockInfo = await db.getBlockInfo()
-    const miningRes = blockUtils.mineHeaderStr(blockInfo.miner.headerStrWithoutNonce, blockInfo.miner.targetDifficulty)
+    // choosing higher difficulty otherwise same nonce can fit into multiple difficulties at a very low difficulty
+    const miningRes = blockUtils.mineHeaderStr(blockInfo.miner.headerStrWithoutNonce, blockInfo.miner.targetDifficulty + 10)
 
     let err
     try {
