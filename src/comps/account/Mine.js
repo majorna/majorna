@@ -81,7 +81,7 @@ export default class extends Component {
         <small className="flex-column">
           <strong className="m-t-m">Current Block</strong>
           <div><strong>No:</strong> {this.state.blockInfo.header.no}</div>
-          <div><strong>Time:</strong> {this.state.blockInfo.header.time}</div>
+          <div><strong>Time:</strong> {this.state.blockInfo.header.time.toLocaleString()}</div>
           <div><strong>Transaction Count:</strong> {this.state.blockInfo.header.txCount}</div>
           <div><strong>Previous Difficulty:</strong> {this.state.blockInfo.header.difficulty}</div>
           <div><strong>Previous Nonce:</strong> {fn(this.state.blockInfo.header.nonce)}</div>

@@ -5,6 +5,21 @@ const db = require('../data/db')
 const block = require('./block')
 
 suite('blockchain', () => {
+  // test('getBlockPath', () => {
+  //   const now = new Date('2018-02-15T10:00:00.000Z')
+  //   const path = blockchain.getBlockPath(now)
+  //   assert(path === '2018/2/15')
+  //
+  //   const path2 = blockchain.getBlockPath(now, -1)
+  //   assert(path2 === '2018/2/14')
+  //
+  //   const path3 = blockchain.getBlockPath(now, -30)
+  //   assert(path3 === '2018/1/16')
+  //
+  //   const path4 = blockchain.getBlockPath(now, 30)
+  //   assert(path4 === '2018/3/17')
+  // })
+
   test('insertBlockSinceLastOne', async () => {
     // create a new block and write the previous one to git repo
     const blockInfo = await db.getBlockInfo()
@@ -46,5 +61,10 @@ suite('blockchain', () => {
     // not required
     const inserted2 = await blockchain.insertBlockIfRequired(tomorrow, new Date().getTime())
     assert(!inserted2)
+  })
+
+  test('startBlockchainInsertTimer', () => {
+    const timer = blockchain.startBlockchainInsertTimer(30)
+    clearInterval(timer)
   })
 })

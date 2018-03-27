@@ -55,7 +55,7 @@ let timerStarted = false
 /**
  * Starts the the blockchain insert timer.
  * Returns a number that can be used in clearing the interval with "clearInterval(ret)".
- * @param interval - Only used for testing. Automatically calculated otherwise.
+ * @param interval - Only used for testing.
  */
 exports.startBlockchainInsertTimer = interval => {
   // prevent duplicate timers
@@ -70,5 +70,8 @@ exports.startBlockchainInsertTimer = interval => {
 
   // start timer
   interval = interval || 1000/* ms */ * 60/* s */ * 5/* min */
+  if (config.blockchain.blockInterval < interval) {
+    interval = Math.round(config.blockchain.blockInterval / 2)
+  }
   return setInterval(() => failSafeInsertBlockIfRequired(), interval)
 }
