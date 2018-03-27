@@ -26,13 +26,10 @@ export default withRouter(class App extends Component {
       acctQr: null, // data:image/png;base64,iVBORw0KG.......kJggg==,
       /* firestore docs */
       userDoc: null,
-      mjDoc: {
-        meta: {
-          val: null, // usd
-          cap: null, // mj
-          userCount: null,
-          monthly: null // usd per day, for last 1 month
-        }
+      mjMetaDoc: {
+        val: null, // usd
+        cap: null, // mj
+        monthly: undefined // usd per day, for last 1 month
       }
     }
 
@@ -73,7 +70,7 @@ export default withRouter(class App extends Component {
       if (u) {
         this.props.history.push('/dashboard')
         this.setState({user: u})
-        this.fbUnsubUsers = this.db.collection('users').doc(u.uid).onSnapshot(async doc => {
+        this.fbUnsubUserSelfDocSnapshot = this.db.collection('users').doc(u.uid).onSnapshot(async doc => {
             if (doc.exists) {
               const userData = doc.data()
               !doc.metadata.hasPendingWrites && this.setState({userDoc: userData})
@@ -86,7 +83,7 @@ export default withRouter(class App extends Component {
               await server.users.init()
             }
           })
-        this.fbUnsubMeta = this.db.collection('mj').doc('meta').onSnapshot(doc => this.setState({mjDoc: {meta: doc.data()}}))
+        this.fbUnsubMjMetaDocSnapshot = this.db.collection('meta').doc('mj').onSnapshot(doc => this.setState({mjMetaDoc: doc.data()}))
         config.server.token = await u.getIdToken()
       } else {
         this.setState(this.nullState) // logged out or token expired and was not renewed
@@ -103,8 +100,9 @@ export default withRouter(class App extends Component {
   }
 
   logout = async () => {
-    this.fbUnsubUsers && this.fbUnsubUsers()
-    this.fbUnsubMeta && this.fbUnsubMeta()
+    // unsub from firestore realtime document updates
+    this.fbUnsubUserSelfDocSnapshot && this.fbUnsubUserSelfDocSnapshot()
+    this.fbUnsubMjMetaDocSnapshot && this.fbUnsubMjMetaDocSnapshot()
     await this.firebaseAuth.signOut()
   }
 
@@ -116,17 +114,17 @@ export default withRouter(class App extends Component {
         <Switch>
           <Route exact path='/' component={Home} />
           <Route path='/login' render={routeProps => <Login {...routeProps} uiConfig={this.firebaseUIConfig} firebaseAuth={this.firebaseAuth}/>} />
-          <Route path='/dashboard' render={routeProps => <Dashboard {...routeProps} user={this.state.user} acctQr={this.state.acctQr} userDoc={this.state.userDoc} mjDoc={this.state.mjDoc}/>} />
+          <Route path='/dashboard' render={routeProps => <Dashboard {...routeProps} user={this.state.user} acctQr={this.state.acctQr} userDoc={this.state.userDoc} mjMetaDoc={this.state.mjMetaDoc}/>} />
           <Redirect from='*' to='/'/>
         </Switch>
       ) : (
         <Switch>
           <Route exact path='/' component={Home} />
           <Route path='/login' render={routeProps => <Login {...routeProps} uiConfig={this.firebaseUIConfig} firebaseAuth={this.firebaseAuth}/>} />
-          <Route path='/dashboard' render={routeProps => <Dashboard {...routeProps} user={this.state.user} acctQr={this.state.acctQr} userDoc={this.state.userDoc} mjDoc={this.state.mjDoc}/>} />
+          <Route path='/dashboard' render={routeProps => <Dashboard {...routeProps} user={this.state.user} acctQr={this.state.acctQr} userDoc={this.state.userDoc} mjMetaDoc={this.state.mjMetaDoc}/>} />
           <Route path='/send' render={routeProps => <Send {...routeProps} userDoc={this.state.userDoc}/>} />
           <Route path='/receive' render={routeProps => <Receive {...routeProps} user={this.state.user} acctQr={this.state.acctQr}/>} />
-          <Route path='/mine' component={Mine} />
+          <Route path='/mine' render={routeProps => <Mine {...routeProps} db={this.db}/>} />
           <Redirect from='*' to='/'/>
         </Switch>
       )}

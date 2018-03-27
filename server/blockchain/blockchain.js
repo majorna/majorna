@@ -1,144 +1,61 @@
+const config = require('../config/config')
 const db = require('../data/db')
 const block = require('./block')
 const github = require('../data/github')
-const crypto = require('./crypto')
-const utils = require('../data/utils')
-
-// files with these names at the root of the git repo
-const lastBlockHeaderFilePath = 'lastblockheader'
-const genesisBlockPath = 'genesisblock'
 
 /**
- * Retrieves last block's header as an object from github, asynchronously.
- * Will return genesis block if there is no last block.
+ * Retrieves the full path of a block in git repo.
  */
-exports.getLastBlockHeader = async () => {
-  try {
-    const lastBlockHeaderFile = await github.getFileContent(lastBlockHeaderFilePath)
-    return block.fromJson(lastBlockHeaderFile)
-  } catch (e) {
-    if (e.code === 404) {
-      return block.getGenesisBlock().header
-    }
-    throw e
-  }
-}
-
-/**
- * Retrieves the full path of a block in a git repo with respect to given time and day shift.
- * @param time - 'Date' object instance.
- * @param dayShift - No of days to shift the time, if any. i.e. +5, -3, etc.
- */
-exports.getBlockPath = (time, dayShift) => {
-  time = new Date(time.getTime()) // don't modify original
-  if (dayShift) {
-    time.setDate(time.getDate() + dayShift)
-  }
-  return `${time.getFullYear()}/${time.getMonth() + 1}/${time.getDate()}`
-}
-
-/**
- * Provides a time range for a block:
- * Start: Midnight of {start}.
- * End: Midnight of {end}.
- */
-exports.getBlockTimeRange = (start, end) => {
-  // make copies of date object not to modify originals
-  start = new Date(start.getTime())
-  start.setUTCHours(0, 0, 0, 0)
-
-  end = new Date(end.getTime())
-  end.setUTCHours(0, 0, 0, 0)
-
-  return {start, end}
-}
-
-/**
- * Creates and inserts a new block into the blockchain git repo, asynchronously.
- * Returns true if a block was inserted. False if there were no txs found to create a block with.
- * Blocks with empty txs are skipped for the sake of space efficiency but can easily be enabled if required.
- * @param startTime - Time to start including txs from.
- * @param endTime - Time to stop including txs from.
- * @param blockPath - Full path of the block to create. i.e. "dir/sub_dir/filename".
- * @param prevBlockHeader - Previous block's header.
- */
-exports.insertBlock = async (startTime, endTime, blockPath, prevBlockHeader) => {
-  // todo: validate all txs before inserting (within valid time, signatures, etc.), and entire block after inserting
-  const txs = await db.getTxsByTimeRange(startTime, endTime)
-  const genesis = block.getGenesisBlock()
-  const blockNo2 = prevBlockHeader.no === genesis.header.no // the block after genesis
-
-  if (txs.length || blockNo2) {
-    if (blockNo2) {
-      // write genesis block to git repo
-      block.sign(genesis)
-      await github.upsertFile(block.toJson(genesis), genesisBlockPath)
-      console.log(`inserted genesis block ${genesisBlockPath}`)
-    }
-
-    const newBlock = block.create(txs, prevBlockHeader)
-    block.sign(newBlock)
-    block.verify(newBlock, prevBlockHeader)
-    // todo: below two should be a single operation editing multiple files so they won't fail separately
-    await github.createFile(block.toJson(newBlock), blockPath)
-    newBlock.header.path = blockPath
-    await github.upsertFile(block.toJson(newBlock.header), lastBlockHeaderFilePath)
-    console.log(`inserted block ${blockPath}`)
-    return true
-  } else {
-    console.log(`no txs found to create block with`)
-    return false
-  }
-}
+exports.getBlockPath = blockHeader => `${blockHeader.time.getUTCFullYear()}/${blockHeader.no}`
 
 /**
  * Looks for the latest block then creates a new block with matching txs (if any), asynchronously.
- * Start time will be the very beginning of the day that the last block was created.
- * End date will be the very beginning of {now}.
+ * Start time will be the very beginning of the day that the last block was created. End date will be the very beginning of {now}.
+ * Also the previous block is inserted into the git repo, since it cannot be updated any more.
  * @param now - Required just in case day changes right before the call to this function (so not using new Date()).
- * @param blockPath - Full path of the block to create. i.e. "dir/sub_dir/filename".
- * @param lastBlockHeader - Only used for testing. Automatically retrieved from GitHub otherwise.
+ * @param blockInfo - Block info meta document.
+ * @param customOldBlockPath - Only used for testing. Useful for creating same block in git repo without overwriting the same one.
  */
-exports.insertBlockSinceLastOne = async (now, blockPath, lastBlockHeader) => {
-  lastBlockHeader = lastBlockHeader || await exports.getLastBlockHeader()
-  const blockTimeRange = exports.getBlockTimeRange(lastBlockHeader.time, now)
-  await exports.insertBlock(blockTimeRange.start, blockTimeRange.end, blockPath, lastBlockHeader)
+exports.insertBlockSinceLastOne = async (now, blockInfo, customOldBlockPath) => {
+  const txs = await db.getTxsByTimeRange(blockInfo.header.time, now)
+  const newBlock = await db.insertBlock(txs, now)
+  const oldBlock = await db.getBlock(newBlock.header.no - 1)
+  const oldBlockPath = customOldBlockPath || exports.getBlockPath(oldBlock.header)
+  await github.createFile(block.toJson(oldBlock), oldBlockPath)
+  console.log(`inserted new block`)
 }
 
 /**
  * Checks if it is time then creates the required block in blockchain, asynchronously.
  * Returns true if a block was inserted. False otherwise.
- * @param blockPath - Only used for testing. Automatically calculated otherwise.
  * @param now - Only used for testing. Automatically calculated otherwise.
+ * @param customOldBlockPath - Only used for testing. Useful for creating same block in git repo without overwriting the same one.
  */
-exports.insertBlockIfRequired = async (blockPath, now) => {
+exports.insertBlockIfRequired = async (now, customOldBlockPath) => {
   // check if it is time to create a block
   now = now || new Date()
-  now.setMinutes(now.getMinutes() - 15 /* some latency to let ongoing txs to complete */)
-  blockPath = blockPath || exports.getBlockPath(now, -1)
-  try {
-    await github.getFileContent(blockPath)
-    console.log('not enough time elapsed since the last block so skipping block creation')
-    return false
-  } catch (e) {
-    if (e.code !== 404) {
-      throw e
-    }
+  now.setMinutes(now.getMinutes() - 5 /* some latency to let ongoing tx insert operations to complete */)
+  const blockInfo = await db.getBlockInfo()
 
-    await exports.insertBlockSinceLastOne(now, blockPath)
+  if (now.getTime() > blockInfo.header.time.getTime() + config.blockchain.blockInterval) {
+    await exports.insertBlockSinceLastOne(now, blockInfo, customOldBlockPath)
     return true
   }
+
+  console.log('not enough time elapsed since the last block so skipping block creation')
+  return false
 }
 
 function failSafeInsertBlockIfRequired () {
   exports.insertBlockIfRequired().catch(e => console.error(e))
+  // todo: also verify blocks for last 1 week or so to make sure that all txs are in blocks, and all blocks are valid
 }
 
 let timerStarted = false
 /**
  * Starts the the blockchain insert timer.
  * Returns a number that can be used in clearing the interval with "clearInterval(ret)".
- * @param interval - Only used for testing. Automatically calculated otherwise.
+ * @param interval - Only used for testing.
  */
 exports.startBlockchainInsertTimer = interval => {
   // prevent duplicate timers
@@ -152,57 +69,9 @@ exports.startBlockchainInsertTimer = interval => {
   !interval && failSafeInsertBlockIfRequired()
 
   // start timer
-  interval = interval || 1000/* ms */ * 60/* s */ * 15/* min */
+  interval = interval || 1000/* ms */ * 60/* s */ * 5/* min */
+  if (config.blockchain.blockInterval < interval) {
+    interval = Math.round(config.blockchain.blockInterval / 2)
+  }
   return setInterval(() => failSafeInsertBlockIfRequired(), interval)
-}
-
-/**
- * Retrieves last last mineable block's header for peers that choose to trust the majorna server, asynchronously.
- * In most cases, one honest peer is enough to get the longest blockchain since it's so hard to fake an entire chain.
- */
-exports.getMineableBlockHeader = async () => {
-  const header = await exports.getLastBlockHeader()
-  const targetDifficulty = header.difficulty = (header.difficulty + 1) // always need to work on a greater difficulty than existing
-  const str = block.getHeaderStr(header, true)
-  // todo: can be simplified greatly, can also include reward in header and reward tx in block
-  return {
-    no: header.no,
-    targetDifficulty,
-    reward: block.getBlockReward(targetDifficulty),
-    headerString: str,
-    headerObject: header
-  }
-}
-
-/**
- * Collects mining reward for a given block number and nonce, asynchronously.
- * Mined block must be the latest, and the nonce must be greater than or equal to the target difficulty.
- */
-exports.collectMiningReward = async (blockNo, nonce, uid) => {
-  // block must be latest
-  const mineableBlockHeader = await exports.getMineableBlockHeader()
-  if (blockNo !== mineableBlockHeader.no) {
-    throw new utils.UserVisibleError(`Mined block: ${blockNo} is not the latest: ${mineableBlockHeader.no}.`)
-  }
-
-  // nonce must be of required difficulty
-  const hash = crypto.hashTextToBuffer('' + nonce + mineableBlockHeader.headerString)
-  const difficulty = block.getHashDifficulty(hash)
-  if (difficulty < mineableBlockHeader.targetDifficulty) {
-    throw new utils.UserVisibleError(`Given nonce: ${nonce} (difficulty: ${difficulty}, hash: ${hash.toString('base64')}) is less than the target difficulty: ${mineableBlockHeader.targetDifficulty}.`)
-  }
-
-  // update the last block with the new and more difficult nonce
-  const lastBlockHeader = mineableBlockHeader.headerObject // this has header.path
-  const lastBlockFile = await github.getFileContent(lastBlockHeader.path)
-  const lastBlock = block.fromJson(lastBlockFile) // this does not have header.path
-  lastBlockHeader.difficulty = lastBlock.header.difficulty = difficulty
-  lastBlockHeader.nonce = lastBlock.header.nonce = nonce
-  block.sign(lastBlock)
-  await github.upsertFile(block.toJson(lastBlock), lastBlockHeader.path)
-  await github.upsertFile(block.toJson(lastBlockHeader), lastBlockHeaderFilePath)
-
-  // give reward to the user
-  await db.makeMajornaTx(uid, mineableBlockHeader.reward)
-  return mineableBlockHeader.reward
 }

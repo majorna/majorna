@@ -15,7 +15,7 @@ suite('block', () => {
     assert(genesis.header.txCount === 0)
     assert(genesis.header.merkleRoot === '')
     assert(genesis.header.time.getTime() === new Date('01 Jan 2018 00:00:00 UTC').getTime())
-    assert(genesis.header.difficulty === 0)
+    assert(genesis.header.minDifficulty === 0)
     assert(genesis.header.nonce === 0)
     assert(Array.isArray(genesis.txs))
     assert(genesis.txs.length === 0)
@@ -83,7 +83,7 @@ suite('block', () => {
     block.sign(signedBlock)
     block.verify(signedBlock, genesisHeader)
     const minedBlock = block.create(txs, genesisHeader)
-    minedBlock.header.difficulty = 1
+    minedBlock.header.minDifficulty = 1
     block.mineBlock(minedBlock)
     block.verify(minedBlock, genesisHeader)
 
@@ -94,7 +94,7 @@ suite('block', () => {
 
     // invalid nonce
     const invalidNonceBlock = block.create(txs, genesisHeader)
-    invalidNonceBlock.header.difficulty = 60
+    invalidNonceBlock.header.minDifficulty = 60
     invalidNonceBlock.header.nonce = 100
     assert.throws(() => block.verify(invalidNonceBlock, genesisHeader), e => e.message.includes('claimed difficulty'))
 
@@ -158,10 +158,10 @@ suite('block', () => {
   test('mineBlock', () => {
     const genesisHeader = block.getGenesisBlock().header
     const minedBlock = block.create(txs, genesisHeader)
-    minedBlock.header.difficulty = 8
-    const hash = block.mineBlock(minedBlock)
+    minedBlock.header.minDifficulty = 8
+    const miningRes = block.mineBlock(minedBlock)
 
-    assert(hash.substring(0, 1) === 'A')
+    assert(miningRes.hashBase64.substring(0, 1) === 'A')
     assert(minedBlock.header.nonce > 0)
 
     block.verify(minedBlock, genesisHeader)
@@ -171,7 +171,7 @@ suite('block', () => {
     const genesisHeader = block.getGenesisBlock().header
     const emptyTxs = []
     const minedBlock = block.create(emptyTxs, genesisHeader)
-    minedBlock.header.difficulty = 4
+    minedBlock.header.minDifficulty = 4
     block.mineBlock(minedBlock)
 
     block.verify(minedBlock, genesisHeader)

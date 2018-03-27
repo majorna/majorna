@@ -11,12 +11,12 @@ export default props => {
   return (
     <React.Fragment>
       <div className="mj-box flex-column p-s">
-        <div className="is-size-5 has-text-centered"><span className="faded">Majorna Price:</span> ${props.mjDoc.meta.val}*</div>
+        <div className="is-size-5 has-text-centered"><span className="faded">Majorna Price:</span> ${props.mjMetaDoc.val}*</div>
         <div className="is-size-5 has-text-centered">
-          <span className="faded">Market Cap:</span> ${fm(props.mjDoc.meta.cap * props.mjDoc.meta.val)} <small>(mj{fm(props.mjDoc.meta.cap)})</small>
+          <span className="faded">Market Cap:</span> ${fm(props.mjMetaDoc.cap * props.mjMetaDoc.val)} <small>(mj{fm(props.mjMetaDoc.cap)})</small>
         </div>
         <ResponsiveContainer width="100%" height={300}>
-          <AreaChart data={getChartData(props.mjDoc.meta)}>
+          <AreaChart data={getChartData(props.mjMetaDoc)}>
             <XAxis dataKey="t"/>
             <YAxis orientation="right"/>
             <Tooltip/>
@@ -27,7 +27,7 @@ export default props => {
       </div>
 
       <div className="mj-box flex-column">
-        <div><strong>Balance</strong>: mj<strong>{fm(props.userDoc.balance)}</strong> (${fm(props.userDoc.balance * props.mjDoc.meta.val)})</div>
+        <div><strong>Balance</strong>: mj<strong>{fm(props.userDoc.balance)}</strong> (${fm(props.userDoc.balance * props.mjMetaDoc.val)})</div>
         <div><strong>Address</strong>: <small>{props.user.uid}</small></div>
         <img width="72" src={props.acctQr} alt={props.user.uid}/>
       </div>

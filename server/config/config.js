@@ -13,7 +13,9 @@ const app = {
   isTest: env === 'test',
   isCloudFn: false, // if "require('firebase-functions').config().firebase" is defined
 
-  port: process.env.PORT || (env !== 'test' ? 3001 : 3002)
+  port: process.env.PORT || (env !== 'test' ? 3001 : 3002),
+
+  debugMode: false // enables debug logging
 }
 
 // firebase config
@@ -89,10 +91,17 @@ MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAE2yLEGhHZMiClLt4rHm6Kajo2qsRRQMUW
 -----END PUBLIC KEY-----`
 }
 
+// blockchain
+const blockchain = {
+  blockDifficultyIncrementStep: 1,
+  blockInterval: 24 * 60 * 60 * 1000 // ms
+}
+
 // module exports
 module.exports = {
   app,
   firebase: fb,
   github,
-  crypto
+  crypto,
+  blockchain
 }

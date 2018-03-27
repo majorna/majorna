@@ -62,7 +62,7 @@ function getHashDifficulty(hash) {
 export const mineBlock = async (headerStr, targetDifficulty, nonce, progressCb, minedBlockCb) => {
   const alg = 'SHA-256'
   const start = new Date().getTime()
-  let elapsedTime
+  let elapsedTime = 0
   let lastNonce = 0
   const enc = new TextEncoder('utf-8')
   const headerStrBuffer = enc.encode(headerStr)

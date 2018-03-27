@@ -18,8 +18,10 @@ function koaConfig () {
     ctx.assert(ctx.headers.authorization, 401, 'Authorization header cannot be empty.')
     try {
       ctx.state.user = await firebaseConfig.verifyIdToken(ctx.headers.authorization.substring(7)/* strip 'Bearer ' prefix */)
-    } catch (e) {
-      console.error(e)
+    } catch (err) {
+      if (config.app.debugMode) {
+        console.debug(err)
+      }
       ctx.throw(401, 'Invalid authorization token.')
     }
     return next()
@@ -27,11 +29,15 @@ function koaConfig () {
 
   koaApp.use(bodyParser())
 
-  // AssertionError is user visible and return status = 400 (bad request)
+  // AssertionError, utils.UserVisibleError, and any error with Error.expose = true set are user visible and return status = 400 (bad request)
+  // for these errors, error details are sent to the user and not logged to console (unless debug mode is on)
   koaApp.use(async (ctx, next) => {
     try {
       await next()
     } catch (err) {
+      if (config.app.debugMode && (err instanceof AssertionError || err.expose)) {
+        console.debug(err)
+      }
       if (err instanceof AssertionError) {
         ctx.throw(400, err.message)
       }

@@ -1,35 +1,93 @@
 const assert = require('assert')
-const tx = require('../blockchain/tx')
+const config = require('../config/config')
+const txUtils = require('../blockchain/tx')
+const blockUtils = require('../blockchain/block')
 const utils = require('./utils')
 const firebaseConfig = require('../config/firebase')
 const firestore = firebaseConfig.firestore
 
 // collection and doc refs
 const txsColRef = firestore.collection('txs')
+const blocksColRef = firestore.collection('blocks')
 const usersColRef = firestore.collection('users')
-const metaDocRef = firestore.collection('mj').doc('meta')
+const metaColRef = firestore.collection('meta')
+const mjMetaDocRef = metaColRef.doc('mj')
+const blockInfoMetaDocRef = metaColRef.doc('blockInfo')
 
 const maxTxsInUserDoc = 15
+const signedGenesisBlock = blockUtils.sign(blockUtils.getGenesisBlock())
 
 /**
  * Initializes database collections if database is empty, asynchronously.
  */
 exports.init = async () => {
-  const metaDoc = await metaDocRef.get()
+  const metaDoc = await mjMetaDocRef.get()
   if (metaDoc.exists) {
     return
   }
 
   const batch = firestore.batch()
-  batch.create(metaDocRef, {val: 0.01, cap: 0, userCount: 0})
+  batch.create(mjMetaDocRef, {
+    val: 0.01,
+    cap: 0,
+    userCount: 0
+    // monthly: [{t: 'May 12', mj: 0.01}]
+  })
+  batch.create(blockInfoMetaDocRef, {
+    header: signedGenesisBlock.header,
+    miner: {
+      headerStrWithoutNonce: '',
+      targetDifficulty: 0,
+      reward: 0
+    }
+  })
+  batch.create(blocksColRef.doc(signedGenesisBlock.header.no.toString()), signedGenesisBlock)
   batch.create(usersColRef.doc('majorna'), {email: 'majorna@majorna', name: 'Majorna', created: new Date(), balance: 0, txs: []})
   await batch.commit()
 }
 
 /**
- * Get majorna metadata document asynchronously.
+ * Deletes all the data and seeds the database with dummy data for testing, asynchronously.
  */
-exports.getMeta = async () => (await metaDocRef.get()).data()
+exports.initTest = async () => {
+  const testData = require('../config/test').data
+  const batch = firestore.batch()
+
+  // delete all data
+  const metasSnap = await metaColRef.get()
+  metasSnap.forEach(metaSnap => batch.delete(metaSnap.ref))
+  const usersSnap = await usersColRef.get()
+  usersSnap.forEach(userSnap => batch.delete(userSnap.ref))
+  const txsSnap = await txsColRef.get()
+  txsSnap.forEach(txSnap => batch.delete(txSnap.ref))
+  const blocksSnap = await blocksColRef.get()
+  blocksSnap.forEach(blockSnap => batch.delete(blockSnap.ref))
+
+  // add seed data
+  batch.create(mjMetaDocRef, testData.meta.mj)
+  batch.create(blockInfoMetaDocRef, testData.meta.blockInfo)
+  batch.create(usersColRef.doc('1'), testData.users.u1Doc)
+  batch.create(usersColRef.doc('2'), testData.users.u2Doc)
+  testData.txs.forEach((tx, i) => batch.create(txsColRef.doc(i.toString()), tx))
+  testData.blocks.forEach(block => batch.create(blocksColRef.doc(block.header.no.toString()), block))
+
+  await batch.commit()
+}
+
+/**
+ * Get majorna metadata document, asynchronously.
+ */
+exports.getMjMeta = async () => (await mjMetaDocRef.get()).data()
+
+/**
+ * Retrieves the block info document, asynchronously.
+ */
+exports.getBlockInfo = async () => (await blockInfoMetaDocRef.get()).data()
+
+/**
+ * Retrieves a block by its no.
+ */
+exports.getBlock = async no => (await blocksColRef.doc(no.toString()).get()).data()
 
 /**
  * Get a user by id, asynchronously.
@@ -61,13 +119,13 @@ exports.createUserDoc = (user, uid) => firestore.runTransaction(async t => {
   console.log(`creating user: ${uid} - ${email} - ${name}`)
 
   // increase market cap
-  const metaDoc = await t.get(metaDocRef)
+  const metaDoc = await t.get(mjMetaDocRef)
   const meta = metaDoc.data()
-  t.update(metaDocRef, {cap: meta.cap + initBalance, userCount: meta.userCount + 1})
+  t.update(mjMetaDocRef, {cap: meta.cap + initBalance, userCount: meta.userCount + 1})
 
   // create the first transaction for the user
   const txRef = txsColRef.doc()
-  const signedTx = tx.sign({id: txRef.id, from: {id: 'majorna', balance: 0}, to: {id: uid, balance: 0}, time, amount: initBalance})
+  const signedTx = txUtils.sign({id: txRef.id, from: {id: 'majorna', balance: 0}, to: {id: uid, balance: 0}, time, amount: initBalance})
   t.create(txRef, signedTx)
 
   // create user doc
@@ -119,10 +177,10 @@ exports.getTxsByTimeRange = async (startTime, endTime) => {
  * @param amount - Transaction amount as integer.
  */
 exports.makeTx = (from, to, amount) => firestore.runTransaction(async t => {
-  assert(from, 'from parameters is required')
-  assert(to, 'to parameters is required')
-  assert(from !== to, 'from and to parameters cannot be same')
-  assert(amount, 'amount ID parameters is required')
+  assert(from, '"from" parameter is required')
+  assert(to, '"to" parameter is required')
+  assert(from !== to, '"from" and "to" parameters cannot be same')
+  assert(amount, '"amount" parameters is required')
   assert(Number.isInteger(amount), 'amount must be an integer')
   assert(amount > 0, 'amount should be > 0')
 
@@ -153,7 +211,7 @@ exports.makeTx = (from, to, amount) => firestore.runTransaction(async t => {
 
   // add tx to txs collection
   const txRef = txsColRef.doc()
-  const signedTx = tx.sign({id: txRef.id, from: {id: from, balance: sender.balance}, to: {id: to, balance: receiver.balance}, time, amount})
+  const signedTx = txUtils.sign({id: txRef.id, from: {id: from, balance: sender.balance}, to: {id: to, balance: receiver.balance}, time, amount})
   t.create(txRef, signedTx)
 
   // update user docs with tx and updated balances
@@ -168,16 +226,65 @@ exports.makeTx = (from, to, amount) => firestore.runTransaction(async t => {
 })
 
 /**
- * Sends funds to given user from majorna, asynchronously.
+ * Creates and inserts the next block with given txs, asynchronously.
+ * @param txs - Txs to be included in the block.
+ * @param now - Optional creation time for the block.
+ */
+exports.insertBlock = (txs, now) => firestore.runTransaction(async t => {
+  const blockInfoDoc = await t.get(blockInfoMetaDocRef)
+  const blockInfo = blockInfoDoc.data()
+
+  // create new block with the given txs and with reference to previous block header
+  const newBlock = blockUtils.create(txs, blockInfo.header, now)
+  blockUtils.sign(newBlock)
+  blockUtils.verify(newBlock, blockInfo.header)
+
+  // insert the new block
+  const newBlockRef = blocksColRef.doc(newBlock.header.no.toString())
+  t.create(newBlockRef, newBlock)
+
+  // update block info doc
+  blockInfo.header = newBlock.header
+  blockInfo.miner.targetDifficulty = config.blockchain.blockDifficultyIncrementStep
+  blockInfo.miner.reward = blockUtils.getBlockReward(blockInfo.miner.targetDifficulty)
+  blockInfo.miner.headerStrWithoutNonce = blockUtils.getHeaderStr(newBlock.header, true, blockInfo.miner.targetDifficulty)
+  t.set(blockInfoMetaDocRef, blockInfo)
+
+  return newBlock
+})
+
+/**
+ * Gives mining reward to a miner, asynchronously.
  * Returned promise resolves to completed transaction data -or- to an error if transaction fails.
  * @param to - Receiver ID.
- * @param amount - Transaction amount as integer.
+ * @param nonce - Nonce that is mined by the miner.
  */
-exports.makeMajornaTx = (to, amount) => firestore.runTransaction(async t => {
-  assert(to, 'to parameters is required')
-  assert(amount, 'amount ID parameters is required')
-  assert(Number.isInteger(amount), 'amount must be an integer')
-  assert(amount > 0, 'amount should be > 0')
+exports.giveMiningReward = (to, nonce) => firestore.runTransaction(async t => {
+  assert(to, '"to" parameter is required')
+  assert(nonce, '"nonce" parameter is required')
+
+  // verify nonce
+  const blockInfoDoc = await t.get(blockInfoMetaDocRef)
+  const blockInfo = blockInfoDoc.data()
+  const givenNonceDifficulty = blockUtils.getHashDifficultyFromStr(blockInfo.miner.headerStrWithoutNonce, nonce)
+  if (givenNonceDifficulty < blockInfo.miner.targetDifficulty) {
+    throw new utils.UserVisibleError(`Given nonce does not belong to the last block or is of insufficient difficulty.`)
+  }
+  const miningReward = blockUtils.getBlockReward(givenNonceDifficulty)
+
+  // update last block
+  const lastBlockRef = blocksColRef.doc(blockInfo.header.no.toString())
+  const lastBlockDoc = await t.get(lastBlockRef)
+  const lastBlock = lastBlockDoc.data()
+  lastBlock.header.minDifficulty = blockInfo.miner.targetDifficulty
+  lastBlock.header.nonce = nonce
+  blockUtils.sign(lastBlock)
+
+  // update block info
+  blockInfo.header = lastBlock.header
+  blockInfo.miner.targetDifficulty = givenNonceDifficulty + config.blockchain.blockDifficultyIncrementStep
+  blockInfo.miner.reward = blockUtils.getBlockReward(blockInfo.miner.targetDifficulty)
+  blockInfo.miner.headerStrWithoutNonce = blockUtils.getHeaderStr(lastBlock.header, true, blockInfo.miner.targetDifficulty)
 
   const time = new Date()
 
@@ -194,42 +301,23 @@ exports.makeMajornaTx = (to, amount) => firestore.runTransaction(async t => {
   const receiver = receiverDoc.data()
 
   // increase market cap
-  const metaDoc = await t.get(metaDocRef)
+  const metaDoc = await t.get(mjMetaDocRef)
   const meta = metaDoc.data()
-  t.update(metaDocRef, {cap: meta.cap + amount})
+  t.update(mjMetaDocRef, {cap: meta.cap + miningReward})
+
+  // block op writes (here to have reads before writes)
+  t.update(lastBlockRef, {sig: lastBlock.sig, 'header.minDifficulty': lastBlock.header.minDifficulty, 'header.nonce': lastBlock.header.nonce})
+  t.set(blockInfoMetaDocRef, blockInfo) // '.set' not to use dot notation for all nested fields
 
   // add tx to txs collection
   const txRef = txsColRef.doc()
-  const signedTx = tx.sign({id: txRef.id, from: {id: from, balance: 0}, to: {id: to, balance: receiver.balance}, time, amount})
+  const signedTx = txUtils.sign({id: txRef.id, from: {id: from, balance: 0}, to: {id: to, balance: receiver.balance}, time, amount: miningReward})
   t.create(txRef, signedTx)
 
   // update user docs with tx and updated balances
-  receiver.txs.unshift({id: txRef.id, from: from, fromName, time, amount})
+  receiver.txs.unshift({id: txRef.id, from: from, fromName, time, amount: miningReward})
   receiver.txs.length > maxTxsInUserDoc && (receiver.txs.length = maxTxsInUserDoc)
-  t.update(receiverDocRef, {balance: receiver.balance + amount, txs: receiver.txs})
+  t.update(receiverDocRef, {balance: receiver.balance + miningReward, txs: receiver.txs})
 
   return signedTx
 })
-
-/**
- * Deletes all the data and seeds the database with dummy data for testing, asynchronously.
- */
-exports.initTest = async () => {
-  const testData = require('../config/test').data
-  const batch = firestore.batch()
-
-  // delete all data
-  const txsSnap = await txsColRef.get()
-  txsSnap.forEach(txSnap => batch.delete(txSnap.ref))
-  const usersSnap = await usersColRef.get()
-  usersSnap.forEach(userSnap => batch.delete(userSnap.ref))
-  batch.delete(metaDocRef)
-
-  // add seed data
-  batch.create(metaDocRef, testData.mj.meta)
-  batch.create(usersColRef.doc('1'), testData.users.u1Doc)
-  batch.create(usersColRef.doc('2'), testData.users.u2Doc)
-  testData.txs.forEach((tx, i) => batch.create(txsColRef.doc(i.toString()), tx))
-
-  await batch.commit()
-}

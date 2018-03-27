@@ -2,6 +2,7 @@ const assert = require('assert')
 const axios = require('axios')
 const db = require('../data/db')
 const tx = require('../blockchain/tx')
+const block = require('../blockchain/block')
 const server = require('./server')
 const config = require('./config')
 const firebaseConfig = require('./firebase') // firebase admin sdk config
@@ -73,9 +74,14 @@ const time = new Date()
 const from = 'majorna'
 const fromName = 'Majorna'
 const initBalance = 500
+const signedGenesisBlock = block.sign(block.getGenesisBlock())
 const testData = exports.data = {
-  mj: {
-    meta: {val: 0.01, cap: initBalance * 3, userCount: 3}
+  meta: {
+    mj: {val: 0.01, cap: initBalance * 3, userCount: 3},
+    blockInfo: {
+      header: signedGenesisBlock.header,
+      miner: {}
+    }
   },
   // u1: User #1
   // u1Doc: Firestore doc seed data
@@ -133,6 +139,9 @@ const testData = exports.data = {
     tx.sign({id: '0', from: {id: from, balance: 0}, to: {id: '1', balance: 0}, time, amount: initBalance}),
     tx.sign({id: '1', from: {id: from, balance: 0}, to: {id: '2', balance: 0}, time, amount: initBalance}),
     tx.sign({id: '2', from: {id: from, balance: 0}, to: {id: '3', balance: 0}, time, amount: initBalance})
+  ],
+  blocks: [
+    signedGenesisBlock
   ],
   // Firebase authentication ID token (JWT) content when decoded
   decodedIdTokenSample: {
