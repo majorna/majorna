@@ -32,7 +32,6 @@ export default class extends Component {
       await mineBlock(
         blockInfo.miner.headerStrWithoutNonce,
         blockInfo.miner.targetDifficulty,
-        blockInfo.header.nonce,
         s => this.setState(s), // callback: progress update
         async nonce => { // callback: mined a block
           this.hashing = false
