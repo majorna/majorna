@@ -32,10 +32,8 @@ export default class extends Component {
       await mineBlock(
         blockInfo.miner.headerStrWithoutNonce,
         blockInfo.miner.targetDifficulty,
-        blockInfo.header.nonce,
         s => this.setState(s), // callback: progress update
         async nonce => { // callback: mined a block
-          this.hashing = false
           await server.blocks.create(nonce) // todo: ignore errors but display error msg
           this.setState((preState, props) => ({
             minedBlocks: (preState.minedBlocks + 1),

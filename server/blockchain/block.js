@@ -1,4 +1,5 @@
 const assert = require('assert')
+const config = require('../config/config')
 const crypto = require('./crypto')
 const txsUtils = require('./txs')
 const txUtils = require('./tx')
@@ -215,4 +216,4 @@ exports.mineHeaderStr = (blockHeaderStr, targetDifficulty) => {
 /**
  * Returns the mining reward for a block given the difficulty.
  */
-exports.getBlockReward = difficulty => 2 * difficulty
+exports.getBlockReward = difficulty => difficulty * config.blockchain.difficultyRewardMultiplier

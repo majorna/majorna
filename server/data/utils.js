@@ -4,8 +4,14 @@ exports.isCloseToDate = (date, closeToDate = new Date(), varianceSeconds = 30) =
   date.getTime() + varianceSeconds * 1000 > closeToDate.getTime() &&
   date.getTime() - varianceSeconds * 1000 < closeToDate.getTime()
 
+/**
+ * A random integer (not crypto safe) of given max value.
+ */
 exports.getRandomInt = max => Math.floor(Math.random() * Math.floor(max))
 
+/**
+ * A random string (not crypto safe) of length 11.
+ */
 exports.getRandomStr = () => Math.random().toString(36).replace('0.', '') // len=11
 
 exports.getWeekNumber = date => {
