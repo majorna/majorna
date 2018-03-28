@@ -9,7 +9,7 @@ const github = require('../data/github')
 exports.getBlockPath = blockHeader => `${blockHeader.time.getUTCFullYear()}/${blockHeader.no}`
 
 /**
- * Looks for the latest block then creates a new block with matching txs (if any), asynchronously.
+ * Looks for the latest block then creates a new block with matching txs, asynchronously.
  * Start time will be the very beginning of the day that the last block was created. End date will be the very beginning of {now}.
  * Also the previous block is inserted into the git repo, since it cannot be updated any more.
  * @param now - Required just in case day changes right before the call to this function (so not using new Date()).
@@ -18,6 +18,10 @@ exports.getBlockPath = blockHeader => `${blockHeader.time.getUTCFullYear()}/${bl
  */
 exports.insertBlockSinceLastOne = async (now, blockInfo, customOldBlockPath) => {
   const txs = await db.getTxsByTimeRange(blockInfo.header.time, now)
+  // don't allow empty block, except for initial block (so users can start mining right away)
+  if (!txs.length && blockInfo.header.no > 2) {
+    console.log(`no txs to create a block with`)
+  }
   const newBlock = await db.insertBlock(txs, now)
   const oldBlock = await db.getBlock(newBlock.header.no - 1)
   const oldBlockPath = customOldBlockPath || exports.getBlockPath(oldBlock.header)

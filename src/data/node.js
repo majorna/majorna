@@ -59,12 +59,11 @@ function getHashDifficulty(hash) {
  * node-forge is about 10x faster here (but needs breaks in the loop with setImmediate not to block the event loop forever)
  * alternatively we can increase the input text size to make async call overhead negligible / or just sha3 or PoS variant
  */
-export const mineBlock = async (headerStr, targetDifficulty, progressCb, minedBlockCb) => {
+export const mineBlock = async (headerStr, targetDifficulty, nonce, progressCb, minedBlockCb) => {
   const alg = 'SHA-256'
   const nonceSuffixArray = new Uint16Array(1)
   crypto.getRandomValues(nonceSuffixArray)
   const nonceSuffix = nonceSuffixArray[0].toString()
-  let nonce = 0
   const start = new Date().getTime()
   let elapsedTime = 0
   let lastNonce = 0

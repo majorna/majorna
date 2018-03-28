@@ -93,8 +93,10 @@ MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAE2yLEGhHZMiClLt4rHm6Kajo2qsRRQMUW
 
 // blockchain
 const blockchain = {
+  blockInterval: 60 * 60 * 1000, // ms
+
   blockDifficultyIncrementStep: 1,
-  blockInterval: 24 * 60 * 60 * 1000 // ms
+  difficultyRewardMultiplier: 2,
 }
 
 // module exports
