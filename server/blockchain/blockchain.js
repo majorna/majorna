@@ -21,6 +21,7 @@ exports.insertBlockSinceLastOne = async (now, blockInfo, customOldBlockPath) => 
   // don't allow empty block, except for initial block (so users can start mining right away)
   if (!txs.length && blockInfo.header.no > 2) {
     console.log(`no txs to create a block with`)
+    return
   }
   const newBlock = await db.insertBlock(txs, now)
   const oldBlock = await db.getBlock(newBlock.header.no - 1)
@@ -31,7 +32,6 @@ exports.insertBlockSinceLastOne = async (now, blockInfo, customOldBlockPath) => 
 
 /**
  * Checks if it is time then creates the required block in blockchain, asynchronously.
- * Returns true if a block was inserted. False otherwise.
  * @param now - Only used for testing. Automatically calculated otherwise.
  * @param customOldBlockPath - Only used for testing. Useful for creating same block in git repo without overwriting the same one.
  */
@@ -43,11 +43,10 @@ exports.insertBlockIfRequired = async (now, customOldBlockPath) => {
 
   if (now.getTime() > blockInfo.header.time.getTime() + config.blockchain.blockInterval) {
     await exports.insertBlockSinceLastOne(now, blockInfo, customOldBlockPath)
-    return true
+    return
   }
 
   console.log('not enough time elapsed since the last block so skipping block creation')
-  return false
 }
 
 function failSafeInsertBlockIfRequired () {

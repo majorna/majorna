@@ -41,12 +41,12 @@ suite('blockchain', () => {
   })
 
   test('insertBlockIfRequired', async () => {
-    const tomorrow = new Date() // end search in tomorrow so we can pick up test txs from the database
+    await db.makeTx('1', '2', 1)
+    const tomorrow = new Date() // end search in tomorrow so we can pick up test tx from the database (5 min latency for ongoing txs stuff...)
     tomorrow.setDate(tomorrow.getDate() + 2)
     const blockPath = new Date().getTime()
 
-    const inserted = await blockchain.insertBlockIfRequired(tomorrow, blockPath)
-    assert(inserted)
+    await blockchain.insertBlockIfRequired(tomorrow, blockPath)
 
     // git repo has previous block file
     const blockFile = await github.getFileContent(blockPath)
@@ -59,8 +59,13 @@ suite('blockchain', () => {
     block.verify(newBlock, blockObj.header)
 
     // not required
-    const inserted2 = await blockchain.insertBlockIfRequired(tomorrow, new Date().getTime())
-    assert(!inserted2)
+    const blockPath2 = new Date().getTime()
+    await blockchain.insertBlockIfRequired(tomorrow, blockPath2)
+    let err
+    try {
+      await github.getFileContent(blockPath2)
+    } catch (e) { err = e }
+    assert(err)
   })
 
   test('startBlockchainInsertTimer', () => {
