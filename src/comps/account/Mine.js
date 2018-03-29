@@ -22,6 +22,9 @@ export default class extends Component {
   }
 
   componentDidMount = async () => {
+    // wake server up
+    await server.debug.ping()
+
     // start network requests
     this.fbUnsubBlockInfoMetaDocSnapshot = this.props.db.collection('meta').doc('blockInfo').onSnapshot(async doc => {
       stopMining()
