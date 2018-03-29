@@ -96,7 +96,7 @@ export const mineBlock = async (headerStr, targetDifficulty, progressCb, minedBl
 
     if (difficulty >= targetDifficulty && interval) {
       base64String = btoa(String.fromCharCode(...hashArray))
-      console.log(`mined block with target difficulty: ${difficulty} (target: ${targetDifficulty}), time: ${elapsedTime}s, nonce: ${nonce}, nonce-suffix: ${nonceSuffix}, hash: ${base64String}`)
+      console.log(`mined block with difficulty: ${difficulty} (target: ${targetDifficulty}), time: ${elapsedTime}s, nonce: ${nonce} (suffix: ${nonceSuffix}), hash: ${base64String}`)
       stopMining(interval)
       await minedBlockCb(nonce + nonceSuffix)
       break
