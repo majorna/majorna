@@ -98,11 +98,11 @@ export default class extends Component {
         <button className="button" onClick={this.handleStop}>Stop</button>
       </div>
 
-      <div className="m-t-l">
+      <small className="m-t-l">
         <i>
           All the mined blocks are on testnet until July 2018.
           They may or may not be transferred to the mainnet, depending on security analysis.
         </i>
-      </div>
+      </small>
     </div>
 }
