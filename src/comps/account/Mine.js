@@ -101,7 +101,7 @@ export default class extends Component {
       <small className="m-t-l">
         <i>
           All the mined blocks are on testnet until July 2018.
-          They may or may not be transferred to the mainnet, depending on security analysis.
+          They may or may not be transferred (in part or fully) to the mainnet, depending on security analysis.
         </i>
       </small>
     </div>
