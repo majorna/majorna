@@ -73,7 +73,7 @@ exports.startBlockchainInsertTimer = interval => {
 
   // start timer
   interval = interval || 1000/* ms */ * 60/* s */ * 5/* min */
-  if (config.blockchain.blockInterval < interval) {
+  if (config.blockchain.blockInterval <= interval) {
     interval = Math.round(config.blockchain.blockInterval / 2)
   }
   return setInterval(() => failSafeInsertBlockIfRequired(), interval)
