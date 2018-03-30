@@ -41,6 +41,10 @@ suite('blockchain', () => {
   })
 
   test('insertBlockIfRequired', async () => {
+    const mineableBlockInfo = await db.getBlockInfo()
+    const miningRes = block.mineHeaderStr(mineableBlockInfo.miner.headerStrWithoutNonce, mineableBlockInfo.miner.targetDifficulty)
+    await db.giveMiningReward('1', miningRes.nonce)
+
     await db.makeTx('1', '2', 1)
     const tomorrow = new Date() // end search in tomorrow so we can pick up test tx from the database (5 min latency for ongoing txs stuff...)
     tomorrow.setDate(tomorrow.getDate() + 2)

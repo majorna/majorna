@@ -19,8 +19,8 @@ exports.getBlockPath = blockHeader => `${blockHeader.time.getUTCFullYear()}/${bl
 exports.insertBlockSinceLastOne = async (now, blockInfo, customOldBlockPath) => {
   const txs = await db.getTxsByTimeRange(blockInfo.header.time, now)
   // don't allow empty block, except for initial block (so users can start mining right away)
-  if (!txs.length && blockInfo.header.no > 2) {
-    console.log(`no txs to create a block with`)
+  if (!blockInfo.header.nonce && blockInfo.header.no > 2) {
+    console.log(`previous block is not mined so skipping block creation`)
     return
   }
   const newBlock = await db.insertBlock(txs, now)
