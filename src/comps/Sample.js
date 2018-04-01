@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 
 export default props =>
-  <div>
-    <span>Wow</span>
-  </div>
+  <React.Fragment>
+    <div className="mj-box">
+      <span>Wow</span>
+    </div>
+  </React.Fragment>
 
 const OneLiner = props => <div>Wow</div>
 
