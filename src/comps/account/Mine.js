@@ -22,6 +22,9 @@ export default class extends Component {
   }
 
   componentDidMount = async () => {
+    // wake server up
+    await server.debug.ping()
+
     // start network requests
     this.fbUnsubBlockInfoMetaDocSnapshot = this.props.db.collection('meta').doc('blockInfo').onSnapshot(async doc => {
       stopMining()
@@ -46,7 +49,7 @@ export default class extends Component {
   }
 
   componentWillUnmount = () => {
-    this.fbUnsubBlockInfoMetaDocSnapshot()
+    this.fbUnsubBlockInfoMetaDocSnapshot && this.fbUnsubBlockInfoMetaDocSnapshot()
     stopMining()
   }
 
@@ -79,7 +82,7 @@ export default class extends Component {
         <small className="flex-column">
           <strong className="m-t-m">Current Block</strong>
           <div><strong>No:</strong> {this.state.blockInfo.header.no}</div>
-          <div><strong>Time:</strong> {this.state.blockInfo.header.time.toLocaleString()}</div>
+          <div><strong>Time:</strong> {this.state.blockInfo.header.time && this.state.blockInfo.header.time.toLocaleString()}</div>
           <div><strong>Transaction Count:</strong> {this.state.blockInfo.header.txCount}</div>
           <div><strong>Min Difficulty:</strong> {this.state.blockInfo.header.minDifficulty}</div>
           <div><strong>Nonce:</strong> {fn(this.state.blockInfo.header.nonce)}</div>
@@ -97,5 +100,12 @@ export default class extends Component {
       <div className="flex-row center-h m-t-l">
         <button className="button" onClick={this.handleStop}>Stop</button>
       </div>
+
+      <small className="m-t-l">
+        <i>
+          All the mined blocks are on testnet until July 2018.
+          They may or may not be transferred (in part or fully) to the mainnet, depending on security analysis.
+        </i>
+      </small>
     </div>
 }

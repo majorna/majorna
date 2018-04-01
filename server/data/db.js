@@ -43,6 +43,7 @@ exports.init = async () => {
   })
   batch.create(blocksColRef.doc(signedGenesisBlock.header.no.toString()), signedGenesisBlock)
   batch.create(usersColRef.doc('majorna'), {email: 'majorna@majorna', name: 'Majorna', created: new Date(), balance: 0, txs: []})
+  // todo: initial allocation of funds 20/80/900
   await batch.commit()
 }
 

@@ -1,3 +1,5 @@
+import { getCryptoRandStr } from './utils'
+
 export const receiveTxs = () => {
   // no duplicates
   // no balance below 0
@@ -61,9 +63,7 @@ function getHashDifficulty(hash) {
  */
 export const mineBlock = async (headerStr, targetDifficulty, progressCb, minedBlockCb) => {
   const alg = 'SHA-256'
-  const nonceSuffixArray = new Uint16Array(1)
-  crypto.getRandomValues(nonceSuffixArray)
-  const nonceSuffix = nonceSuffixArray[0].toString()
+  const nonceSuffix = getCryptoRandStr()
   const start = new Date().getTime()
   let elapsedTime = 0
   let nonce = 0
@@ -83,7 +83,7 @@ export const mineBlock = async (headerStr, targetDifficulty, progressCb, minedBl
     lastNonce = nonce
   }, intervalTime)
 
-  console.log(`starting hash loop with target difficulty ${targetDifficulty}`)
+  console.log(`starting hash loop with target difficulty: ${targetDifficulty}, nonce suffix: ${nonceSuffix}`)
   while (interval) {
     nonce++
     nonceBuffer = enc.encode(nonce.toString())
@@ -96,7 +96,7 @@ export const mineBlock = async (headerStr, targetDifficulty, progressCb, minedBl
 
     if (difficulty >= targetDifficulty && interval) {
       base64String = btoa(String.fromCharCode(...hashArray))
-      console.log(`mined block with target difficulty: ${difficulty} (target: ${targetDifficulty}), time: ${elapsedTime}s, nonce: ${nonce}, hash: ${base64String}`)
+      console.log(`mined block with difficulty: ${difficulty} (target: ${targetDifficulty}), time: ${elapsedTime}s, nonce: ${nonce} (suffix: ${nonceSuffix}), hash: ${base64String}`)
       stopMining(interval)
       await minedBlockCb(nonce + nonceSuffix)
       break
