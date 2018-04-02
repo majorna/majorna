@@ -1,3 +1,0 @@
-// summary (media items)
-
-// details

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import mj from '../res/mj.png'
+import mj from '../../res/mj.png'
 
 export default () =>
   <React.Fragment>

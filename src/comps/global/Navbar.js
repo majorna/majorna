@@ -28,6 +28,7 @@ export default class extends Component {
         ) : (
           <div className="navbar-end">
             <Link className="navbar-item" to='/dashboard' onClick={this.closeNav}>Dashboard</Link>
+            <Link className="navbar-item" to='/shop' onClick={this.closeNav}>Shop</Link>
             <div className="navbar-item has-dropdown is-hoverable">
               <a className="navbar-link">{this.props.user.displayName}</a>
               <div className="navbar-dropdown is-boxed is-right">
