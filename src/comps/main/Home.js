@@ -21,7 +21,7 @@ export default () =>
 
     {/* Media items with key Majorna facts */}
     <div className="mj-box align-start">
-      <img src={mj} width="128" alt="Majorna"/>
+      <img src={mj} width="128" height="128" alt="Majorna"/>
       <div className="flex-column flex-grow-1 m-l-m">
         <div className="is-size-5">Simple Cryptocurrency</div>
         Easy to use digital currency in your browser.
