@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import logo from '../../res/majorna.png'
-import { Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 
 export default class extends Component {
   state = {navOpen: false}
@@ -27,12 +27,12 @@ export default class extends Component {
           </div>
         ) : (
           <div className="navbar-end">
-            <Link className="navbar-item" to='/dashboard' onClick={this.closeNav}>Dashboard</Link>
-            <Link className="navbar-item" to='/shop' onClick={this.closeNav}>Shop</Link>
+            <NavLink className="navbar-item" activeClassName="is-active" to='/dashboard' onClick={this.closeNav}>Dashboard</NavLink>
+            <NavLink className="navbar-item" activeClassName="is-active" to='/shop' onClick={this.closeNav}>Shop</NavLink>
             <div className="navbar-item has-dropdown is-hoverable">
               <a className="navbar-link">{this.props.user.displayName}</a>
               <div className="navbar-dropdown is-boxed is-right">
-                <Link className="navbar-item" to='/profile' onClick={this.closeNav}>Profile</Link>
+                <NavLink className="navbar-item" activeClassName="is-active" to='/profile' onClick={this.closeNav}>Profile</NavLink>
                 <Link className="navbar-item" to='/' onClick={this.logout}>Logout</Link>
               </div>
             </div>
