@@ -14,13 +14,23 @@ export default props =>
       </div>
 
       <div className="mj-box flex-column center-all">
-        <span>US Dollar</span>
-        <i className="fas fa-dollar-sign" style={{width: 120, height: 120}}/>
+        <span>Bitcoin</span>
+        <i className="fab fa-bitcoin" style={{width: 110, height: 110}}/>
       </div>
 
       <div className="mj-box flex-column center-all">
-        <span>Bitcoin</span>
-        <i className="fab fa-bitcoin" style={{width: 120, height: 120}}/>
+        <span>Ethereum</span>
+        <i className="fab fa-ethereum" style={{width: 110, height: 110}}/>
+      </div>
+
+      <div className="mj-box flex-column center-all">
+        <span>US Dollar</span>
+        <i className="fas fa-dollar-sign" style={{width: 110, height: 110}}/>
+      </div>
+
+      <div className="mj-box flex-column center-all">
+        <span>Euro</span>
+        <i className="fas fa-euro-sign" style={{width: 110, height: 110}}/>
       </div>
 
       <div className="mj-box flex-column center-all">
