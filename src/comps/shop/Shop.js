@@ -12,6 +12,7 @@ export default props =>
       <div className="mj-box flex-column center-all">
         <span>Majorna</span>
         <Link to="/shop/majorna"><img src={mj} width="150" height="150" alt="Majorna"/></Link>
+        <Link className="button is-small is-info" to="/shop/majorna">Details</Link>
       </div>
 
       <div className="mj-box flex-column center-all">
