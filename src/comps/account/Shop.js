@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import mj from '../../res/mj.png'
 
 export default props =>
@@ -10,7 +11,7 @@ export default props =>
     <div className="mj-box shop-grid">
       <div className="mj-box flex-column center-all">
         <span>Majorna</span>
-        <img src={mj} width="150" height="150" alt="Majorna"/>
+        <Link to="/shop/majorna"><img src={mj} width="150" height="150" alt="Majorna"/></Link>
       </div>
 
       <div className="mj-box flex-column center-all">
@@ -43,8 +44,3 @@ export default props =>
       Footer text about what shop is..
     </div>
   </React.Fragment>
-
-// const details = props =>
-//   <div className="mj-box flex-column center-all">
-//     <div className="is-size-5 has-text-centered">Purchase - {props.product.name}</div>
-//   </div>

@@ -14,6 +14,7 @@ import Home from './comps/main/Home'
 import Login from './comps/main/Login'
 import Profile from './comps/account/Profile'
 import Shop from './comps/account/Shop'
+import ShopItem from './comps/account/ShopItem'
 import Dashboard from './comps/account/Dashboard'
 import Footer from './comps/global/Footer'
 import Send from './comps/account/Send'
@@ -124,6 +125,7 @@ export default withRouter(class App extends Component {
           <Route exact path='/' component={Home} />
           <Route path='/login' render={routeProps => <Login {...routeProps} uiConfig={this.firebaseUIConfig} firebaseAuth={this.firebaseAuth}/>} />
           <Route path='/profile' render={routeProps => <Profile {...routeProps} user={this.state.user}/>} />
+          <Route path='/shop/:id' component={ShopItem} />
           <Route path='/shop' component={Shop} />
           <Route path='/dashboard' render={routeProps => <Dashboard {...routeProps} user={this.state.user} acctQr={this.state.acctQr} userDoc={this.state.userDoc} mjMetaDoc={this.state.mjMetaDoc}/>} />
           <Route path='/send' render={routeProps => <Send {...routeProps} userDoc={this.state.userDoc}/>} />
