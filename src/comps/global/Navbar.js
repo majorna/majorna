@@ -23,7 +23,8 @@ export default class extends Component {
       <div className={"navbar-menu" + (this.state.navOpen ? ' is-active' : '')}>
         {!this.props.user ? (
           <div className="navbar-end">
-            <Link className="navbar-item" to='/login' onClick={this.closeNav}>Log In | Sign Up</Link>
+            <NavLink className="navbar-item" activeClassName="is-active" to='/login' onClick={this.closeNav}>Log In | Sign Up</NavLink>
+            {/*<NavLink className="navbar-item" activeClassName="is-active" to='/about' onClick={this.closeNav}>About</NavLink>*/}
           </div>
         ) : (
           <div className="navbar-end">

@@ -8,6 +8,8 @@ export default props => {
   return (
     <div className="mj-box flex-column center-all">
       <div className="is-size-5 has-text-centered" style={{textTransform: 'capitalize'}}>Purchase - {item.id}</div>
+
+      <button className="button m-t-l" onClick={props.history.goBack}>Back</button>
     </div>
   )
 }
