@@ -11,6 +11,7 @@ import fasTh from '@fortawesome/fontawesome-free-solid/faTh'
 import fasCheck from '@fortawesome/fontawesome-free-solid/faCheck'
 import fasDollarSign from '@fortawesome/fontawesome-free-solid/faDollarSign'
 import fasEuroSign from '@fortawesome/fontawesome-free-solid/faEuroSign'
+import fasShoppingCart from '@fortawesome/fontawesome-free-solid/faShoppingCart'
 
 import fabGithub from '@fortawesome/fontawesome-free-brands/faGithub'
 import fabReddit from '@fortawesome/fontawesome-free-brands/faReddit'
@@ -28,6 +29,7 @@ fontawesome.library.add(fasTh)
 fontawesome.library.add(fasCheck)
 fontawesome.library.add(fasDollarSign)
 fontawesome.library.add(fasEuroSign)
+fontawesome.library.add(fasShoppingCart)
 
 fontawesome.library.add(fabGithub)
 fontawesome.library.add(fabReddit)
