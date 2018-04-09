@@ -4,8 +4,9 @@ import mj from '../../res/mj.png'
 
 export default props =>
   <React.Fragment>
-    <div className="mj-box flex-column">
-      <div className="is-size-5 has-text-centered">Shop</div>
+    <div className="mj-box flex-column center-all">
+      <div className="is-size-5">Shop</div>
+      <div className="m-t-s">Currently all items in the shop are only for preview. You can vote for future products to be made available at the bottom of this page.</div>
     </div>
 
     <div className="mj-box shop-grid">
