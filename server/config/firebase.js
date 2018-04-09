@@ -1,6 +1,8 @@
 /**
  * Firebase:
  * - API ref: https://firebase.google.com/docs/reference/admin/node/
+ * - Changelog (firebase client - not firebase admin!): https://firebase.google.com/support/release-notes/js
+ * - Changelog (firebase UI): https://github.com/firebase/firebaseui-web-react/releases
  *
  * Firestore:
  * - API ref: https://cloud.google.com/nodejs/docs/reference/firestore/latest/
