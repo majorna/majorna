@@ -2,7 +2,27 @@ import React from 'react'
 
 export default props => {
   const item = {
-    id: props.match.params.id
+    id: props.match.params.id,
+    unavailable: true,
+    name: '',
+    description: ''
+  }
+
+  switch (item.id) {
+    case 'majorna':
+      item.name = 'Majorna'
+      item.description = 'Buy mj using US Dollar, Euro, Bitcoin, or Ethereum.'
+      break;
+    case 'bitcoin':
+      break;
+    case 'ethereum':
+      break;
+    case 'usdollar':
+      break;
+    case 'euro':
+      break;
+    case 'crowner':
+      break;
   }
 
   return (

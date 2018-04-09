@@ -27,7 +27,7 @@ export default props =>
         <button className="button is-small is-info is-outlined m-t-s">Details</button>
       </Link>
 
-      <Link className="mj-box flex-column center-all" to="/shop/usd">
+      <Link className="mj-box flex-column center-all" to="/shop/usdollar">
         <span>US Dollar</span>
         <i className="fas fa-dollar-sign m-t-s" style={{width: 110, height: 110}}/>
         <button className="button is-small is-info is-outlined m-t-s">Details</button>
