@@ -1,4 +1,6 @@
 // majorna
+// - link to roadmap
+// - link to tech
 // - intro (what it is & goals)
 // - link to tech page for details)
 
