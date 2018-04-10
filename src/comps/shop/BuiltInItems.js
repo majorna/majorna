@@ -37,6 +37,13 @@ export default [
     fontIcon: 'fas fa-euro-sign'
   },
   {
+    id: 'reddit',
+    name: 'Send to Reddit',
+    unavailable: true,
+    description: 'Send Majorna to a Reddit comment or post author.',
+    fontIcon: 'fab fa-reddit'
+  },
+  {
     id: 'crowner',
     name: 'Crowner',
     unavailable: true,
