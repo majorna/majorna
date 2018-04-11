@@ -38,6 +38,7 @@ exports.insertBlockSinceLastOne = async (now, blockInfo, customOldBlockPath) => 
 exports.insertBlockIfRequired = async (now, customOldBlockPath) => {
   // check if it is time to create a block
   now = now || new Date()
+  // todo: this 5 min stuff creates confusion in the UI, where current block seems 5 mins in the past even if it's freshly created
   now.setMinutes(now.getMinutes() - 5 /* some latency to let ongoing tx insert operations to complete */)
   const blockInfo = await db.getBlockInfo()
 
