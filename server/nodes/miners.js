@@ -1,5 +1,8 @@
 exports.miners = []
 
+/**
+ * Adds a miner to the miner map. If the miner exists on the map, the coordinates are updated.
+ */
 exports.addMiner = (id, lat, lon) => {
   const miner = exports.miners.find(m => m.id === id)
   if (miner) {
@@ -9,5 +12,5 @@ exports.addMiner = (id, lat, lon) => {
     exports.miners.push({id, lat, lon, seen: new Date()})
   }
 
-  // purge offline miners
+  // todo: purge offline miners
 }

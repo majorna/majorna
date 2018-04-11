@@ -23,11 +23,11 @@ export default class extends Component {
 
   componentDidMount = async () => {
     // get rough location so we can populate miner map
-    const locationRes = await server.miner.getLocation()
+    const locationRes = await server.miners.getLocation()
     const location = locationRes.status === 200 && await locationRes.json()
 
     // set miner location for miner map (also wakes server up)
-    await server.miner.setLocation(location.latitude, location.longitude)
+    await server.miners.post(location.latitude, location.longitude)
 
     // start network requests
     this.fbUnsubBlockInfoMetaDocSnapshot = this.props.db.collection('meta').doc('blockInfo').onSnapshot(async doc => {
