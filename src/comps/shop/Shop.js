@@ -20,4 +20,8 @@ export default props =>
         </Link>
       )}
     </div>
+
+    <div className="mj-box flex-column center-all">
+      <button className="button is-info" disabled><i className="fas fa-sign-in-alt m-r-s"/>Merchant Login</button>
+    </div>
   </React.Fragment>
