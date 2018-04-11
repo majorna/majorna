@@ -96,7 +96,7 @@ const blockchain = {
   blockInterval: 5 * 60 * 1000, // ms
 
   blockDifficultyIncrementStep: 1,
-  difficultyRewardMultiplier: 10
+  difficultyRewardMultiplier: 5
 }
 
 // module exports

@@ -1,3 +1,19 @@
+/*body {
+    font-family: system-ui;
+}*/
+
+/* layout */
+#root {
+    /* center and limit content width */
+    max-width: 1216px; /* limit: widescreen */
+    margin-right: auto;
+    margin-left: auto; /* equal left-right margin after max-width is exceeded */
+
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* so pages with insufficient width will not collapse into a narrow column */
+}
+
 /* flex-box (direction: row) with a border, margin, and padding */
 .mj-box {
     /* https://www.paulirish.com/2012/box-sizing-border-box-ftw/
@@ -101,6 +117,11 @@
     color: grey;
 }
 
+/* animations */
+@keyframes rotate360 {
+    to {transform: rotate(360deg);}
+}
+
 /* spinner */
 .spinner::before {
     content: '';
@@ -113,23 +134,15 @@
     border-radius: 50%;
 }
 
-/* animations */
-@keyframes rotate360 {
-    to {transform: rotate(360deg);}
+/* ######### components ######### */
+
+/* shop */
+.shop-grid {
+    display: grid;
+    /*grid-gap: 1rem;*/
+    grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
 }
 
-/* layout */
-#root {
-    /* center and limit content width */
-    max-width: 1216px; /* limit: widescreen */
-    margin-right: auto;
-    margin-left: auto; /* equal left-right margin after max-width is exceeded */
-
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1; /* so pages with insufficient width will not collapse into a narrow column */
+.shop-grid a {
+    color: #4a4a4a;
 }
-
-/*body {*/
-    /*font-family: system-ui;*/
-/*}*/
