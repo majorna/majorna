@@ -10,3 +10,5 @@ export default props =>
 // summary (media items)
 
 // details (paragraphs)
+// - signed vs mined blocks
+// - [signed] = delegated trust as a security measure during ~1st year

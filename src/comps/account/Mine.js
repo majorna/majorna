@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { fm, fn } from '../../data/utils'
 import server from '../../data/server'
 import { mineBlock, stopMining } from '../../data/node'
+import { ResponsiveContainer, Scatter, ScatterChart, XAxis, YAxis } from 'recharts'
+import worldMap from '../../res/world_map.svg'
 
 export default class extends Component {
   state = {
@@ -18,12 +20,22 @@ export default class extends Component {
     hashRate: 0,
 
     // ui state
-    showDetails: false
+    showDetails: false,
+    miners: []
   }
 
   componentDidMount = async () => {
-    // wake server up
-    await server.debug.ping()
+    // 3rd party service can fail here so waking server is enough even if request fails
+    try {
+      // get rough location so we can populate miner map
+      const locationRes = await server.miners.getLocation()
+      const location = locationRes.status === 200 && await locationRes.json()
+
+      // set miner location for miner map (also wakes server up)
+      const minersRes = await server.miners.post(location.latitude, location.longitude)
+      const minersData = await await minersRes.json()
+      this.setState({miners: minersData.miners})
+    } catch (e) { console.error(e) }
 
     // start network requests
     this.fbUnsubBlockInfoMetaDocSnapshot = this.props.db.collection('meta').doc('blockInfo').onSnapshot(async doc => {
@@ -60,8 +72,8 @@ export default class extends Component {
   render = () =>
     <div className="mj-box flex-column">
       <div className="is-size-5 has-text-centered">Mining mj</div>
-      <div className="flex-row center-all spinner m-t-l"/>
 
+      <div className="flex-row center-all spinner m-t-l"/>
       <div><strong>Time:</strong> {this.state.time}s</div>
       <div><strong>Rate:</strong> {fn(this.state.hashRate)} Hash/s</div>
       <div><strong>Nonce:</strong> {fn(this.state.nonce)}</div>
@@ -71,6 +83,17 @@ export default class extends Component {
 
       <div className="m-t-m"><strong>Mined Blocks:</strong> {this.state.minedBlocks}</div>
       <div><strong>Collected Rewards:</strong> mj{fm(this.state.blockInfo.miner.reward * this.state.minedBlocks)}</div>
+
+      <div className="m-t-m" style={{maxWidth: '30rem'}}>
+        <strong>Miner Map:</strong>
+        <ResponsiveContainer width="100%" aspect={2}>
+          <ScatterChart style={{backgroundImage: `url(${worldMap})`, backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%', backgroundPosition: 'center'}}>
+            <XAxis dataKey={'lon'} type="number" domain={[-180, 180]} hide/>
+            <YAxis dataKey={'lat'} type="number" domain={[-90, 90]} hide/>
+            <Scatter data={this.state.miners} fill='darkorange'/>
+          </ScatterChart>
+        </ResponsiveContainer>
+      </div>
 
       <div className="m-t-m">
         <button className="button is-small" onClick={this.handleShowDetails}>

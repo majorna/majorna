@@ -21,6 +21,14 @@ export default {
   },
   blocks: {
     create: nonce => postJson('/blocks', {nonce})
+  },
+  miners: {
+    getLocation: async () => {
+      try {
+        return await fetch('https://geoip-db.com/json/')
+      } catch (e) { console.error(e) }
+    },
+    post: (lat, lon) => postJson('/miners', {lat, lon})
   }
 }
 
