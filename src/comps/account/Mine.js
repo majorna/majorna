@@ -86,7 +86,7 @@ export default class extends Component {
 
       <div className="m-t-m">
         <strong>Miner Map:</strong>
-        <ResponsiveContainer width="100%" height={200}>
+        <ResponsiveContainer width="100%" aspect={2}>
           <ScatterChart style={{backgroundImage: `url(${worldMap})`, backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%', backgroundPosition: 'center'}}>
             <XAxis dataKey={'lon'} type="number" domain={[-180, 180]} hide/>
             <YAxis dataKey={'lat'} type="number" domain={[-90, 90]} hide/>
