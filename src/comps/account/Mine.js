@@ -3,6 +3,7 @@ import { fm, fn } from '../../data/utils'
 import server from '../../data/server'
 import { mineBlock, stopMining } from '../../data/node'
 import { CartesianGrid, ResponsiveContainer, Scatter, ScatterChart, Tooltip, XAxis, YAxis } from 'recharts'
+import worldMap from '../../res/world_map.svg'
 
 export default class extends Component {
   state = {
@@ -85,13 +86,11 @@ export default class extends Component {
 
       <div className="m-t-m">
         <strong>Miner Map:</strong>
-        <ResponsiveContainer width="100%" height={300}>
-          <ScatterChart>
-            <CartesianGrid />
-            <XAxis dataKey={'x'} type="number" name='stature' unit='cm'/>
-            <YAxis dataKey={'y'} type="number" name='weight' unit='kg'/>
-            <Scatter name='A school' data={this.miners} fill='#8884d8'/>
-            <Tooltip cursor={{strokeDasharray: '3 3'}}/>
+        <ResponsiveContainer width="100%" height={200}>
+          <ScatterChart style={{backgroundImage: `url(${worldMap})`, backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%', backgroundPosition: 'center'}}>
+            <XAxis dataKey={'lon'} type="number" domain={[-180, 180]}/>
+            <YAxis dataKey={'lat'} type="number" domain={[-90, 90]}/>
+            <Scatter data={this.state.miners} fill='darkorange'/>
           </ScatterChart>
         </ResponsiveContainer>
       </div>
