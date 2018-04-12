@@ -84,7 +84,7 @@ export default class extends Component {
       <div className="m-t-m"><strong>Mined Blocks:</strong> {this.state.minedBlocks}</div>
       <div><strong>Collected Rewards:</strong> mj{fm(this.state.blockInfo.miner.reward * this.state.minedBlocks)}</div>
 
-      <div className="m-t-m">
+      <div className="m-t-m" style={{maxWidth: '30rem'}}>
         <strong>Miner Map:</strong>
         <ResponsiveContainer width="100%" aspect={2}>
           <ScatterChart style={{backgroundImage: `url(${worldMap})`, backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%', backgroundPosition: 'center'}}>
