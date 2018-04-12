@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { fm, fn } from '../../data/utils'
 import server from '../../data/server'
 import { mineBlock, stopMining } from '../../data/node'
-import { CartesianGrid, ResponsiveContainer, Scatter, ScatterChart, Tooltip, XAxis, YAxis } from 'recharts'
+import { ResponsiveContainer, Scatter, ScatterChart, XAxis, YAxis } from 'recharts'
 import worldMap from '../../res/world_map.svg'
 
 export default class extends Component {
@@ -88,8 +88,8 @@ export default class extends Component {
         <strong>Miner Map:</strong>
         <ResponsiveContainer width="100%" height={200}>
           <ScatterChart style={{backgroundImage: `url(${worldMap})`, backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%', backgroundPosition: 'center'}}>
-            <XAxis dataKey={'lon'} type="number" domain={[-180, 180]}/>
-            <YAxis dataKey={'lat'} type="number" domain={[-90, 90]}/>
+            <XAxis dataKey={'lon'} type="number" domain={[-180, 180]} hide/>
+            <YAxis dataKey={'lat'} type="number" domain={[-90, 90]} hide/>
             <Scatter data={this.state.miners} fill='darkorange'/>
           </ScatterChart>
         </ResponsiveContainer>
