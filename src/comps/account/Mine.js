@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { fm, fn } from '../../data/utils'
 import server from '../../data/server'
 import { mineBlock, stopMining } from '../../data/node'
+import { CartesianGrid, ResponsiveContainer, Scatter, ScatterChart, Tooltip, XAxis, YAxis } from 'recharts'
 
 export default class extends Component {
   state = {
@@ -18,12 +19,12 @@ export default class extends Component {
     hashRate: 0,
 
     // ui state
-    showDetails: false
+    showDetails: false,
+    miners: []
   }
 
   componentDidMount = async () => {
     // 3rd party service can fail here so waking server is enough even if request fails
-    let miners = []
     try {
       // get rough location so we can populate miner map
       const locationRes = await server.miners.getLocation()
@@ -32,7 +33,7 @@ export default class extends Component {
       // set miner location for miner map (also wakes server up)
       const minersRes = await server.miners.post(location.latitude, location.longitude)
       const minersData = await await minersRes.json()
-      miners = minersData.miners
+      this.setState({miners: minersData.miners})
     } catch (e) { console.error(e) }
 
     // start network requests
@@ -70,8 +71,8 @@ export default class extends Component {
   render = () =>
     <div className="mj-box flex-column">
       <div className="is-size-5 has-text-centered">Mining mj</div>
-      <div className="flex-row center-all spinner m-t-l"/>
 
+      <div className="flex-row center-all spinner m-t-l"/>
       <div><strong>Time:</strong> {this.state.time}s</div>
       <div><strong>Rate:</strong> {fn(this.state.hashRate)} Hash/s</div>
       <div><strong>Nonce:</strong> {fn(this.state.nonce)}</div>
@@ -81,6 +82,19 @@ export default class extends Component {
 
       <div className="m-t-m"><strong>Mined Blocks:</strong> {this.state.minedBlocks}</div>
       <div><strong>Collected Rewards:</strong> mj{fm(this.state.blockInfo.miner.reward * this.state.minedBlocks)}</div>
+
+      <div className="m-t-m">
+        <strong>Miner Map:</strong>
+        <ResponsiveContainer width="100%" height={300}>
+          <ScatterChart>
+            <CartesianGrid />
+            <XAxis dataKey={'x'} type="number" name='stature' unit='cm'/>
+            <YAxis dataKey={'y'} type="number" name='weight' unit='kg'/>
+            <Scatter name='A school' data={this.miners} fill='#8884d8'/>
+            <Tooltip cursor={{strokeDasharray: '3 3'}}/>
+          </ScatterChart>
+        </ResponsiveContainer>
+      </div>
 
       <div className="m-t-m">
         <button className="button is-small" onClick={this.handleShowDetails}>
