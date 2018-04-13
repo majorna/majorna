@@ -97,7 +97,8 @@ export default class extends Component {
 
       <div className="m-t-m">
         <button className="button is-small" onClick={this.handleShowDetails}>
-          {this.state.showDetails ? <i className="far fa-minus-square m-r-s"/> : <i className="far fa-plus-square m-r-s"/>}
+          <span style={{display: (this.state.showDetails ? 'none' : 'initial')}}><i className="far fa-plus-square m-r-s"/></span>
+          <span style={{display: (this.state.showDetails ? 'initial' : 'none')}}><i className="far fa-minus-square m-r-s"/></span>
           Details
         </button>
       </div>
