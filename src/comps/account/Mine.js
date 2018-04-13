@@ -102,6 +102,7 @@ export default class extends Component {
           <span style={{display: (this.state.showDetails ? 'initial' : 'none')}}><i className="far fa-minus-square m-r-s"/></span>
           Details
         </button>
+        {/* todo: anchor link might not work without this: https://github.com/rafrex/react-router-hash-link */}
         <Link to='/about/tech#mining' className="button is-small m-l-s"><i className="far fa-question-circle m-r-s"/>What is mining?</Link>
       </div>
       {this.state.showDetails &&

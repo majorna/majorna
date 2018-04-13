@@ -18,3 +18,6 @@ export default props =>
 // details (paragraphs)
 // - signed vs mined blocks
 // - [signed] = delegated trust as a security measure during ~1st year
+
+// mining
+// - after securing network aspect + the reward for it, describe webrtc P2P, browser permanent store for blocks, trimming, etc.
