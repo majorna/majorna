@@ -80,6 +80,7 @@ if (app.isProd) {
     crypto.publicKey = fs.readFileSync(crypto.publicKeyPath)
   }
 } else {
+  // only for testing and dev
   crypto.privateKey = `-----BEGIN EC PRIVATE KEY-----
 MHQCAQEEIHZ9HWFXtortTsbEOOjPZ6hIMDTiFVWX552YWW5aZHlgoAcGBSuBBAAK
 oUQDQgAE2yLEGhHZMiClLt4rHm6Kajo2qsRRQMUW3PqHOBnECvFkwXZstFNGyZD4
@@ -95,6 +96,7 @@ MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAE2yLEGhHZMiClLt4rHm6Kajo2qsRRQMUW
 const blockchain = {
   blockInterval: 5 * 60 * 1000, // ms
 
+  initialMinBlockDifficulty: app.isProd ? 10 : 1,
   blockDifficultyIncrementStep: 1,
   difficultyRewardMultiplier: 5
 }

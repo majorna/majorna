@@ -246,7 +246,7 @@ exports.insertBlock = (txs, now) => firestore.runTransaction(async t => {
 
   // update block info doc
   blockInfo.header = newBlock.header
-  blockInfo.miner.targetDifficulty = config.blockchain.blockDifficultyIncrementStep
+  blockInfo.miner.targetDifficulty = config.blockchain.initialMinBlockDifficulty
   blockInfo.miner.reward = blockUtils.getBlockReward(blockInfo.miner.targetDifficulty)
   blockInfo.miner.headerStrWithoutNonce = blockUtils.getHeaderStr(newBlock.header, true, blockInfo.miner.targetDifficulty)
   t.set(blockInfoMetaDocRef, blockInfo)
