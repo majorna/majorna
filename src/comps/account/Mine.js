@@ -4,6 +4,7 @@ import server from '../../data/server'
 import { mineBlock, stopMining } from '../../data/node'
 import { ResponsiveContainer, Scatter, ScatterChart, XAxis, YAxis } from 'recharts'
 import worldMap from '../../res/world_map.svg'
+import { Link } from 'react-router-dom'
 
 export default class extends Component {
   state = {
@@ -101,6 +102,7 @@ export default class extends Component {
           <span style={{display: (this.state.showDetails ? 'initial' : 'none')}}><i className="far fa-minus-square m-r-s"/></span>
           Details
         </button>
+        <Link to='/about/tech#mining' className="button is-small m-l-s"><i className="far fa-question-circle m-r-s"/>What is mining?</Link>
       </div>
       {this.state.showDetails &&
         <small className="flex-column">
