@@ -1,3 +1,15 @@
+import React from 'react'
+
+export default props =>
+  <React.Fragment>
+    <div className="mj-box flex-column">
+      <div className="is-size-5 has-text-centered">About Majorna</div>
+
+      <div className="m-t-m">Lorem ipsum</div>
+    </div>
+  </React.Fragment>
+
+
 // # majorna
 // - link to roadmap
 // - link to tech

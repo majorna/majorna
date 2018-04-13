@@ -20,6 +20,9 @@ import Footer from './comps/global/Footer'
 import Send from './comps/account/Send'
 import Receive from './comps/account/Receive'
 import Mine from './comps/account/Mine'
+import About from './comps/about/About'
+import Tech from './comps/about/Tech'
+import Roadmap from './comps/about/Roadmap'
 
 export default withRouter(class App extends Component {
   constructor(props) {
@@ -115,6 +118,9 @@ export default withRouter(class App extends Component {
 
       <Switch>
         <Route exact path='/' component={Home} />
+        <Route path='/about/roadmap' component={Roadmap} />
+        <Route path='/about/tech' component={Tech} />
+        <Route path='/about' component={About} />
         <Route path='/login' render={routeProps => <Login {...routeProps} uiConfig={this.firebaseUIConfig} firebaseAuth={this.firebaseAuth}/>} />
         <Route path='/profile' render={routeProps => <Profile {...routeProps} user={this.state.user}/>} />
         <Route path='/shop/:id' component={ShopItem} />
