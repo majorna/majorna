@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import mj from '../../res/mj.png'
 
-export default () =>
+export default props =>
   <React.Fragment>
     {/* Intro text with "Get Started" button */}
     <div className="hero is-medium is-light">
@@ -18,7 +18,7 @@ export default () =>
     </div>
 
     {/* Majorna stats from firestore/mj/meta document */}
-    {/*<div className="mj-box">Majorna Stats</div>*/}
+    <div className="mj-box">Majorna Stats</div>
 
     {/* Media items with key Majorna facts */}
     <div className="mj-box align-start">
