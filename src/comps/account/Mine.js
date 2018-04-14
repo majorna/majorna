@@ -80,10 +80,10 @@ export default class extends Component {
       <div><strong>Nonce:</strong> {fn(this.state.nonce)}</div>
 
       <div className="m-t-m"><strong>Target Difficulty:</strong> {this.state.blockInfo.miner.targetDifficulty}</div>
-      <div><strong>Reward for Block:</strong> mj{fm(this.state.blockInfo.miner.reward)}</div>
+      <div><strong>Reward for Block:</strong> mj{fm(this.state.blockInfo.miner.reward || 0)}</div>
 
       <div className="m-t-m"><strong>Mined Blocks:</strong> {this.state.minedBlocks}</div>
-      <div><strong>Collected Rewards:</strong> mj{fm(this.state.blockInfo.miner.reward * this.state.minedBlocks)}</div>
+      <div><strong>Collected Rewards:</strong> mj{fm(this.state.blockInfo.miner.reward * this.state.minedBlocks || 0)}</div>
 
       <div className="m-t-m" style={{maxWidth: '30rem'}}>
         <strong>Miner Map:</strong>
@@ -112,7 +112,7 @@ export default class extends Component {
           <div><strong>Time:</strong> {this.state.blockInfo.header.time && this.state.blockInfo.header.time.toLocaleString()}</div>
           <div><strong>Transaction Count:</strong> {this.state.blockInfo.header.txCount}</div>
           <div><strong>Min Difficulty:</strong> {this.state.blockInfo.header.minDifficulty}</div>
-          <div><strong>Nonce:</strong> {fn(this.state.blockInfo.header.nonce)}</div>
+          <div><strong>Nonce:</strong> {fn(this.state.blockInfo.header.nonce || 0)}</div>
           <div><strong>Previous Block Hash:</strong> <small>{this.state.blockInfo.header.prevHash}</small></div>
           <div><strong>Merkle Root:</strong> <small>{this.state.blockInfo.header.merkleRoot}</small></div>
 
