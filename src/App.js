@@ -77,18 +77,18 @@ export default withRouter(class App extends Component {
         this.props.history.push('/dashboard')
         this.setState({user: u})
         this.fbUnsubUserSelfDocSnapshot = this.db.collection('users').doc(u.uid).onSnapshot(async doc => {
-            if (doc.exists) {
-              const userData = doc.data()
-              !doc.metadata.hasPendingWrites && this.setState({userDoc: userData})
-              this.setState({acctQr: await QRCode.toDataURL(
-                [{data: `majorna:${userData.uid}`, mode: 'byte'}],
-                {errorCorrectionLevel: 'H', margin: 1, scale: 8})})
-            } else {
-              // id token might still be null at this point
-              if (!config.server.token) config.server.token = await u.getIdToken()
-              await server.users.init()
-            }
-          })
+          if (doc.exists) {
+            const userData = doc.data()
+            !doc.metadata.hasPendingWrites && this.setState({userDoc: userData})
+            this.setState({acctQr: await QRCode.toDataURL(
+              [{data: `majorna:${userData.uid}`, mode: 'byte'}],
+              {errorCorrectionLevel: 'H', margin: 1, scale: 8})})
+          } else {
+            // id token might still be null at this point
+            if (!config.server.token) config.server.token = await u.getIdToken()
+            await server.users.init()
+          }
+        })
         this.fbUnsubMjMetaDocSnapshot = this.db.collection('meta').doc('mj').onSnapshot(doc => this.setState({mjMetaDoc: doc.data()}))
         config.server.token = await u.getIdToken()
       } else {
