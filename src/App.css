@@ -1,6 +1,7 @@
-/*body {
-    font-family: system-ui;
-}*/
+body {
+    /* https://css-tricks.com/snippets/css/system-font-stack/ & https://caniuse.com/#feat=font-family-system-ui */
+    /*font-family: system-ui;*/
+}
 
 /* layout */
 #root {
