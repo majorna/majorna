@@ -18,7 +18,7 @@ export default props =>
     </div>
 
     {/* Majorna stats from firestore/mj/meta document */}
-    <div className="mj-box">Majorna Stats</div>
+    {props.stats && <div className="mj-box">Majorna Stats</div>}
 
     {/* Media items with key Majorna facts */}
     <div className="mj-box align-start">
