@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { fm } from '../../data/utils'
 import mj from '../../res/mj.png'
 
 export default props =>
@@ -18,7 +19,30 @@ export default props =>
     </div>
 
     {/* Majorna stats from firestore/mj/meta document */}
-    {props.stats && <div className="mj-box">Majorna Stats</div>}
+    {!props.mjMetaDoc.val ? <div className="mj-box center-all spinner"/> :
+      <div className="mj-box">
+        <div className="flex-column center-all">
+          <div className="is-size-5">${props.mjMetaDoc.val}</div>
+          Current Price
+        </div>
+        <div className="flex-column center-all">
+          <div className="is-size-5">${fm(props.mjMetaDoc.marketCap * props.mjMetaDoc.val)}</div>
+          Market Cap.
+        </div>
+        <div className="flex-column center-all">
+          <div className="is-size-5">{fm(props.mjMetaDoc.marketCap)} mj</div>
+          Current Supply
+        </div>
+        <div className="flex-column center-all">
+          <div className="is-size-5">{fm(props.mjMetaDoc.monthly)} mj</div>
+          Tx Volume (monthly)
+        </div>
+        <div className="flex-column center-all">
+          <div className="is-size-5">{props.mjMetaDoc.userCount}</div>
+          Users
+        </div>
+      </div>
+    }
 
     {/* Media items with key Majorna facts */}
     <div className="mj-box align-start">

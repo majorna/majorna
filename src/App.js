@@ -73,6 +73,8 @@ export default withRouter(class App extends Component {
 
     // initialize firebase sockets
     this.db = this.firebaseApp.firestore()
+    this.fbUnsubMjMetaDocSnapshot = this.db.collection('meta').doc('mj').onSnapshot(doc => this.setState({mjMetaDoc: doc.data()}))
+
     this.firebaseAuth = this.firebaseApp.auth()
     this.firebaseAuth.onAuthStateChanged(async u => {
       if (u) {
@@ -91,7 +93,6 @@ export default withRouter(class App extends Component {
             await server.users.init()
           }
         })
-        this.fbUnsubMjMetaDocSnapshot = this.db.collection('meta').doc('mj').onSnapshot(doc => this.setState({mjMetaDoc: doc.data()}))
         config.server.token = await u.getIdToken()
       } else {
         this.setState(this.nullState) // logged out or token expired and was not renewed
@@ -119,7 +120,7 @@ export default withRouter(class App extends Component {
       <Navbar logout={this.logout} user={this.state.user}/>
 
       <Switch>
-        <Route exact path='/' component={Home} />
+        <Route exact path='/' render={routeProps => <Home {...routeProps} mjMetaDoc={this.state.mjMetaDoc}/>} />
         <Route path='/about/roadmap' component={Roadmap} />
         <Route path='/about/tech' component={Tech} />
         <Route path='/about' component={About} />
