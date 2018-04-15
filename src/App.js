@@ -23,6 +23,7 @@ import Mine from './comps/account/Mine'
 import About from './comps/about/About'
 import Tech from './comps/about/Tech'
 import Roadmap from './comps/about/Roadmap'
+import PrivateRoute from './comps/shared/PrivateRoute'
 
 export default withRouter(class App extends Component {
   constructor(props) {
@@ -122,13 +123,13 @@ export default withRouter(class App extends Component {
         <Route path='/about/tech' component={Tech} />
         <Route path='/about' component={About} />
         <Route path='/login' render={routeProps => <Login {...routeProps} uiConfig={this.firebaseUIConfig} firebaseAuth={this.firebaseAuth}/>} />
-        <Route path='/profile' render={routeProps => <Profile {...routeProps} user={this.state.user}/>} />
-        <Route path='/shop/:id' component={ShopItem} />
-        <Route path='/shop' component={Shop} />
         <Route path='/dashboard' render={routeProps => <Dashboard {...routeProps} user={this.state.user} acctQr={this.state.acctQr} userDoc={this.state.userDoc} mjMetaDoc={this.state.mjMetaDoc}/>} />
-        <Route path='/send' render={routeProps => <Send {...routeProps} userDoc={this.state.userDoc}/>} />
-        <Route path='/receive' render={routeProps => <Receive {...routeProps} user={this.state.user} acctQr={this.state.acctQr}/>} />
-        <Route path='/mine' render={routeProps => <Mine {...routeProps} db={this.db}/>} />
+        <PrivateRoute path='/profile' render={routeProps => <Profile {...routeProps} user={this.state.user}/>} />
+        <PrivateRoute path='/shop/:id' component={ShopItem} />
+        <PrivateRoute path='/shop' component={Shop} />
+        <PrivateRoute path='/send' render={routeProps => <Send {...routeProps} userDoc={this.state.userDoc}/>} />
+        <PrivateRoute path='/receive' render={routeProps => <Receive {...routeProps} user={this.state.user} acctQr={this.state.acctQr}/>} />
+        <PrivateRoute path='/mine' render={routeProps => <Mine {...routeProps} db={this.db}/>} />
         <Redirect from='*' to='/'/>
       </Switch>
 
