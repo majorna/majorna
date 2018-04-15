@@ -82,9 +82,9 @@ export default props =>
     <div className="mj-box align-start">
       <i className="flex-order-1 m-l-m fas fa-credit-card" style={{width: 110, height: 120}}/>
       <div className="flex-column flex-grow-1">
-        <div className="is-size-5">Open Business Model</div>
-        Majorna team intents to fund development via providing services around the cryptocurrency.
-        The team is also responsible for monitoring and insuring the safety of the system.
+        <div className="is-size-5">Open Development Model</div>
+        Majorna team intents to fund development via providing services around the currency (i.e. payment services).
+        The team is also responsible for continuous monitoring and overall safety of the system.
       </div>
     </div>
 
