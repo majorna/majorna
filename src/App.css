@@ -12,7 +12,6 @@ body {
 
     display: flex;
     flex-direction: column;
-    flex-grow: 1; /* so pages with insufficient width will not collapse into a narrow column */
 }
 
 /* flex-box (direction: row) with a border, margin, and padding */
@@ -41,7 +40,7 @@ body {
 
 /* alignment */
 .center-all {
-    align-items: center; /* flex: vertical */
+    align-items: center; /* flex: vertical when flex-direction: row (default), horizontal otherwise */
     justify-content: center; /* flex: horizontal */
     text-align: center; /* text: centered text */
 }
