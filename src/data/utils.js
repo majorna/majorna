@@ -17,7 +17,7 @@ export const fn = new Intl.NumberFormat().format
  * @returns {null}
  */
 export function getChartData(meta) {
-  let data = meta.monthly
+  let data = meta.monthly.vals
   const val = meta.val
 
   if (!data && val) {

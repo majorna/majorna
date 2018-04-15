@@ -38,7 +38,7 @@ export default props =>
           Max Supply
         </div>
         <div className="flex-column center-all">
-          <div className="is-size-5">{fm(props.mjMetaDoc.monthly)} mj</div>
+          <div className="is-size-5">{fm(props.mjMetaDoc.monthly.txVolume)} mj</div>
           Tx Volume (monthly)
         </div>
         <div className="flex-column center-all">

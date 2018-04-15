@@ -30,8 +30,13 @@ exports.init = async () => {
   batch.create(mjMetaDocRef, {
     val: 0.01,
     marketCap: 0,
-    userCount: 0
-    // monthly: [{t: 'May 12', mj: 0.01}]
+    userCount: 0,
+    maxSupply: 100000000,
+    monthly: {
+      month: 0,
+      txVolume: 0
+      // vals: [{t: 'May 12', mj: 0.01}]
+    }
   })
   batch.create(blockInfoMetaDocRef, {
     header: signedGenesisBlock.header,
