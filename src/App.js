@@ -32,13 +32,7 @@ export default withRouter(class App extends Component {
       user: null, // firebase auth user
       acctQr: null, // data:image/png;base64,iVBORw0KG.......kJggg==,
       /* firestore docs */
-      userDoc: null,
-      mjMetaDoc: {
-        val: null, // usd
-        marketCap: null, // mj
-        userCount: null,
-        monthly: undefined // usd per day, for last 1 month
-      }
+      userDoc: null
     }
 
     // firebase config
@@ -111,7 +105,7 @@ export default withRouter(class App extends Component {
   logout = async () => {
     // unsub from firestore realtime document updates
     this.fbUnsubUserSelfDocSnapshot && this.fbUnsubUserSelfDocSnapshot()
-    this.fbUnsubMjMetaDocSnapshot && this.fbUnsubMjMetaDocSnapshot()
+    // this.fbUnsubMjMetaDocSnapshot && this.fbUnsubMjMetaDocSnapshot()
     await this.firebaseAuth.signOut()
   }
 

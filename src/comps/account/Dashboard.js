@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { fm, getChartData } from '../../data/utils'
 
 export default props => {
-  if (!props.userDoc) {
+  if (!props.userDoc || !props.mjMetaDoc) {
     return <div className="mj-box center-all spinner"/>
   }
 

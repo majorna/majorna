@@ -19,7 +19,7 @@ export default props =>
     </div>
 
     {/* Majorna stats from firestore/mj/meta document */}
-    {!props.mjMetaDoc.val ? <div className="mj-box center-all spinner"/> :
+    {!props.mjMetaDoc ? <div className="mj-box center-all spinner"/> :
       <div className="mj-box home-stats-grid">
         <div className="flex-column center-all">
           <div className="is-size-5">${props.mjMetaDoc.val}</div>
@@ -30,8 +30,12 @@ export default props =>
           Market Cap.
         </div>
         <div className="flex-column center-all">
-          <div className="is-size-5">{fm(props.mjMetaDoc.marketCap)} mj</div>
+          <div className="is-size-5">{fm(props.mjMetaDoc.marketCap / 1000000)}M mj</div>
           Current Supply
+        </div>
+        <div className="flex-column center-all">
+          <div className="is-size-5">{fm(props.mjMetaDoc.maxSupply / 1000000)}M mj</div>
+          Max Supply
         </div>
         <div className="flex-column center-all">
           <div className="is-size-5">{fm(props.mjMetaDoc.monthly)} mj</div>
