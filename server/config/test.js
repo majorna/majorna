@@ -77,7 +77,7 @@ const initBalance = 500
 const signedGenesisBlock = block.sign(block.getGenesisBlock())
 const testData = exports.data = {
   meta: {
-    mj: {val: 0.01, cap: initBalance * 3, userCount: 3},
+    mj: {val: 0.01, marketCap: initBalance * 3, userCount: 3},
     blockInfo: {
       header: signedGenesisBlock.header,
       miner: {}

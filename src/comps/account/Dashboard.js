@@ -13,7 +13,7 @@ export default props => {
       <div className="mj-box flex-column p-s">
         <div className="is-size-5 has-text-centered"><span className="faded">Majorna Price:</span> ${props.mjMetaDoc.val}*</div>
         <div className="is-size-5 has-text-centered">
-          <span className="faded">Market Cap:</span> ${fm(props.mjMetaDoc.cap * props.mjMetaDoc.val)} <small>(mj{fm(props.mjMetaDoc.cap)})</small>
+          <span className="faded">Market Cap:</span> ${fm(props.mjMetaDoc.marketCap * props.mjMetaDoc.val)} <small>(mj{fm(props.mjMetaDoc.marketCap)})</small>
         </div>
         <ResponsiveContainer width="100%" height={300}>
           <AreaChart data={getChartData(props.mjMetaDoc)}>

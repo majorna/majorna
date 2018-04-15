@@ -29,7 +29,7 @@ exports.init = async () => {
   const batch = firestore.batch()
   batch.create(mjMetaDocRef, {
     val: 0.01,
-    cap: 0,
+    marketCap: 0,
     userCount: 0
     // monthly: [{t: 'May 12', mj: 0.01}]
   })
@@ -119,10 +119,10 @@ exports.createUserDoc = (user, uid) => firestore.runTransaction(async t => {
 
   console.log(`creating user: ${uid} - ${email} - ${name}`)
 
-  // increase market cap
+  // increase market marketCap
   const metaDoc = await t.get(mjMetaDocRef)
   const meta = metaDoc.data()
-  t.update(mjMetaDocRef, {cap: meta.cap + initBalance, userCount: meta.userCount + 1})
+  t.update(mjMetaDocRef, {marketCap: meta.marketCap + initBalance, userCount: meta.userCount + 1})
 
   // create the first transaction for the user
   const txRef = txsColRef.doc()
@@ -301,10 +301,10 @@ exports.giveMiningReward = (to, nonce) => firestore.runTransaction(async t => {
   }
   const receiver = receiverDoc.data()
 
-  // increase market cap
+  // increase market marketCap
   const metaDoc = await t.get(mjMetaDocRef)
   const meta = metaDoc.data()
-  t.update(mjMetaDocRef, {cap: meta.cap + miningReward})
+  t.update(mjMetaDocRef, {marketCap: meta.marketCap + miningReward})
 
   // block op writes (here to have reads before writes)
   t.update(lastBlockRef, {sig: lastBlock.sig, 'header.minDifficulty': lastBlock.header.minDifficulty, 'header.nonce': lastBlock.header.nonce})
