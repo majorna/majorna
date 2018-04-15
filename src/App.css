@@ -14,6 +14,13 @@ body {
     flex-direction: column;
 }
 
+@media screen and (min-width: 768px) {
+    .box-center {
+        margin-right: auto !important;
+        margin-left: auto !important;
+    }
+}
+
 /* flex-box (direction: row) with a border, margin, and padding */
 .mj-box {
     /* https://www.paulirish.com/2012/box-sizing-border-box-ftw/
@@ -111,9 +118,17 @@ body {
 }
 
 /* sizing */
-/* f: font  |  x: extra ..., s: small, m: medium, l: large */
+/* f: font, mw: max-width  |  x: extra ..., s: small, m: medium, l: large */
 .f-s {
     font-size: 0.8rem;
+}
+
+.mw-m {
+    max-width: 800px;
+}
+
+.mw-s {
+    max-width: 500px;
 }
 
 /* typography */

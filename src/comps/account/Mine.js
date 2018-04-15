@@ -71,7 +71,7 @@ export default class extends Component {
   handleShowDetails = () => this.setState(prevState => ({showDetails: !prevState.showDetails}))
 
   render = () =>
-    <div className="mj-box flex-column">
+    <div className="mj-box flex-column box-center mw-m">
       <div className="is-size-5 has-text-centered">Mining mj</div>
 
       <div className="flex-row center-all spinner m-t-l"/>
