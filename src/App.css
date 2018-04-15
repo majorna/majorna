@@ -14,7 +14,7 @@ body {
     flex-direction: column;
 }
 
-@media screen and (min-width: 768px) {
+@media screen and (min-width: 800px) {
     .box-center {
         margin-right: auto !important;
         margin-left: auto !important;
@@ -118,17 +118,19 @@ body {
 }
 
 /* sizing */
-/* f: font, mw: max-width  |  x: extra ..., s: small, m: medium, l: large */
+/* f: font, w: width  |  x: extra ..., s: small, m: medium, l: large */
 .f-s {
     font-size: 0.8rem;
 }
 
-.mw-m {
-    max-width: 800px;
-}
+@media screen and (min-width: 800px) {
+    .w-m {
+        width: 750px;
+    }
 
-.mw-s {
-    max-width: 500px;
+    .w-s {
+        width: 500px;
+    }
 }
 
 /* typography */

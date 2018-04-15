@@ -7,7 +7,7 @@ export default props => {
   function handleBuy () {}
 
   return (
-    <div className="mj-box flex-column center-all">
+    <div className="mj-box flex-column center-all box-center w-m">
       <div className="is-size-5 has-text-centered">Buy - {item.name}</div>
 
       {item.fontIcon && <i className={item.fontIcon + ' m-t-m'} style={{width: 150, height: 150}}/>}

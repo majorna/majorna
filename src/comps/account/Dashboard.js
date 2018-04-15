@@ -26,19 +26,19 @@ export default props => {
         <small><i>* (future-fixed trading price before exchange opens)</i></small>
       </div>
 
-      <div className="mj-box flex-column">
+      <div className="mj-box flex-column w-s">
         <div><strong>Balance</strong>: mj<strong>{fm(props.userDoc.balance)}</strong> (${fm(props.userDoc.balance * props.mjMetaDoc.val)})</div>
         <div><strong>Address</strong>: <small>{props.user.uid}</small></div>
         <div><Link to="/receive"><img width="72" src={props.acctQr} alt={props.user.uid}/></Link></div>
       </div>
 
-      <div className="mj-box">
+      <div className="mj-box w-s">
         <Link to="/send" className="button is-info"><i className="fas fa-paper-plane m-r-s"/>Send</Link>
         <Link to="/receive" className="button m-l-m"><i className="fas fa-qrcode m-r-s"/>Receive</Link>
         <Link to="/mine" className="button m-l-xl"><i className="fas fa-th m-r-s"/>Mine</Link>
       </div>
 
-      <div className="mj-box flex-column">
+      <div className="mj-box flex-column w-m">
         <strong>Transactions</strong>
         {props.userDoc.txs.map(t =>
           t.from ? (

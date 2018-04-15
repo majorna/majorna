@@ -86,7 +86,7 @@ export default class extends Component {
   render() {
     if (this.state.step === 'confirm') {
       return (
-        <div className="mj-box flex-column">
+        <div className="mj-box flex-column box-center w-s">
           <div className="is-size-5 has-text-centered">Confirm Send</div>
 
           <div><strong>Receiver:</strong> {this.state.receiver}</div>
@@ -109,7 +109,7 @@ export default class extends Component {
 
     if (this.state.step === 'complete') {
       return (
-        <div className="mj-box flex-column">
+        <div className="mj-box flex-column box-center w-s">
           <div className="is-size-5 has-text-centered has-text-info"><i className="fas fa-check m-r-s"/>Successfully Sent</div>
 
           <div className="flex-row center-h m-t-l">
@@ -120,7 +120,7 @@ export default class extends Component {
     }
 
     return (
-      <div className="mj-box flex-column">
+      <div className="mj-box flex-column box-center w-s">
         <div className="is-size-5 has-text-centered">Send mj</div>
 
         <strong>Receiver</strong>
