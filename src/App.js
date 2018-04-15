@@ -36,6 +36,7 @@ export default withRouter(class App extends Component {
       mjMetaDoc: {
         val: null, // usd
         cap: null, // mj
+        userCount: null,
         monthly: undefined // usd per day, for last 1 month
       }
     }
