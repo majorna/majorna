@@ -104,15 +104,21 @@ exports.updateMjMetaStatsIfRequired = async endTime => {
   // get all txs from the beginning of the previous month until the end of previous month
   const beginningOfPreviousMonth = new Date(previousMonthNow.getTime())
   beginningOfPreviousMonth.setDate(0)
-  const txs = await exports.getTxsByTimeRange(beginningOfPreviousMonth, endTime || previousMonthNow)
+  const limit = 500
   let volume = 0
-  txs.forEach(tx => { volume += tx.amount })
+  let offset = 0
+  while (true) {
+    const txsSnap = await txsColRef.where('time', '>=', beginningOfPreviousMonth).where('time', '<', endTime || previousMonthNow).offset(offset).limit(limit).get()
+    if (!txsSnap.size || offset > 1000000 /* infinite loop protection */) {
+      break
+    }
+    offset += txsSnap.size
+    txsSnap.docs.forEach(tx => { volume += tx.data().amount })
+  }
+
   await mjMetaDocRef.update({'monthly.updated': now, 'monthly.txVolume': volume})
 
-  // todo: const txsQuery = txsColRef.where('time', '>=', beginningOfPreviousMonth).where('time', '<', endTime || previousMonthNow).limit(1).get()
-  // txsSnap.docs.map(doc => doc.data())
-
-  console.log('stats have been updated')
+  console.log('mj meta stats have been updated')
   return true
 }
 
