@@ -41,10 +41,10 @@ export default props =>
           <div className="is-size-5">${fm(props.mjMetaDoc.monthly.txVolume * props.mjMetaDoc.val)}</div>
           Tx Volume (monthly)
         </div>
-        {/*<div className="flex-column center-all">*/}
-          {/*<div className="is-size-5">{props.mjMetaDoc.userCount}</div>*/}
-          {/*Total Accounts*/}
-        {/*</div>*/}
+        <div className="flex-column center-all">
+          <div className="is-size-5">{props.mjMetaDoc.userCount}</div>
+          Total Accounts
+        </div>
       </div>
     }
 
