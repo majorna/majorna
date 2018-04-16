@@ -10,6 +10,7 @@
     "lint": "standard --fix"
   },
   "dependencies": {
+    "@google-cloud/logging": "^1.2.0",
     "@octokit/rest": "^14.0.8",
     "axios": "^0.17.1",
     "firebase-admin": "^5.8.1",

@@ -33,6 +33,7 @@ const fb = {
     messagingSenderId: '346214163117'
   },
 
+  serviceJson: null,
   credentials: null,
   config: {
     credential: null
@@ -41,16 +42,16 @@ const fb = {
 
 if (app.isTest || app.isDev) { // test config with config file
   console.log('config: firebase: dev/test mode')
-  const serviceJson = require(fb.testServiceKeyJsonPath)
-  fb.credentials = firebaseAdmin.credential.cert(serviceJson)
+  fb.serviceJson = require(fb.testServiceKeyJsonPath)
+  fb.credentials = firebaseAdmin.credential.cert(fb.serviceJson)
   fb.config = {credential: fb.credentials}
 } else if (app.isCloudFn) { // Google Cloud Functions
   console.log('config: firebase: cloud functions mode')
   fb.config = require('firebase-functions').config().firebase
 } else if (fb.serviceKeyJsonPath || fb.serverKeyJson) { // local or manual configuration
   console.log('config: firebase: local/manual mode')
-  const serviceJson = (fb.serviceKeyJsonPath && require(fb.serviceKeyJsonPath)) || JSON.parse(fb.serverKeyJson)
-  fb.credentials = firebaseAdmin.credential.cert(serviceJson)
+  fb.serviceJson = (fb.serviceKeyJsonPath && require(fb.serviceKeyJsonPath)) || JSON.parse(fb.serverKeyJson)
+  fb.credentials = firebaseAdmin.credential.cert(fb.serviceJson)
   fb.config = {credential: fb.credentials}
 } else { // Google Compute Engine
   console.log('config: firebase: gce mode')

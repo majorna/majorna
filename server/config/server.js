@@ -19,7 +19,7 @@ function koaConfig () {
     try {
       ctx.state.user = await firebaseConfig.verifyIdToken(ctx.headers.authorization.substring(7)/* strip 'Bearer ' prefix */)
     } catch (err) {
-      config.app.debugMode && console.debug(err)
+      config.app.debugMode && console.log(err)
       ctx.throw(401, 'Invalid authorization token.')
     }
     return next()
@@ -33,7 +33,7 @@ function koaConfig () {
     try {
       await next()
     } catch (err) {
-      config.app.debugMode && (err instanceof AssertionError || err.expose) && console.debug(err)
+      config.app.debugMode && (err instanceof AssertionError || err.expose) && console.log(err)
       err instanceof AssertionError && ctx.throw(400, err.message)
       throw err
     }
