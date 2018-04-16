@@ -33,7 +33,7 @@ exports.init = async () => {
     userCount: 0,
     maxSupply: 100000000,
     monthly: {
-      month: 0,
+      monthNo: 0,
       txVolume: 0
       // vals: [{t: 'May 12', mj: 0.01}]
     }
@@ -87,9 +87,23 @@ exports.getMjMeta = async () => (await mjMetaDocRef.get()).data()
 
 /**
  * Updates mj stats if required. Update happens only once a month.
+ * Returns true if stats were updated, false otherwise.
  */
 exports.updateMjMetaStatsIfRequired = async () => firestore.runTransaction(async t => {
+  const metaDoc = await t.get(mjMetaDocRef)
+  const meta = metaDoc.data()
 
+  const currentMonthNo = new Date().getMonth() + 1
+  if (currentMonthNo <= meta.monthly.monthNo) {
+    return false
+  }
+
+  // get all txs till the beginning of the previous month till the end of previous month
+  const txsQuery = txsColRef.where('time', '>=', startTime).where('time', '<', endTime)
+
+  // const txsSnap = await txsColRef.where('time', '>=', startTime).where('time', '<', endTime).get()
+  // return txsSnap.docs.map(doc => doc.data())
+  return true
 })
 
 /**
