@@ -33,7 +33,7 @@ exports.init = async () => {
     userCount: 0,
     maxSupply: 100000000,
     monthly: {
-      monthNo: 0,
+      updated: 0,
       txVolume: 0
       // vals: [{t: 'May 12', mj: 0.01}]
     }
@@ -86,25 +86,29 @@ exports.initTest = async () => {
 exports.getMjMeta = async () => (await mjMetaDocRef.get()).data()
 
 /**
- * Updates mj stats if required. Update happens only once a month.
+ * Updates estimated mj stats if required. Update happens only once a month.
  * Returns true if stats were updated, false otherwise.
  */
-exports.updateMjMetaStatsIfRequired = async () => firestore.runTransaction(async t => {
-  const metaDoc = await t.get(mjMetaDocRef)
+exports.updateMjMetaStatsIfRequired = async () => {
+  const now = new Date()
+  const metaDoc = await mjMetaDocRef.get()
   const meta = metaDoc.data()
 
-  const currentMonthNo = new Date().getMonth() + 1
-  if (currentMonthNo <= meta.monthly.monthNo) {
+  const previousMonthNow = new Date(now.getTime())
+  previousMonthNow.setMonth(now.getMonth() - 1)
+  if (previousMonthNow <= meta.monthly.updated) {
     return false
   }
 
-  // get all txs till the beginning of the previous month till the end of previous month
-  const txsQuery = txsColRef.where('time', '>=', startTime).where('time', '<', endTime)
+  // get all txs from the beginning of the previous month until the end of previous month
+  const beginningOfPreviousMonth = new Date(previousMonthNow.getTime())
+  beginningOfPreviousMonth.setDate(0)
+  const txsQuery = txsColRef.where('time', '>=', previousMonthNow).where('time', '<', now).limit(5) // todo: 500
 
   // const txsSnap = await txsColRef.where('time', '>=', startTime).where('time', '<', endTime).get()
   // return txsSnap.docs.map(doc => doc.data())
   return true
-})
+}
 
 /**
  * Retrieves the block info document, asynchronously.
