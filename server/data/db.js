@@ -86,6 +86,13 @@ exports.initTest = async () => {
 exports.getMjMeta = async () => (await mjMetaDocRef.get()).data()
 
 /**
+ * Updates mj stats if required. Update happens only once a month.
+ */
+exports.updateMjMetaStatsIfRequired = async () => firestore.runTransaction(async t => {
+
+})
+
+/**
  * Retrieves the block info document, asynchronously.
  */
 exports.getBlockInfo = async () => (await blockInfoMetaDocRef.get()).data()
