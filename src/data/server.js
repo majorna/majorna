@@ -23,11 +23,7 @@ export default {
     create: nonce => postJson('/blocks', {nonce})
   },
   miners: {
-    getLocation: async () => {
-      try {
-        return await fetch('https://geoip-db.com/json/')
-      } catch (e) { console.error(e) }
-    },
+    getLocation: () => fetch('https://geoip-db.com/json/'),
     post: (lat, lon) => postJson('/miners', {lat, lon})
   }
 }
@@ -35,16 +31,25 @@ export default {
 // redirect to login page upon 401
 function handle401 (res) {
   if (res.status === 401) {
+    console.error(res)
     window.location.replace('/login')
   } else {
     return res
   }
 }
 
+// redirect to login upon network error
+function handleNetworkError (e) {
+  if (e instanceof TypeError) {
+    console.error(e)
+    window.location.replace('/login')
+  }
+}
+
 const get = url => fetch(config.server.url + url, {
   method: 'GET',
   headers: new Headers({Authorization: `Bearer ${config.server.token}`})
-}).then(handle401)
+}).then(handle401).catch(handleNetworkError)
 
 const postJson = (url, data) => fetch(config.server.url + url, {
   method: 'POST',
@@ -53,4 +58,4 @@ const postJson = (url, data) => fetch(config.server.url + url, {
     'Content-Type': 'application/json'
   }),
   body: JSON.stringify(data)
-}).then(handle401)
+}).then(handle401).catch(handleNetworkError)
