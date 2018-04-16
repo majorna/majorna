@@ -41,14 +41,23 @@ suite('db', () => {
   })
 
   test('updateMjMetaStatsIfRequired', async () => {
+    const now = new Date()
     const metaBefore = await db.getMjMeta()
     assert(!metaBefore.monthly.txVolume)
 
-    const updated = await db.updateMjMetaStatsIfRequired(new Date())
+    const updated = await db.updateMjMetaStatsIfRequired(now)
     assert(updated)
 
     const metaAfter = await db.getMjMeta()
     assert(metaAfter.monthly.txVolume)
+
+    // no updates required
+    const updated2 = await db.updateMjMetaStatsIfRequired(now)
+    assert(!updated2)
+
+    const metaAfter2 = await db.getMjMeta()
+    assert(metaAfter2.monthly.updated.getTime() === metaAfter.monthly.updated.getTime())
+    assert(metaAfter2.monthly.txVolume === metaAfter.monthly.txVolume)
   })
 
   test('getBlockInfo', async () => {
