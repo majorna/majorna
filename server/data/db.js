@@ -112,6 +112,7 @@ exports.updateMjMetaStatsIfRequired = async endTime => {
   // todo: const txsQuery = txsColRef.where('time', '>=', beginningOfPreviousMonth).where('time', '<', endTime || previousMonthNow).limit(1).get()
   // txsSnap.docs.map(doc => doc.data())
 
+  console.log('stats have been updated')
   return true
 }
 
