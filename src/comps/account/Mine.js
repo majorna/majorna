@@ -36,7 +36,9 @@ export default class extends Component {
       const minersRes = await server.miners.post(location.latitude, location.longitude)
       const minersData = await await minersRes.json()
       this.setState({miners: minersData.miners})
-    } catch (e) { console.error(e) }
+    } catch (e) {
+      console.error(e)
+    }
 
     // start network requests
     this.fbUnsubBlockInfoMetaDocSnapshot = this.props.db.collection('meta').doc('blockInfo').onSnapshot(async doc => {

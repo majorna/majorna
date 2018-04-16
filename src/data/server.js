@@ -42,6 +42,9 @@ function handle401 (res) {
 function handleNetworkError (e) {
   if (e instanceof TypeError) {
     console.error(e)
+    // todo: show a message to user about the network error (can be /login?reason=disconnected)
+    // on the other hand, being redirected to login page on every network error can be really annoying
+    // however not redirecting means leaving the app in an unknown state
     window.location.replace('/login')
   }
 }
