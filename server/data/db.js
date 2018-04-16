@@ -88,8 +88,9 @@ exports.getMjMeta = async () => (await mjMetaDocRef.get()).data()
 /**
  * Updates estimated mj stats if required. Update happens only once a month.
  * Returns true if stats were updated, false otherwise.
+ * @param endTime - Only used for testing. Automatically calculated otherwise.
  */
-exports.updateMjMetaStatsIfRequired = async () => {
+exports.updateMjMetaStatsIfRequired = async endTime => {
   const now = new Date()
   const metaDoc = await mjMetaDocRef.get()
   const meta = metaDoc.data()
@@ -103,10 +104,14 @@ exports.updateMjMetaStatsIfRequired = async () => {
   // get all txs from the beginning of the previous month until the end of previous month
   const beginningOfPreviousMonth = new Date(previousMonthNow.getTime())
   beginningOfPreviousMonth.setDate(0)
-  const txsQuery = txsColRef.where('time', '>=', previousMonthNow).where('time', '<', now).limit(5) // todo: 500
+  const txs = await exports.getTxsByTimeRange(beginningOfPreviousMonth, endTime || previousMonthNow)
+  let volume = 0
+  txs.forEach(tx => { volume += tx.amount })
+  await mjMetaDocRef.update({'monthly.updated': now, 'monthly.txVolume': volume})
 
-  // const txsSnap = await txsColRef.where('time', '>=', startTime).where('time', '<', endTime).get()
-  // return txsSnap.docs.map(doc => doc.data())
+  // todo: const txsQuery = txsColRef.where('time', '>=', beginningOfPreviousMonth).where('time', '<', endTime || previousMonthNow).limit(1).get()
+  // txsSnap.docs.map(doc => doc.data())
+
   return true
 }
 

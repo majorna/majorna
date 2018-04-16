@@ -40,6 +40,17 @@ suite('db', () => {
     assert(meta.userCount >= 0)
   })
 
+  test('updateMjMetaStatsIfRequired', async () => {
+    const metaBefore = await db.getMjMeta()
+    assert(!metaBefore.monthly.txVolume)
+
+    const updated = await db.updateMjMetaStatsIfRequired(new Date())
+    assert(updated)
+
+    const metaAfter = await db.getMjMeta()
+    assert(metaAfter.monthly.txVolume)
+  })
+
   test('getBlockInfo', async () => {
     const blockInfo = await db.getBlockInfo()
     assert(blockInfo.header)
