@@ -100,7 +100,7 @@ exports.updateMjMetaStatsIfRequired = async endTime => {
   previousMonthEnd.setDate(30)
   previousMonthEnd.setHours(0, 0, 0, 0)
   if (previousMonthEnd <= meta.monthly.updated) {
-    console.log(`skipping mj meta stats update. previous month end: ${previousMonthEnd}, last updated: ${meta.monthly.updated}`)
+    console.log(`skipping mj meta stats update. previous month end: ${previousMonthEnd} <= last updated: ${meta.monthly.updated}`)
     return false
   }
 
@@ -114,7 +114,7 @@ exports.updateMjMetaStatsIfRequired = async endTime => {
 
   console.log('starting mj meta stats update loop')
   while (true) {
-    const txsSnap = await txsColRef.where('time', '>=', previousMonthBeginning).where('time', '<', endTime || previousMonthEnd).offset(offset).limit(limit).get()
+    const txsSnap = await txsColRef.where('time', '>=', previousMonthBeginning).where('time', '<', (endTime || previousMonthEnd)).offset(offset).limit(limit).get()
     if (!txsSnap.size || offset > 1000000 /* infinite loop protection */) {
       break
     }
