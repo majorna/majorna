@@ -100,7 +100,7 @@ exports.updateMjMetaStatsIfRequired = async endTime => {
   previousMonthEnd.setDate(30)
   previousMonthEnd.setHours(0, 0, 0, 0)
   if (previousMonthEnd <= meta.monthly.updated) {
-    console.log(`skipping mj meta stats update. previous month end: ${previousMonthEnd} <= last updated: ${meta.monthly.updated}`)
+    console.log(`skipping mj meta stats update: previous month end: ${previousMonthEnd} <= last updated: ${meta.monthly.updated}`)
     return false
   }
 
@@ -124,7 +124,7 @@ exports.updateMjMetaStatsIfRequired = async endTime => {
 
   await mjMetaDocRef.update({'monthly.updated': previousMonthEnd, 'monthly.txVolume': volume})
 
-  console.log('mj meta stats have been updated')
+  console.log(`mj meta stats have been updated for period: previousMonthBeginning: ${previousMonthBeginning} - previousMonthEnd: ${previousMonthEnd}`)
   return true
 }
 
