@@ -4,8 +4,13 @@ export default props =>
   <React.Fragment>
     <div className="mj-box flex-column">
       <div className="is-size-5 has-text-centered">About Majorna</div>
-
-      <div className="m-t-m">Lorem ipsum</div>
+      <div className="m-t-m">
+        This page is a placeholder for following work-in-progress documents:
+      </div>
+      <ul>
+        <li>Majorna Technology</li>
+        <li>Roadmap</li>
+      </ul>
     </div>
   </React.Fragment>
 
