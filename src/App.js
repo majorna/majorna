@@ -35,6 +35,9 @@ export default withRouter(class App extends Component {
       userDoc: null
     }
 
+    // firebase default url redirect (also have reference in public/indes.html#link_rel=canonical
+    window.document.URL.includes('majorna-fire.firebaseapp.com') && window.location.replace('https://getmajorna.com')
+
     // firebase config
     this.firebaseUIConfig = {
       signInOptions: [
