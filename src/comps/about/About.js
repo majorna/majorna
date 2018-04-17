@@ -6,7 +6,9 @@ export default props =>
     <div className="mj-box flex-column">
       <div className="is-size-5 has-text-centered">About Majorna</div>
       <div className="m-t-m">
-        This page is a placeholder for following work-in-progress documents:
+        Majorna is an easy to use cryptocurrency.
+        It is available in browser, without any need for special software.
+        Following are work-in-progress documents detailing Majorna:
       </div>
 
       <div className="content">
