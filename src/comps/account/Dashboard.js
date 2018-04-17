@@ -2,6 +2,7 @@ import React from 'react'
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from 'recharts'
 import { Link } from 'react-router-dom'
 import { fm, getChartData } from '../../data/utils'
+import StatsWidget from '../shared/StatsWidget'
 
 export default props => {
   if (!props.userDoc || !props.mjMetaDoc) {
@@ -25,6 +26,8 @@ export default props => {
         </ResponsiveContainer>
         <small><i>* (future-fixed trading price before exchange opens)</i></small>
       </div>
+
+      <StatsWidget mjMetaDoc={props.mjMetaDoc} />
 
       <div className="mj-box flex-column w-s">
         <div><strong>Balance</strong>: mj<strong>{fm(props.userDoc.balance)}</strong> (${fm(props.userDoc.balance * props.mjMetaDoc.val)})</div>
