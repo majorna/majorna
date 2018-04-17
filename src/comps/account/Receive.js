@@ -2,7 +2,7 @@ import React from 'react'
 import { toClipboard } from '../../data/utils'
 
 export default props =>
-  <div className="mj-box flex-column center-all">
+  <div className="mj-box flex-column center-all box-center w-s">
     <div className="is-size-5">Account Address</div>
 
     <div className="mj-box flex-row">

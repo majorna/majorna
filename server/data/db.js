@@ -27,11 +27,16 @@ exports.init = async () => {
   }
 
   const batch = firestore.batch()
-  batch.create(mjMetaDocRef, {
+  batch.create(mjMetaDocRef, { // todo: use this data as testData.meta.mj init data
     val: 0.01,
-    cap: 0,
-    userCount: 0
-    // monthly: [{t: 'May 12', mj: 0.01}]
+    marketCap: 0,
+    userCount: 0,
+    maxSupply: 100000000,
+    monthly: {
+      updated: 0,
+      txVolume: 0
+      // vals: [{t: 'May 12', mj: 0.01}]
+    }
   })
   batch.create(blockInfoMetaDocRef, {
     header: signedGenesisBlock.header,
@@ -81,6 +86,49 @@ exports.initTest = async () => {
 exports.getMjMeta = async () => (await mjMetaDocRef.get()).data()
 
 /**
+ * Updates estimated mj stats if required. Update happens only once a month.
+ * Returns true if stats were updated, false otherwise.
+ * @param endTime - Only used for testing. Automatically calculated otherwise.
+ */
+exports.updateMjMetaStatsIfRequired = async endTime => {
+  const now = new Date()
+  const metaDoc = await mjMetaDocRef.get()
+  const meta = metaDoc.data()
+
+  const previousMonthEnd = new Date(now.getTime())
+  previousMonthEnd.setMonth(now.getMonth() - 1)
+  previousMonthEnd.setDate(30)
+  previousMonthEnd.setHours(0, 0, 0, 0)
+  if (previousMonthEnd <= meta.monthly.updated) {
+    console.log(`skipping mj meta stats update: previous month end: ${previousMonthEnd} <= last updated: ${meta.monthly.updated}`)
+    return false
+  }
+
+  // get all txs from the beginning of the previous month until the end of previous month
+  const previousMonthBeginning = new Date(previousMonthEnd.getTime())
+  previousMonthBeginning.setDate(0)
+  previousMonthBeginning.setHours(0, 0, 0, 0)
+  const limit = 500
+  let volume = 0
+  let offset = 0
+
+  console.log('starting mj meta stats update loop')
+  while (true) {
+    const txsSnap = await txsColRef.where('time', '>=', previousMonthBeginning).where('time', '<', (endTime || previousMonthEnd)).offset(offset).limit(limit).get()
+    if (!txsSnap.size || offset > 1000000 /* infinite loop protection */) {
+      break
+    }
+    offset += txsSnap.size
+    txsSnap.docs.forEach(tx => { volume += tx.data().amount })
+  }
+
+  await mjMetaDocRef.update({'monthly.updated': previousMonthEnd, 'monthly.txVolume': volume})
+
+  console.log(`mj meta stats have been updated for period: previousMonthBeginning: ${previousMonthBeginning} - previousMonthEnd: ${previousMonthEnd}`)
+  return true
+}
+
+/**
  * Retrieves the block info document, asynchronously.
  */
 exports.getBlockInfo = async () => (await blockInfoMetaDocRef.get()).data()
@@ -119,10 +167,10 @@ exports.createUserDoc = (user, uid) => firestore.runTransaction(async t => {
 
   console.log(`creating user: ${uid} - ${email} - ${name}`)
 
-  // increase market cap
+  // increase market marketCap
   const metaDoc = await t.get(mjMetaDocRef)
   const meta = metaDoc.data()
-  t.update(mjMetaDocRef, {cap: meta.cap + initBalance, userCount: meta.userCount + 1})
+  t.update(mjMetaDocRef, {marketCap: meta.marketCap + initBalance, userCount: meta.userCount + 1})
 
   // create the first transaction for the user
   const txRef = txsColRef.doc()
@@ -246,7 +294,7 @@ exports.insertBlock = (txs, now) => firestore.runTransaction(async t => {
 
   // update block info doc
   blockInfo.header = newBlock.header
-  blockInfo.miner.targetDifficulty = config.blockchain.blockDifficultyIncrementStep
+  blockInfo.miner.targetDifficulty = config.blockchain.initialMinBlockDifficulty
   blockInfo.miner.reward = blockUtils.getBlockReward(blockInfo.miner.targetDifficulty)
   blockInfo.miner.headerStrWithoutNonce = blockUtils.getHeaderStr(newBlock.header, true, blockInfo.miner.targetDifficulty)
   t.set(blockInfoMetaDocRef, blockInfo)
@@ -301,10 +349,10 @@ exports.giveMiningReward = (to, nonce) => firestore.runTransaction(async t => {
   }
   const receiver = receiverDoc.data()
 
-  // increase market cap
+  // increase market marketCap
   const metaDoc = await t.get(mjMetaDocRef)
   const meta = metaDoc.data()
-  t.update(mjMetaDocRef, {cap: meta.cap + miningReward})
+  t.update(mjMetaDocRef, {marketCap: meta.marketCap + miningReward})
 
   // block op writes (here to have reads before writes)
   t.update(lastBlockRef, {sig: lastBlock.sig, 'header.minDifficulty': lastBlock.header.minDifficulty, 'header.nonce': lastBlock.header.nonce})

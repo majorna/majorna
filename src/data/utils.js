@@ -14,10 +14,9 @@ export const fn = new Intl.NumberFormat().format
 /**
  * Generate static chart data for a single value (useful for pre-trading price display)
  * @param meta - Meta document.
- * @returns {null}
  */
 export function getChartData(meta) {
-  let data = meta.monthly
+  let data = meta.monthly.vals
   const val = meta.val
 
   if (!data && val) {

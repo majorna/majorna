@@ -27,7 +27,7 @@ exports.insertBlockSinceLastOne = async (now, blockInfo, customOldBlockPath) => 
   const oldBlock = await db.getBlock(newBlock.header.no - 1)
   const oldBlockPath = customOldBlockPath || exports.getBlockPath(oldBlock.header)
   await github.createFile(block.toJson(oldBlock), oldBlockPath)
-  console.log(`inserted new block`)
+  console.log(`inserted new block: no ${newBlock.header.no}, time: ${newBlock.header.time}, nonce: ${newBlock.header.nonce}`)
 }
 
 /**
@@ -50,8 +50,12 @@ exports.insertBlockIfRequired = async (now, customOldBlockPath) => {
   console.log('not enough time elapsed since the last block so skipping block creation')
 }
 
-function failSafeInsertBlockIfRequired () {
+/**
+ * Calls conditional block insertion and stat updater functions and silently logs all errors thrown.
+ */
+function failSafeInsertBlockAndUpdateStatsIfRequired () {
   exports.insertBlockIfRequired().catch(e => console.error(e))
+  db.updateMjMetaStatsIfRequired().catch(e => console.error(e))
   // todo: also verify blocks for last 1 week or so to make sure that all txs are in blocks, and all blocks are valid
 }
 
@@ -70,12 +74,12 @@ exports.startBlockchainInsertTimer = interval => {
 
   // do initial block check immediately
   // skip on testing since ongoing promise can do conflicting data changes
-  !interval && failSafeInsertBlockIfRequired()
+  !interval && failSafeInsertBlockAndUpdateStatsIfRequired()
 
   // start timer
   interval = interval || 1000/* ms */ * 60/* s */ * 5/* min */
   if (config.blockchain.blockInterval <= interval) {
     interval = Math.round(config.blockchain.blockInterval / 2)
   }
-  return setInterval(() => failSafeInsertBlockIfRequired(), interval)
+  return setInterval(() => failSafeInsertBlockAndUpdateStatsIfRequired(), interval)
 }

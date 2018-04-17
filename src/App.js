@@ -6,20 +6,24 @@ import 'firebase/auth'
 import 'firebase/firestore'
 import 'bulma/css/bulma.css'
 import './App.css'
-import './comps/global/FontAwesome'
+import './comps/shared/FontAwesome'
 import config from './data/config'
 import server from './data/server'
-import Navbar from './comps/global/Navbar'
-import Home from './comps/main/Home'
-import Login from './comps/main/Login'
+import Navbar from './comps/shared/Navbar'
+import Home from './comps/home/Home'
+import Login from './comps/home/Login'
 import Profile from './comps/account/Profile'
 import Shop from './comps/shop/Shop'
 import ShopItem from './comps/shop/ShopItem'
 import Dashboard from './comps/account/Dashboard'
-import Footer from './comps/global/Footer'
+import Footer from './comps/shared/Footer'
 import Send from './comps/account/Send'
 import Receive from './comps/account/Receive'
 import Mine from './comps/account/Mine'
+import About from './comps/about/About'
+import Tech from './comps/about/Tech'
+import Roadmap from './comps/about/Roadmap'
+import PrivateRoute from './comps/shared/PrivateRoute'
 
 export default withRouter(class App extends Component {
   constructor(props) {
@@ -28,12 +32,7 @@ export default withRouter(class App extends Component {
       user: null, // firebase auth user
       acctQr: null, // data:image/png;base64,iVBORw0KG.......kJggg==,
       /* firestore docs */
-      userDoc: null,
-      mjMetaDoc: {
-        val: null, // usd
-        cap: null, // mj
-        monthly: undefined // usd per day, for last 1 month
-      }
+      userDoc: null
     }
 
     // firebase config
@@ -68,25 +67,27 @@ export default withRouter(class App extends Component {
 
     // initialize firebase sockets
     this.db = this.firebaseApp.firestore()
+    this.fbUnsubMjMetaDocSnapshot = this.db.collection('meta').doc('mj').onSnapshot(doc => this.setState({mjMetaDoc: doc.data()}))
+
     this.firebaseAuth = this.firebaseApp.auth()
     this.firebaseAuth.onAuthStateChanged(async u => {
       if (u) {
         this.props.history.push('/dashboard')
         this.setState({user: u})
+        // todo: this.fbUnsubMjMetaDocSnapshot = this.db.collection('meta').doc('mj').onSnapshot(doc => this.setState({mjMetaDoc: doc.data()}))
         this.fbUnsubUserSelfDocSnapshot = this.db.collection('users').doc(u.uid).onSnapshot(async doc => {
-            if (doc.exists) {
-              const userData = doc.data()
-              !doc.metadata.hasPendingWrites && this.setState({userDoc: userData})
-              this.setState({acctQr: await QRCode.toDataURL(
-                [{data: `majorna:${userData.uid}`, mode: 'byte'}],
-                {errorCorrectionLevel: 'H', margin: 1, scale: 8})})
-            } else {
-              // id token might still be null at this point
-              if (!config.server.token) config.server.token = await u.getIdToken()
-              await server.users.init()
-            }
-          })
-        this.fbUnsubMjMetaDocSnapshot = this.db.collection('meta').doc('mj').onSnapshot(doc => this.setState({mjMetaDoc: doc.data()}))
+          if (doc.exists) {
+            const userData = doc.data()
+            !doc.metadata.hasPendingWrites && this.setState({userDoc: userData})
+            this.setState({acctQr: await QRCode.toDataURL(
+              [{data: `majorna:${userData.uid}`, mode: 'byte'}],
+              {errorCorrectionLevel: 'H', margin: 1, scale: 8})})
+          } else {
+            // id token might still be null at this point
+            if (!config.server.token) config.server.token = await u.getIdToken()
+            await server.users.init()
+          }
+        })
         config.server.token = await u.getIdToken()
       } else {
         this.setState(this.nullState) // logged out or token expired and was not renewed
@@ -105,7 +106,7 @@ export default withRouter(class App extends Component {
   logout = async () => {
     // unsub from firestore realtime document updates
     this.fbUnsubUserSelfDocSnapshot && this.fbUnsubUserSelfDocSnapshot()
-    this.fbUnsubMjMetaDocSnapshot && this.fbUnsubMjMetaDocSnapshot()
+    // todo: this.fbUnsubMjMetaDocSnapshot && this.fbUnsubMjMetaDocSnapshot()
     await this.firebaseAuth.signOut()
   }
 
@@ -113,27 +114,21 @@ export default withRouter(class App extends Component {
     <React.Fragment>
       <Navbar logout={this.logout} user={this.state.user}/>
 
-      {!this.state.user ? (
-        <Switch>
-          <Route exact path='/' component={Home} />
-          <Route path='/login' render={routeProps => <Login {...routeProps} uiConfig={this.firebaseUIConfig} firebaseAuth={this.firebaseAuth}/>} />
-          <Route path='/dashboard' render={routeProps => <Dashboard {...routeProps} user={this.state.user} acctQr={this.state.acctQr} userDoc={this.state.userDoc} mjMetaDoc={this.state.mjMetaDoc}/>} />
-          <Redirect from='*' to='/'/>
-        </Switch>
-      ) : (
-        <Switch>
-          <Route exact path='/' component={Home} />
-          <Route path='/login' render={routeProps => <Login {...routeProps} uiConfig={this.firebaseUIConfig} firebaseAuth={this.firebaseAuth}/>} />
-          <Route path='/profile' render={routeProps => <Profile {...routeProps} user={this.state.user}/>} />
-          <Route path='/shop/:id' component={ShopItem} />
-          <Route path='/shop' component={Shop} />
-          <Route path='/dashboard' render={routeProps => <Dashboard {...routeProps} user={this.state.user} acctQr={this.state.acctQr} userDoc={this.state.userDoc} mjMetaDoc={this.state.mjMetaDoc}/>} />
-          <Route path='/send' render={routeProps => <Send {...routeProps} userDoc={this.state.userDoc}/>} />
-          <Route path='/receive' render={routeProps => <Receive {...routeProps} user={this.state.user} acctQr={this.state.acctQr}/>} />
-          <Route path='/mine' render={routeProps => <Mine {...routeProps} db={this.db}/>} />
-          <Redirect from='*' to='/'/>
-        </Switch>
-      )}
+      <Switch>
+        <Route exact path='/' render={routeProps => <Home {...routeProps} mjMetaDoc={this.state.mjMetaDoc}/>} />
+        <Route path='/about/tech' component={Tech} />
+        <Route path='/about/roadmap' component={Roadmap} />
+        <Route path='/about' component={About} />
+        <Route path='/login' render={routeProps => <Login {...routeProps} uiConfig={this.firebaseUIConfig} firebaseAuth={this.firebaseAuth}/>} />
+        <Route path='/dashboard' render={routeProps => <Dashboard {...routeProps} user={this.state.user} acctQr={this.state.acctQr} userDoc={this.state.userDoc} mjMetaDoc={this.state.mjMetaDoc}/>} />
+        <PrivateRoute path='/profile' render={routeProps => <Profile {...routeProps} user={this.state.user}/>} />
+        <PrivateRoute path='/shop/:id' component={ShopItem} />
+        <PrivateRoute path='/shop' component={Shop} />
+        <PrivateRoute path='/send' render={routeProps => <Send {...routeProps} userDoc={this.state.userDoc}/>} />
+        <PrivateRoute path='/receive' render={routeProps => <Receive {...routeProps} user={this.state.user} acctQr={this.state.acctQr}/>} />
+        <PrivateRoute path='/mine' render={routeProps => <Mine {...routeProps} db={this.db}/>} />
+        <Redirect from='*' to='/'/>
+      </Switch>
 
       <Footer/>
     </React.Fragment>

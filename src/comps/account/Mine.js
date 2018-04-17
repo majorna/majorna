@@ -4,6 +4,7 @@ import server from '../../data/server'
 import { mineBlock, stopMining } from '../../data/node'
 import { ResponsiveContainer, Scatter, ScatterChart, XAxis, YAxis } from 'recharts'
 import worldMap from '../../res/world_map.svg'
+import { Link } from 'react-router-dom'
 
 export default class extends Component {
   state = {
@@ -35,7 +36,9 @@ export default class extends Component {
       const minersRes = await server.miners.post(location.latitude, location.longitude)
       const minersData = await await minersRes.json()
       this.setState({miners: minersData.miners})
-    } catch (e) { console.error(e) }
+    } catch (e) {
+      console.error(e)
+    }
 
     // start network requests
     this.fbUnsubBlockInfoMetaDocSnapshot = this.props.db.collection('meta').doc('blockInfo').onSnapshot(async doc => {
@@ -70,7 +73,7 @@ export default class extends Component {
   handleShowDetails = () => this.setState(prevState => ({showDetails: !prevState.showDetails}))
 
   render = () =>
-    <div className="mj-box flex-column">
+    <div className="mj-box flex-column box-center w-m">
       <div className="is-size-5 has-text-centered">Mining mj</div>
 
       <div className="flex-row center-all spinner m-t-l"/>
@@ -79,10 +82,10 @@ export default class extends Component {
       <div><strong>Nonce:</strong> {fn(this.state.nonce)}</div>
 
       <div className="m-t-m"><strong>Target Difficulty:</strong> {this.state.blockInfo.miner.targetDifficulty}</div>
-      <div><strong>Reward for Block:</strong> mj{fm(this.state.blockInfo.miner.reward)}</div>
+      <div><strong>Reward for Block:</strong> mj{fm(this.state.blockInfo.miner.reward || 0)}</div>
 
       <div className="m-t-m"><strong>Mined Blocks:</strong> {this.state.minedBlocks}</div>
-      <div><strong>Collected Rewards:</strong> mj{fm(this.state.blockInfo.miner.reward * this.state.minedBlocks)}</div>
+      <div><strong>Collected Rewards:</strong> mj{fm(this.state.blockInfo.miner.reward * this.state.minedBlocks || 0)}</div>
 
       <div className="m-t-m" style={{maxWidth: '30rem'}}>
         <strong>Miner Map:</strong>
@@ -97,9 +100,12 @@ export default class extends Component {
 
       <div className="m-t-m">
         <button className="button is-small" onClick={this.handleShowDetails}>
-          {this.state.showDetails ? <i className="far fa-minus-square m-r-s"/> : <i className="far fa-plus-square m-r-s"/>}
+          <span style={{display: (this.state.showDetails ? 'none' : 'initial')}}><i className="far fa-plus-square m-r-s"/></span>
+          <span style={{display: (this.state.showDetails ? 'initial' : 'none')}}><i className="far fa-minus-square m-r-s"/></span>
           Details
         </button>
+        {/* todo: anchor link might not work without this: https://github.com/rafrex/react-router-hash-link */}
+        <Link to='/about/tech#mining' className="button is-small m-l-s"><i className="far fa-question-circle m-r-s"/>What is mining?</Link>
       </div>
       {this.state.showDetails &&
         <small className="flex-column">
@@ -108,7 +114,7 @@ export default class extends Component {
           <div><strong>Time:</strong> {this.state.blockInfo.header.time && this.state.blockInfo.header.time.toLocaleString()}</div>
           <div><strong>Transaction Count:</strong> {this.state.blockInfo.header.txCount}</div>
           <div><strong>Min Difficulty:</strong> {this.state.blockInfo.header.minDifficulty}</div>
-          <div><strong>Nonce:</strong> {fn(this.state.blockInfo.header.nonce)}</div>
+          <div><strong>Nonce:</strong> {fn(this.state.blockInfo.header.nonce || 0)}</div>
           <div><strong>Previous Block Hash:</strong> <small>{this.state.blockInfo.header.prevHash}</small></div>
           <div><strong>Merkle Root:</strong> <small>{this.state.blockInfo.header.merkleRoot}</small></div>
 

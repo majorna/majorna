@@ -1,3 +1,24 @@
+import React from 'react'
+import { Link } from 'react-router-dom'
+
+export default props =>
+  <React.Fragment>
+    <div className="mj-box flex-column">
+      <div className="is-size-5 has-text-centered">About Majorna</div>
+      <div className="m-t-m">
+        This page is a placeholder for following work-in-progress documents:
+      </div>
+
+      <div className="content">
+        <ul className="m-t-l">
+          <li><Link to="/about/tech">Majorna Technology</Link></li>
+          <li><Link to="/about/roadmap">Roadmap</Link></li>
+        </ul>
+      </div>
+    </div>
+  </React.Fragment>
+
+
 // # majorna
 // - link to roadmap
 // - link to tech

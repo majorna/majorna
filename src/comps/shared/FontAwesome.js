@@ -2,6 +2,7 @@ import fontawesome from '@fortawesome/fontawesome'
 
 import farPlusSquare from '@fortawesome/fontawesome-free-regular/faPlusSquare'
 import farMinusSquare from '@fortawesome/fontawesome-free-regular/faMinusSquare'
+import farQuestionCircle from '@fortawesome/fontawesome-free-regular/faQuestionCircle'
 
 import fasCreditCard from '@fortawesome/fontawesome-free-solid/faCreditCard'
 import fasGlobe from '@fortawesome/fontawesome-free-solid/faGlobe'
@@ -21,6 +22,7 @@ import fabEthereum from '@fortawesome/fontawesome-free-brands/faEthereum'
 
 fontawesome.library.add(farPlusSquare)
 fontawesome.library.add(farMinusSquare)
+fontawesome.library.add(farQuestionCircle)
 
 fontawesome.library.add(fasCreditCard)
 fontawesome.library.add(fasGlobe)

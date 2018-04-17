@@ -1,6 +1,7 @@
-/*body {
-    font-family: system-ui;
-}*/
+body {
+    /* https://css-tricks.com/snippets/css/system-font-stack/ & https://caniuse.com/#feat=font-family-system-ui */
+    /*font-family: system-ui;*/
+}
 
 /* layout */
 #root {
@@ -11,7 +12,13 @@
 
     display: flex;
     flex-direction: column;
-    flex-grow: 1; /* so pages with insufficient width will not collapse into a narrow column */
+}
+
+@media screen and (min-width: 800px) {
+    .box-center {
+        margin-right: auto !important;
+        margin-left: auto !important;
+    }
 }
 
 /* flex-box (direction: row) with a border, margin, and padding */
@@ -30,7 +37,7 @@
 
 .flex-row {
     display: flex;
-    /* flex-direction: row; default already */
+    flex-direction: row; /* flexbox default */
 }
 
 .flex-column {
@@ -40,7 +47,7 @@
 
 /* alignment */
 .center-all {
-    align-items: center; /* flex: vertical */
+    align-items: center; /* flex: vertical when flex-direction: row (default), horizontal otherwise */
     justify-content: center; /* flex: horizontal */
     text-align: center; /* text: centered text */
 }
@@ -94,6 +101,10 @@
     margin-left: 2rem;
 }
 
+.m-l-l {
+    margin-left: 1.5rem;
+}
+
 .m-l-m {
     margin-left: 1rem;
 }
@@ -107,9 +118,19 @@
 }
 
 /* sizing */
-/* f: font  |  x: extra ..., s: small, m: medium, l: large */
+/* f: font, w: width  |  x: extra ..., s: small, m: medium, l: large */
 .f-s {
     font-size: 0.8rem;
+}
+
+@media screen and (min-width: 800px) {
+    .w-m {
+        width: 750px;
+    }
+
+    .w-s {
+        width: 500px;
+    }
 }
 
 /* typography */
@@ -135,6 +156,13 @@
 }
 
 /* ######### components ######### */
+
+/* home */
+.home-stats-grid {
+    display: grid;
+    grid-gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+}
 
 /* shop */
 .shop-grid {

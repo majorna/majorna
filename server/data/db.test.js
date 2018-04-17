@@ -35,9 +35,29 @@ suite('db', () => {
 
   test('getMjMeta', async () => {
     const meta = await db.getMjMeta()
-    assert(meta.cap >= 500)
+    assert(meta.marketCap >= 500)
     assert(meta.val >= 0)
     assert(meta.userCount >= 0)
+  })
+
+  test('updateMjMetaStatsIfRequired', async () => {
+    const now = new Date()
+    const metaBefore = await db.getMjMeta()
+    assert(!metaBefore.monthly.txVolume)
+
+    const updated = await db.updateMjMetaStatsIfRequired(now)
+    assert(updated)
+
+    const metaAfter = await db.getMjMeta()
+    assert(metaAfter.monthly.txVolume)
+
+    // no updates required
+    const updated2 = await db.updateMjMetaStatsIfRequired(now)
+    assert(!updated2)
+
+    const metaAfter2 = await db.getMjMeta()
+    assert(metaAfter2.monthly.updated.getTime() === metaAfter.monthly.updated.getTime())
+    assert(metaAfter2.monthly.txVolume === metaAfter.monthly.txVolume)
   })
 
   test('getBlockInfo', async () => {
@@ -63,9 +83,9 @@ suite('db', () => {
 
     const newUserData = await db.createUserDoc(testUserData, uid)
 
-    // verify market cap increase
+    // verify market marketCap increase
     const metaAfter = await db.getMjMeta()
-    assert(metaAfter.cap === meta.cap + starterBalance)
+    assert(metaAfter.marketCap === meta.marketCap + starterBalance)
     assert(metaAfter.userCount === meta.userCount + 1)
 
     // verify user doc fields
@@ -232,9 +252,9 @@ suite('db', () => {
       assert(receiverTx.amount === retrievedRewardTx.amount)
       totalReward += retrievedRewardTx.amount
 
-      // verify market cap increase
+      // verify market marketCap increase
       const metaAfter = await db.getMjMeta()
-      assert(metaAfter.cap === initMeta.cap + totalReward)
+      assert(metaAfter.marketCap === initMeta.marketCap + totalReward)
 
       // verify last block update
       const lastBlock = await db.getBlock(blockToMine.header.no)
