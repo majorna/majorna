@@ -27,7 +27,7 @@ exports.insertBlockSinceLastOne = async (now, blockInfo, customOldBlockPath) => 
   const oldBlock = await db.getBlock(newBlock.header.no - 1)
   const oldBlockPath = customOldBlockPath || exports.getBlockPath(oldBlock.header)
   await github.createFile(block.toJson(oldBlock), oldBlockPath)
-  console.log(`inserted new block`)
+  console.log(`inserted new block: no ${newBlock.header.no}, time: ${newBlock.header.time}, nonce: ${newBlock.header.nonce}`)
 }
 
 /**
