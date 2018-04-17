@@ -20,6 +20,7 @@ export default props =>
           <li>☐ Stats page.</li>
           <li>☐ Funding page.</li>
           <li>☐ Public announcement.</li>
+          <li>☐ Exchange.</li>
           <li>☐ Mobile apps.</li>
           <li>☐ 3rd party integrations and bots.</li>
           <li>☐ Majorna fund.</li>
