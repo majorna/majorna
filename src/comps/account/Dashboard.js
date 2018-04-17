@@ -27,8 +27,6 @@ export default props => {
         <small><i>* (future-fixed trading price before exchange opens)</i></small>
       </div>
 
-      <StatsWidget mjMetaDoc={props.mjMetaDoc} />
-
       <div className="mj-box flex-column w-s">
         <div><strong>Balance</strong>: mj<strong>{fm(props.userDoc.balance)}</strong> (${fm(props.userDoc.balance * props.mjMetaDoc.val)})</div>
         <div><strong>Address</strong>: <small>{props.user.uid}</small></div>
@@ -59,6 +57,8 @@ export default props => {
           )
         )}
       </div>
+
+      <StatsWidget mjMetaDoc={props.mjMetaDoc} />
     </React.Fragment>
   )
 }
