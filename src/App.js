@@ -57,7 +57,7 @@ export default withRouter(class App extends Component {
       } :
       {
         apiKey: 'AIzaSyCxdSFEhrqdH2VJ8N4XmRZ9st5Q5hBmgfY',
-        authDomain: 'majorna-fire.firebaseapp.com',
+        authDomain: 'getmajorna.com',
         databaseURL: 'https://majorna-fire.firebaseio.com',
         projectId: 'majorna-fire',
         storageBucket: 'majorna-fire.appspot.com',
