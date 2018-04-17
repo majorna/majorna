@@ -27,7 +27,7 @@ exports.init = async () => {
   }
 
   const batch = firestore.batch()
-  batch.create(mjMetaDocRef, {
+  batch.create(mjMetaDocRef, { // todo: use this data as testData.meta.mj init data
     val: 0.01,
     marketCap: 0,
     userCount: 0,

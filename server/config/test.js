@@ -83,7 +83,7 @@ const testData = exports.data = {
       userCount: 3,
       maxSupply: 0,
       monthly: {
-        month: 0,
+        updated: 0,
         txVolume: 0
         // vals: [{t: 'May 12', mj: 0.01}]
       }
