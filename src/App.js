@@ -74,6 +74,7 @@ export default withRouter(class App extends Component {
       if (u) {
         this.props.history.push('/dashboard')
         this.setState({user: u})
+        // todo: this.fbUnsubMjMetaDocSnapshot = this.db.collection('meta').doc('mj').onSnapshot(doc => this.setState({mjMetaDoc: doc.data()}))
         this.fbUnsubUserSelfDocSnapshot = this.db.collection('users').doc(u.uid).onSnapshot(async doc => {
           if (doc.exists) {
             const userData = doc.data()
@@ -105,7 +106,7 @@ export default withRouter(class App extends Component {
   logout = async () => {
     // unsub from firestore realtime document updates
     this.fbUnsubUserSelfDocSnapshot && this.fbUnsubUserSelfDocSnapshot()
-    // this.fbUnsubMjMetaDocSnapshot && this.fbUnsubMjMetaDocSnapshot()
+    // todo: this.fbUnsubMjMetaDocSnapshot && this.fbUnsubMjMetaDocSnapshot()
     await this.firebaseAuth.signOut()
   }
 
@@ -115,8 +116,8 @@ export default withRouter(class App extends Component {
 
       <Switch>
         <Route exact path='/' render={routeProps => <Home {...routeProps} mjMetaDoc={this.state.mjMetaDoc}/>} />
-        <Route path='/about/roadmap' component={Roadmap} />
         <Route path='/about/tech' component={Tech} />
+        <Route path='/about/roadmap' component={Roadmap} />
         <Route path='/about' component={About} />
         <Route path='/login' render={routeProps => <Login {...routeProps} uiConfig={this.firebaseUIConfig} firebaseAuth={this.firebaseAuth}/>} />
         <Route path='/dashboard' render={routeProps => <Dashboard {...routeProps} user={this.state.user} acctQr={this.state.acctQr} userDoc={this.state.userDoc} mjMetaDoc={this.state.mjMetaDoc}/>} />

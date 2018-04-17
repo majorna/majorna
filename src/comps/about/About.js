@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 export default props =>
   <React.Fragment>
@@ -7,10 +8,13 @@ export default props =>
       <div className="m-t-m">
         This page is a placeholder for following work-in-progress documents:
       </div>
-      <ul>
-        <li>Majorna Technology</li>
-        <li>Roadmap</li>
-      </ul>
+
+      <div className="content">
+        <ul className="m-t-l">
+          <li><Link to="/about/tech">Majorna Technology</Link></li>
+          <li><Link to="/about/roadmap">Roadmap</Link></li>
+        </ul>
+      </div>
     </div>
   </React.Fragment>
 
