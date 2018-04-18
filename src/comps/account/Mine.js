@@ -90,7 +90,7 @@ export default class extends Component {
       <div className="m-t-m" style={{maxWidth: '30rem'}}>
         <strong>Miner Map:</strong>
         <ResponsiveContainer width="100%" aspect={2}>
-          <ScatterChart style={{backgroundImage: `url(${worldMap})`, backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%', backgroundPosition: 'center'}}>
+          <ScatterChart style={{backgroundImage: `url(${worldMap})`, backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%', backgroundPosition: '1rem center'}}>
             <XAxis dataKey={'lon'} type="number" domain={[-180, 180]} hide/>
             <YAxis dataKey={'lat'} type="number" domain={[-90, 90]} hide/>
             <Scatter data={this.state.miners} fill='darkorange'/>
