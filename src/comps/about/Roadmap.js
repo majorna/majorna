@@ -1,7 +1,10 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 export default props =>
   <div className="mj-box flex-column">
+    <Link to="/about">{'< About'}</Link>
+
     <div className="is-size-5 has-text-centered">Roadmap</div>
     <div className="m-t-m">
       Following bullets summarise completed and planned tasks:
