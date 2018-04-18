@@ -33,6 +33,7 @@ export default class extends Component {
             <div className="navbar-item has-dropdown is-hoverable">
               <a className="navbar-link">{this.props.user.displayName}</a>
               <div className="navbar-dropdown is-boxed is-right">
+                <NavLink className="navbar-item" activeClassName="is-active" to='/about' onClick={this.closeNav}>About</NavLink>
                 <NavLink className="navbar-item" activeClassName="is-active" to='/profile' onClick={this.closeNav}>Profile</NavLink>
                 <Link className="navbar-item" to='/' onClick={this.logout}>Logout</Link>
               </div>
