@@ -24,7 +24,7 @@ export default props => {
             <Area type='monotone' dataKey='mj' unit="$" stroke='DarkOrange' fill='Wheat'/>
           </AreaChart>
         </ResponsiveContainer>
-        <small><i>* (future-fixed trading price before exchange opens)</i></small>
+        <small><i>* (fixed trading price until exchange opens)</i></small>
       </div>
 
       <div className="mj-box flex-column w-s">
