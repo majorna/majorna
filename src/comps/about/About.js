@@ -6,7 +6,12 @@ export default props =>
     <div className="mj-box flex-column">
       <div className="is-size-5 has-text-centered">About Majorna</div>
       <div className="m-t-m">
-        This page is a placeholder for following work-in-progress documents:
+        Majorna is an easy to use cryptocurrency.
+        It is available in browser, without any need for special software.
+        All transaction logs are kept at GitHub <a href="https://github.com/majorna/blockchain" target="_blank" rel="noopener noreferrer">blockchain repo</a>.
+        All transaction are transparent and logs are publicly accessible, whereas senders and receiver identities are anonymous.
+        This makes your account balance provable and secure, while keeping your identity hidden (there are also plans to make transactions themselves anonymous).
+        Following are work-in-progress documents detailing Majorna:
       </div>
 
       <div className="content">

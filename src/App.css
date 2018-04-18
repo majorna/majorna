@@ -118,7 +118,8 @@ body {
 }
 
 /* sizing */
-/* f: font, w: width  |  x: extra ..., s: small, m: medium, l: large */
+/* f: font, w: width, mw: max-width */
+/* x: extra ..., s: small, m: medium, l: large */
 .f-s {
     font-size: 0.8rem;
 }
@@ -131,6 +132,10 @@ body {
     .w-s {
         width: 500px;
     }
+}
+
+.mw-l {
+    max-width: 1216px;
 }
 
 /* typography */
@@ -157,8 +162,8 @@ body {
 
 /* ######### components ######### */
 
-/* home */
-.home-stats-grid {
+/* shared */
+.stats-grid {
     display: grid;
     grid-gap: 1.5rem;
     grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));

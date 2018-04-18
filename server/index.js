@@ -1,18 +1,18 @@
+// redirect all logs to StackDriver before any other code is executed
 const util = require('util')
 const firebaseConfig = require('./config/firebase')
-const server = require('./config/server')
-const blockchain = require('./blockchain/blockchain')
-
-// redirect all logs to StackDriver
 console.log = (...args) => {
-  const log = util.format.apply(null, args) + '\n'
-  process.stdout.write(log)
-  firebaseConfig.log.info(firebaseConfig.log.entry(log)).catch(e => process.stderr.write(e))
+  const logLine = util.format.apply(null, args)
+  process.stdout.write(logLine + '\n')
+  firebaseConfig.log.info(firebaseConfig.log.entry(logLine)).catch(e => process.stderr.write(e))
 }
 console.error = (...args) => {
-  const log = util.format.apply(null, args) + '\n'
-  process.stderr.write(log)
-  firebaseConfig.log.error(firebaseConfig.log.entry(log)).catch(e => process.stderr.write(e))
+  const logLine = util.format.apply(null, args)
+  process.stderr.write(logLine + '\n')
+  firebaseConfig.log.error(firebaseConfig.log.entry(logLine)).catch(e => process.stderr.write(e))
 }
+
+const server = require('./config/server')
+const blockchain = require('./blockchain/blockchain')
 
 server().then(() => blockchain.startBlockchainInsertTimer())

@@ -1,4 +1,4 @@
-<a href="https://majorna-fire.firebaseapp.com"><img src="/src/res/majorna.png" width="256"></a>
+<a href="https://getmajorna.com"><img src="/src/res/majorna.png" width="256"></a>
 
 [![version](https://img.shields.io/github/release/majorna/majorna.svg)](https://github.com/majorna/majorna/releases) [![license](https://img.shields.io/github/license/majorna/majorna.svg)](/LICENSE) [![Build Status](https://travis-ci.org/majorna/majorna.svg?branch=master)](https://travis-ci.org/majorna/majorna)
 

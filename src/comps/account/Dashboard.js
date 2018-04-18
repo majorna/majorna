@@ -2,6 +2,7 @@ import React from 'react'
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from 'recharts'
 import { Link } from 'react-router-dom'
 import { fm, getChartData } from '../../data/utils'
+import StatsWidget from '../shared/StatsWidget'
 
 export default props => {
   if (!props.userDoc || !props.mjMetaDoc) {
@@ -23,7 +24,7 @@ export default props => {
             <Area type='monotone' dataKey='mj' unit="$" stroke='DarkOrange' fill='Wheat'/>
           </AreaChart>
         </ResponsiveContainer>
-        <small><i>* (future-fixed trading price before exchange opens)</i></small>
+        <small><i>* (fixed trading price until exchange opens)</i></small>
       </div>
 
       <div className="mj-box flex-column w-s">
@@ -56,6 +57,8 @@ export default props => {
           )
         )}
       </div>
+
+      <StatsWidget mjMetaDoc={props.mjMetaDoc} />
     </React.Fragment>
   )
 }
