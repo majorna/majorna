@@ -36,7 +36,11 @@ export default props => {
       <div className="mj-box w-s">
         <Link to="/send" className="button is-info"><i className="fas fa-paper-plane m-r-s"/>Send</Link>
         <Link to="/receive" className="button m-l-m"><i className="fas fa-qrcode m-r-s"/>Receive</Link>
-        <Link to="/mine" className="button m-l-xl"><i className="fas fa-th m-r-s"/>Mine</Link>
+      </div>
+
+      <div className="mj-box w-s">
+        <Link to="/shop/majorna" className="button is-primary"><i className="fas fa-credit-card m-r-s"/>Buy Majorna</Link>
+        <Link to="/mine" className="button m-l-m"><i className="fas fa-th m-r-s"/>Mine</Link>
       </div>
 
       <div className="mj-box flex-column w-m">
