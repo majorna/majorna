@@ -10,7 +10,7 @@ export default props => {
   window.requestAnimationFrame(() => {
     const script = document.createElement('script')
     script.src = 'https://commerce.coinbase.com/v1/checkout.js'
-    document.getElementById('widget').appendChild(script)
+    document.getElementById('action-buttons').appendChild(script)
   })
 
   return (
@@ -32,14 +32,8 @@ export default props => {
 
       {item.unavailable && <strong className="m-t-m">Status: <span className="has-text-warning">Unavailable</span></strong>}
 
-      <div id="widget">
-        <a className="donate-with-crypto" href="https://commerce.coinbase.com/checkout/3e67bb92-c9e8-42c3-a832-48f8bfc67e84">
-          <span>Get Majorna</span>
-        </a>
-      </div>
-
-      <div className="flex-row m-t-l">
-        <button className="button is-info" disabled={item.unavailable} onClick={handleBuy}><i className="fas fa-shopping-cart m-r-s"/>Buy</button>
+      <div id="action-buttons" className="flex-row m-t-l">
+        <a className="button is-info donate-with-crypto" disabled={item.unavailable} href="https://commerce.coinbase.com/checkout/3e67bb92-c9e8-42c3-a832-48f8bfc67e84" onClick={handleBuy}>Buy</a>
         <button className="button m-l-m" onClick={props.history.goBack}>Cancel</button>
       </div>
     </div>
