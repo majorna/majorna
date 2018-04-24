@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/majorna/majorna.svg?branch=master)](https://travis-ci.org/majorna/majorna)
 
-Majorna is a cryptocurrency with primary objectives of becoming:
+Majorna is an MIT licensed cryptocurrency with primary objectives of becoming:
 * Decentralized.
 * Trustless.
 * PoW-less.

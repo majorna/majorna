@@ -12,7 +12,11 @@ export default props => {
     })
   }
 
-  function handleBuy () {}
+  function handleBuy () {
+    if (!item.externalUrl) {
+      // no external url to redirect the user to so handle exchange internally
+    }
+  }
 
   return (
     <div className="mj-box flex-column center-all box-center w-m">
