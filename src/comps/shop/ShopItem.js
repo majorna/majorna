@@ -1,46 +1,45 @@
-import React from 'react'
+import React, { Component } from 'react'
 import builtInItems from './BuiltInItems'
 
-export default props => {
-  const item = builtInItems.find(i => i.id === props.match.params.id)
-  if (item.id === 'majorna') {
-    // todo: use component did mount
-    window.requestAnimationFrame(() => {
-      const script = document.createElement('script')
-      script.src = 'https://commerce.coinbase.com/v1/checkout.js'
-      document.getElementById('action-buttons').appendChild(script)
-    })
+export default class extends Component {
+  item = builtInItems.find(i => i.id === this.props.match.params.id)
+
+  componentDidMount = () => {
+    // rendering of dom is complete in-mem so we can manipulate dom now
+    const script = document.createElement('script')
+    script.src = 'https://commerce.coinbase.com/v1/checkout.js'
+    // coinbase scripts expects to be in the same container that script is executed
+    document.getElementById('action-buttons').appendChild(script)
   }
 
-  function handleBuy () {
-    if (!item.externalUrl) {
-      // no external url to redirect the user to so handle exchange internally
+  handleBuy = () => {
+    if (!this.item.externalUrl) {
+      // no external url to redirect the user to, so handle exchange internally
     }
   }
 
-  return (
+  render = () =>
     <div className="mj-box flex-column center-all box-center w-m">
-      <div className="is-size-5 has-text-centered">Buy - {item.name}</div>
+      <div className="is-size-5 has-text-centered">Buy - {this.item.name}</div>
 
-      {item.fontIcon && <i className={item.fontIcon + ' m-t-m'} style={{width: 150, height: 150}}/>}
+      {this.item.fontIcon && <i className={this.item.fontIcon + ' m-t-m'} style={{width: 150, height: 150}}/>}
 
-      {item.imageUrl && <img className="m-t-m" width="150" height="150" src={item.imageUrl} alt={item.name}/>}
+      {this.item.imageUrl && <img className="m-t-m" width="150" height="150" src={this.item.imageUrl} alt={this.item.name}/>}
 
-      {item.googlePlayUrl &&
-        <a href={item.googlePlayUrl} target="_blank" rel="noopener noreferrer">
+      {this.item.googlePlayUrl &&
+        <a href={this.item.googlePlayUrl} target="_blank" rel="noopener noreferrer">
           <img className="m-t-m" width="150" src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" alt="Get it on Google Play"/>
         </a>
       }
 
       <strong className="m-t-m">Description</strong>
-      <div>{item.description}</div>
+      <div>{this.item.description}</div>
 
-      {item.unavailable && <strong className="m-t-m">Status: <span className="has-text-warning">Unavailable</span></strong>}
+      {this.item.unavailable && <strong className="m-t-m">Status: <span className="has-text-warning">Unavailable</span></strong>}
 
       <div id="action-buttons" className="flex-row m-t-l">
-        <a className="button is-info donate-with-crypto" disabled={item.unavailable} href={item.externalUrl} onClick={handleBuy}>Buy</a>
-        <button className="button m-l-m" onClick={props.history.goBack}>Cancel</button>
+        <a className="button is-info donate-with-crypto" disabled={this.item.unavailable} href={this.item.externalUrl} onClick={this.handleBuy}>Buy</a>
+        <button className="button m-l-m" onClick={this.props.history.goBack}>Cancel</button>
       </div>
     </div>
-  )
 }
