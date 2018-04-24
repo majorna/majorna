@@ -23,7 +23,7 @@ export default props => {
       <strong className="m-t-m">Description</strong>
       <div>{item.description}</div>
 
-      <strong className="m-t-m">Status: {item.unavailable ? <span className="has-text-warning">Unavailable</span> : <span className="has-text-success">Available</span>}</strong>
+      {item.unavailable && <strong className="m-t-m">Status: <span className="has-text-warning">Unavailable</span></strong>}
 
       <div className="flex-row m-t-l">
         <button className="button is-info" disabled={item.unavailable} onClick={handleBuy}><i className="fas fa-shopping-cart m-r-s"/>Buy</button>

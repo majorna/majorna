@@ -4,9 +4,9 @@ export default [
   {
     id: 'majorna',
     name: 'Majorna',
-    unavailable: true,
     description: 'Buy Majorna using US Dollar, Euro, Bitcoin, or Ethereum.',
-    imageUrl: mj
+    imageUrl: mj,
+    externalUrl: 'https://commerce.coinbase.com/checkout/3e67bb92-c9e8-42c3-a832-48f8bfc67e84',
   },
   {
     id: 'bitcoin',
