@@ -1,22 +1,33 @@
 <a href="https://getmajorna.com"><img src="/src/res/majorna.png" width="256"></a>
 
-[![version](https://img.shields.io/github/release/majorna/majorna.svg)](https://github.com/majorna/majorna/releases) [![license](https://img.shields.io/github/license/majorna/majorna.svg)](/LICENSE) [![Build Status](https://travis-ci.org/majorna/majorna.svg?branch=master)](https://travis-ci.org/majorna/majorna)
+[![Build Status](https://travis-ci.org/majorna/majorna.svg?branch=master)](https://travis-ci.org/majorna/majorna)
 
 Majorna is a cryptocurrency with primary objectives of becoming:
-* Decentralized
-* Trustless
-* PoW-less
+* Decentralized.
+* Trustless.
+* PoW-less.
 
 This repo contains Majorna source code with following components:
 * Majorna server.
-* Majorna UI.
-* Majorna miner.
+* Majorna UI (including miner).
 
 ## Blockchain
 
 Blockchain (ledger of all transactions) is kept in its [own repo](https://github.com/majorna/blockchain).
 
-## Deployment
+## Community
+
+* [/r/majorna](https://www.reddit.com/r/majorna/)
+
+## License
+
+MIT
+
+## Development
+
+Following information is for Majorna developers and contributors:
+
+### Deployment
 
 Server requires following environment variables in production mode:
 
@@ -41,7 +52,7 @@ MAJORNA_FIREBASE_TEST_JSON_PATH # alternative
 MAJORNA_GITHUB_TOKEN
 ```
 
-## Heroku Push
+### Heroku Push
 
 ```bash
 git subtree push --prefix server heroku master
@@ -50,7 +61,7 @@ git subtree push --prefix server heroku master
 git push heroku `git subtree split --prefix server master`:master --force
 ```
 
-## Upgrading Packages
+### Upgrading Packages
 
 UI:
 
@@ -60,11 +71,3 @@ UI:
 
 Server:
 * Node.js: https://nodejs.org/en/download/releases/
-
-## Community
-
-* [/r/majorna](https://www.reddit.com/r/majorna/)
-
-## License
-
-MIT
