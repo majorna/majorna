@@ -9,7 +9,7 @@ export default class extends Component {
     if (this.item.externalScript) {
       const script = document.createElement('script')
       script.src = this.item.externalScript
-      document.getElementById('action-buttons').appendChild(script)
+      this.actionButtons.appendChild(script)
     }
   }
 
@@ -38,7 +38,7 @@ export default class extends Component {
 
       {this.item.unavailable && <strong className="m-t-m">Status: <span className="has-text-warning">Unavailable</span></strong>}
 
-      <div id="action-buttons" className="flex-row m-t-l">
+      <div ref={ref => this.actionButtons = ref} className="flex-row m-t-l">
         <a className="button is-info donate-with-crypto" disabled={this.item.unavailable} href={this.item.externalUrl} onClick={this.handleBuy}>Buy</a>
         <button className="button m-l-m" onClick={this.props.history.goBack}>Cancel</button>
       </div>
