@@ -6,10 +6,11 @@ export default class extends Component {
 
   componentDidMount = () => {
     // rendering of dom is complete in-mem so we can manipulate dom now
-    const script = document.createElement('script')
-    script.src = 'https://commerce.coinbase.com/v1/checkout.js'
-    // coinbase scripts expects to be in the same container that script is executed
-    document.getElementById('action-buttons').appendChild(script)
+    if (this.item.externalScript) {
+      const script = document.createElement('script')
+      script.src = this.item.externalScript
+      document.getElementById('action-buttons').appendChild(script)
+    }
   }
 
   handleBuy = () => {
