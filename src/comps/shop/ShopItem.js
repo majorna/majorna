@@ -5,7 +5,6 @@ export default class extends Component {
   item = builtInItems.find(i => i.id === this.props.match.params.id)
 
   componentDidMount = () => {
-    // rendering of dom is complete in-mem so we can manipulate dom now
     if (this.item.externalScript) {
       const script = document.createElement('script')
       script.src = this.item.externalScript
