@@ -13,4 +13,8 @@ exports.coinbaseCommerce = route.post('/webhooks/coinbase-commerce', async (ctx,
   // webhook payload is legit so log the details
   const data = ctx.request.body
   console.log('Incoming Coinbase Commerce webhook:', data)
+
+  if (data.event.type === 'charge:confirmed') {
+
+  }
 })
