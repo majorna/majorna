@@ -1,25 +1,16 @@
 const route = require('koa-route')
-const grpc = require('grpc')
-const db = require('../data/db')
+const config = require('../config/config')
 
 /**
- * Create user doc and return a blank response (204).
+ * Accept payments through Coinbase Commerce: https://commerce.coinbase.com/docs/api/#webhooks
  */
-exports.init = route.get('/users/init', async ctx => {
-  try {
-    await db.createUserDoc(ctx.state.user)
-  } catch (e) {
-    if (parseInt(e.code) === grpc.status.ALREADY_EXISTS) {
-      ctx.status = 200
-      return
-    } else {
-      throw e
-    }
-  }
-  ctx.status = 204
-})
+exports.coinbaseCommerce = route.post('/webhooks/coinbase-commerce', async (ctx, id) => {
+  // verify raw payload signature
+  const secret = config.webhooks.coinbaseCommerceSecret
+  const sig = ctx.headers['X-CC-Webhook-Signature']
+  const payload = ctx.request.rawBody
 
-exports.get = route.get('/users/:id', async (ctx, id) => {
-  const user = await db.getUser(id)
-  ctx.body = {name: user.name}
+  // webhook payload is legit so log the details
+  const data = ctx.request.body
+  console.log('Incoming Coinbase Commerce webhook:', data)
 })

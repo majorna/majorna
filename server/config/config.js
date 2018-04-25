@@ -102,11 +102,17 @@ const blockchain = {
   difficultyRewardMultiplier: 5
 }
 
+// webhooks
+const webhooks = {
+  coinbaseCommerceSecret: process.env.COINBASE_COMMERCE_SECRET
+}
+
 // module exports
 module.exports = {
   app,
   firebase: fb,
   github,
   crypto,
-  blockchain
+  blockchain,
+  webhooks
 }

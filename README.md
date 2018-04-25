@@ -41,6 +41,8 @@ MAJORNA_TX_SIGN_PRIVATE_KEY
 MAJORNA_TX_SIGN_PRIVATE_KEY_PATH # alternative
 MAJORNA_TX_SIGN_PUBLIC_KEY
 MAJORNA_TX_SIGN_PUBLIC_KEY_PATH # alternative
+
+COINBASE_COMMERCE_SECRET
 ```
 
 Following environment variables are required to run the tests:
