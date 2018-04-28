@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import server from '../../data/server'
+import { fm } from '../../data/utils'
 
 export default class extends Component {
   state = {
@@ -13,13 +14,14 @@ export default class extends Component {
     const resEth = await server.coinbase.price('ETH-USD')
     const ethData = await resEth.json()
     this.setState({
-      btcMj: Math.round(btcData.data.amount / this.props.mjMetaDoc.val),
-      ethMj: Math.round(ethData.data.amount / this.props.mjMetaDoc.val)
+      btcMj: fm(Math.round(btcData.data.amount / this.props.mjMetaDoc.val)),
+      ethMj: fm(Math.round(ethData.data.amount / this.props.mjMetaDoc.val))
     })
   }
 
-  render = () =>
+  render = () => !this.state.btcMj ? null :
     <React.Fragment>
-      abc
+      1 Bitcoin = {this.state.btcMj} Majorna <br/>
+      1 Ethereum = {this.state.ethMj} Majorna
     </React.Fragment>
 }
