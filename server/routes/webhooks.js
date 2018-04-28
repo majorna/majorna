@@ -4,7 +4,7 @@ const config = require('../config/config')
 /**
  * Accept payments through Coinbase Commerce: https://commerce.coinbase.com/docs/api/#webhooks
  */
-exports.coinbaseCommerce = route.post('/webhooks/coinbase-commerce', async (ctx, id) => {
+exports.coinbaseCommerce = route.post('/webhooks/coinbase-commerce', async ctx => {
   // verify raw payload signature
   const secret = config.webhooks.coinbaseCommerceSecret
   const sig = ctx.headers['X-CC-Webhook-Signature']
@@ -17,4 +17,6 @@ exports.coinbaseCommerce = route.post('/webhooks/coinbase-commerce', async (ctx,
   if (data.event.type === 'charge:confirmed') {
 
   }
+
+  // need to return 200 otherwise coinbase retries
 })
