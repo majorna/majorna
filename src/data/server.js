@@ -25,6 +25,9 @@ export default {
   miners: {
     getLocation: () => fetch('https://geoip-db.com/json/'),
     post: (lat, lon) => postJson('/miners', {lat, lon})
+  },
+  coinbase: {
+    price: currencyPair => fetch(`https://api.coinbase.com/v2/prices/${currencyPair}/spot`)
   }
 }
 

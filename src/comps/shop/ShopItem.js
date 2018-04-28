@@ -35,6 +35,8 @@ export default class extends Component {
       <strong className="m-t-m">Description</strong>
       <div>{this.item.description}</div>
 
+      {this.item.widget && <div className="m-t-m"><this.item.widget mjMetaDoc={this.props.mjMetaDoc}/></div>}
+
       {this.item.unavailable && <strong className="m-t-m">Status: <span className="has-text-warning">Unavailable</span></strong>}
 
       <div ref={ref => this.actionButtons = ref} className="flex-row m-t-l">
