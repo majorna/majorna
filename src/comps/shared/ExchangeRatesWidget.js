@@ -20,8 +20,9 @@ export default class extends Component {
   }
 
   render = () => !this.state.btcMj ? null :
-    <React.Fragment>
-      1 Bitcoin = {this.state.btcMj} Majorna <br/>
-      1 Ethereum = {this.state.ethMj} Majorna
-    </React.Fragment>
+    <div className="flex-column">
+      <strong>Exchange Rates</strong>
+      1 Bitcoin = {this.state.btcMj} mj <br/>
+      1 Ethereum = {this.state.ethMj} mj
+    </div>
 }
