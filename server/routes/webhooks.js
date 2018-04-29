@@ -6,7 +6,7 @@ const config = require('../config/config')
  */
 exports.coinbaseCommerce = route.post('/webhooks/coinbase-commerce', async ctx => {
   // verify raw payload signature
-  const secret = config.webhooks.coinbaseCommerceSecret
+  const sharedSecret = config.integrations.coinbaseCommerce.webhookSharedSecret
   const sig = ctx.headers['X-CC-Webhook-Signature']
   const payload = ctx.request.rawBody
 

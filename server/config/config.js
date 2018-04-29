@@ -102,9 +102,12 @@ const blockchain = {
   difficultyRewardMultiplier: 5
 }
 
-// webhooks
-const webhooks = {
-  coinbaseCommerceSecret: process.env.COINBASE_COMMERCE_SECRET
+// 3rd party integrations
+const integrations = {
+  coinbaseCommerce: {
+    apiKey: process.env.MAJORNA_COINBASE_COMMERCE_API_KEY,
+    webhookSharedSecret: process.env.MAJORNA_COINBASE_COMMERCE_WEBHOOK_SHARED_SECRET
+  }
 }
 
 // module exports
@@ -114,5 +117,5 @@ module.exports = {
   github,
   crypto,
   blockchain,
-  webhooks
+  integrations
 }
