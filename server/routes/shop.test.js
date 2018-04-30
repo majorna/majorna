@@ -1,8 +1,8 @@
 const assert = require('assert')
 const testData = require('../config/test').data
 
-suite('route: webhooks', () => {
-  test('get', async () => {
+suite('route: shop', () => {
+  test('webhooks/coinbase-commerce', async () => {
     const res = await testData.users.u1Request.get('/users/2')
     assert(res.status === 200)
     assert(res.data.name === testData.users.u2Doc.name)
