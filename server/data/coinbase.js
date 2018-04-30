@@ -8,3 +8,4 @@
 
 // todo: use curl https://api.coinbase.com/v2/exchange-rates?currency=USD
 // instead of individual calls
+// also fix the UI code

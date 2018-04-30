@@ -19,10 +19,15 @@ export default class extends Component {
     })
   }
 
-  render = () => !this.state.btcMj ? null :
+  render = () =>
     <div className="flex-column">
       <strong>Exchange Rates</strong>
-      1 Bitcoin = {this.state.btcMj} mj <br/>
-      1 Ethereum = {this.state.ethMj} mj
+      {!this.state.btcMj ?
+        <div className="mj-box center-all spinner"/> :
+        <div>
+          1 Bitcoin = {this.state.btcMj} mj <br/>
+          1 Ethereum = {this.state.ethMj} mj
+        </div>
+      }
     </div>
 }
