@@ -27,7 +27,7 @@ export default {
     post: (lat, lon) => postJson('/miners', {lat, lon})
   },
   coinbase: {
-    price: currencyPair => fetch(`https://api.coinbase.com/v2/prices/${currencyPair}/spot`)
+    usdExchangeRates: () => fetch('https://api.coinbase.com/v2/exchange-rates?currency=USD')
   }
 }
 

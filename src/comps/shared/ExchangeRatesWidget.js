@@ -9,13 +9,11 @@ export default class extends Component {
   }
 
   componentDidMount = async () => {
-    const resBtc = await server.coinbase.price('BTC-USD')
-    const btcData = await resBtc.json()
-    const resEth = await server.coinbase.price('ETH-USD')
-    const ethData = await resEth.json()
+    const usdExRes = await server.coinbase.usdExchangeRates()
+    const usdExData = await usdExRes.json()
     this.setState({
-      btcMj: fm(Math.round(btcData.data.amount / this.props.mjMetaDoc.val)),
-      ethMj: fm(Math.round(ethData.data.amount / this.props.mjMetaDoc.val))
+      btcMj: fm(Math.round(1 / usdExData.data.rates.BTC / this.props.mjMetaDoc.val)),
+      ethMj: fm(Math.round(1 / usdExData.data.rates.ETH / this.props.mjMetaDoc.val))
     })
   }
 
@@ -24,7 +22,7 @@ export default class extends Component {
       <strong>Exchange Rates</strong>
       {!this.state.btcMj ?
         <div className="mj-box center-all spinner"/> :
-        <div>
+        <div className="mj-box">
           1 Bitcoin = {this.state.btcMj} mj <br/>
           1 Ethereum = {this.state.ethMj} mj
         </div>
