@@ -20,4 +20,7 @@ exports.coinbaseCommerce = route.post('/shop/webhooks/coinbase-commerce', async 
   // }
 
   // need to return 200 otherwise coinbase retries
+
+  // todo: check if sending BTC, some more BTC, then ETH causes webhook to get called with same info and updated figures
+  // (which would cause double buy)
 })

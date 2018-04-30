@@ -5,25 +5,14 @@
  * Coinbase Commerce Integration:
  * - API ref: https://commerce.coinbase.com/docs/api/
  */
+const axios = require('axios')
 
-// todo: use curl https://api.coinbase.com/v2/exchange-rates?currency=USD
+exports.createCharge = async userId => {
+}
 
-/* todo: use
-
- curl https://api.commerce.coinbase.com/charges \
- -X POST \
- -H 'Content-Type: application/json' \
- -H "X-CC-Api-Key: <Your API Key>" \
- -H "X-CC-Version: 2018-03-22"
- -d '{
- "name": "The Sovereign Individual",
- "description": "Mastering the Transition to the Information Age",
- "pricing_type": "no_price",
- "metadata": {
- "customer_id": "id_1005",
- "customer_name": "Satoshi Nakamoto"
- }
- }'
-
- */
-
+exports.getExchanges = async () => {
+  const res = await axios.get('https://api.coinbase.com/v2/exchange-rates?currency=USD')
+  assert(res.status === 200)
+  assert(res.data.data.rates.BTC)
+  assert(res.data.data.rates.ETH)
+}
