@@ -16,11 +16,11 @@ export default props =>
       Tx Volume (monthly)
     </div>
     <div className="flex-column center-all">
-      <strong className="is-size-5 has-text-grey">{fm(props.mjMetaDoc.marketCap / 1000000)}M mj</strong>
+      <strong className="is-size-5 has-text-grey">{fm(props.mjMetaDoc.marketCap / (1000 * 1000))}M mj</strong>
       Current Supply
     </div>
     <div className="flex-column center-all">
-      <strong className="is-size-5 has-text-grey">{fm(props.mjMetaDoc.maxSupply / 1000000)}M mj</strong>
+      <strong className="is-size-5 has-text-grey">{fm(props.mjMetaDoc.maxSupply / (1000 * 1000 * 1000))}B mj</strong>
       Max Supply
     </div>
     <div className="flex-column center-all">

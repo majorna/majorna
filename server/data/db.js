@@ -31,7 +31,7 @@ exports.init = async () => {
     val: 0.01,
     marketCap: 0,
     userCount: 0,
-    maxSupply: 100000000,
+    maxSupply: 200 * 1000 * 1000 * 1000,
     monthly: {
       updated: 0,
       txVolume: 0
