@@ -4,7 +4,7 @@ const route = require('koa-route')
 /**
  * Accept payments through Coinbase Commerce: https://commerce.coinbase.com/docs/api/#webhooks
  */
-exports.coinbaseCommerce = route.post('/webhooks/coinbase-commerce', async ctx => {
+exports.coinbaseCommerce = route.post('/shop/webhooks/coinbase-commerce', async ctx => {
   // verify raw payload signature
   // const sharedSecret = config.integrations.coinbaseCommerce.webhookSharedSecret
   // const sig = ctx.headers['X-CC-Webhook-Signature']
@@ -15,7 +15,8 @@ exports.coinbaseCommerce = route.post('/webhooks/coinbase-commerce', async ctx =
   // console.log('Incoming Coinbase Commerce webhook:', data)
   //
   // if (data.event.type === 'charge:confirmed') {
-  //
+  //   // check coinbase for spot prices and convert all incoming payments
+  //   // (a transaction can have payments in multiple cryptos with different amounts)
   // }
 
   // need to return 200 otherwise coinbase retries
