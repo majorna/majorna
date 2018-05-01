@@ -15,7 +15,10 @@ const app = {
 
   port: process.env.PORT || (env !== 'test' ? 3001 : 3002),
 
-  debugMode: false // enables debug logging
+  debugMode: false, // enables debug logging
+
+  url: 'https://getmajorna.com',
+  logoUrl: 'https://raw.githubusercontent.com/majorna/majorna/master/src/res/mj.png'
 }
 
 // firebase config
