@@ -1,5 +1,6 @@
 const route = require('koa-route')
 // const config = require('../config/config')
+const coinbase = require('../data/coinbase')
 
 /**
  * Accept payments through Coinbase Commerce: https://commerce.coinbase.com/docs/api/#webhooks
@@ -35,4 +36,12 @@ exports.coinbaseCommerce = route.post('/shop/webhooks/coinbase-commerce', async 
   // (which would cause double buy)
 
   ctx.status = 200
+})
+
+/**
+ * Retrieves user specific Coinbase Commerce charge URL.
+ */
+exports.coinbaseCommerceChargeUrl = route.get('/shop/coinbase-commerce-charge-url', async ctx => {
+  const chargeUrl = await coinbase.createCharge(ctx.state.user.uid)
+  ctx.body = {chargeUrl}
 })

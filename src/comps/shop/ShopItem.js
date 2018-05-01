@@ -4,6 +4,10 @@ import builtInItems from './BuiltInItems'
 export default class extends Component {
   item = builtInItems.find(i => i.id === this.props.match.params.id)
 
+  state = {
+    buyButtonDisabled: this.item.unavailable || this.item.getChargeUrl
+  }
+
   componentDidMount = () => {
     if (this.item.externalScript) {
       const script = document.createElement('script')
@@ -40,7 +44,7 @@ export default class extends Component {
       {this.item.unavailable && <strong className="m-t-m">Status: <span className="has-text-warning">Unavailable</span></strong>}
 
       <div ref={ref => this.actionButtons = ref} className="flex-row m-t-l">
-        <a className="button is-info donate-with-crypto" disabled={this.item.unavailable} href={this.item.externalUrl} onClick={this.handleBuy}>Buy</a>
+        <a className="button is-info donate-with-crypto" disabled={this.state.buyButtonDisabled} href={this.item.externalUrl} onClick={this.handleBuy}>Buy</a>
         <button className="button m-l-m" onClick={this.props.history.goBack}>Cancel</button>
       </div>
     </div>

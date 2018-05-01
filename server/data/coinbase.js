@@ -10,8 +10,8 @@ const axios = require('axios')
 const config = require('../config/config')
 
 /**
- * Creates a Coinbase Commerce charge with given user ID in charge metadata.
- * Webhook events for this charge will include this metadata.
+ * Creates a Coinbase Commerce charge with given user ID in charge metadata and returns the charge URL.
+ * Webhook events for this charge will include the same user ID in their metadata.
  */
 exports.createCharge = async userId => {
   assert(userId, 'use ID parameter is required')

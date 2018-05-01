@@ -26,6 +26,9 @@ export default {
     getLocation: () => fetch('https://geoip-db.com/json/'),
     post: (lat, lon) => postJson('/miners', {lat, lon})
   },
+  shop: {
+    getCoinbaseCommerceChargeUrl: () => get('/shop/coinbase-commerce-charge-url')
+  },
   coinbase: {
     usdExchangeRates: () => fetch('https://api.coinbase.com/v2/exchange-rates?currency=USD')
   }
