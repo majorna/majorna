@@ -12,20 +12,21 @@ const config = require('../config/config')
 exports.createCharge = async userId => {
   assert(userId, 'use ID parameter is required')
 
-  const res = await axios.post('https://api.commerce.coinbase.com/charges', {
-    headers: {
-      'X-CC-Api-Key': config.integrations.coinbaseCommerce.apiKey,
-      'X-CC-Version': '2018-03-22'
-    },
-    data: {
+  const res = await axios.post('https://api.commerce.coinbase.com/charges',
+    {
       name: 'Majorna',
       description: 'Get Majorna using other cryptos.',
       logo_url: config.app.logoUrl,
       redirect_url: config.app.url,
       pricing_type: 'no_price',
       metadata: { userId: userId }
-    }
-  })
+    },
+    {
+      headers: {
+        'X-CC-Api-Key': config.integrations.coinbaseCommerce.apiKey,
+        'X-CC-Version': '2018-03-22'
+      }
+    })
 
   assert(res.data.data.metadata.userId === userId)
   return res.data.data.hosted_url
