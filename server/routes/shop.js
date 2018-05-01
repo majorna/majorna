@@ -31,7 +31,6 @@ exports.coinbaseCommerce = route.post('/shop/webhooks/coinbase-commerce', async 
     // (a transaction can have payments in multiple cryptos with different amounts)
   }
 
-
   // todo: check if sending BTC, some more BTC, then ETH causes webhook to get called with same info and updated figures
   // (which would cause double buy)
 

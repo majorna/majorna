@@ -5,10 +5,13 @@
  * Coinbase Commerce Integration:
  * - API ref: https://commerce.coinbase.com/docs/api/
  */
+const assert = require('assert')
 const axios = require('axios')
 const config = require('../config/config')
 
 exports.createCharge = async userId => {
+  assert(userId, 'use ID parameter is required')
+
   const res = await axios.post('https://api.commerce.coinbase.com/charges', {
     headers: {
       'X-CC-Api-Key': config.integrations.coinbaseCommerce.apiKey,
@@ -23,6 +26,9 @@ exports.createCharge = async userId => {
       metadata: { userId: userId }
     }
   })
+
+  assert(res.data.data.metadata.userId === userId)
+  return res.data.data.hosted_url
 }
 
 exports.getExchanges = async () => {
