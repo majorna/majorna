@@ -9,6 +9,10 @@ const assert = require('assert')
 const axios = require('axios')
 const config = require('../config/config')
 
+/**
+ * Creates a Coinbase Commerce charge with given user ID in charge metadata.
+ * Webhook events for this charge will include this metadata.
+ */
 exports.createCharge = async userId => {
   assert(userId, 'use ID parameter is required')
 
@@ -28,13 +32,21 @@ exports.createCharge = async userId => {
       }
     })
 
+  assert(res.status === 201)
   assert(res.data.data.metadata.userId === userId)
   return res.data.data.hosted_url
 }
 
-exports.getExchanges = async () => {
+/**
+ * Retrieves conversion rates for USD -> other currencies.
+ * Example:
+ * USD -> BTC: 0.00011100
+ * BTC -> USD: 1/0.00011100 = 9009
+ */
+exports.getUSDExchanges = async () => {
   const res = await axios.get('https://api.coinbase.com/v2/exchange-rates?currency=USD')
   assert(res.status === 200)
   assert(res.data.data.rates.BTC)
   assert(res.data.data.rates.ETH)
+  return res.data.data.rates
 }
