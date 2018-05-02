@@ -5,21 +5,29 @@ export default class extends Component {
   item = builtInItems.find(i => i.id === this.props.match.params.id)
 
   state = {
-    buyButtonDisabled: this.item.unavailable || this.item.getChargeUrl
+    buyButtonDisabled: this.item.unavailable || this.item.getChargeUrl,
+    externalUrl: this.item.externalUrl
   }
 
-  componentDidMount = () => {
+  componentDidMount = async () => {
     if (this.item.externalScript) {
+      // coinbase script expects to be executed in the same container with the 'Buy' button
       const script = document.createElement('script')
       script.src = this.item.externalScript
       this.actionButtons.appendChild(script)
+    } else if (this.item.externalUrlFn) {
+      const urlRes = await this.item.externalUrlFn()
+      const urlData = await urlRes.json()
+      this.setState({externalUrl: urlData.chargeUrl})
     }
   }
 
   handleBuy = () => {
-    if (!this.item.externalUrl) {
-      // no external url to redirect the user to, so handle exchange internally
-    }
+    // if (this.item.externalUrl || this.item.externalUrlFn) {
+    //   return
+    // }
+
+    // no external url to redirect the user to, so handle exchange internally
   }
 
   render = () =>
@@ -44,7 +52,7 @@ export default class extends Component {
       {this.item.unavailable && <strong className="m-t-m">Status: <span className="has-text-warning">Unavailable</span></strong>}
 
       <div ref={ref => this.actionButtons = ref} className="flex-row m-t-l">
-        <a className="button is-info donate-with-crypto" disabled={this.state.buyButtonDisabled} href={this.item.externalUrl} onClick={this.handleBuy}>Buy</a>
+        <a className="button is-info donate-with-crypto" disabled={this.state.buyButtonDisabled} href={this.state.externalUrl} onClick={this.handleBuy}>Buy</a>
         <button className="button m-l-m" onClick={this.props.history.goBack}>Cancel</button>
       </div>
     </div>
