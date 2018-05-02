@@ -8,6 +8,7 @@ export default [
     name: 'Majorna',
     description: 'Buy Majorna using Bitcoin, Ethereum, or other cryptos. Amount sent will be converted to mj and deposited in your account, based on the current exchange rate. You can report problems about purchases to [support@getmajorna.com].',
     imageUrl: mj,
+    isCoinbase: true,
     // externalScript: 'https://commerce.coinbase.com/v1/checkout.js',
     // externalUrl: 'https://commerce.coinbase.com/embed/checkout/3e67bb92-c9e8-42c3-a832-48f8bfc67e84',
     externalUrlFn: server.shop.getCoinbaseCommerceChargeUrl,
