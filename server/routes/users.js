@@ -19,7 +19,10 @@ exports.init = route.get('/users/init', async ctx => {
   ctx.status = 204
 })
 
-exports.get = route.get('/users/:id', async (ctx, id) => {
+/**
+ * Retrieves a user's full name given the exact user ID.
+ */
+exports.getName = route.get('/users/:id', async (ctx, id) => {
   const user = await db.getUser(id)
   ctx.body = {name: user.name}
 })
