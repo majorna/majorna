@@ -6,7 +6,7 @@ export default [
   {
     id: 'majorna',
     name: 'Majorna',
-    description: 'Buy Majorna using Bitcoin, Ethereum, or other cryptos. Amount sent will be converted to mj and deposited in your account, based on the current exchange rates. You can report problems about purchases to [support@getmajorna.com].',
+    description: 'Buy Majorna using Bitcoin, Ethereum, or other cryptos. Amount sent will be converted to mj and deposited in your account within 15 minutes. You can report problems about purchases to [support@getmajorna.com].',
     imageUrl: mj,
     isCoinbase: true,
     // externalScript: 'https://commerce.coinbase.com/v1/checkout.js',
