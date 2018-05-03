@@ -10,5 +10,6 @@ suite('coinbase', () => {
   test('getUSDExchanges', async () => {
     const exchanges = await coinbase.getUSDExchanges()
     assert((1 / exchanges.BTC) > 5000)
+    assert((1 / exchanges.ETH) > 300)
   })
 })

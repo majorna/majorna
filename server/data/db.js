@@ -28,7 +28,7 @@ exports.init = async () => {
 
   const batch = firestore.batch()
   batch.create(mjMetaDocRef, { // todo: use this data as testData.meta.mj init data
-    val: 0.01,
+    val: 0.01, // usd
     marketCap: 0,
     userCount: 0,
     maxSupply: 200 * 1000 * 1000 * 1000,
@@ -367,6 +367,46 @@ exports.giveMiningReward = (to, nonce) => firestore.runTransaction(async t => {
   receiver.txs.unshift({id: txRef.id, from: from, fromName, time, amount: miningReward})
   receiver.txs.length > maxTxsInUserDoc && (receiver.txs.length = maxTxsInUserDoc)
   t.update(receiverDocRef, {balance: receiver.balance + miningReward, txs: receiver.txs})
+
+  return signedTx
+})
+
+/**
+ * Creates an mj purchase transaction to the given user with ID with given amount.
+ */
+exports.purchaseMj = (to, usdAmount) => firestore.runTransaction(async t => {
+  assert(to, '"to" parameter is required')
+  assert(usdAmount, '"usdAmount" parameter is required')
+
+  const time = new Date()
+
+  // sender is majorna
+  const from = 'majorna'
+  const fromName = 'Majorna'
+
+  // check if receiver exists
+  const receiverDocRef = usersColRef.doc(to)
+  const receiverDoc = await t.get(receiverDocRef)
+  if (!receiverDoc.exists) {
+    throw new utils.UserVisibleError(`receiver ID:${to} does not exist`)
+  }
+  const receiver = receiverDoc.data()
+
+  // increase market marketCap
+  const metaDoc = await t.get(mjMetaDocRef)
+  const meta = metaDoc.data()
+  const amount = usdAmount / meta.val
+  t.update(mjMetaDocRef, {marketCap: meta.marketCap + amount})
+
+  // add tx to txs collection
+  const txRef = txsColRef.doc()
+  const signedTx = txUtils.sign({id: txRef.id, from: {id: from, balance: 0}, to: {id: to, balance: receiver.balance}, time, amount})
+  t.create(txRef, signedTx)
+
+  // update user docs with tx and updated balances
+  receiver.txs.unshift({id: txRef.id, from: from, fromName, time, amount})
+  receiver.txs.length > maxTxsInUserDoc && (receiver.txs.length = maxTxsInUserDoc)
+  t.update(receiverDocRef, {balance: receiver.balance + amount, txs: receiver.txs})
 
   return signedTx
 })
