@@ -5,6 +5,7 @@ export default class extends Component {
   item = builtInItems.find(i => i.id === this.props.match.params.id)
 
   state = {
+    showClose: false,
     externalUrl: this.item.externalUrl
   }
 
@@ -50,10 +51,16 @@ export default class extends Component {
 
       {this.item.unavailable && <strong className="m-t-m">Status: <span className="has-text-warning">Unavailable</span></strong>}
 
-      <div ref={ref => this.actionButtons = ref} className="flex-row m-t-l">
-        {!this.item.isCoinbase && <button className="button is-info" disabled={this.item.unavailable} onClick={this.handleBuy}><i className="fas fa-shopping-cart m-r-s"/>Buy</button>}
-        {this.item.isCoinbase && <a className="button is-info donate-with-crypto" disabled={!this.state.externalUrl} href={this.state.externalUrl} target="_blank" rel="noopener noreferrer"><i className="fas fa-shopping-cart m-r-s"/>Buy</a>}
-        <button className="button m-l-m" onClick={this.props.history.goBack}>Cancel</button>
-      </div>
+      {this.state.showClose ?
+        <div className="flex-row m-t-l">
+          <button className="button is-info m-l-m" onClick={this.props.history.goBack}><i className="fas fa-check m-r-s"/>Close</button>
+        </div>
+        :
+        <div ref={ref => this.actionButtons = ref} className="flex-row m-t-l">
+          {!this.item.isCoinbase && <button className="button is-info" disabled={this.item.unavailable} onClick={this.handleBuy}><i className="fas fa-shopping-cart m-r-s"/>Buy</button>}
+          {this.item.isCoinbase && <a className="button is-info donate-with-crypto" disabled={!this.state.externalUrl} onClick={() => this.setState({showClose: true})} href={this.state.externalUrl} target="_blank" rel="noopener noreferrer"><i className="fas fa-shopping-cart m-r-s"/>Buy</a>}
+          <button className="button m-l-m" onClick={this.props.history.goBack}>Cancel</button>
+        </div>
+      }
     </div>
 }
