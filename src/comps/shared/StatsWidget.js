@@ -8,11 +8,11 @@ export default props =>
       Current Price
     </div>
     <div className="flex-column center-all">
-      <strong className="is-size-5 has-text-success">${fm(props.mjMetaDoc.marketCap * props.mjMetaDoc.val)}</strong>
+      <strong className="is-size-5 has-text-success">${fm(Math.round(props.mjMetaDoc.marketCap * props.mjMetaDoc.val))}</strong>
       Market Cap.
     </div>
     <div className="flex-column center-all">
-      <strong className="is-size-5 has-text-success">${fm(props.mjMetaDoc.monthly.txVolume * props.mjMetaDoc.val)}</strong>
+      <strong className="is-size-5 has-text-success">${fm(Math.round(props.mjMetaDoc.monthly.txVolume * props.mjMetaDoc.val))}</strong>
       Tx Volume (monthly)
     </div>
     <div className="flex-column center-all">
