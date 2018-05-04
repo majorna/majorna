@@ -15,7 +15,7 @@ exports.coinbaseCommerce = route.post('/webhooks/coinbase-commerce', async ctx =
   hmac.update(rawBody)
   const calculatedSig = hmac.digest('hex')
   if (calculatedSig !== sig) {
-    console.log(`Incoming Coinbase Commerce webhook had invalid signature. Expected sig: ${sig}, got: ${calculatedSig}, raw body: ${rawBody}`)
+    console.log(`Incoming Coinbase Commerce webhook had invalid signature. Expected sig: ${calculatedSig}, got: ${sig}, raw body: ${rawBody}`)
     ctx.throw(401, 'Invalid payload signature.')
   }
 
