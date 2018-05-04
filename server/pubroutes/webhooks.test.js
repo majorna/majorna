@@ -4,7 +4,7 @@ const config = require('../config/config')
 const db = require('../data/db')
 const testData = require('../config/test').data
 
-suite.only('pubroute: webhooks', () => {
+suite('pubroute: webhooks', () => {
   test('coinbase-commerce', async () => {
     // prepare request
     const payload = {
