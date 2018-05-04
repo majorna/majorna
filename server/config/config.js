@@ -102,7 +102,7 @@ const blockchain = {
 
   initialMinBlockDifficulty: app.isProd ? 10 : 1,
   blockDifficultyIncrementStep: 1,
-  difficultyRewardMultiplier: 5
+  difficultyRewardMultiplier: 2.5
 }
 
 // 3rd party integrations
