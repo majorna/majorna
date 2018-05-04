@@ -39,7 +39,7 @@ exports.coinbaseCommerce = route.post('/shop/webhooks/coinbase-commerce', async 
   }
   const usdAmount = lastPayment.value.local.amount
 
-  await db.purchaseMj(userId, usdAmount)
+  await db.giveMj(userId, usdAmount)
 
   ctx.status = 200
 })

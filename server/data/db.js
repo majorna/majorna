@@ -372,10 +372,10 @@ exports.giveMiningReward = (to, nonce) => firestore.runTransaction(async t => {
 })
 
 /**
- * Creates an mj purchase transaction to the given user with ID with given amount.
+ * Deposits given amount of mj to given user by ID.
  */
-exports.purchaseMj = (to, usdAmount) => firestore.runTransaction(async t => {
-  assert(to, '"to" parameter is required')
+exports.giveMj = (userId, usdAmount) => firestore.runTransaction(async t => {
+  assert(userId, '"userId" parameter is required')
   assert(usdAmount, '"usdAmount" parameter is required')
 
   const time = new Date()
@@ -385,10 +385,10 @@ exports.purchaseMj = (to, usdAmount) => firestore.runTransaction(async t => {
   const fromName = 'Majorna'
 
   // check if receiver exists
-  const receiverDocRef = usersColRef.doc(to)
+  const receiverDocRef = usersColRef.doc(userId)
   const receiverDoc = await t.get(receiverDocRef)
   if (!receiverDoc.exists) {
-    throw new utils.UserVisibleError(`receiver ID:${to} does not exist`)
+    throw new utils.UserVisibleError(`receiver ID:${userId} does not exist`)
   }
   const receiver = receiverDoc.data()
 
@@ -400,7 +400,7 @@ exports.purchaseMj = (to, usdAmount) => firestore.runTransaction(async t => {
 
   // add tx to txs collection
   const txRef = txsColRef.doc()
-  const signedTx = txUtils.sign({id: txRef.id, from: {id: from, balance: 0}, to: {id: to, balance: receiver.balance}, time, amount})
+  const signedTx = txUtils.sign({id: txRef.id, from: {id: from, balance: 0}, to: {id: userId, balance: receiver.balance}, time, amount})
   t.create(txRef, signedTx)
 
   // update user docs with tx and updated balances
