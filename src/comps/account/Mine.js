@@ -129,12 +129,5 @@ export default class extends Component {
       <div className="flex-row center-h m-t-l">
         <button className="button" onClick={this.handleStop}>Stop</button>
       </div>
-
-      <small className="m-t-l">
-        <i>
-          All the mined blocks are on testnet until July 2018.
-          They may or may not be transferred (in part or fully) to the mainnet, depending on security analysis.
-        </i>
-      </small>
     </div>
 }
