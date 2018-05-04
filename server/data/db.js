@@ -264,11 +264,9 @@ exports.makeTx = (from, to, amount) => firestore.runTransaction(async t => {
   t.create(txRef, signedTx)
 
   // update user docs with tx and updated balances
-  sender.txs.unshift({id: txRef.id, to, toName, time, amount})
-  sender.txs.length > maxTxsInUserDoc && (sender.txs.length = maxTxsInUserDoc)
+  addTxToUserDoc(sender, txRef.id, null, null, to, toName, time, amount)
   t.update(senderDocRef, {balance: sender.balance - amount, txs: sender.txs})
-  receiver.txs.unshift({id: txRef.id, from, fromName, time, amount})
-  receiver.txs.length > maxTxsInUserDoc && (receiver.txs.length = maxTxsInUserDoc)
+  addTxToUserDoc(receiver, txRef.id, from, fromName, null, null, time, amount)
   t.update(receiverDocRef, {balance: receiver.balance + amount, txs: receiver.txs})
 
   return signedTx
@@ -364,8 +362,7 @@ exports.giveMiningReward = (to, nonce) => firestore.runTransaction(async t => {
   t.create(txRef, signedTx)
 
   // update user docs with tx and updated balances
-  receiver.txs.unshift({id: txRef.id, from: from, fromName, time, amount: miningReward})
-  receiver.txs.length > maxTxsInUserDoc && (receiver.txs.length = maxTxsInUserDoc)
+  addTxToUserDoc(receiver, txRef.id, from, fromName, null, null, time, miningReward)
   t.update(receiverDocRef, {balance: receiver.balance + miningReward, txs: receiver.txs})
 
   return signedTx
@@ -404,9 +401,28 @@ exports.giveMj = (userId, usdAmount) => firestore.runTransaction(async t => {
   t.create(txRef, signedTx)
 
   // update user docs with tx and updated balances
-  receiver.txs.unshift({id: txRef.id, from: from, fromName, time, amount})
-  receiver.txs.length > maxTxsInUserDoc && (receiver.txs.length = maxTxsInUserDoc)
+  addTxToUserDoc(receiver, txRef.id, from, fromName, null, null, time, amount)
   t.update(receiverDocRef, {balance: receiver.balance + amount, txs: receiver.txs})
 
   return signedTx
 })
+
+/**
+ * Adds a tx in txs array property in the given user doc. This function mutates the doc.
+ * Last item in the txs array is dropped if max txs in the doc limit is reached.
+ * @param userData - User object.
+ * @param time - JavaScript DateTime object instance.
+ * @param amount - Amount in mj.
+ */
+function addTxToUserDoc (userData, txId, fromId, fromName, toId, toName, time, amount) {
+  assert(amount, `"amount" field is required as the last field`)
+  assert(userData.id !== fromId && userData.id !== toId, 'txs array object should omit self referencing IDs, otherwise we cannot know if it is outgoing or incoming tx')
+
+  if (fromId) {
+    userData.txs.unshift({id: txId, from: fromId, fromName, time, amount})
+  } else {
+    userData.txs.unshift({id: txId, to: toId, toName, time, amount})
+  }
+
+  userData.txs.length > maxTxsInUserDoc && (userData.txs.length = maxTxsInUserDoc)
+}
