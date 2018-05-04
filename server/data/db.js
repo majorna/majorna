@@ -28,10 +28,10 @@ exports.init = async () => {
 
   const batch = firestore.batch()
   batch.create(mjMetaDocRef, { // todo: use this data as testData.meta.mj init data
-    val: 0.01,
+    val: 0.01, // usd
     marketCap: 0,
     userCount: 0,
-    maxSupply: 100000000,
+    maxSupply: 200 * 1000 * 1000 * 1000,
     monthly: {
       updated: 0,
       txVolume: 0
@@ -48,7 +48,7 @@ exports.init = async () => {
   })
   batch.create(blocksColRef.doc(signedGenesisBlock.header.no.toString()), signedGenesisBlock)
   batch.create(usersColRef.doc('majorna'), {email: 'majorna@majorna', name: 'Majorna', created: new Date(), balance: 0, txs: []})
-  // todo: initial allocation of funds 20/80/900
+  // todo: initial allocation of funds dev/foundation/public
   await batch.commit()
 }
 
@@ -264,11 +264,9 @@ exports.makeTx = (from, to, amount) => firestore.runTransaction(async t => {
   t.create(txRef, signedTx)
 
   // update user docs with tx and updated balances
-  sender.txs.unshift({id: txRef.id, to, toName, time, amount})
-  sender.txs.length > maxTxsInUserDoc && (sender.txs.length = maxTxsInUserDoc)
+  addTxToUserDoc(sender, txRef.id, null, null, to, toName, time, amount)
   t.update(senderDocRef, {balance: sender.balance - amount, txs: sender.txs})
-  receiver.txs.unshift({id: txRef.id, from, fromName, time, amount})
-  receiver.txs.length > maxTxsInUserDoc && (receiver.txs.length = maxTxsInUserDoc)
+  addTxToUserDoc(receiver, txRef.id, from, fromName, null, null, time, amount)
   t.update(receiverDocRef, {balance: receiver.balance + amount, txs: receiver.txs})
 
   return signedTx
@@ -364,9 +362,67 @@ exports.giveMiningReward = (to, nonce) => firestore.runTransaction(async t => {
   t.create(txRef, signedTx)
 
   // update user docs with tx and updated balances
-  receiver.txs.unshift({id: txRef.id, from: from, fromName, time, amount: miningReward})
-  receiver.txs.length > maxTxsInUserDoc && (receiver.txs.length = maxTxsInUserDoc)
+  addTxToUserDoc(receiver, txRef.id, from, fromName, null, null, time, miningReward)
   t.update(receiverDocRef, {balance: receiver.balance + miningReward, txs: receiver.txs})
 
   return signedTx
 })
+
+/**
+ * Deposits given amount of mj to given user by ID.
+ */
+exports.giveMj = (userId, usdAmount) => firestore.runTransaction(async t => {
+  assert(userId, '"userId" parameter is required')
+  assert(usdAmount, '"usdAmount" parameter is required')
+
+  const time = new Date()
+
+  // sender is majorna
+  const from = 'majorna'
+  const fromName = 'Majorna'
+
+  // check if receiver exists
+  const receiverDocRef = usersColRef.doc(userId)
+  const receiverDoc = await t.get(receiverDocRef)
+  if (!receiverDoc.exists) {
+    throw new utils.UserVisibleError(`receiver ID:${userId} does not exist`)
+  }
+  const receiver = receiverDoc.data()
+
+  // increase market marketCap
+  const metaDoc = await t.get(mjMetaDocRef)
+  const meta = metaDoc.data()
+  const amount = Math.round(usdAmount / meta.val)
+  t.update(mjMetaDocRef, {marketCap: meta.marketCap + amount})
+
+  // add tx to txs collection
+  const txRef = txsColRef.doc()
+  const signedTx = txUtils.sign({id: txRef.id, from: {id: from, balance: 0}, to: {id: userId, balance: receiver.balance}, time, amount})
+  t.create(txRef, signedTx)
+
+  // update user docs with tx and updated balances
+  addTxToUserDoc(receiver, txRef.id, from, fromName, null, null, time, amount)
+  t.update(receiverDocRef, {balance: receiver.balance + amount, txs: receiver.txs})
+
+  return signedTx
+})
+
+/**
+ * Adds a tx in txs array property in the given user doc. This function mutates the doc.
+ * Last item in the txs array is dropped if max txs in the doc limit is reached.
+ * @param userData - User object.
+ * @param time - JavaScript DateTime object instance.
+ * @param amount - Amount in mj.
+ */
+function addTxToUserDoc (userData, txId, fromId, fromName, toId, toName, time, amount) {
+  assert(amount, `"amount" field is required as the last field`)
+  assert(userData.id !== fromId && userData.id !== toId, 'txs array object should omit self referencing IDs, otherwise we cannot know if it is outgoing or incoming tx')
+
+  if (fromId) {
+    userData.txs.unshift({id: txId, from: fromId, fromName, time, amount})
+  } else {
+    userData.txs.unshift({id: txId, to: toId, toName, time, amount})
+  }
+
+  userData.txs.length > maxTxsInUserDoc && (userData.txs.length = maxTxsInUserDoc)
+}

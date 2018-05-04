@@ -1,12 +1,18 @@
 import mj from '../../res/mj.png'
+import ExchangeRatesWidget from '../shared/ExchangeRatesWidget'
+import server from '../../data/server'
 
 export default [
   {
     id: 'majorna',
     name: 'Majorna',
-    unavailable: true,
-    description: 'Buy Majorna using US Dollar, Euro, Bitcoin, or Ethereum.',
-    imageUrl: mj
+    description: 'Buy Majorna using Bitcoin, Ethereum, or other cryptos. Amount sent will be converted to mj and deposited in your account within 15 minutes. You can report problems about purchases to [support@getmajorna.com].',
+    imageUrl: mj,
+    isCoinbase: true,
+    // externalScript: 'https://commerce.coinbase.com/v1/checkout.js',
+    // externalUrl: 'https://commerce.coinbase.com/embed/checkout/3e67bb92-c9e8-42c3-a832-48f8bfc67e84',
+    externalUrlFn: server.shop.getCoinbaseCommerceChargeUrl,
+    widget: ExchangeRatesWidget
   },
   {
     id: 'bitcoin',

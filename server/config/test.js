@@ -81,7 +81,7 @@ const testData = exports.data = {
       val: 0.01,
       marketCap: initBalance * 3,
       userCount: 3,
-      maxSupply: 0,
+      maxSupply: 200 * 1000 * 1000 * 1000,
       monthly: {
         updated: 0,
         txVolume: 0

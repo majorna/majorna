@@ -16,7 +16,7 @@ const OneLiner = props => <div>Wow</div>
 //     abc: ''
 //   }
 //
-//   componentDidMount = () => {/*start network requests here*/}
+//   componentDidMount = () => {/*start network requests here*/ /*rendering of dom is complete in-mem so we can manipulate dom now*/}
 //
 //   handleCancel = () => this.props.history.goBack()
 //

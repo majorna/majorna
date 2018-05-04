@@ -290,4 +290,35 @@ suite('db', () => {
     const receiverAfterBalance = (await db.getUser(to)).balance
     assert(receiverAfterBalance === receiverInitBalance + blockUtils.getBlockReward(miningRes.difficulty))
   })
+
+  test('giveMj', async () => {
+    const from = 'majorna'
+    const to = '1'
+    const initMeta = await db.getMjMeta()
+    const receiverInitBalance = (await db.getUser(to)).balance
+    const amountUsd = 5
+    const amountMj = amountUsd / initMeta.val
+
+    const tx = await db.giveMj(to, amountUsd)
+
+    // validate tx in txs col
+    const retrievedTx = await db.getTx(tx.id)
+    assert(txUtils.verify(retrievedTx))
+    assert(retrievedTx.from.id === from)
+    assert(retrievedTx.to.id === to)
+    assert(retrievedTx.time.getTime() === tx.time.getTime())
+    assert(retrievedTx.amount === amountMj)
+
+    // validate user doc
+    const receiver = await db.getUser(to)
+    assert(receiver.balance === receiverInitBalance + retrievedTx.amount)
+    const receiverTx = receiver.txs[0]
+    assert(receiverTx.from === from)
+    assert(receiverTx.time.getTime() === retrievedTx.time.getTime())
+    assert(receiverTx.amount === retrievedTx.amount)
+
+    // verify market marketCap increase
+    const metaAfter = await db.getMjMeta()
+    assert(metaAfter.marketCap === initMeta.marketCap + amountMj)
+  })
 })

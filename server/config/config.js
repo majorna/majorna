@@ -15,7 +15,10 @@ const app = {
 
   port: process.env.PORT || (env !== 'test' ? 3001 : 3002),
 
-  debugMode: false // enables debug logging
+  debugMode: false, // enables debug logging
+
+  url: 'https://getmajorna.com',
+  logoUrl: 'https://raw.githubusercontent.com/majorna/majorna/master/src/res/mj.png'
 }
 
 // firebase config
@@ -99,7 +102,15 @@ const blockchain = {
 
   initialMinBlockDifficulty: app.isProd ? 10 : 1,
   blockDifficultyIncrementStep: 1,
-  difficultyRewardMultiplier: 5
+  difficultyRewardMultiplier: 2.5
+}
+
+// 3rd party integrations
+const integrations = {
+  coinbaseCommerce: {
+    apiKey: process.env.MAJORNA_COINBASE_COMMERCE_API_KEY,
+    webhookSharedSecret: process.env.MAJORNA_COINBASE_COMMERCE_WEBHOOK_SHARED_SECRET
+  }
 }
 
 // module exports
@@ -108,5 +119,6 @@ module.exports = {
   firebase: fb,
   github,
   crypto,
-  blockchain
+  blockchain,
+  integrations
 }
