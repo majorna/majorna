@@ -12,6 +12,10 @@ function koaConfig () {
   const koaApp = new Koa()
   koaApp.use(logger())
   koaApp.use(cors())
+  koaApp.use(bodyParser())
+
+  // mount public routes
+  mountRoutes('pubroutes', koaApp)
 
   // middleware below this line is only reached if jwt token is valid
   koaApp.use(async (ctx, next) => {
@@ -24,8 +28,6 @@ function koaConfig () {
     }
     return next()
   })
-
-  koaApp.use(bodyParser())
 
   // AssertionError, utils.UserVisibleError, and any error with Error.expose = true set are user visible and return status = 400 (bad request)
   // for these errors, error details are sent to the user and not logged to console (unless debug mode is on)
@@ -40,13 +42,17 @@ function koaConfig () {
   })
 
   // mount all the routes
-  fs.readdirSync('routes').forEach(file => {
-    if (file.endsWith('.test.js')) return
-    const route = require('../routes/' + file)
-    Object.keys(route).forEach(key => koaApp.use(route[key]))
-  })
+  mountRoutes('routes', koaApp)
 
   return koaApp
+}
+
+function mountRoutes (dir, koaApp) {
+  fs.readdirSync(dir).forEach(file => {
+    if (file.endsWith('.test.js')) return
+    const route = require(`../${dir}/` + file)
+    Object.keys(route).forEach(key => koaApp.use(route[key]))
+  })
 }
 
 module.exports = async () => {
