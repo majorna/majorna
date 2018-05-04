@@ -392,7 +392,7 @@ exports.giveMj = (userId, usdAmount) => firestore.runTransaction(async t => {
   // increase market marketCap
   const metaDoc = await t.get(mjMetaDocRef)
   const meta = metaDoc.data()
-  const amount = usdAmount / meta.val
+  const amount = Math.round(usdAmount / meta.val)
   t.update(mjMetaDocRef, {marketCap: meta.marketCap + amount})
 
   // add tx to txs collection

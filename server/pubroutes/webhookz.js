@@ -10,7 +10,7 @@ exports.coinbaseCommerce = route.post('/webhooks/coinbase-commerce', async ctx =
   // verify raw payload signature
   const rawBody = ctx.request.rawBody
   const sharedSecret = config.integrations.coinbaseCommerce.webhookSharedSecret
-  const sig = ctx.headers['X-CC-Webhook-Signature']
+  const sig = ctx.headers['x-cc-webhook-signature']
   const hmac = crypto.createHmac('sha256', sharedSecret)
   hmac.update(rawBody)
   const calculatedSig = hmac.digest('hex')
@@ -21,7 +21,7 @@ exports.coinbaseCommerce = route.post('/webhooks/coinbase-commerce', async ctx =
 
   // webhook payload is legit so log the details
   const data = ctx.request.body
-  console.log('Incoming Coinbase Commerce webhook:', data)
+  console.log('Incoming valid Coinbase Commerce webhook:', JSON.stringify(data, null, 2))
 
   if (data.event.type !== 'charge:confirmed') {
     // need to return 200 otherwise coinbase retries
