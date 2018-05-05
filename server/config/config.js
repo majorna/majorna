@@ -110,6 +110,9 @@ const integrations = {
   coinbaseCommerce: {
     apiKey: process.env.MAJORNA_COINBASE_COMMERCE_API_KEY,
     webhookSharedSecret: process.env.MAJORNA_COINBASE_COMMERCE_WEBHOOK_SHARED_SECRET
+  },
+  stripe: {
+    secretKey: app.isProd ? process.env.MAJORNA_STRIPE_SECRET_KEY : process.env.MAJORNA_STRIPE_TEST_SECRET_KEY
   }
 }
 
