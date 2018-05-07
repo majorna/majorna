@@ -117,7 +117,7 @@ exports.verify = (block, prevBlockHeader) => {
   assert(block.header.time, 'Block header does not have a time.')
   assert(block.header.time.getTime() > exports.getGenesisBlock().header.time.getTime(), 'Block time is invalid or is before the genesis.')
   if (block.sig) {
-    assert(block.sig.length === 96, `Block signature length is invalid. Expected ${96}, got ${block.sig.length}.`)
+    assert(block.sig.length === 92 || block.sig.length === 96, `Block signature length is invalid. Expected ${92} or ${96}, got ${block.sig.length}.`)
     block.header.minDifficulty > 0 && assert(block.header.nonce > 0, 'Nonce should be > 0 if difficulty is > 0.')
     block.header.nonce > 0 && assert(block.header.minDifficulty > 0, 'Difficulty should be > 0 if nonce is > 0.')
   } else {
