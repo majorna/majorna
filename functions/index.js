@@ -1,3 +1,5 @@
+// todo: needs update based on: https://firebase.google.com/docs/functions/beta-v1-diff
+
 // const functions = require('firebase-functions');
 // const firebase = require('firebase-admin');
 // firebase.initializeApp(functions.config().firebase);
