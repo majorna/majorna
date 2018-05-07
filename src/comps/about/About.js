@@ -10,11 +10,18 @@ export default props =>
       All transaction logs are kept at GitHub <a href="https://github.com/majorna/blockchain" target="_blank" rel="noopener noreferrer">blockchain repo</a>.
       All transaction are transparent and logs are publicly accessible, whereas senders and receiver identities are anonymous.
       This makes your account balance provable and secure, while keeping your identity hidden (there are also plans to make transactions themselves anonymous).
-      Following are work-in-progress documents detailing Majorna:
     </div>
 
-    <div className="content">
-      <ul className="m-t-l">
+    <strong className="m-t-m">Majorna Supply</strong>
+    <div>
+      Max Majorna supply allocated for public distribution is denoted on the front page.
+      Matching amount will be allocated for Majorna Fund after supply cap is reached.
+      Current Majorna supply denotes the currently distributed amount; through mining or purchasing.
+    </div>
+
+    <div className="content m-t-m">
+      Following are work-in-progress documents detailing Majorna:
+      <ul>
         <li><Link to="/about/tech">Majorna Technology</Link></li>
         <li><Link to="/about/roadmap">Roadmap</Link></li>
       </ul>
