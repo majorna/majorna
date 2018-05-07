@@ -98,7 +98,8 @@ export default withRouter(class App extends Component {
     // ID token expires every 60 mins so renew it every 15 mins not to send expired token to server
     setInterval(async () => {
       if (this.state.user) {
-        config.server.token = await this.state.user.getIdToken()
+        config.server.token = await this.state.user.getIdToken(true)
+        console.log('refreshed firebase auth ID token')
       }
     }, 15 * 60 * 1000)
   }
