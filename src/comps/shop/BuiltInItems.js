@@ -8,9 +8,13 @@ export default [
     name: 'Majorna',
     description: 'Buy Majorna using Bitcoin, Ethereum, or other cryptos. Amount sent will be converted to mj and deposited in your account within 15 minutes. You can report problems about purchases to [support@getmajorna.com].',
     imageUrl: mj,
-    isCoinbase: true,
-    // coinbaseScript: 'https://commerce.coinbase.com/v1/checkout.js',
-    // coinbaseUrl: 'https://commerce.coinbase.com/embed/checkout/3e67bb92-c9e8-42c3-a832-48f8bfc67e84',
+    stripeScriptUrl: 'https://checkout.stripe.com/checkout.js',
+    stripeConfig: {
+      name: 'Majorna',
+      description: '2 widgets',
+      currency: 'sek',
+      amount: 2000
+    },
     coinbaseUrlFn: server.shop.getCoinbaseCommerceChargeUrl,
     widget: ExchangeRatesWidget
   },

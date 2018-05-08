@@ -6,16 +6,28 @@ export default class extends Component {
 
   state = {
     showClose: false,
+    stripeCheckout: null,
     coinbaseUrl: this.item.coinbaseUrl
   }
 
   componentDidMount = async () => {
-    if (this.item.isCoinbase && this.item.coinbaseScript) {
-      // coinbase script expects to be executed in the same container with the 'Buy' button
+    if (this.item.stripeScriptUrl) {
       const script = document.createElement('script')
-      script.src = this.item.coinbaseScript
-      this.actionButtons.appendChild(script)
-    } else if (this.item.isCoinbase && this.item.coinbaseUrlFn) {
+      script.src = this.item.stripeScriptUrl
+      script.onload = () => {
+        this.state.stripeCheckout = window.StripeCheckout.configure({
+          key: 'pk_test_98A7TrR0G8W7SyUIdjoQytZj',
+          locale: 'auto',
+          token: function(token) {
+            console.log('stripe token:', token)
+          }
+        })
+        window.addEventListener('popstate', () => this.state.stripeCheckout.close())
+      }
+      this.container.appendChild(script)
+    }
+
+    if (this.item.coinbaseUrlFn) {
       const urlRes = await this.item.coinbaseUrlFn()
       const urlData = await urlRes.json()
       this.setState({coinbaseUrl: urlData.chargeUrl})
@@ -23,7 +35,7 @@ export default class extends Component {
   }
 
   handleBuy = () => {
-    // if (this.item.isCoinbase || this.item.coinbaseUrl || this.item.coinbaseUrlFn) {
+    // if (this.item.stripeUrl || this.item.coinbaseUrlFn) {
     //   return
     // }
 
@@ -31,7 +43,7 @@ export default class extends Component {
   }
 
   render = () =>
-    <div className="mj-box flex-column center-all box-center w-m">
+    <div ref={ref => this.container = ref}  className="mj-box flex-column center-all box-center w-m">
       <div className="is-size-5 has-text-centered">Buy - {this.item.name}</div>
 
       {this.item.fontIcon && <i className={this.item.fontIcon + ' m-t-m'} style={{width: 150, height: 150}}/>}
@@ -56,9 +68,17 @@ export default class extends Component {
           <button className="button is-info m-l-m" onClick={this.props.history.goBack}><i className="fas fa-check m-r-s"/>Close</button>
         </div>
         :
-        <div ref={ref => this.actionButtons = ref} className="flex-row m-t-l">
-          {!this.item.isCoinbase && <button className="button is-info" disabled={this.item.unavailable} onClick={this.handleBuy}><i className="fas fa-shopping-cart m-r-s"/>Buy</button>}
-          {this.item.isCoinbase && <a className="button is-info donate-with-crypto" disabled={!this.state.coinbaseUrl} onClick={() => this.setState({showClose: true})} href={this.state.coinbaseUrl} target="_blank" rel="noopener noreferrer"><i className="fas fa-shopping-cart m-r-s"/>Buy</a>}
+        <div className="flex-row m-t-l">
+          {this.item.id !== 'majorna' && <button className="button is-info" disabled={this.item.unavailable} onClick={this.handleBuy}><i className="fas fa-shopping-cart m-r-s"/>Buy</button>}
+          {this.item.id === 'majorna' &&
+            <React.Fragment>
+              <button className="button is-info" disabled={!this.state.stripeCheckout} onClick={() => this.state.stripeCheckout.open(this.item.stripeConfig)}>
+                <i className="fas fa-shopping-cart m-r-s"/>Buy with Card
+              </button>
+              <a className="button is-info" disabled={!this.state.coinbaseUrl} onClick={() => this.setState({showClose: true})} href={this.state.coinbaseUrl} target="_blank" rel="noopener noreferrer">
+                <i className="fas fa-shopping-cart m-r-s"/>Buy with Cryptos
+              </a>
+            </React.Fragment>}
           <button className="button m-l-m" onClick={this.props.history.goBack}>Cancel</button>
         </div>
       }
