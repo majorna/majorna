@@ -27,6 +27,7 @@ export default {
     post: (lat, lon) => postJson('/miners', {lat, lon})
   },
   shop: {
+    createStripeCharge: (token, usdAmount) => postJson('/shop/stripe-charge', {token, usdAmount}),
     getCoinbaseCommerceChargeUrl: () => get('/shop/coinbase-commerce-charge-url')
   },
   coinbase: {

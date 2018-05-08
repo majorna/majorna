@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import builtInItems from './BuiltInItems'
 import { fm } from '../../data/utils'
 import config from '../../data/config'
+import server from '../../data/server'
 
 export default class extends Component {
   item = builtInItems.find(i => i.id === this.props.match.params.id)
@@ -22,9 +23,7 @@ export default class extends Component {
         this.state.stripeCheckout = window.StripeCheckout.configure({
           key: config.stripe.publishableKey,
           locale: 'auto',
-          token: function(token) {
-            console.log('stripe token:', token)
-          }
+          token: token => server.shop.createStripeCharge(token, this.state.stripeAmount)
         })
       }
       this.container.appendChild(script)
