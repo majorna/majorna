@@ -11,7 +11,7 @@ export default class extends Component {
     showClose: false,
     showStripeAmount: false,
     stripeCheckout: null,
-    stripeAmount: 1,
+    stripeAmount: 10,
     coinbaseUrl: this.item.coinbaseUrl
   }
 
