@@ -22,7 +22,6 @@ export default class extends Component {
             console.log('stripe token:', token)
           }
         })
-        window.addEventListener('popstate', () => this.state.stripeCheckout.close())
       }
       this.container.appendChild(script)
     }
