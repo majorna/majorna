@@ -12,8 +12,8 @@ export default [
     stripeConfig: {
       name: 'Majorna',
       description: 'Buy Majorna using card (via Stripe).',
-      currency: 'sek',
-      amount: 2000
+      currency: 'usd',
+      amount: 0
     },
     coinbaseUrlFn: server.shop.getCoinbaseCommerceChargeUrl,
     widget: ExchangeRatesWidget
