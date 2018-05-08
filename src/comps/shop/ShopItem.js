@@ -52,7 +52,8 @@ export default class extends Component {
   }
 
   handleStripeBuy = () => {
-    this.item.stripeConfig.amount = this.state.stripeAmount
+    this.item.stripeConfig.amount = this.state.stripeAmount * 100
+    console.log(this.item.stripeConfig)
     this.state.stripeCheckout.open(this.item.stripeConfig)
     this.setState({
       showStripeAmount: false,
