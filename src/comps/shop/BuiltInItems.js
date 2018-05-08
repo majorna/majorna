@@ -11,7 +11,7 @@ export default [
     stripeScriptUrl: 'https://checkout.stripe.com/checkout.js',
     stripeConfig: {
       name: 'Majorna',
-      description: 'Buy Majorna using other cryptocurrencies.',
+      description: 'Buy Majorna using card (via Stripe).',
       currency: 'sek',
       amount: 2000
     },
