@@ -13,6 +13,7 @@ export default [
       name: 'Majorna',
       description: 'Buy Majorna using card (via Stripe).',
       currency: 'usd',
+      allowRememberMe: false,
       amount: 0
     },
     coinbaseUrlFn: server.shop.getCoinbaseCommerceChargeUrl,
