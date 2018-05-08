@@ -23,7 +23,7 @@ export default class extends Component {
         this.state.stripeCheckout = window.StripeCheckout.configure({
           key: config.stripe.publishableKey,
           locale: 'auto',
-          token: token => server.shop.createStripeCharge(token, this.state.stripeAmount)
+          token: token => server.shop.createStripeCharge(token.id, this.state.stripeAmount)
         })
       }
       this.container.appendChild(script)

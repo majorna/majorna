@@ -34,5 +34,8 @@ exports.createCharge = async (token, usdAmount) => {
   assert(res.data.paid)
   assert(config.app.isProd ? res.data.livemode : !res.data.livemode)
   assert(!res.data.refunded)
+
+  console.log('Stripe: successful charge:', res.data)
+
   return res.data.amount / usdMultiplier
 }
