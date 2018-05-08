@@ -14,7 +14,7 @@ const config = require('../config/config')
  * Webhook events for this charge will include the same user ID in their metadata.
  */
 exports.createCharge = async userId => {
-  assert(userId, 'use ID parameter is required')
+  assert(userId, '"userId" parameter is required')
 
   const res = await axios.post('https://api.commerce.coinbase.com/charges',
     {
