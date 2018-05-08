@@ -67,18 +67,18 @@ export default class extends Component {
           <button className="button is-info m-l-m" onClick={this.props.history.goBack}><i className="fas fa-check m-r-s"/>Close</button>
         </div>
         :
-        <div className="flex-row m-t-l">
+        <div className="flex-row flex-column m-t-l">
           {this.item.id !== 'majorna' && <button className="button is-info" disabled={this.item.unavailable} onClick={this.handleBuy}><i className="fas fa-shopping-cart m-r-s"/>Buy</button>}
           {this.item.id === 'majorna' &&
             <React.Fragment>
               <button className="button is-info" disabled={!this.state.stripeCheckout} onClick={() => this.state.stripeCheckout.open(this.item.stripeConfig)}>
-                <i className="fas fa-shopping-cart m-r-s"/>Buy with Card
+                <i className="fas fa-credit-card m-r-s"/>Buy with Card
               </button>
-              <a className="button is-info" disabled={!this.state.coinbaseUrl} onClick={() => this.setState({showClose: true})} href={this.state.coinbaseUrl} target="_blank" rel="noopener noreferrer">
-                <i className="fas fa-shopping-cart m-r-s"/>Buy with Cryptos
+              <a className="button is-info m-t-s" disabled={!this.state.coinbaseUrl} onClick={() => this.setState({showClose: true})} href={this.state.coinbaseUrl} target="_blank" rel="noopener noreferrer">
+                <i className="fab fa-bitcoin m-r-s"/>Buy with Cryptos
               </a>
             </React.Fragment>}
-          <button className="button m-l-m" onClick={this.props.history.goBack}>Cancel</button>
+          <button className="button m-t-s" onClick={this.props.history.goBack}>Cancel</button>
         </div>
       }
     </div>
