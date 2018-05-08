@@ -8,22 +8,19 @@ const usdMultiplier = 100
 /**
  * Creates a Stripe charge with given params.
  * @param token - Token acquired from Stripe checkout or elements.
- * @param amountUsd - Amount in US Dollars (not cents, whole Dollars without fractions).
- * @param amountMj - Matching amount in Majorna.
+ * @param usdAmount - Amount in US Dollars (not cents, whole Dollars without fractions).
  * @returns {Promise.<number>} - A promise that resolves to actually charged amount in whole US Dollars.
  */
-exports.createCharge = async (token, amountUsd, amountMj) => {
+exports.createCharge = async (token, usdAmount) => {
   assert(token, '"token" parameter is required')
-  assert(amountUsd, '"amountUsd" parameter is required')
-  assert(amountMj, '"amountMj" parameter is required')
+  assert(usdAmount, '"usdAmount" parameter is required')
 
-  amountUsd = amountUsd * usdMultiplier
+  usdAmount = usdAmount * usdMultiplier
 
   const res = await axios.post('https://api.stripe.com/v1/charges',
     querystring.stringify({
-      amount: amountUsd,
+      amount: usdAmount,
       currency: 'usd',
-      description: `Purchase of ${amountMj} mj.`,
       source: token
     }),
     {
