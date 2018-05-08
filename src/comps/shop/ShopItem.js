@@ -6,28 +6,28 @@ export default class extends Component {
 
   state = {
     showClose: false,
-    externalUrl: this.item.externalUrl
+    coinbaseUrl: this.item.coinbaseUrl
   }
 
   componentDidMount = async () => {
-    if (this.item.isCoinbase && this.item.externalScript) {
+    if (this.item.isCoinbase && this.item.coinbaseScript) {
       // coinbase script expects to be executed in the same container with the 'Buy' button
       const script = document.createElement('script')
-      script.src = this.item.externalScript
+      script.src = this.item.coinbaseScript
       this.actionButtons.appendChild(script)
-    } else if (this.item.isCoinbase && this.item.externalUrlFn) {
-      const urlRes = await this.item.externalUrlFn()
+    } else if (this.item.isCoinbase && this.item.coinbaseUrlFn) {
+      const urlRes = await this.item.coinbaseUrlFn()
       const urlData = await urlRes.json()
-      this.setState({externalUrl: urlData.chargeUrl})
+      this.setState({coinbaseUrl: urlData.chargeUrl})
     }
   }
 
   handleBuy = () => {
-    // if (this.item.isCoinbase || this.item.externalUrl || this.item.externalUrlFn) {
+    // if (this.item.isCoinbase || this.item.coinbaseUrl || this.item.coinbaseUrlFn) {
     //   return
     // }
 
-    // no external url to redirect the user to, so handle exchange internally
+    // no coinbase url to redirect the user to, so handle exchange internally
   }
 
   render = () =>
@@ -58,7 +58,7 @@ export default class extends Component {
         :
         <div ref={ref => this.actionButtons = ref} className="flex-row m-t-l">
           {!this.item.isCoinbase && <button className="button is-info" disabled={this.item.unavailable} onClick={this.handleBuy}><i className="fas fa-shopping-cart m-r-s"/>Buy</button>}
-          {this.item.isCoinbase && <a className="button is-info donate-with-crypto" disabled={!this.state.externalUrl} onClick={() => this.setState({showClose: true})} href={this.state.externalUrl} target="_blank" rel="noopener noreferrer"><i className="fas fa-shopping-cart m-r-s"/>Buy</a>}
+          {this.item.isCoinbase && <a className="button is-info donate-with-crypto" disabled={!this.state.coinbaseUrl} onClick={() => this.setState({showClose: true})} href={this.state.coinbaseUrl} target="_blank" rel="noopener noreferrer"><i className="fas fa-shopping-cart m-r-s"/>Buy</a>}
           <button className="button m-l-m" onClick={this.props.history.goBack}>Cancel</button>
         </div>
       }
