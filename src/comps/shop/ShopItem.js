@@ -36,14 +36,6 @@ export default class extends Component {
     }
   }
 
-  handleBuy = () => {
-    // if (this.item.stripeUrl || this.item.coinbaseUrlFn) {
-    //   return
-    // }
-
-    // no coinbase url to redirect the user to, so handle exchange internally
-  }
-
   handleStripeAmount = e => {
     // cannot buy negative amount
     let amount = e.target.value
@@ -100,7 +92,7 @@ export default class extends Component {
           </div>
           :
           <div className="flex-row flex-column m-t-l">
-            {this.item.id !== 'majorna' && <button className="button is-info" disabled={this.item.unavailable} onClick={this.handleBuy}><i className="fas fa-shopping-cart m-r-s"/>Buy</button>}
+            {this.item.id !== 'majorna' && <button className="button is-info" disabled={this.item.unavailable}><i className="fas fa-shopping-cart m-r-s"/>Buy</button>}
             {this.item.id === 'majorna' &&
             <React.Fragment>
               <button className="button is-info" disabled={!this.state.stripeCheckout} onClick={() => this.setState({showStripeAmount: true})}>
