@@ -33,10 +33,28 @@ export default class extends Component {
               type: 'card',
               token: token.id
             })
-            if (source.card.three_d_secure === 'not_supported') {
+            if (source.error) {
+              // todo: show error
+            } else if (source.source.card.three_d_secure === 'not_supported') {
               await server.shop.createStripeCharge(token.id, this.state.stripeAmount)
+              // todo: show error
             } else {
-
+              const threeDSource = await stripe.createSource({
+                type: 'three_d_secure',
+                amount: this.state.stripeAmount * 100,
+                currency: 'usd',
+                three_d_secure: {
+                  card: source.source.id
+                },
+                redirect: {
+                  return_url: `https://getmajorna.com/payment?userId=${this.props.user.uid}`
+                }
+              })
+              if (threeDSource.error) {
+                // todo: show error
+              } else {
+                window.location.replace(threeDSource.source.redirect.url)
+              }
             }
           }
         })
