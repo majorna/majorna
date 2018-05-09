@@ -17,16 +17,31 @@ export default class extends Component {
 
   componentDidMount = async () => {
     if (this.item.stripeScriptUrl) {
-      const script = document.createElement('script')
-      script.src = this.item.stripeScriptUrl
-      script.onload = () => {
+      const stripeScript = document.createElement('script')
+      stripeScript.src = this.item.stripeScriptUrl
+      this.container.appendChild(stripeScript)
+
+      const stripeCheckoutScript = document.createElement('script')
+      stripeCheckoutScript.src = this.item.stripeCheckoutScriptUrl
+      stripeCheckoutScript.onload = () => {
         this.state.stripeCheckout = window.StripeCheckout.configure({
           key: config.stripe.publishableKey,
           locale: 'auto',
-          token: token => server.shop.createStripeCharge(token.id, this.state.stripeAmount)
+          token: async token => {
+            const stripe = window.Stripe(config.stripe.publishableKey)
+            const source = await stripe.createSource({
+              type: 'card',
+              token: token.id
+            })
+            if (source.card.three_d_secure === 'not_supported') {
+              await server.shop.createStripeCharge(token.id, this.state.stripeAmount)
+            } else {
+
+            }
+          }
         })
       }
-      this.container.appendChild(script)
+      this.container.appendChild(stripeCheckoutScript)
     }
 
     if (this.item.coinbaseUrlFn) {

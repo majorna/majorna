@@ -8,7 +8,8 @@ export default [
     name: 'Majorna',
     description: 'Buy Majorna using Bitcoin, Ethereum, or other cryptos. Amount sent will be converted to mj and deposited in your account within 15 minutes. You can report problems about purchases to [support@getmajorna.com].',
     imageUrl: mj,
-    stripeScriptUrl: 'https://checkout.stripe.com/checkout.js',
+    stripeScriptUrl: 'https://js.stripe.com/v3/',
+    stripeCheckoutScriptUrl: 'https://checkout.stripe.com/checkout.js',
     stripeConfig: {
       name: 'Majorna',
       description: 'Buy Majorna using card (via Stripe).',
