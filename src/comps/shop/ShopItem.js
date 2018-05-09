@@ -17,10 +17,12 @@ export default class extends Component {
 
   componentDidMount = async () => {
     if (this.item.stripeScriptUrl) {
+      // stripe api client
       const stripeScript = document.createElement('script')
       stripeScript.src = this.item.stripeScriptUrl
       this.container.appendChild(stripeScript)
 
+      // stripe checkout ui
       const stripeCheckoutScript = document.createElement('script')
       stripeCheckoutScript.src = this.item.stripeCheckoutScriptUrl
       stripeCheckoutScript.onload = () => {
