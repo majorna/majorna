@@ -12,23 +12,18 @@ This repo contains Majorna source code with following components:
 * Majorna UI (including miner).
 
 ## Blockchain
-
 Blockchain (ledger of all transactions) is kept in its [own repo](https://github.com/majorna/blockchain).
 
 ## Community
-
 * [/r/majorna](https://www.reddit.com/r/majorna/)
 
 ## License
-
 MIT
 
 ## Development
-
 Following information is for Majorna developers and contributors:
 
 ### Deployment
-
 Server requires following environment variables in production mode:
 
 ```
@@ -63,7 +58,6 @@ MAJORNA_STRIPE_TEST_SECRET_KEY
 ```
 
 ### Heroku Push
-
 ```bash
 git subtree push --prefix server heroku master
 
@@ -72,7 +66,6 @@ git push heroku `git subtree split --prefix server master`:master --force
 ```
 
 ### Upgrading Packages
-
 UI:
 
 * Firebase: https://firebase.google.com/support/release-notes/js
@@ -81,3 +74,12 @@ UI:
 
 Server:
 * Node.js: https://nodejs.org/en/download/releases/
+
+### Hardcoded URLs
+* This readme
+* Client/server config files
+* Firebase Auth: authorized domains
+* Firebase Hosting
+* Coinbase Commerce/Stripe webhooks
+* GitHub organization description/majorna repo description
+* Reddit
