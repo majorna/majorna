@@ -49,7 +49,7 @@ export default class extends Component {
                   card: source.source.id
                 },
                 redirect: {
-                  return_url: `https://getmajorna.com/payment?userId=${this.props.user.uid}`
+                  return_url: `${config.hosting.url}/payment?userId=${this.props.user.uid}`
                 }
               })
               if (threeDSource.error) {

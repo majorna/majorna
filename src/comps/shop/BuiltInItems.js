@@ -1,12 +1,13 @@
 import mj from '../../res/mj.png'
 import ExchangeRatesWidget from '../shared/ExchangeRatesWidget'
 import server from '../../data/server'
+import config from '../../data/config'
 
 export default [
   {
     id: 'majorna',
     name: 'Majorna',
-    description: 'Buy Majorna using Bitcoin, Ethereum, or other cryptos. Amount sent will be converted to mj and deposited in your account within 15 minutes. You can report problems about purchases to [support@getmajorna.com].',
+    description: `Buy Majorna using Bitcoin, Ethereum, or other cryptos. Amount sent will be converted to mj and deposited in your account within 15 minutes. You can report problems about purchases to [support@${config.hosting.domain}].`,
     imageUrl: mj,
     stripeScriptUrl: 'https://js.stripe.com/v3/',
     stripeCheckoutScriptUrl: 'https://checkout.stripe.com/checkout.js',

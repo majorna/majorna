@@ -2,6 +2,8 @@ const env = window.document.URL.includes('http://localhost:3000') ? 'development
 const isDev = env === 'development'
 const isProd = env === 'production'
 
+const domain = 'getmajorna.com'
+
 /**
  * Global UI configuration.
  */
@@ -10,6 +12,10 @@ export default {
     env,
     isDev,
     isProd,
+  },
+  hosting: {
+    domain,
+    url: `https://${domain}`
   },
   server: {
     url: isDev ? 'http://localhost:3001' : 'https://majorna.herokuapp.com',
