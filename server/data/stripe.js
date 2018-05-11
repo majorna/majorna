@@ -30,6 +30,7 @@ exports.createCharge = async (token, usdAmount) => {
     })
 
   // todo: assertions errors need meaning messages as they are shown to users
+  // also need to capture axios errors and send to UI
   assert(res.status === 200)
   assert(res.data.captured)
   assert(res.data.paid)
