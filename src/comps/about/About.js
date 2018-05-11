@@ -12,6 +12,15 @@ export default props =>
       This makes your account balance provable and secure, while keeping your identity hidden (there are also plans to make transactions themselves anonymous).
     </div>
 
+    <strong className="m-t-m">Why Majorna</strong>
+    <div>
+      Majorna is a decentralized cryptocurrency.
+      Being a <a href="https://en.wikipedia.org/wiki/Cryptocurrency" target="_blank" rel="noopener noreferrer">cryptocurrency</a> means your money does not need to be stored physically; it is a digitally signed information.
+      Being decentralized means that your account does not belong to an institution, all account information is duplicated across the globe, and you hold the key.
+      Via memorizing your private key, you can have all your money, in your memory!
+      And only you can spend it using your private key.
+    </div>
+
     <strong className="m-t-m">Majorna Supply</strong>
     <div>
       Max Majorna supply allocated for public distribution is denoted on the front page.
