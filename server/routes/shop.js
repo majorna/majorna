@@ -19,6 +19,6 @@ exports.createStripeCharge = route.post('/shop/stripe-charge', async ctx => {
  * Retrieves user specific Coinbase Commerce charge URL.
  */
 exports.coinbaseCommerceChargeUrl = route.get('/shop/coinbase-commerce-charge-url', async ctx => {
-  const chargeUrl = await coinbase.createCharge(ctx.state.user.uid)
+  const chargeUrl = await coinbase.createCharge(ctx.state.user.uid, ctx.state.user.name)
   ctx.body = {chargeUrl}
 })

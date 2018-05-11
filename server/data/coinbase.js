@@ -13,12 +13,13 @@ const config = require('../config/config')
  * Creates a Coinbase Commerce charge with given user ID in charge metadata and returns the charge URL.
  * Webhook events for this charge will include the same user ID in their metadata.
  */
-exports.createCharge = async userId => {
+exports.createCharge = async (userId, name) => {
   assert(userId, '"userId" parameter is required')
+  assert(name, '"userId" parameter is required')
 
   const res = await axios.post('https://api.commerce.coinbase.com/charges',
     {
-      name: 'Majorna',
+      name: 'Majorna: ' + name,
       description: 'Buy Majorna using other cryptocurrencies.',
       logo_url: config.app.logoUrl,
       redirect_url: config.app.url,

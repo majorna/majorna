@@ -3,7 +3,7 @@ const coinbase = require('./coinbase')
 
 suite('coinbase', () => {
   test('createCharge', async () => {
-    const hostedUrl = await coinbase.createCharge('123')
+    const hostedUrl = await coinbase.createCharge('123', 'abc')
     assert(hostedUrl.startsWith('https://commerce.coinbase.com/charges/'))
   })
 
