@@ -80,6 +80,6 @@ Server:
 * Client/server config files
 * Firebase Auth: authorized domains
 * Firebase Hosting
-* Coinbase Commerce/Stripe webhooks
+* Coinbase Commerce/Stripe webhooks, company email/website/support configurations
 * GitHub organization description/majorna repo description
 * Reddit
