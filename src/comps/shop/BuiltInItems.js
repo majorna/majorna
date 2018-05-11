@@ -1,17 +1,24 @@
 import mj from '../../res/mj.png'
 import ExchangeRatesWidget from '../shared/ExchangeRatesWidget'
 import server from '../../data/server'
+import config from '../../data/config'
 
 export default [
   {
     id: 'majorna',
     name: 'Majorna',
-    description: 'Buy Majorna using Bitcoin, Ethereum, or other cryptos. Amount sent will be converted to mj and deposited in your account within 15 minutes. You can report problems about purchases to [support@getmajorna.com].',
+    description: `Buy Majorna using Bitcoin, Ethereum, or other cryptos. Amount sent will be converted to mj and deposited in your account within 15 minutes. You can report problems about purchases to [support@${config.hosting.domain}].`,
     imageUrl: mj,
-    isCoinbase: true,
-    // externalScript: 'https://commerce.coinbase.com/v1/checkout.js',
-    // externalUrl: 'https://commerce.coinbase.com/embed/checkout/3e67bb92-c9e8-42c3-a832-48f8bfc67e84',
-    externalUrlFn: server.shop.getCoinbaseCommerceChargeUrl,
+    stripeScriptUrl: 'https://js.stripe.com/v3/',
+    stripeCheckoutScriptUrl: 'https://checkout.stripe.com/checkout.js',
+    stripeConfig: {
+      name: 'Majorna',
+      description: 'Buy Majorna using card (via Stripe).',
+      currency: 'usd',
+      allowRememberMe: false,
+      amount: 0
+    },
+    coinbaseUrlFn: server.shop.getCoinbaseCommerceChargeUrl,
     widget: ExchangeRatesWidget
   },
   {

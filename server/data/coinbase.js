@@ -13,13 +13,14 @@ const config = require('../config/config')
  * Creates a Coinbase Commerce charge with given user ID in charge metadata and returns the charge URL.
  * Webhook events for this charge will include the same user ID in their metadata.
  */
-exports.createCharge = async userId => {
-  assert(userId, 'use ID parameter is required')
+exports.createCharge = async (userId, name) => {
+  assert(userId, '"userId" parameter is required')
+  assert(name, '"userId" parameter is required')
 
   const res = await axios.post('https://api.commerce.coinbase.com/charges',
     {
-      name: 'Majorna',
-      description: 'Get Majorna using other cryptocurrencies.',
+      name: 'Majorna: ' + name,
+      description: 'Buy Majorna using other cryptocurrencies.',
       logo_url: config.app.logoUrl,
       redirect_url: config.app.url,
       pricing_type: 'no_price',
@@ -32,6 +33,7 @@ exports.createCharge = async userId => {
       }
     })
 
+  // todo: assertions errors need meaning messages as they are shown to users
   assert(res.status === 201)
   assert(res.data.data.metadata.userId === userId)
   return res.data.data.hosted_url
@@ -45,6 +47,7 @@ exports.createCharge = async userId => {
  */
 exports.getUSDExchanges = async () => {
   const res = await axios.get('https://api.coinbase.com/v2/exchange-rates?currency=USD')
+  // todo: assertions errors need meaning messages as they are shown to users
   assert(res.status === 200)
   assert(res.data.data.rates.BTC)
   assert(res.data.data.rates.ETH)

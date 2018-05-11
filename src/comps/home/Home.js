@@ -28,7 +28,7 @@ export default props =>
         <div className="is-size-5">Simple Cryptocurrency</div>
         Easy to use digital currency in your browser.
         Log in with your Google, Facebook, or Twitter account to start sending, receiving, and mining Majorna.
-        <Link to='/login'>+mj500 balance for all new accounts (until supply cap).</Link>
+        <Link to='/login'>+mj500 balance for new accounts.</Link>
       </div>
     </div>
 

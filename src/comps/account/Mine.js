@@ -18,6 +18,7 @@ export default class extends Component {
     nonce: 0,
     time: 0,
     minedBlocks: 0,
+    collectedReward: 0,
     hashRate: 0,
 
     // ui state
@@ -55,6 +56,7 @@ export default class extends Component {
           await server.blocks.create(nonce) // todo: ignore errors but display error msg
           this.setState((preState, props) => ({
             minedBlocks: (preState.minedBlocks + 1),
+            collectedReward: (preState.collectedReward + preState.blockInfo.miner.reward),
             hashRate: 0,
             time: 0,
             targetDifficulty: 0
@@ -85,7 +87,7 @@ export default class extends Component {
       <div><strong>Reward for Block:</strong> mj{fm(this.state.blockInfo.miner.reward || 0)}</div>
 
       <div className="m-t-m"><strong>Mined Blocks:</strong> {this.state.minedBlocks}</div>
-      <div><strong>Collected Rewards:</strong> mj{fm(this.state.blockInfo.miner.reward * this.state.minedBlocks || 0)}</div>
+      <div><strong>Collected Rewards:</strong> mj{fm(this.state.collectedReward)}</div>
 
       <div className="m-t-m" style={{maxWidth: '30rem'}}>
         <strong>Miner Map:</strong>

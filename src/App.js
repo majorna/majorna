@@ -57,7 +57,7 @@ export default withRouter(class App extends Component {
       } :
       {
         apiKey: 'AIzaSyCxdSFEhrqdH2VJ8N4XmRZ9st5Q5hBmgfY',
-        authDomain: 'getmajorna.com',
+        authDomain: config.hosting.domain,
         databaseURL: 'https://majorna-fire.firebaseio.com',
         projectId: 'majorna-fire',
         storageBucket: 'majorna-fire.appspot.com',
@@ -97,8 +97,10 @@ export default withRouter(class App extends Component {
 
     // ID token expires every 60 mins so renew it every 15 mins not to send expired token to server
     setInterval(async () => {
+      // todo: can instead retry fetch after refreshing token instead of doing this every 15 min: https://stackoverflow.com/a/46176314/628273
       if (this.state.user) {
-        config.server.token = await this.state.user.getIdToken()
+        config.server.token = await this.state.user.getIdToken(true)
+        console.log('refreshed firebase auth ID token')
       }
     }, 15 * 60 * 1000)
   }
@@ -122,7 +124,7 @@ export default withRouter(class App extends Component {
         <Route path='/login' render={routeProps => <Login {...routeProps} uiConfig={this.firebaseUIConfig} firebaseAuth={this.firebaseAuth}/>} />
         <Route path='/dashboard' render={routeProps => <Dashboard {...routeProps} user={this.state.user} acctQr={this.state.acctQr} userDoc={this.state.userDoc} mjMetaDoc={this.state.mjMetaDoc}/>} />
         <PrivateRoute path='/profile' render={routeProps => <Profile {...routeProps} user={this.state.user}/>} />
-        <PrivateRoute path='/shop/:id' render={routeProps => <ShopItem {...routeProps} mjMetaDoc={this.state.mjMetaDoc}/>} />
+        <PrivateRoute path='/shop/:id' render={routeProps => <ShopItem {...routeProps} mjMetaDoc={this.state.mjMetaDoc} user={this.state.user}/>} />
         <PrivateRoute path='/shop' component={Shop} />
         <PrivateRoute path='/send' render={routeProps => <Send {...routeProps} userDoc={this.state.userDoc}/>} />
         <PrivateRoute path='/receive' render={routeProps => <Receive {...routeProps} user={this.state.user} acctQr={this.state.acctQr}/>} />
