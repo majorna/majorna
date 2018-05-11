@@ -33,6 +33,7 @@ exports.createCharge = async (userId, name) => {
       }
     })
 
+  // todo: assertions errors need meaning messages as they are shown to users
   assert(res.status === 201)
   assert(res.data.data.metadata.userId === userId)
   return res.data.data.hosted_url
@@ -46,6 +47,7 @@ exports.createCharge = async (userId, name) => {
  */
 exports.getUSDExchanges = async () => {
   const res = await axios.get('https://api.coinbase.com/v2/exchange-rates?currency=USD')
+  // todo: assertions errors need meaning messages as they are shown to users
   assert(res.status === 200)
   assert(res.data.data.rates.BTC)
   assert(res.data.data.rates.ETH)
