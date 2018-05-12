@@ -30,7 +30,10 @@ export default class extends Component {
           key: config.stripe.publishableKey,
           locale: 'auto',
           token: async token => {
-            await server.shop.createStripeCharge(token.id, this.state.stripeAmount)
+            const res = await server.shop.createStripeCharge(token.id, this.state.stripeAmount)
+            if (res.ok) {
+
+            }
 
             // const stripe = window.Stripe(config.stripe.publishableKey)
             // const source = await stripe.createSource({
