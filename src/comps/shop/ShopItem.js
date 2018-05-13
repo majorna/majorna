@@ -31,9 +31,10 @@ export default class extends Component {
           locale: 'auto',
           token: async token => {
             const res = await server.shop.createStripeCharge(token.id, this.state.stripeAmount)
-            if (res.ok) {
-
-            }
+            // need to show notifications on main App since user might have navigated away from this page and nothing will be rendered
+            res.ok ?
+              this.props.showNotification('Card purchase succeeded.') :
+              this.props.showNotification('Card purchase failed. Note that 3D secure payments are not supported at the moment so you can disable it and re-try.')
 
             // const stripe = window.Stripe(config.stripe.publishableKey)
             // const source = await stripe.createSource({

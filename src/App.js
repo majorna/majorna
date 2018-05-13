@@ -29,6 +29,7 @@ export default withRouter(class App extends Component {
   constructor(props) {
     super(props)
     this.state = this.nullState = {
+      notification: null,
       user: null, // firebase auth user
       acctQr: null, // data:image/png;base64,iVBORw0KG.......kJggg==,
       /* firestore docs */
@@ -112,6 +113,8 @@ export default withRouter(class App extends Component {
     await this.firebaseAuth.signOut()
   }
 
+  showNotification = notification => this.setState({notification})
+
   render = () =>
     <React.Fragment>
       <Navbar logout={this.logout} user={this.state.user}/>
@@ -124,7 +127,7 @@ export default withRouter(class App extends Component {
         <Route path='/login' render={routeProps => <Login {...routeProps} uiConfig={this.firebaseUIConfig} firebaseAuth={this.firebaseAuth}/>} />
         <Route path='/dashboard' render={routeProps => <Dashboard {...routeProps} user={this.state.user} acctQr={this.state.acctQr} userDoc={this.state.userDoc} mjMetaDoc={this.state.mjMetaDoc}/>} />
         <PrivateRoute path='/profile' render={routeProps => <Profile {...routeProps} user={this.state.user}/>} />
-        <PrivateRoute path='/shop/:id' render={routeProps => <ShopItem {...routeProps} mjMetaDoc={this.state.mjMetaDoc} user={this.state.user}/>} />
+        <PrivateRoute path='/shop/:id' render={routeProps => <ShopItem {...routeProps} mjMetaDoc={this.state.mjMetaDoc} user={this.state.user} showNotification={this.showNotification}/>} />
         <PrivateRoute path='/shop' component={Shop} />
         <PrivateRoute path='/send' render={routeProps => <Send {...routeProps} userDoc={this.state.userDoc}/>} />
         <PrivateRoute path='/receive' render={routeProps => <Receive {...routeProps} user={this.state.user} acctQr={this.state.acctQr}/>} />
