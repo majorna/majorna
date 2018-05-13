@@ -121,7 +121,7 @@ export default class extends Component {
         }
 
         <strong className="m-t-m">Description</strong>
-        <div>{this.item.description}</div>
+        <div>{typeof this.item.description === 'string' ? this.item.description : <this.item.description/>}</div>
 
         {this.item.widget && <div className="m-t-m"><this.item.widget mjMetaDoc={this.props.mjMetaDoc}/></div>}
 
