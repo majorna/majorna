@@ -24,6 +24,7 @@ import About from './comps/about/About'
 import Tech from './comps/about/Tech'
 import Roadmap from './comps/about/Roadmap'
 import PrivateRoute from './comps/shared/PrivateRoute'
+import Modal from './comps/shared/Modal'
 
 export default withRouter(class App extends Component {
   constructor(props) {
@@ -114,10 +115,13 @@ export default withRouter(class App extends Component {
   }
 
   showNotification = notification => this.setState({notification})
+  clearNotification = () => this.setState({notification: null})
 
   render = () =>
     <React.Fragment>
       <Navbar logout={this.logout} user={this.state.user}/>
+
+      <Modal clearNotification={this.clearNotification}>{this.state.notification}</Modal>
 
       <Switch>
         <Route exact path='/' render={routeProps => <Home {...routeProps} mjMetaDoc={this.state.mjMetaDoc}/>} />
