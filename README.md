@@ -83,3 +83,4 @@ Server:
 * Coinbase Commerce/Stripe webhooks, company email/website/support configurations
 * GitHub organization description/majorna repo description
 * Reddit
+* Blog

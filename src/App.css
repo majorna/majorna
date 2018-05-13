@@ -147,10 +147,17 @@ body {
     color: grey;
 }
 
+/* colors */
+.bg-white {
+    background-color: white;
+}
+
 /* animations */
 @keyframes rotate360 {
     to {transform: rotate(360deg);}
 }
+
+/* ######### components ######### */
 
 /* spinner */
 .spinner::before {
@@ -163,8 +170,6 @@ body {
     border-bottom-color: transparent;
     border-radius: 50%;
 }
-
-/* ######### components ######### */
 
 /* shared */
 .stats-grid {
