@@ -9,6 +9,8 @@ const firebaseConfig = require('./firebase')
 
 let koaApp
 
+exports.getGitHubTestFile = () => 'testfiles/testfile-' + new Date().getTime()
+
 /**
  * Global test setup and teardown.
  * These two run only run once before the test suite starts and after everything is finished.
