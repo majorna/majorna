@@ -411,6 +411,11 @@ exports.giveMj = (userId, usdAmount) => firestore.runTransaction(async t => {
  * Adds a tx in txs array property in the given user doc. This function mutates the doc.
  * Last item in the txs array is dropped if max txs in the doc limit is reached.
  * @param userData - User object.
+ * @param txId
+ * @param fromId
+ * @param fromName
+ * @param toId
+ * @param toName
  * @param time - JavaScript DateTime object instance.
  * @param amount - Amount in mj.
  */
