@@ -1,0 +1,1 @@
+exports.getStr = () => 'wow'
