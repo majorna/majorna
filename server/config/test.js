@@ -100,7 +100,7 @@ const testData = exports.data = {
   users: {
     anonRequest: null,
     u1Doc: {
-      email: 'chuck.norris@majorna.mj',
+      email: `chuck.norris@${config.app.domain}`,
       name: 'Chuck Norris',
       created: time,
       balance: initBalance,
@@ -108,7 +108,7 @@ const testData = exports.data = {
     },
     u1Auth: {
       uid: '1',
-      email: 'chuck.norris@majorna.mj',
+      email: `chuck.norris@${config.app.domain}`,
       emailVerified: true,
       password: 'password',
       displayName: 'Chuck Norris',
@@ -118,14 +118,14 @@ const testData = exports.data = {
     u1Token: null,
     u1Request: null,
     u2Doc: {
-      email: 'morgan.almighty@majorna.mj',
+      email: `morgan.almighty@${config.app.domain}`,
       name: 'Morgan Almighty',
       created: time,
       balance: initBalance,
       txs: [{id: '1', from, fromName, time, amount: initBalance}]
     },
     u3Doc: {
-      email: 'john.doe@majorna.mj',
+      email: `john.doe@${config.app.domain}`,
       name: 'John Doe',
       created: time,
       balance: initBalance,
@@ -133,7 +133,7 @@ const testData = exports.data = {
     },
     u4Auth: {
       uid: '4',
-      email: 'bob.marley@majorna.mj',
+      email: `bob.marley@${config.app.domain}`,
       emailVerified: true,
       password: 'password',
       displayName: 'Bob Marley',

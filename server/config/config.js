@@ -4,6 +4,8 @@ const firebaseAdmin = require('firebase-admin')
 const env = process.env.NODE_ENV || (process.env.CI && 'test') || 'development'
 console.log(`config: ${env}`)
 
+const domain = 'getmajorna.com'
+
 // app config
 const app = {
   env,
@@ -17,7 +19,8 @@ const app = {
 
   debugMode: false, // enables debug logging
 
-  url: 'https://getmajorna.com',
+  domain,
+  url: `https://${domain}`,
   logoUrl: 'https://raw.githubusercontent.com/majorna/majorna/master/src/res/mj.png'
 }
 
