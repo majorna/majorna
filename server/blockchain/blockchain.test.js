@@ -23,7 +23,7 @@ suite('blockchain', () => {
   test('insertBlockSinceLastOne', async () => {
     // create a new block and write the previous one to git repo
     const blockInfo = await db.getBlockInfo()
-    const blockPath = new Date().getTime()
+    const blockPath = 'testfiles/testfile-' + new Date().getTime()
     await blockchain.insertBlockSinceLastOne(new Date(), blockInfo, blockPath)
 
     const blockFile = await github.getFileContent(blockPath)
@@ -31,7 +31,7 @@ suite('blockchain', () => {
 
     // now repeat again and verify the last inserted block with the previous one
     const blockInfo2 = await db.getBlockInfo()
-    const blockPath2 = new Date().getTime()
+    const blockPath2 = 'testfiles/testfile-' + new Date().getTime()
     await blockchain.insertBlockSinceLastOne(new Date(), blockInfo2, blockPath2)
 
     const blockFile2 = await github.getFileContent(blockPath2)
@@ -48,7 +48,7 @@ suite('blockchain', () => {
     await db.makeTx('1', '2', 1)
     const tomorrow = new Date() // end search in tomorrow so we can pick up test tx from the database (5 min latency for ongoing txs stuff...)
     tomorrow.setDate(tomorrow.getDate() + 2)
-    const blockPath = new Date().getTime()
+    const blockPath = 'testfiles/testfile-' + new Date().getTime()
 
     await blockchain.insertBlockIfRequired(tomorrow, blockPath)
 
@@ -63,7 +63,7 @@ suite('blockchain', () => {
     block.verify(newBlock, blockObj.header)
 
     // not required
-    const blockPath2 = new Date().getTime()
+    const blockPath2 = 'testfiles/testfile-' + new Date().getTime()
     await blockchain.insertBlockIfRequired(tomorrow, blockPath2)
     let err
     try {
