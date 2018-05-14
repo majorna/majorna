@@ -3,7 +3,7 @@ const querystring = require('querystring')
 const axios = require('axios')
 const config = require('../config/config')
 
-const usdMultiplier = 100
+const usdMultiplier = 100 // stripe represents USD in cents rather than dollars hence the multiplier
 
 /**
  * Creates a Stripe charge with given params.
