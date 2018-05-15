@@ -81,7 +81,7 @@ Server:
 * Client/server config files
 * Firebase Hosting
 * Firebase Auth: sign-in methods: authorized domains
-* console.developers.google.com/apis/credentials/oauthclient/ -> allowed redirect urls
+* console.developers.google.com/apis/credentials/oauthclient/ -> allowed redirect urls (test with new user registration)
 * Coinbase Commerce/Stripe webhooks, company email/website/support configurations, whitelisted hosted widget domains
 * GitHub organization description/majorna repo description
 * Reddit
