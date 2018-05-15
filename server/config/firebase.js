@@ -23,9 +23,11 @@ const firebaseAdmin = require('firebase-admin')
 const Logging = require('@google-cloud/logging')
 const config = require('./config')
 
-// (test only)
-exports.clientSdk = require('firebase') // firebase client sdk, to impersonate user logins during testing
-require('firebase/firestore') // side effect: required for the firebase client sdk app to have .firebase() method
+// (testing only)
+if (config.app.isTest) {
+  exports.clientSdk = require('firebase') // firebase client sdk, to impersonate user logins during testing
+  require('firebase/firestore') // side effect: required for the firebase client sdk app to have .firebase() method
+}
 
 // module exports
 exports.app = firebaseAdmin.initializeApp(config.firebase.config)

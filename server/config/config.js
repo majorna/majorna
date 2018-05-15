@@ -4,7 +4,7 @@ const firebaseAdmin = require('firebase-admin')
 const env = process.env.NODE_ENV || (process.env.CI && 'test') || 'development'
 console.log(`config: ${env}`)
 
-const domain = 'majorna.app'
+const domain = 'getmajorna.com'
 
 // app config
 const app = {
