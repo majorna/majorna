@@ -1,4 +1,4 @@
-<a href="https://getmajorna.com"><img src="/src/res/majorna.png" width="256"></a>
+<a href="https://majorna.app"><img src="/src/res/majorna.png" width="256"></a>
 
 [![Build Status](https://travis-ci.org/majorna/majorna.svg?branch=master)](https://travis-ci.org/majorna/majorna)
 
@@ -77,9 +77,11 @@ Server:
 
 ### Hardcoded URLs
 * This readme
+* public/index.html
 * Client/server config files
-* Firebase Auth: authorized domains
 * Firebase Hosting
+* Firebase Auth: authorized domains
+* console.developers.google.com/apis/credentials/oauthclient/ -> allowed redirect urls
 * Coinbase Commerce/Stripe webhooks, company email/website/support configurations
 * GitHub organization description/majorna repo description
 * Reddit

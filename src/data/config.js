@@ -2,7 +2,7 @@ const env = window.document.URL.includes('http://localhost:3000') ? 'development
 const isDev = env === 'development'
 const isProd = env === 'production'
 
-const domain = 'getmajorna.com'
+const domain = 'majorna.app'
 
 /**
  * Global UI configuration.
