@@ -100,7 +100,7 @@ exports.updateMjMetaStatsIfRequired = async endTime => {
   previousMonthEnd.setDate(30)
   previousMonthEnd.setHours(0, 0, 0, 0)
   if (previousMonthEnd <= meta.monthly.updated) {
-    console.log(`skipping mj meta stats update since: previous month end: ${previousMonthEnd} <= last updated: ${meta.monthly.updated}`)
+    console.log(`skipping mj meta stats update. condition: previous month end: ${previousMonthEnd} <= last updated: ${meta.monthly.updated}`)
     return false
   }
 
