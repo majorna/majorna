@@ -35,7 +35,7 @@ export default class extends Component {
 
       // set miner location for miner map (also wakes server up)
       const minersRes = await server.miners.post(location.latitude, location.longitude)
-      const minersData = await await minersRes.json()
+      const minersData = await minersRes.json()
       this.setState({miners: minersData.miners})
     } catch (e) {
       console.error(e)
