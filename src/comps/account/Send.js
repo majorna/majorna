@@ -89,7 +89,7 @@ export default class extends Component {
         <div className="mj-box flex-column box-center w-s">
           <div className="is-size-5 has-text-centered">Confirm Send</div>
 
-          <div><strong>Receiver:</strong> {this.state.receiver}</div>
+          <div><strong>Address:</strong> {this.state.receiver}</div>
 
           <div><strong className="m-t-m">Amount:</strong> mj{fm(this.state.amount)}</div>
 
@@ -123,7 +123,7 @@ export default class extends Component {
       <div className="mj-box flex-column box-center w-s">
         <div className="is-size-5 has-text-centered">Send mj</div>
 
-        <strong>Receiver</strong>
+        <strong>Address</strong>
         <input className="input" type="text" value={this.state.receiver} onChange={this.handleReceiver}/>
         {this.state.receiverName && <strong className="has-text-info">Name: {this.state.receiverName}</strong>}
 
