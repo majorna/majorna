@@ -76,9 +76,9 @@ export const mineBlock = async (headerStr, targetDifficulty, progressCb, minedBl
   interval = setInterval(() => {
     elapsedTime = Math.round(new Date(new Date().getTime() - start).getTime() / intervalTime)
     progressCb({
-      hashRate: nonce - lastNonce,
+      nonce: nonce,
       time: elapsedTime,
-      nonce: nonce
+      hashRate: nonce - lastNonce
     })
     lastNonce = nonce
   }, intervalTime)
