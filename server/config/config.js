@@ -103,9 +103,9 @@ MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAE2yLEGhHZMiClLt4rHm6Kajo2qsRRQMUW
 const blockchain = {
   blockInterval: 5 * 60 * 1000, // ms
 
-  initialMinBlockDifficulty: app.isProd ? 18 : 1,
+  initialMinBlockDifficulty: app.isProd ? 20 : 1,
   blockDifficultyIncrementStep: 1,
-  difficultyRewardMultiplier: 1.8
+  difficultyRewardMultiplier: 1.5
 }
 
 // 3rd party integrations
