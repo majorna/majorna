@@ -288,7 +288,9 @@ suite('db', () => {
     assert(err.message.includes('contention') || err.message.includes('nonce'))
 
     const receiverAfterBalance = (await db.getUser(to)).balance
-    assert(receiverAfterBalance === receiverInitBalance + blockUtils.getBlockReward(miningRes.difficulty))
+    const miningReward = blockUtils.getBlockReward(miningRes.difficulty)
+    assert(miningReward)
+    assert(receiverAfterBalance === receiverInitBalance + miningReward)
   })
 
   test('giveMj', async () => {
