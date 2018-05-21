@@ -74,13 +74,10 @@ exports.startBlockchainInsertTimer = interval => {
   timerStarted = true
 
   // do initial block check immediately
-  // skip on testing since ongoing promise can do conflicting data changes
+  // skip on testing since ongoing promise can do conflicting data changes as we don't await the promise
   !interval && failSafeInsertBlockAndUpdateStatsIfRequired()
 
   // start timer
-  interval = interval || 1000/* ms */ * 60/* s */ * 5/* min */
-  if (config.blockchain.blockInterval <= interval) {
-    interval = Math.round(config.blockchain.blockInterval / 2)
-  }
+  interval = interval || Math.round(config.blockchain.blockInterval / 2)
   return setInterval(() => failSafeInsertBlockAndUpdateStatsIfRequired(), interval)
 }
