@@ -83,7 +83,7 @@ export const mineBlock = async (headerStr, targetDifficulty, progressCb, minedBl
     lastNonce = nonce
   }, intervalTime)
 
-  console.log(`starting hash loop with target difficulty: ${targetDifficulty}, nonce suffix: ${nonceSuffix}`)
+  console.log(`starting hash loop with interval ID: ${localInterval}, target difficulty: ${targetDifficulty}, nonce suffix: ${nonceSuffix}`)
   while (localInterval === interval) {
     nonce++
     nonceBuffer = enc.encode(nonce.toString())
@@ -103,5 +103,5 @@ export const mineBlock = async (headerStr, targetDifficulty, progressCb, minedBl
     }
   }
 
-  console.log(`stopped or finished mining a block`)
+  console.log(`stopped or finished mining a block with local interval ID: ${localInterval}, next (if any) interval ID: ${interval}`)
 }
