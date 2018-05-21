@@ -2,7 +2,7 @@ const assert = require('assert')
 const testData = require('../config/test').data
 
 suite('route: shop', () => {
-  test('createStripeCharge', async () => {
+  test.skip('createStripeCharge', async () => {
     const res = await testData.users.u1Request.post('/shop/stripe-charge', {
       token: 'tok_visa',
       usdAmount: 10
