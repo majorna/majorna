@@ -44,14 +44,14 @@ export default class extends Component {
     }
 
     // start network requests
-    this.fbUnsubBlockInfoMetaDocSnapshot = this.props.db.collection('meta').doc('blockInfo').onSnapshot(doc => {
+    this.fbUnsubBlockInfoMetaDocSnapshot = this.props.db.collection('meta').doc('blockInfo').onSnapshot(async doc => {
       stopMining()
 
       const blockInfo = doc.data()
       this.setState({blockInfo})
 
       // todo: better way would be to check and abort running mining promise inside node.stopMining()
-      setTimeout(() => mineBlock(
+      await mineBlock(
         blockInfo.miner.headerStrWithoutNonce,
         blockInfo.miner.targetDifficulty,
         s => this.setState(s), // callback: progress update
@@ -68,8 +68,7 @@ export default class extends Component {
             time: 0,
             hashRate: 0
           })
-        }), 50)
-
+        })
     })
   }
 
