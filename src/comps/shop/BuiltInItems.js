@@ -12,8 +12,8 @@ export default [
     description: () => <React.Fragment>
       Buy Majorna using Card or Bitcoin, Ethereum, or other cryptos.
       Amount sent will be converted to mj and deposited in your account within 15 minutes.
-      By purchasing Majorna, you agree to the <Link to="/about/agreement">User Agreement</Link>, so make sure to review it.
-      You can report problems about purchases to <a href={'mailto:support@' + config.hosting.domain} target="_blank" rel="noopener noreferrer">support@{config.hosting.domain}</a>
+      By purchasing Majorna, you agree to the <Link to="/about/terms">Terms and Conditions</Link>, so make sure to review it.
+      You can report problems about purchases to <a href={'mailto:support@' + config.hosting.domain} target="_blank" rel="noopener noreferrer">support@{config.hosting.domain}</a>.
     </React.Fragment>,
     imageUrl: mj,
     stripeScriptUrl: 'https://js.stripe.com/v3/',

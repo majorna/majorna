@@ -2,7 +2,7 @@ import React from 'react'
 
 export default props =>
   <div className="mj-box flex-column">
-    <div className="is-size-5 has-text-centered">Majorna User Agreement</div>
+    <div className="is-size-5 has-text-centered">Majorna Terms and Conditions</div>
     <div className="m-t-m">
       <u>Last updated: May 22, 2018.</u>
       Via using or purchasing Majorna, you agree to the following terms and conditions so make sure to review them thoroughly:
@@ -18,10 +18,10 @@ export default props =>
       Majorna accounts current are not covered by deposit insurance, but we plan to add it as an option in the future.
     </div>
 
-    <strong className="m-t-m">Updates to the Agreement</strong>
+    <strong className="m-t-m">Updates to the Terms and Conditions</strong>
     <div>
-      User agreement is updated occasionally, and you can find the last updated time at the beginning of the agreement.
-      You are required to review the updates occasionally as with continuing to use Majorna means agreement to updated terms.
+      Terms and conditions are updated occasionally, and you can find the last updated time at the beginning of the agreement.
+      You are required to review the updates occasionally, as continuing to use Majorna means agreeing to the updated terms and conditions.
     </div>
 
     <div className="flex-row center-h m-t-l">
