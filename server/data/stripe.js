@@ -3,7 +3,7 @@ const querystring = require('querystring')
 const axios = require('axios')
 const config = require('../config/config')
 
-const usdMultiplier = 100
+const usdMultiplier = 100 // stripe represents USD in cents rather than dollars hence the multiplier
 
 /**
  * Creates a Stripe charge with given params.
@@ -40,4 +40,78 @@ exports.createCharge = async (token, usdAmount) => {
   console.log('Stripe: successful charge:', res.data)
 
   return res.data.amount / usdMultiplier
+}
+
+exports.sampleSuccessfulChargeResponse = {
+  id: 'ch_sdafsdff43qasdfasf',
+  object: 'charge',
+  amount: 100, // 1$ hence 100 cents
+  amount_refunded: 0,
+  application: null,
+  application_fee: null,
+  balance_transaction: 'txn_sadfsadfwef23fsadasdf',
+  captured: true,
+  created: 1526041750,
+  currency: 'usd',
+  customer: null,
+  description: null,
+  destination: null,
+  dispute: null,
+  failure_code: null,
+  failure_message: null,
+  fraud_details: {},
+  invoice: null,
+  livemode: true,
+  metadata: {},
+  on_behalf_of: null,
+  order: null,
+  outcome: {
+    network_status: 'approved_by_network',
+    reason: null,
+    risk_level: 'normal',
+    seller_message: 'Payment complete.',
+    type: 'authorized'
+  },
+  paid: true,
+  receipt_email: null,
+  receipt_number: null,
+  refunded: false,
+  refunds: {
+    object: 'list',
+    data: [],
+    has_more: false,
+    total_count: 0,
+    url: '/v1/charges/ch_sdafsdff43qasdfasf/refunds'
+  },
+  review: null,
+  shipping: null,
+  source: {
+    id: 'card_sdafsadf332rasdfasd',
+    object: 'card',
+    address_city: null,
+    address_country: null,
+    address_line1: null,
+    address_line1_check: null,
+    address_line2: null,
+    address_state: null,
+    address_zip: null,
+    address_zip_check: null,
+    brand: 'Visa',
+    country: 'UK',
+    customer: null,
+    cvc_check: 'pass',
+    dynamic_last4: null,
+    exp_month: 10,
+    exp_year: 2018,
+    fingerprint: 'sdfsdfsda32fsdfwe344',
+    funding: 'debit',
+    last4: '1111',
+    metadata: {},
+    name: 'abc@abc.com',
+    tokenization_method: null
+  },
+  source_transfer: null,
+  statement_descriptor: null,
+  status: 'succeeded',
+  transfer_group: null
 }

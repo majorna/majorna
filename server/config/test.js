@@ -5,11 +5,11 @@ const tx = require('../blockchain/tx')
 const block = require('../blockchain/block')
 const server = require('./server')
 const config = require('./config')
-const firebaseConfig = require('./firebase') // firebase admin sdk config
-const firebaseClientSdk = require('firebase') // firebase client sdk, to impersonate user logins
-require('firebase/firestore') // side effect: required for the firebase client sdk app to have .firebase() method
+const firebaseConfig = require('./firebase')
 
 let koaApp
+
+exports.getGitHubTestFile = () => 'testfiles/testfile-' + new Date().getTime()
 
 /**
  * Global test setup and teardown.
@@ -25,10 +25,10 @@ suiteSetup(async () => {
   await firebaseConfig.auth.createUser(u4)
 
   // initialize firebase client sdk and sign in as a user, to get an id token
-  testData.users.u1FBClient = firebaseClientSdk.initializeApp(config.firebase.testClientSdkKeyJsonPath, 'u1FBClient')
+  testData.users.u1FBClient = firebaseConfig.clientSdk.initializeApp(config.firebase.testClientSdkKeyJsonPath, 'u1FBClient')
   const authUser1 = await testData.users.u1FBClient.auth().signInWithEmailAndPassword(u1.email, u1.password)
   testData.users.u1Token = await authUser1.getIdToken()
-  testData.users.u4FBClient = firebaseClientSdk.initializeApp(config.firebase.testClientSdkKeyJsonPath, 'u4FBClient')
+  testData.users.u4FBClient = firebaseConfig.clientSdk.initializeApp(config.firebase.testClientSdkKeyJsonPath, 'u4FBClient')
   const authUser2 = await testData.users.u4FBClient.auth().signInWithEmailAndPassword(u4.email, u4.password)
   testData.users.u4Token = await authUser2.getIdToken()
 
@@ -102,7 +102,7 @@ const testData = exports.data = {
   users: {
     anonRequest: null,
     u1Doc: {
-      email: 'chuck.norris@majorna.mj',
+      email: `chuck.norris@${config.app.domain}`,
       name: 'Chuck Norris',
       created: time,
       balance: initBalance,
@@ -110,7 +110,7 @@ const testData = exports.data = {
     },
     u1Auth: {
       uid: '1',
-      email: 'chuck.norris@majorna.mj',
+      email: `chuck.norris@${config.app.domain}`,
       emailVerified: true,
       password: 'password',
       displayName: 'Chuck Norris',
@@ -120,14 +120,14 @@ const testData = exports.data = {
     u1Token: null,
     u1Request: null,
     u2Doc: {
-      email: 'morgan.almighty@majorna.mj',
+      email: `morgan.almighty@${config.app.domain}`,
       name: 'Morgan Almighty',
       created: time,
       balance: initBalance,
       txs: [{id: '1', from, fromName, time, amount: initBalance}]
     },
     u3Doc: {
-      email: 'john.doe@majorna.mj',
+      email: `john.doe@${config.app.domain}`,
       name: 'John Doe',
       created: time,
       balance: initBalance,
@@ -135,7 +135,7 @@ const testData = exports.data = {
     },
     u4Auth: {
       uid: '4',
-      email: 'bob.marley@majorna.mj',
+      email: `bob.marley@${config.app.domain}`,
       emailVerified: true,
       password: 'password',
       displayName: 'Bob Marley',

@@ -1,7 +1,7 @@
 const assert = require('assert')
+const testConfig = require('../config/test')
 const github = require('./github')
 
-const testFilePath = 'testfile'
 const readmePath = 'README.md'
 
 // todo: cleanup repo to 1st commit in 'suiteSetup in test.js'
@@ -15,7 +15,7 @@ suite('github', () => {
   })
 
   test('createFile', async () => {
-    const path = 'testfiles/testfile-' + new Date().getTime()
+    const path = testConfig.getGitHubTestFile()
     const text = 'some-text-' + new Date().getTime()
     await github.createFile(text, path)
     const file = await github.getFileContent(path)
@@ -28,6 +28,7 @@ suite('github', () => {
   })
 
   test('upsertFile', async () => {
+    const testFilePath = testConfig.getGitHubTestFile()
     const appendText = 'some-text-' + new Date().getTime()
     await github.upsertFile(appendText, testFilePath)
     const updatedFile = await github.getFileContent(testFilePath)

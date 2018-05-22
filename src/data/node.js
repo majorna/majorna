@@ -73,18 +73,18 @@ export const mineBlock = async (headerStr, targetDifficulty, progressCb, minedBl
   let nonceBuffer, fullStrArr, hashBuffer, hashArray, base64String, difficulty
 
   const intervalTime = 1000 //ms
-  interval = setInterval(() => {
+  const localInterval = interval = setInterval(() => {
     elapsedTime = Math.round(new Date(new Date().getTime() - start).getTime() / intervalTime)
     progressCb({
-      hashRate: nonce - lastNonce,
+      nonce: nonce,
       time: elapsedTime,
-      nonce: nonce
+      hashRate: nonce - lastNonce
     })
     lastNonce = nonce
   }, intervalTime)
 
-  console.log(`starting hash loop with target difficulty: ${targetDifficulty}, nonce suffix: ${nonceSuffix}`)
-  while (interval) {
+  console.log(`starting hash loop with interval ID: ${localInterval}, target difficulty: ${targetDifficulty}, nonce suffix: ${nonceSuffix}`)
+  while (localInterval === interval) {
     nonce++
     nonceBuffer = enc.encode(nonce.toString())
     fullStrArr = new Uint8Array(nonceBuffer.length + headerStrBuffer.length)
@@ -94,14 +94,14 @@ export const mineBlock = async (headerStr, targetDifficulty, progressCb, minedBl
     hashArray = new Uint8Array(hashBuffer)
     difficulty = getHashDifficulty(hashArray)
 
-    if (difficulty >= targetDifficulty && interval) {
+    if (difficulty >= targetDifficulty && localInterval === interval) {
       base64String = btoa(String.fromCharCode(...hashArray))
       console.log(`mined block with difficulty: ${difficulty} (target: ${targetDifficulty}), time: ${elapsedTime}s, nonce: ${nonce} (suffix: ${nonceSuffix}), hash: ${base64String}`)
-      stopMining(interval)
+      stopMining()
       await minedBlockCb(nonce + nonceSuffix)
       break
     }
   }
 
-  console.log(`stopped or finished mining a block`)
+  console.log(`stopped or finished mining a block with local interval ID: ${localInterval}, next (if any) interval ID: ${interval}`)
 }

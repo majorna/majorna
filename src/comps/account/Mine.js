@@ -17,9 +17,11 @@ export default class extends Component {
     // current mining info
     nonce: 0,
     time: 0,
+    hashRate: 0,
+
+    // pas mining info
     minedBlocks: 0,
     collectedReward: 0,
-    hashRate: 0,
 
     // ui state
     showDetails: false,
@@ -35,7 +37,7 @@ export default class extends Component {
 
       // set miner location for miner map (also wakes server up)
       const minersRes = await server.miners.post(location.latitude, location.longitude)
-      const minersData = await await minersRes.json()
+      const minersData = await minersRes.json()
       this.setState({miners: minersData.miners})
     } catch (e) {
       console.error(e)
@@ -48,19 +50,24 @@ export default class extends Component {
       const blockInfo = doc.data()
       this.setState({blockInfo})
 
+      // todo: better way would be to check and abort running mining promise inside node.stopMining()
       await mineBlock(
         blockInfo.miner.headerStrWithoutNonce,
         blockInfo.miner.targetDifficulty,
         s => this.setState(s), // callback: progress update
         async nonce => { // callback: mined a block
-          await server.blocks.create(nonce) // todo: ignore errors but display error msg
-          this.setState((preState, props) => ({
-            minedBlocks: (preState.minedBlocks + 1),
-            collectedReward: (preState.collectedReward + preState.blockInfo.miner.reward),
-            hashRate: 0,
+          const res = await server.blocks.create(nonce)
+          if (res.ok) { // we collected the reward
+            this.setState(preState => ({
+              minedBlocks: (preState.minedBlocks + 1),
+              collectedReward: (preState.collectedReward + preState.blockInfo.miner.reward)
+            }))
+          }
+          this.setState({
+            nonce: 0,
             time: 0,
-            targetDifficulty: 0
-          }))
+            hashRate: 0
+          })
         })
     })
   }

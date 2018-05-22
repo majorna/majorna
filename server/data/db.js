@@ -100,7 +100,7 @@ exports.updateMjMetaStatsIfRequired = async endTime => {
   previousMonthEnd.setDate(30)
   previousMonthEnd.setHours(0, 0, 0, 0)
   if (previousMonthEnd <= meta.monthly.updated) {
-    console.log(`skipping mj meta stats update since: previous month end: ${previousMonthEnd} <= last updated: ${meta.monthly.updated}`)
+    console.log(`skipping mj meta stats update. condition: previous month end: ${previousMonthEnd} <= last updated: ${meta.monthly.updated}`)
     return false
   }
 
@@ -411,6 +411,11 @@ exports.giveMj = (userId, usdAmount) => firestore.runTransaction(async t => {
  * Adds a tx in txs array property in the given user doc. This function mutates the doc.
  * Last item in the txs array is dropped if max txs in the doc limit is reached.
  * @param userData - User object.
+ * @param txId
+ * @param fromId
+ * @param fromName
+ * @param toId
+ * @param toName
  * @param time - JavaScript DateTime object instance.
  * @param amount - Amount in mj.
  */

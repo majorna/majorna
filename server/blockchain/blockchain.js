@@ -25,7 +25,8 @@ exports.insertBlockSinceLastOne = async (now, blockInfo, customOldBlockPath) => 
   }
   const newBlock = await db.insertBlock(txs, now)
   const oldBlock = await db.getBlock(newBlock.header.no - 1)
-  const oldBlockPath = customOldBlockPath || exports.getBlockPath(oldBlock.header)
+  let oldBlockPath = customOldBlockPath || exports.getBlockPath(oldBlock.header)
+  config.app.isDev && (oldBlockPath += `-${new Date().getTime()}`)
   await github.createFile(block.toJson(oldBlock), oldBlockPath)
   console.log(`inserted new block: no ${newBlock.header.no}, time: ${newBlock.header.time}, previous-nonce: ${oldBlock.header.nonce}`)
 }
@@ -73,13 +74,10 @@ exports.startBlockchainInsertTimer = interval => {
   timerStarted = true
 
   // do initial block check immediately
-  // skip on testing since ongoing promise can do conflicting data changes
+  // skip on testing since ongoing promise can do conflicting data changes as we don't await the promise
   !interval && failSafeInsertBlockAndUpdateStatsIfRequired()
 
   // start timer
-  interval = interval || 1000/* ms */ * 60/* s */ * 5/* min */
-  if (config.blockchain.blockInterval <= interval) {
-    interval = Math.round(config.blockchain.blockInterval / 2)
-  }
+  interval = interval || Math.round(config.blockchain.blockInterval / 2)
   return setInterval(() => failSafeInsertBlockAndUpdateStatsIfRequired(), interval)
 }

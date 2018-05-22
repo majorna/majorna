@@ -77,10 +77,12 @@ Server:
 
 ### Hardcoded URLs
 * This readme
+* public/index.html
 * Client/server config files
-* Firebase Auth: authorized domains
 * Firebase Hosting
-* Coinbase Commerce/Stripe webhooks, company email/website/support configurations
+* Firebase Auth: sign-in methods: authorized domains
+* console.developers.google.com/apis/credentials/oauthclient/ -> allowed redirect urls (test with new user registration)
+* Coinbase Commerce/Stripe webhooks, company email/website/support configurations, whitelisted hosted widget domains
 * GitHub organization description/majorna repo description
 * Reddit
 * Blog

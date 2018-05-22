@@ -4,6 +4,8 @@ const firebaseAdmin = require('firebase-admin')
 const env = process.env.NODE_ENV || (process.env.CI && 'test') || 'development'
 console.log(`config: ${env}`)
 
+const domain = 'getmajorna.com'
+
 // app config
 const app = {
   env,
@@ -17,7 +19,8 @@ const app = {
 
   debugMode: false, // enables debug logging
 
-  url: 'https://getmajorna.com',
+  domain,
+  url: `https://${domain}`,
   logoUrl: 'https://raw.githubusercontent.com/majorna/majorna/master/src/res/mj.png'
 }
 
@@ -98,11 +101,11 @@ MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAE2yLEGhHZMiClLt4rHm6Kajo2qsRRQMUW
 
 // blockchain
 const blockchain = {
-  blockInterval: 5 * 60 * 1000, // ms
+  blockInterval: (app.isProd ? 10 : 3) * 60 * 1000, // ms
 
-  initialMinBlockDifficulty: app.isProd ? 10 : 1,
+  initialMinBlockDifficulty: app.isProd ? 18 : 1,
   blockDifficultyIncrementStep: 1,
-  difficultyRewardMultiplier: 2.5
+  difficultyRewardMultiplier: app.isProd ? 0.1 : 1 // (reward multiplier < 1 breaks tests due to math.round)
 }
 
 // 3rd party integrations
