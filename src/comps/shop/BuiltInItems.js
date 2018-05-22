@@ -3,6 +3,7 @@ import mj from '../../res/mj.png'
 import ExchangeRatesWidget from '../shared/ExchangeRatesWidget'
 import server from '../../data/server'
 import config from '../../data/config'
+import { Link } from 'react-router-dom'
 
 export default [
   {
@@ -11,6 +12,7 @@ export default [
     description: () => <React.Fragment>
       Buy Majorna using Card or Bitcoin, Ethereum, or other cryptos.
       Amount sent will be converted to mj and deposited in your account within 15 minutes.
+      By purchasing Majorna, you agree to the <Link to="/about/agreement">User Agreement</Link>, so make sure to review it.
       You can report problems about purchases to <a href={'mailto:support@' + config.hosting.domain} target="_blank" rel="noopener noreferrer">support@{config.hosting.domain}</a>
     </React.Fragment>,
     imageUrl: mj,

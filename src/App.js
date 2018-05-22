@@ -25,6 +25,7 @@ import Tech from './comps/about/Tech'
 import Roadmap from './comps/about/Roadmap'
 import PrivateRoute from './comps/shared/PrivateRoute'
 import Modal from './comps/shared/Modal'
+import Agreement from './comps/about/Agreement'
 
 export default withRouter(class App extends Component {
   constructor(props) {
@@ -127,6 +128,7 @@ export default withRouter(class App extends Component {
         <Route exact path='/' render={routeProps => <Home {...routeProps} mjMetaDoc={this.state.mjMetaDoc}/>} />
         <Route path='/about/tech' component={Tech} />
         <Route path='/about/roadmap' component={Roadmap} />
+        <Route path='/about/agreement' component={Agreement} />
         <Route path='/about' component={About} />
         <Route path='/login' render={routeProps => <Login {...routeProps} uiConfig={this.firebaseUIConfig} firebaseAuth={this.firebaseAuth}/>} />
         <Route path='/dashboard' render={routeProps => <Dashboard {...routeProps} user={this.state.user} acctQr={this.state.acctQr} userDoc={this.state.userDoc} mjMetaDoc={this.state.mjMetaDoc}/>} />
