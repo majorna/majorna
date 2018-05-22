@@ -5,7 +5,7 @@ export default props =>
     <div className="is-size-5 has-text-centered">Majorna Terms and Conditions</div>
     <div className="m-t-m">
       <u>Last updated: May 22, 2018.</u>
-      Via using or purchasing Majorna, you agree to the following terms and conditions so make sure to review them thoroughly:
+      Via using or purchasing Majorna, you agree to the following terms and conditions:
     </div>
 
     <strong className="m-t-m">Majorna Definition</strong>
@@ -29,14 +29,6 @@ export default props =>
        however we plan to add it as an option in the future.
     </div>
 
-    <strong className="m-t-m">Data Processing</strong>
-    <div>
-      Majorna does not have access to your personally identifiable information outside of what 3rd party authentication providers supply.
-      Majorna only keeps minimal information required to associate your account to you and does not share it with 3rd parties.
-      All the information that Majorna receives is presented by the authentication provider during first ever login.
-      Majorna does not have access to your credentials.
-    </div>
-
     <strong className="m-t-m">Development Period</strong>
     <div>
       Until a final v1.0 release, Majorna platform will be under rapid development.
@@ -44,6 +36,14 @@ export default props =>
        1.0 <a href="https://github.com/majorna/majorna/releases" target="_blank" rel="noopener noreferrer">release</a>,
        occasional hardforks and downtime is expected.
       All the forks and relevant activity will always be on blockchain repository.
+    </div>
+
+    <strong className="m-t-m">Data Processing</strong>
+    <div>
+      Majorna does not have access to your personally identifiable information outside of what 3rd party authentication providers supply.
+      Majorna only keeps minimal information required to associate your account to you and does not share it with 3rd parties.
+      All the information that Majorna receives is presented by the authentication provider during first ever login.
+      Majorna does not have access to your credentials.
     </div>
 
     <strong className="m-t-m">Updates to the Terms and Conditions</strong>
