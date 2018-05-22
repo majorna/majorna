@@ -22,12 +22,12 @@ export default props =>
 
     <strong className="m-t-m">No Liability</strong>
     <div>
-      All Majorna transactions are final, not-refundable, and visible at the blockchain repository.
+      All Majorna transactions are final, non-refundable, and visible at the blockchain repository.
       As the account holder, you are responsible for all your transactions.
-      You are also responsible for keeping your connected accounts secure, as Majorna assumes no liability.
-      Compromise of your accounts credentials may result in loss of funds.
+      You are also responsible for keeping your connected accounts (i.e. Google) secure, as Majorna assumes no liability.
+      Compromise of your account credentials may result in loss of funds, therefore it is highly recommended for you to enable 2-step verification in your connected account(s).
       If you choose to move your funds to a personal private key, you are responsible for its safety and security.
-      Majorna has no claim or liability on your funds, and Majorna accounts current are not covered by deposit insurance, however we plan to add it as an option in the future.
+      Majorna has no claim or liability on your funds, and Majorna accounts are not covered by deposit insurance currently, however we plan to add it as an option in the future.
     </div>
 
     <strong className="m-t-m">Development Period</strong>
@@ -42,13 +42,13 @@ export default props =>
     <div>
       Majorna does not have access to your personally identifiable information outside of what 3rd party authentication providers supply.
       Majorna only keeps minimal information required to associate your account to you and does not share it with 3rd parties.
-      All the information that Majorna receives is presented by the authentication provider during first ever login.
+      All the information that Majorna receives is listed by the authentication provider during first ever login.
       Majorna does not have access to your credentials.
     </div>
 
     <strong className="m-t-m">Updates to the Terms and Conditions</strong>
     <div>
-      Terms and conditions are updated occasionally, and you can find the last updated time at the beginning of the agreement.
+      Terms and conditions are updated occasionally, and you can find the last updated time at the beginning of this agreement.
       You are required to review the updates occasionally, as continuing to use Majorna means agreeing to the updated terms and conditions.
     </div>
 
