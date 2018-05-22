@@ -4,15 +4,17 @@ export default props =>
   <div className="mj-box flex-column">
     <div className="is-size-5 has-text-centered">Majorna Terms and Conditions</div>
     <div className="m-t-m">
-      <u>Last updated: May 22, 2018.</u>
-      Via using or purchasing Majorna, you agree to the following terms and conditions:
+      Last updated: May 22, 2018.
     </div>
 
-    <strong className="m-t-m">Majorna Definition</strong>
+    <div className="m-t-m">
+      Via using or acquiring Majorna, you agree to the following terms and conditions:
+    </div>
+
+    <strong className="m-t-m">Definition of Majorna</strong>
     <div>
       Majorna is a cryptocurrency.
-      All the Majorna on all the accounts along with all the transactions are stored and is visible at the
-       <a href="https://github.com/majorna/blockchain" target="_blank" rel="noopener noreferrer">blockchain</a> repository.
+      All the Majorna on all the accounts along with all the transactions are stored and is visible at the <a href="https://github.com/majorna/blockchain" target="_blank" rel="noopener noreferrer">blockchain</a> repository.
       Via opening an account on Majorna, you become a counterpart to this agreement.
       You have the all rights to send, receive, mine, and purchase Majorna on your account.
       Your obligations are spelled out throughout the rest of this document.
@@ -25,16 +27,14 @@ export default props =>
       You are also responsible for keeping your connected accounts secure, as Majorna assumes no liability.
       Compromise of your accounts credentials may result in loss of funds.
       If you choose to move your funds to a personal private key, you are responsible for its safety and security.
-      Majorna has no claim or liability on your funds, and Majorna accounts current are not covered by deposit insurance,
-       however we plan to add it as an option in the future.
+      Majorna has no claim or liability on your funds, and Majorna accounts current are not covered by deposit insurance, however we plan to add it as an option in the future.
     </div>
 
     <strong className="m-t-m">Development Period</strong>
     <div>
       Until a final v1.0 release, Majorna platform will be under rapid development.
-      Currently all mining and purchasing activity is on mainnet however until wider security analysis and a
-       1.0 <a href="https://github.com/majorna/majorna/releases" target="_blank" rel="noopener noreferrer">release</a>,
-       occasional hardforks and downtime is expected.
+      Currently all mining and purchasing activity is on mainnet.
+      However until wider security analysis and a 1.0 <a href="https://github.com/majorna/majorna/releases" target="_blank" rel="noopener noreferrer">release</a>, occasional hardforks and downtime is expected.
       All the forks and relevant activity will always be on blockchain repository.
     </div>
 
