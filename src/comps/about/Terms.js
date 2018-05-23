@@ -22,7 +22,7 @@ export default props =>
 
     <strong className="m-t-m">No Liability</strong>
     <div>
-      All Majorna transactions are final, non-refundable, and visible at the blockchain repository.
+      All Majorna transactions including sending, receiving, mining, and purchases are final and non-refundable.
       As the account holder, you are responsible for all your transactions.
       You are also responsible for keeping your connected accounts (i.e. Google) secure, as Majorna assumes no liability.
       Compromise of your account credentials may result in loss of funds, therefore it is highly recommended for you to enable 2-step verification in your connected account(s).
