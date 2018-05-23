@@ -45,6 +45,10 @@ export default class extends Component {
 
     // start network requests
     this.fbUnsubBlockInfoMetaDocSnapshot = this.props.db.collection('meta').doc('blockInfo').onSnapshot(async doc => {
+      if (!this.fbUnsubBlockInfoMetaDocSnapshot) {
+        return // can happen if callback queued to be triggered right after unmount function call
+      }
+
       stopMining()
 
       const blockInfo = doc.data()
@@ -74,6 +78,7 @@ export default class extends Component {
 
   componentWillUnmount = () => {
     this.fbUnsubBlockInfoMetaDocSnapshot && this.fbUnsubBlockInfoMetaDocSnapshot()
+    this.fbUnsubBlockInfoMetaDocSnapshot = null
     stopMining()
   }
 
