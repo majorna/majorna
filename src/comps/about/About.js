@@ -41,7 +41,7 @@ export default props =>
       <ul>
         <li><Link to="/about/tech">Majorna Technology</Link></li>
         <li><Link to="/about/roadmap">Roadmap</Link></li>
-        <li><Link to="/about/terms">User Agreement</Link></li>
+        <li><Link to="/about/terms">Terms and Conditions</Link></li>
       </ul>
     </div>
   </div>
