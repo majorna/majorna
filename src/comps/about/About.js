@@ -62,3 +62,4 @@ export default props =>
 
 // ## the vision
 // - long term goals (and link to roadmap complete with time goals)
+// - plan to be a globally accepted payment platform & currency
