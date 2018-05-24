@@ -41,6 +41,7 @@ export default props =>
       <ul>
         <li><Link to="/about/tech">Majorna Technology</Link></li>
         <li><Link to="/about/roadmap">Roadmap</Link></li>
+        <li><a href="https://github.com/orgs/majorna/people" target="_blank" rel="noopener noreferrer">Team</a></li>
         <li><Link to="/about/terms">Terms and Conditions</Link></li>
       </ul>
     </div>
