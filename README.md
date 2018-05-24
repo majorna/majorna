@@ -2,14 +2,8 @@
 
 [![Build Status](https://travis-ci.org/majorna/majorna.svg?branch=master)](https://travis-ci.org/majorna/majorna)
 
-Majorna is an MIT licensed cryptocurrency with primary objectives of becoming:
-* Decentralized.
-* Trustless.
-* PoW-less.
-
-This repo contains Majorna source code with following components:
-* Majorna server.
-* Majorna UI (including miner).
+Majorna is an in-browser cryptocurrency utilizing web technologies including [WebRTC](https://en.wikipedia.org/wiki/WebRTC) and [Web Crypto API](https://en.wikipedia.org/wiki/Web_cryptography_API).
+This repo contains source code for all Majorna components including server, miner, and web UI.
 
 ## Blockchain
 Blockchain (ledger of all transactions) is kept in its [own repo](https://github.com/majorna/blockchain).
@@ -67,7 +61,6 @@ git push heroku `git subtree split --prefix server master`:master --force
 
 ### Upgrading Packages
 UI:
-
 * Firebase: https://firebase.google.com/support/release-notes/js
 * Bulma: https://github.com/jgthms/bulma/releases
 * React-scripts: https://github.com/facebook/create-react-app/releases (see `Migrating from x.x.x to x.x.x` section)

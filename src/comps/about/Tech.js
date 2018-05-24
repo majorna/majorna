@@ -16,6 +16,21 @@ export default props =>
       Mining secures majorna transactions via preventing duplicates, so people cannot spend more money than they have.
       As the mining reward, you get some majorna, which in turn helps distribute the currency to users.
     </div>
+
+    <div id="mining" className="is-size-5 has-text-centered m-t-l">Node/Web Technologies Used</div>
+    <div className="m-t-m">
+      Mining is a means of solving a cryptographically hard problem utilizing your computers processor(s).
+      Mining secures majorna transactions via preventing duplicates, so people cannot spend more money than they have.
+      As the mining reward, you get some majorna, which in turn helps distribute the currency to users.
+    </div>
+
+    <div id="mining" className="is-size-5 has-text-centered m-t-l">Cryptographic Algorithms Used</div>
+    <ul className="m-t-m">
+      <li>Account public/private key pairs: Elliptic Curve DSA using SECP256K1 curve.</li>
+      <li>Transaction signature: ECDSA with SHA256.</li>
+      <li>Transaction/merkle tree hash: SHA256.</li>
+      <li>Block/miner hash: SHA256.</li>
+    </ul>
   </div>
 
 

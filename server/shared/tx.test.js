@@ -1,7 +1,7 @@
 const assert = require('assert')
 const tx = require('./tx')
 
-suite.only('tx', () => {
+suite('tx', () => {
   test('constructor', () => {
     assert(tx)
   })

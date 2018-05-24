@@ -20,7 +20,7 @@ exports.txSchema = {
 
 /**
  * Concatenates the the given tx into a regular string, fit for hashing.
- *  * todo: include sig ??
+ *  * todo: include sig if available??
  */
 exports.getStr = tx =>
   '' + tx.id + tx.from.id + tx.from.balance + tx.to.id + tx.to.balance + tx.time.getTime() + tx.amount
