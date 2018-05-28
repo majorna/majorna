@@ -10,7 +10,6 @@ if (config.app.isNode) {
   exports.signText = text => crypto.createSign(config.crypto.algo).update(text).sign(config.crypto.privateKey, config.crypto.encoding)
 
   exports.verifyText = (sig, text) => crypto.createVerify(config.crypto.algo).update(text).verify(config.crypto.publicKey, sig, config.crypto.encoding)
+} else {
 
-  return
 }
-
