@@ -38,7 +38,7 @@ export default props =>
       All the forks and relevant activity will always be on blockchain repository.
     </div>
 
-    <strong className="m-t-m">Data Processing</strong>
+    <strong className="m-t-m">Privacy Policy</strong>
     <div>
       Majorna does not have access to your personally identifiable information outside of what 3rd party authentication providers supply.
       Majorna only keeps minimal information required to associate your account to you and does not share it with 3rd parties.
