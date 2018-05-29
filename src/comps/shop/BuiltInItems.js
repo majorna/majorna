@@ -1,26 +1,27 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import mj from '../../res/mj.png'
 import ExchangeRatesWidget from '../shared/ExchangeRatesWidget'
 import server from '../../data/server'
 import config from '../../data/config'
-import { Link } from 'react-router-dom'
 
 export default [
   {
     id: 'majorna',
     name: 'Majorna',
     description: () => <React.Fragment>
-      Buy Majorna using Card or Bitcoin, Ethereum, or other cryptos.
-      Amount sent will be converted to mj and deposited in your account within 15 minutes.
-      By purchasing Majorna, you agree to the <Link to="/about/terms">Terms and Conditions</Link>, so make sure to review it.
-      You can report problems about purchases to <a href={'mailto:support@' + config.hosting.domain} target="_blank" rel="noopener noreferrer">support@{config.hosting.domain}</a>.
+      Contribute to Majorna development using Bitcoin: all donors receive matching amount of majorna in their accounts within 30 minutes, as a token of gratitude.
+      Majorna currently has no inherent value, and may or may not have any value in the future depending on public acceptance, so keep that in mind.
+      Via using Majorna, you agree to the <Link to="/about/terms">Terms and Conditions</Link>.
+      All donations are final and non-refundable.
+      You can report problems about donations to <a href={'mailto:support@' + config.hosting.domain} target="_blank" rel="noopener noreferrer">support@{config.hosting.domain}</a>.
     </React.Fragment>,
     imageUrl: mj,
-    stripeScriptUrl: 'https://js.stripe.com/v3/',
+    // stripeScriptUrl: 'https://js.stripe.com/v3/',
     stripeCheckoutScriptUrl: 'https://checkout.stripe.com/checkout.js',
     stripeConfig: {
       name: 'Majorna',
-      description: 'Buy Majorna using card (via Stripe).',
+      description: 'Donate to Majorna using card (via Stripe).',
       currency: 'usd',
       allowRememberMe: false,
       amount: 0
@@ -32,28 +33,28 @@ export default [
     id: 'bitcoin',
     name: 'Bitcoin',
     unavailable: true,
-    description: 'Buy Bitcoin using your Majorna balance.',
+    description: 'Get Bitcoin using your Majorna balance.',
     fontIcon: 'fab fa-bitcoin'
   },
   {
     id: 'ethereum',
     name: 'Ethereum',
     unavailable: true,
-    description: 'Buy Ethereum using your Majorna balance.',
+    description: 'Get Ethereum using your Majorna balance.',
     fontIcon: 'fab fa-ethereum'
   },
   {
     id: 'usdollar',
     name: 'US Dollar',
     unavailable: true,
-    description: 'Buy US Dollar using your Majorna balance.',
+    description: 'Get US Dollar using your Majorna balance.',
     fontIcon: 'fas fa-dollar-sign'
   },
   {
     id: 'euro',
     name: 'Euro',
     unavailable: true,
-    description: 'Buy Euro using your Majorna balance.',
+    description: 'Get Euro using your Majorna balance.',
     fontIcon: 'fas fa-euro-sign'
   },
   {

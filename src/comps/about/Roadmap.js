@@ -14,11 +14,12 @@ export default props =>
       <ul>
         <li>☑ Send & receive support.</li>
         <li>☑ Google auth integration.</li>
-        <li>☑ Miner.</li>
+        <li>☑ Miner (using Web Crypto API).</li>
         <li>☑ Shop.</li>
-        <li>☑ Coinbase Commerce and Stripe integration.</li>
-        <li>☐ Peer-to-peer network (using WebRTC).</li>
+        <li>☑ Coinbase Commerce integration.</li>
+        <li>☐ Peer-to-peer decentralized network (using WebRTC).</li>
         <li>☐ Individual public/private key pairs for users.</li>
+        <li>☐ GPU miner.</li>
         <li>☐ Tech pages.</li>
         <li>☐ Stats page.</li>
         <li>☐ Funding page.</li>
@@ -29,6 +30,7 @@ export default props =>
         <li>☐ 3rd party integrations and bots.</li>
         <li>☐ Payment services.</li>
         <li>☐ Majorna fund.</li>
+        <li>☐ Proof-of-stake transition (after all currency is distributed).</li>
       </ul>
     </div>
   </div>

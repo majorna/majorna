@@ -35,10 +35,11 @@ export default props =>
     <div className="mj-box align-start">
       <i className="flex-order-1 m-l-m fas fa-globe" style={{width: 110, height: 110}}/>
       <div className="flex-column flex-grow-1">
-        <div className="is-size-5">Decentralized and Scalable</div>
-        Trustless and decentralized with simple in-browser miner.
-        Peer-to-peer payments without a central authority.
-        Horizontal scalability through delegated trust.
+        <div className="is-size-5">Planned Decentralization</div>
+        In-browser miner is fully functional.
+        Trustless and decentralized peer-to-peer network is a work in progress.
+        Until a 1.0 release, all mined blocks are also signed by the Majorna key as a security measure.
+        See Roadmap for development goals in About section.
       </div>
     </div>
 
@@ -56,7 +57,8 @@ export default props =>
       <i className="flex-order-1 m-l-m fas fa-credit-card" style={{width: 110, height: 120}}/>
       <div className="flex-column flex-grow-1">
         <div className="is-size-5">Open Development Model</div>
-        Majorna team intents to fund development via providing services around the currency (i.e. payment services).
+        Currently all development is funded by donations.
+        However Majorna team intents to provide services around the currency, i.e. merchant services, shop, etc.
         The team is also responsible for continuous monitoring and overall safety of the system.
       </div>
     </div>

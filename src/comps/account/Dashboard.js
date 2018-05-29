@@ -27,6 +27,16 @@ export default props => {
         <small><i>* (fixed trading price until exchange opens)</i></small>
       </div>
 
+      <div className="mj-box flex-column">
+        <strong>A Note on Donations</strong>
+        100% of your donations goes toward Majorna development.
+        However Majorna tokens you get or mine may or may not have any value in the future depending on public acceptance, so keep that in mind.
+        No matter the outcome, the project is fully open source and will contribute to maturity of the cryptocurrency ecosystem under any circumstance.
+        Since donation section was not clear, all donation made between May 20-29 are eligible for a one-time full refund, if you desire so.
+        Please contact support@getmajorna.com for details (please send the mail to getmajorna@gmail.com too, for extra security).
+        If you want to keep the Majorna you received and your donation to the development, we are grateful and you don't have to do anything.
+      </div>
+
       <div className="mj-box flex-column w-s">
         <div><strong>Balance</strong>: mj<strong>{fm(props.userDoc.balance)}</strong> (${fm(props.userDoc.balance * props.mjMetaDoc.val)})</div>
         <div><strong>Address</strong>: <small>{props.user.uid}</small></div>
@@ -39,7 +49,7 @@ export default props => {
       </div>
 
       <div className="mj-box w-s">
-        <Link to="/shop/majorna" className="button is-primary"><i className="fas fa-credit-card m-r-s"/>Buy Majorna</Link>
+        <Link to="/shop/majorna" className="button is-primary"><i className="fab fa-bitcoin m-r-s"/>Donate</Link>
         <Link to="/mine" className="button m-l-m"><i className="fas fa-th m-r-s"/>Mine</Link>
       </div>
 
