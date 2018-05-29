@@ -20,7 +20,7 @@ exports.createCharge = async (userId, name) => {
   const res = await axios.post('https://api.commerce.coinbase.com/charges',
     {
       name: 'Majorna: ' + name,
-      description: 'Buy Majorna using other cryptocurrencies.',
+      description: 'Donate to Majorna using other cryptocurrencies.',
       logo_url: config.app.logoUrl,
       redirect_url: config.app.url,
       pricing_type: 'no_price',

@@ -10,18 +10,18 @@ export default [
     id: 'majorna',
     name: 'Majorna',
     description: () => <React.Fragment>
-      Buy Majorna using Bitcoin, Ethereum, or other cryptos.
+      Donate to Majorna using Bitcoin, Ethereum, or other cryptos.
       Amount sent will be converted to mj and deposited in your account within 15 minutes.
-      Via purchasing Majorna, you agree to the <Link to="/about/terms">Terms and Conditions</Link>.
-      All purchases are final and non-refundable.
-      You can report problems about purchases to <a href={'mailto:support@' + config.hosting.domain} target="_blank" rel="noopener noreferrer">support@{config.hosting.domain}</a>.
+      Via donating to Majorna, you agree to the <Link to="/about/terms">Terms and Conditions</Link>.
+      All donations are final and non-refundable.
+      You can report problems about donations to <a href={'mailto:support@' + config.hosting.domain} target="_blank" rel="noopener noreferrer">support@{config.hosting.domain}</a>.
     </React.Fragment>,
     imageUrl: mj,
     // stripeScriptUrl: 'https://js.stripe.com/v3/',
     stripeCheckoutScriptUrl: 'https://checkout.stripe.com/checkout.js',
     stripeConfig: {
       name: 'Majorna',
-      description: 'Buy Majorna using card (via Stripe).',
+      description: 'Donate to Majorna using card (via Stripe).',
       currency: 'usd',
       allowRememberMe: false,
       amount: 0
@@ -33,28 +33,28 @@ export default [
     id: 'bitcoin',
     name: 'Bitcoin',
     unavailable: true,
-    description: 'Buy Bitcoin using your Majorna balance.',
+    description: 'Get Bitcoin using your Majorna balance.',
     fontIcon: 'fab fa-bitcoin'
   },
   {
     id: 'ethereum',
     name: 'Ethereum',
     unavailable: true,
-    description: 'Buy Ethereum using your Majorna balance.',
+    description: 'Get Ethereum using your Majorna balance.',
     fontIcon: 'fab fa-ethereum'
   },
   {
     id: 'usdollar',
     name: 'US Dollar',
     unavailable: true,
-    description: 'Buy US Dollar using your Majorna balance.',
+    description: 'Get US Dollar using your Majorna balance.',
     fontIcon: 'fas fa-dollar-sign'
   },
   {
     id: 'euro',
     name: 'Euro',
     unavailable: true,
-    description: 'Buy Euro using your Majorna balance.',
+    description: 'Get Euro using your Majorna balance.',
     fontIcon: 'fas fa-euro-sign'
   },
   {

@@ -33,8 +33,8 @@ export default class extends Component {
             const res = await server.shop.createStripeCharge(token.id, this.state.stripeAmount)
             // need to show notifications on main App since user might have navigated away from this page and nothing will be rendered
             res.ok ?
-              this.props.showNotification('Card purchase succeeded.') :
-              this.props.showNotification('Card purchase failed! Note that 3D secure payments are not supported at the moment so you can disable it and re-try.')
+              this.props.showNotification('Card donation succeeded.') :
+              this.props.showNotification('Card donation failed! Note that 3D secure transactions are not supported at the moment so you can disable it and re-try.')
 
             // const stripe = window.Stripe(config.stripe.publishableKey)
             // const source = await stripe.createSource({
@@ -103,12 +103,12 @@ export default class extends Component {
         <div className="m-t-m"><strong>Amount (mj):</strong> {fm(this.state.stripeAmount / this.props.mjMetaDoc.val)}</div>
 
         <button className="button is-info m-t-l" onClick={this.handleStripeBuy}>
-          <i className="fas fa-credit-card m-r-s"/>Buy with Card
+          <i className="fas fa-credit-card m-r-s"/>Donate with Card
         </button>
       </div>
     } else {
       return <div ref={ref => this.container = ref} className="mj-box flex-column center-all box-center w-m">
-        <div className="is-size-5 has-text-centered">Buy - {this.item.name}</div>
+        <div className="is-size-5 has-text-centered">Get - {this.item.name}</div>
 
         {this.item.fontIcon && <i className={this.item.fontIcon + ' m-t-m'} style={{width: 150, height: 150}}/>}
 
@@ -137,10 +137,10 @@ export default class extends Component {
             {this.item.id === 'majorna' &&
               <React.Fragment>
                 {/*<button className="button is-info" disabled={!this.state.stripeCheckout} onClick={() => this.setState({showStripeAmount: true})}>*/}
-                  {/*<i className="fas fa-credit-card m-r-s"/>Buy with Card*/}
+                  {/*<i className="fas fa-credit-card m-r-s"/>Donate with Card*/}
                 {/*</button>*/}
                 <a className="button is-info m-t-s" disabled={!this.state.coinbaseUrl} onClick={() => this.setState({showClose: true})} href={this.state.coinbaseUrl} target="_blank" rel="noopener noreferrer">
-                  <i className="fab fa-bitcoin m-r-s"/>Buy with Cryptos
+                  <i className="fab fa-bitcoin m-r-s"/>Donate with Cryptos
                 </a>
               </React.Fragment>}
             <button className="button m-t-s" onClick={this.props.history.goBack}>Cancel</button>

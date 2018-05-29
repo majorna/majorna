@@ -32,7 +32,7 @@ export default props =>
     <div>
       Max Majorna supply allocated for public distribution is denoted on the front page.
       Matching amount will be allocated for Majorna Fund after supply cap is reached (this is subject to change until v1.0 release).
-      Current Majorna supply denotes the currently distributed amount; through mining or purchasing.
+      Current Majorna supply denotes the currently distributed amount; through mining or donations.
     </div>
 
     <div className="content m-t-m">
