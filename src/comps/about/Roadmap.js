@@ -17,7 +17,7 @@ export default props =>
         <li>☑ Miner.</li>
         <li>☑ Shop.</li>
         <li>☑ Coinbase Commerce and Stripe integration.</li>
-        <li>☐ Peer-to-peer network (using WebRTC).</li>
+        <li>☐ Peer-to-peer decentralized network (using WebRTC).</li>
         <li>☐ Individual public/private key pairs for users.</li>
         <li>☐ GPU miner.</li>
         <li>☐ Tech pages.</li>

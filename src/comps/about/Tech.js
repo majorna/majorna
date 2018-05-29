@@ -20,7 +20,7 @@ export default props =>
     <strong id="mining" className="m-t-m">Web Technologies Used</strong>
     <ul>
       <li>Signing/mining in browser using <a href="https://en.wikipedia.org/wiki/Web_cryptography_API" target="_blank" rel="noopener noreferrer">Web Crypto API</a>.</li>
-      <li>Nodes peer-to-peer connectivity using <a href="https://en.wikipedia.org/wiki/WebRTC" target="_blank" rel="noopener noreferrer">WebRTC</a>.</li>
+      <li>Nodes peer-to-peer connectivity using <a href="https://en.wikipedia.org/wiki/WebRTC" target="_blank" rel="noopener noreferrer">WebRTC</a> (work in progress) .</li>
       <li>Until P2P API is production ready, all miners trust all blocks signed by main Majorna key as a means of delegated trust.</li>
     </ul>
 
