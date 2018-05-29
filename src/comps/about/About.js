@@ -14,7 +14,7 @@ export default props =>
 
     <strong className="m-t-m">Why Cryptocurrency</strong>
     <div>
-      Majorna is a decentralized cryptocurrency.
+      Majorna is a cryptocurrency that is partially-decentralized until 1.0 release, and will be fully decentralized afterwards.
       Being a <a href="https://en.wikipedia.org/wiki/Cryptocurrency" target="_blank" rel="noopener noreferrer">cryptocurrency</a> means your money does not need to be stored physically; it is a digitally signed information.
       Being decentralized means that your account does not belong to an institution, all account information is duplicated across the globe, and you hold the key.
       Via memorizing your private key, you can have all your money, in your memory!

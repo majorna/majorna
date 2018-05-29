@@ -36,10 +36,10 @@ export default props =>
       <i className="flex-order-1 m-l-m fas fa-globe" style={{width: 110, height: 110}}/>
       <div className="flex-column flex-grow-1">
         <div className="is-size-5">Decentralized and Scalable</div>
-        Trustless and decentralized with simple in-browser miner.
+        Trustless and decentralized (fully after 1.0 release) with simple in-browser miner.
         Peer-to-peer payments without a central authority.
         Horizontal scalability through delegated trust.
-        See roadmap for listed development goals in About section.
+        See roadmap for development goals in About section.
       </div>
     </div>
 
