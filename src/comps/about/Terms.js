@@ -24,9 +24,10 @@ export default props =>
     <div>
       All donations goes towards Majorna development and are non-refundable.
       Majorna is an active project and it may or may not be successful.
-      All mj tokens you have may or may not have an eventual value.
+      Majorna currently has no inherent value, and may or may not have any value in the future depending on public acceptance.
       Via using Majorna, you accept this.
-      However the project is fully open source and will contribute to maturity of the cryptocurrency ecosystem under any circumstance.
+      However we believe that it has a great change of becoming a publicly accepted currency and a payment platform one day.
+      Project is fully open source and will contribute to maturity of the cryptocurrency ecosystem regardless of the outcome.
     </div>
 
     <strong className="m-t-m">No Liability</strong>
