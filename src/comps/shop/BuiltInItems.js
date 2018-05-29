@@ -10,7 +10,7 @@ export default [
     id: 'majorna',
     name: 'Majorna',
     description: () => <React.Fragment>
-      Contribute to Majorna development using Bitcoin or Ethereum: all donors receive matching amount of majorna in their accounts within 30 minutes, as a token of gratitude.
+      Contribute to Majorna development using Bitcoin: all donors receive matching amount of majorna in their accounts within 30 minutes, as a token of gratitude.
       Majorna currently has no inherent value, and may or may not have any value in the future, so keep that in mind.
       Via using Majorna, you agree to the <Link to="/about/terms">Terms and Conditions</Link>.
       All donations are final and non-refundable.
