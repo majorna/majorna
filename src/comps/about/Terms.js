@@ -40,6 +40,11 @@ export default props =>
       Majorna has no claim or liability on your funds, and Majorna accounts are not covered by deposit insurance currently, however we plan to add it as an option in the future.
     </div>
 
+    <strong className="m-t-m">No Claim</strong>
+    <div>
+      Majorna in your account does not give you any financial claim or rights in Majorna project.
+    </div>
+
     <strong className="m-t-m">Development Period</strong>
     <div>
       Until a final v1.0 release, Majorna platform will be under rapid development.
