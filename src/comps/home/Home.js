@@ -36,8 +36,7 @@ export default props =>
       <i className="flex-order-1 m-l-m fas fa-globe" style={{width: 110, height: 110}}/>
       <div className="flex-column flex-grow-1">
         <div className="is-size-5">Planned Decentralization</div>
-        In-browser miner is fully functional.
-        Trustless and decentralized peer-to-peer network is a work in progress.
+        While in-browser miner is fully functional, trustless and decentralized peer-to-peer network is a work in progress.
         Until a 1.0 release, all mined blocks are also signed by the Majorna key as a security measure.
         See Roadmap for development goals in About section.
       </div>
