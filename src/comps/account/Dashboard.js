@@ -34,6 +34,7 @@ export default props => {
         No matter the outcome, the project is fully open source and will contribute to maturity of the cryptocurrency ecosystem under any circumstance.
         Since donation section was not clear, all donation made between May 20-29 are eligible for a one-time full refund, if you desire so.
         Please contact support@getmajorna.com for details (please send the mail to getmajorna@gmail.com too, for extra security).
+        If you want to keep the Majorna you received and your donation to the development, we are grateful and you don't have to do anything.
       </div>
 
       <div className="mj-box flex-column w-s">
