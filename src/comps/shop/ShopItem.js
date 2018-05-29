@@ -133,7 +133,7 @@ export default class extends Component {
           </div>
           :
           <div className="flex-row flex-column m-t-l">
-            {this.item.id !== 'majorna' && <button className="button is-info" disabled={this.item.unavailable}><i className="fas fa-shopping-cart m-r-s"/>Buy</button>}
+            {this.item.id !== 'majorna' && <button className="button is-info" disabled={this.item.unavailable}><i className="fas fa-shopping-cart m-r-s"/>Get</button>}
             {this.item.id === 'majorna' &&
               <React.Fragment>
                 {/*<button className="button is-info" disabled={!this.state.stripeCheckout} onClick={() => this.setState({showStripeAmount: true})}>*/}
