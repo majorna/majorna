@@ -10,9 +10,9 @@ export default [
     id: 'majorna',
     name: 'Majorna',
     description: () => <React.Fragment>
-      Donate to Majorna using Bitcoin, Ethereum, or other cryptos.
-      Amount sent will be converted to mj and deposited in your account within 15 minutes.
-      Via donating to Majorna, you agree to the <Link to="/about/terms">Terms and Conditions</Link>.
+      Donate to Majorna development using Bitcoin or Ethereum: all donors receive matching amount of majorna in their accounts within 30 minutes as a token of gratitude.
+      Majorna currently has no inherent value, and may or may not have any value in the future, so keep that in mind.
+      Via using Majorna, you agree to the <Link to="/about/terms">Terms and Conditions</Link>.
       All donations are final and non-refundable.
       You can report problems about donations to <a href={'mailto:support@' + config.hosting.domain} target="_blank" rel="noopener noreferrer">support@{config.hosting.domain}</a>.
     </React.Fragment>,
