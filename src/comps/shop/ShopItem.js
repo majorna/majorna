@@ -140,7 +140,7 @@ export default class extends Component {
                   {/*<i className="fas fa-credit-card m-r-s"/>Donate with Card*/}
                 {/*</button>*/}
                 <a className="button is-info m-t-s" disabled={!this.state.coinbaseUrl} onClick={() => this.setState({showClose: true})} href={this.state.coinbaseUrl} target="_blank" rel="noopener noreferrer">
-                  <i className="fab fa-bitcoin m-r-s"/>Donate with Cryptos
+                  <i className="fab fa-bitcoin m-r-s"/>Donate with Bitcoin
                 </a>
               </React.Fragment>}
             <button className="button m-t-s" onClick={this.props.history.goBack}>Cancel</button>
