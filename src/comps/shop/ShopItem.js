@@ -136,9 +136,9 @@ export default class extends Component {
             {this.item.id !== 'majorna' && <button className="button is-info" disabled={this.item.unavailable}><i className="fas fa-shopping-cart m-r-s"/>Buy</button>}
             {this.item.id === 'majorna' &&
               <React.Fragment>
-                <button className="button is-info" disabled={!this.state.stripeCheckout} onClick={() => this.setState({showStripeAmount: true})}>
-                  <i className="fas fa-credit-card m-r-s"/>Buy with Card
-                </button>
+                {/*<button className="button is-info" disabled={!this.state.stripeCheckout} onClick={() => this.setState({showStripeAmount: true})}>*/}
+                  {/*<i className="fas fa-credit-card m-r-s"/>Buy with Card*/}
+                {/*</button>*/}
                 <a className="button is-info m-t-s" disabled={!this.state.coinbaseUrl} onClick={() => this.setState({showClose: true})} href={this.state.coinbaseUrl} target="_blank" rel="noopener noreferrer">
                   <i className="fab fa-bitcoin m-r-s"/>Buy with Cryptos
                 </a>
