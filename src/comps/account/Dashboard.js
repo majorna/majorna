@@ -32,6 +32,8 @@ export default props => {
         100% of your donations goes toward Majorna development.
         However Majorna tokens you get or mine may or may not have any value in the future, so keep that in mind.
         No matter the outcome, the project is fully open source and will contribute to maturity of the cryptocurrency ecosystem under any circumstance.
+        Since donation section was not clear, all donation made between May 20-29 are eligible for a one-time full refund, if you desire so.
+        Please contact support@getmajorna.com for details (please send the mail to getmajorna@gmail.com too, for extra security).
       </div>
 
       <div className="mj-box flex-column w-s">
