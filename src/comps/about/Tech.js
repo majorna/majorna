@@ -7,7 +7,7 @@ export default props =>
 
     <div className="is-size-5 has-text-centered">Majorna Technology</div>
     <div className="m-t-m">
-      Following topics summarise Majorna's technical design and concepts:
+      Following topics summarize Majorna's technical design and concepts:
     </div>
 
     <strong id="mining" className="m-t-m">Mining</strong>
