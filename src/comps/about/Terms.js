@@ -16,7 +16,7 @@ export default props =>
       Majorna is a cryptocurrency.
       All the Majorna on all the accounts along with all the transactions are stored and is visible at the <a href="https://github.com/majorna/blockchain" target="_blank" rel="noopener noreferrer">blockchain</a> repository.
       Via opening an account on Majorna, you become a counterpart to this agreement.
-      You have the all rights to send, receive, and mine Majorna on your account.
+      You have the all rights to send, receive, hold, and mine Majorna on your account.
       Your obligations are listed below.
     </div>
 
