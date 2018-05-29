@@ -13,6 +13,7 @@ export default [
       Buy Majorna using Bitcoin, Ethereum, or other cryptos.
       Amount sent will be converted to mj and deposited in your account within 15 minutes.
       Via acquiring Majorna, you agree to <Link to="/about/terms">Terms and Conditions</Link>.
+      All purchases are final and non-refundable.
       You can report problems about purchases to <a href={'mailto:support@' + config.hosting.domain} target="_blank" rel="noopener noreferrer">support@{config.hosting.domain}</a>.
     </React.Fragment>,
     imageUrl: mj,
