@@ -17,7 +17,7 @@ export default props =>
       All the Majorna on all the accounts along with all the transactions are stored and is visible at the <a href="https://github.com/majorna/blockchain" target="_blank" rel="noopener noreferrer">blockchain</a> repository.
       Via opening an account on Majorna, you become a counterpart to this agreement.
       You have the all rights to send, receive, mine, and purchase Majorna on your account.
-      Your obligations are spelled out throughout the rest of this document.
+      Your obligations are listed below.
     </div>
 
     <strong className="m-t-m">No Liability</strong>
@@ -25,7 +25,7 @@ export default props =>
       All Majorna transactions including sending, receiving, mining, and purchases are final and non-refundable.
       As the account holder, you are responsible for all your transactions.
       You are also responsible for keeping your connected accounts (i.e. Google) secure, as Majorna assumes no liability.
-      Compromise of your account credentials may result in loss of funds, therefore it is highly recommended for you to enable 2-step verification in your connected account(s).
+      Compromise of your account credentials may result in loss of funds, therefore it is highly recommended for you to enable 2-step verification in your connected accounts.
       If you choose to move your funds to a personal private key, you are responsible for its safety and security.
       Majorna has no claim or liability on your funds, and Majorna accounts are not covered by deposit insurance currently, however we plan to add it as an option in the future.
     </div>
