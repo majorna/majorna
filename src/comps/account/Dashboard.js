@@ -27,6 +27,13 @@ export default props => {
         <small><i>* (fixed trading price until exchange opens)</i></small>
       </div>
 
+      <div className="mj-box flex-column">
+        <strong>A Note on Donations</strong>
+        100% of your donations goes toward Majorna development.
+        However Majorna tokens you get or mine may or may not have any value in the future, so keep that in mind.
+        No matter the outcome, the project is fully open source and will contribute to maturity of the cryptocurrency ecosystem under any circumstance.
+      </div>
+
       <div className="mj-box flex-column w-s">
         <div><strong>Balance</strong>: mj<strong>{fm(props.userDoc.balance)}</strong> (${fm(props.userDoc.balance * props.mjMetaDoc.val)})</div>
         <div><strong>Address</strong>: <small>{props.user.uid}</small></div>
