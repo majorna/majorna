@@ -4,7 +4,7 @@ export default props =>
   <div className="mj-box flex-column">
     <div className="is-size-5 has-text-centered">Majorna Terms and Conditions</div>
     <div className="m-t-m">
-      Last updated: May 22, 2018.
+      Last updated: May 29, 2018.
     </div>
 
     <div className="m-t-m">
