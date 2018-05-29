@@ -39,6 +39,7 @@ export default props =>
         Trustless and decentralized with simple in-browser miner.
         Peer-to-peer payments without a central authority.
         Horizontal scalability through delegated trust.
+        See roadmap for listed development goals in About section.
       </div>
     </div>
 
