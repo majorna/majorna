@@ -27,7 +27,7 @@ export default props =>
         <li>☐ Mobile apps.</li>
         <li>☐ Shop/Merchant SDK.</li>
         <li>☐ Public announcement.</li>
-        <li>☐ Proof-of-stake transition (after all currency is distributed).</li>
+        <li>☐ After all mj supply is distributed: transition to proof-of-stake, delegate trust, or another consensus algorithm.</li>
       </ul>
     </div>
   </div>
