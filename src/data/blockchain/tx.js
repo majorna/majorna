@@ -1,6 +1,3 @@
-const assert = require('assert')
-const crypto = require('./crypto')
-
 assert({
   sig: '', // signature of the tx, signed by the sender (or majorna on behalf of sender)
   id: '', // ID of the transaction
@@ -16,7 +13,7 @@ assert({
   amount: 0 // amount being sent
 })
 
-module.exports = class Tx {
+export default class Tx {
   constructor (sig, id, fromId, fromBalance, toId, toBalance, time, amount) {
     this.sig = sig
     this.id = id
@@ -30,42 +27,33 @@ module.exports = class Tx {
     }
     this.time = time
     this.amount = amount
+
+    // todo: verify the Tx so that each field is non-null and non-empty (with verifyTx?)
   }
 
   /**
    * Concatenates the the given tx into a regular string, fit for hashing.
    */
-  getStr () {
-    return '' + this.id + this.from.id + this.from.balance + this.to.id + this.to.balance + this.time.getTime() + this.amount
-  }
+  getStr = () => '' + this.id + this.from.id + this.from.balance + this.to.id + this.to.balance + this.time.getTime() + this.amount
 
   /**
    * Creates a valid tx object out of a given object. Extra fields will not be used.
    */
-  static getObj (tx) {
-    return new Tx(tx.sig, tx.id, tx.from.id, tx.from.balance, tx.to.id, tx.to.balance, tx.time, tx.amount)
-  }
+  static getObj = tx => new Tx(tx.sig, tx.id, tx.from.id, tx.from.balance, tx.to.id, tx.to.balance, tx.time, tx.amount)
 
   /**
    * Signs the tx with majorna certificate.
    */
-  sign () {
-    this.sig = crypto.signText(this.getStr())
-  }
+  sign = () => { this.sig = crypto.signText(this.getStr()) }
 
   /**
    * Verifies the tx's signature.
    */
-  verifySig () {
-    return crypto.verifyText(this.sig, this.getStr())
-  }
+  verifySig = () => crypto.verifyText(this.sig, this.getStr())
 
   /**
    * Verifies the tx.
    * Returns true if tx is valid. Throws an assert.AssertionError with a relevant message, if the verification fails.
    */
-  verify () {
-    // todo: verify schema & contents too (as we do with block.verify)
-    return this.verifySig()
-  }
+  verify = () => this.verifySig() // todo: verify schema & contents too (as we do with block.verify)
 }
