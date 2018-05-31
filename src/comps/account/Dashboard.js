@@ -49,7 +49,7 @@ export default props => {
       </div>
 
       <div className="mj-box w-s">
-        <Link to="/shop/majorna" className="button is-primary"><i className="fab fa-bitcoin m-r-s"/>Donate</Link>
+        <Link to="/shop/majorna" className="button is-primary"><i className="fas fa-credit-card m-r-s"/>Donate</Link>
         <Link to="/mine" className="button m-l-m"><i className="fas fa-th m-r-s"/>Mine</Link>
       </div>
 

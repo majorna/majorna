@@ -14,23 +14,21 @@ export default props =>
       <ul>
         <li>☑ Send & receive support.</li>
         <li>☑ Google auth integration.</li>
-        <li>☑ Miner (using Web Crypto API).</li>
+        <li>☑ Miner.</li>
         <li>☑ Shop.</li>
         <li>☑ Coinbase Commerce integration.</li>
-        <li>☐ Peer-to-peer decentralized network (using WebRTC).</li>
+        <li>☐ Peer-to-peer decentralized network (w/ WebRTC).</li>
         <li>☐ Individual public/private key pairs for users.</li>
         <li>☐ GPU miner.</li>
-        <li>☐ Tech pages.</li>
         <li>☐ Stats page.</li>
-        <li>☐ Funding page.</li>
-        <li>☐ Public announcement.</li>
+        <li>☐ Blockchain explorer.</li>
+        <li>☐ Payment services (hosted payment page, widget, button).</li>
+        <li>☐ 3rd party integrations and bots.</li>
         <li>☐ Exchange.</li>
         <li>☐ Mobile apps.</li>
         <li>☐ Shop/Merchant SDK.</li>
-        <li>☐ 3rd party integrations and bots.</li>
-        <li>☐ Payment services.</li>
-        <li>☐ Majorna fund.</li>
-        <li>☐ Proof-of-stake transition (after all currency is distributed).</li>
+        <li>☐ Public announcement.</li>
+        <li>☐ After all mj supply is distributed: transition to proof-of-stake, delegate trust, or another consensus algorithm.</li>
       </ul>
     </div>
   </div>

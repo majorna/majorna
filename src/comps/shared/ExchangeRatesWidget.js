@@ -25,7 +25,7 @@ export default class extends Component {
         <div className="mj-box">
           1 USD = {fm(Math.round(1 / this.props.mjMetaDoc.val))} mj <br/>
           1 Bitcoin = {this.state.btcMj} mj <br/>
-          {/*1 Ethereum = {this.state.ethMj} mj*/}
+          1 Ethereum = {this.state.ethMj} mj
         </div>
       }
     </div>
