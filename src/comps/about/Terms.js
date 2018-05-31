@@ -48,7 +48,7 @@ export default props =>
     <div>
       Until a final v1.0 release, Majorna platform will be under rapid development.
       Currently all transactions and mining activity is on mainnet.
-      However until wider security analysis and a 1.0 <a href="https://github.com/majorna/majorna/releases" target="_blank" rel="noopener noreferrer">release</a>, occasional hardforks and downtime is expected.
+      However until wider security analysis and a v1.0 <a href="https://github.com/majorna/majorna/releases" target="_blank" rel="noopener noreferrer">release</a>, occasional hardforks and downtime is expected.
       All the forks and relevant activity will always be on blockchain repository.
     </div>
 
