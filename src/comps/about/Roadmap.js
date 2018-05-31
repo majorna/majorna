@@ -21,6 +21,7 @@ export default props =>
         <li>☐ Individual public/private key pairs for users.</li>
         <li>☐ GPU miner.</li>
         <li>☐ Stats page.</li>
+        <li>☐ Blockchain explorer.</li>
         <li>☐ Payment services (hosted payment page, widget, button).</li>
         <li>☐ 3rd party integrations and bots.</li>
         <li>☐ Exchange.</li>
