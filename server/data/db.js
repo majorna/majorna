@@ -114,6 +114,7 @@ exports.updateMjMetaStatsIfRequired = async endTime => {
 
   console.log('starting mj meta stats update loop')
   while (true) {
+    console.log(`mj meta stats update loop is running with offset: ${offset}`)
     const txsSnap = await txsColRef.where('time', '>=', previousMonthBeginning).where('time', '<', (endTime || previousMonthEnd)).offset(offset).limit(limit).get()
     if (!txsSnap.size || offset > 1000000 /* infinite loop protection */) {
       break
