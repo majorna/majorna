@@ -4,7 +4,7 @@ export default props =>
   <div className="mj-box flex-column">
     <div className="is-size-5 has-text-centered">Majorna Terms and Conditions</div>
     <div className="m-t-m">
-      Last updated: May 29, 2018.
+      Last updated: May 31, 2018.
     </div>
 
     <div className="m-t-m">
@@ -29,7 +29,7 @@ export default props =>
       Project is fully open source and will contribute to maturity of the cryptocurrency ecosystem regardless of the outcome.
     </div>
 
-    <strong className="m-t-m">No Liability</strong>
+    <strong className="m-t-m">No Liability or Claim</strong>
     <div>
       All Majorna transactions including sending, receiving, mining, and donations are final and non-refundable.
       As the account holder, you are responsible for all your transactions.
@@ -37,10 +37,6 @@ export default props =>
       Compromise of your account credentials may result in loss of funds, therefore it is highly recommended for you to enable 2-step verification in your connected accounts.
       If you choose to move your funds to a personal private key, you are responsible for its safety and security.
       Majorna has no claim or liability on your funds, and Majorna accounts are not covered by deposit insurance currently, however we plan to add it as an option in the future.
-    </div>
-
-    <strong className="m-t-m">No Claim</strong>
-    <div>
       Majorna in your account does not give you any financial claim or rights in Majorna project.
     </div>
 
