@@ -26,10 +26,10 @@ suiteSetup(async () => {
 
   // initialize firebase client sdk and sign in as a user, to get an id token
   testData.users.u1FBClient = firebaseConfig.clientSdk.initializeApp(config.firebase.testClientSdkKeyJsonPath, 'u1FBClient')
-  const authUser1 = await testData.users.u1FBClient.auth().signInWithEmailAndPassword(u1.email, u1.password)
+  const authUser1 = (await testData.users.u1FBClient.auth().signInWithEmailAndPassword(u1.email, u1.password)).user
   testData.users.u1Token = await authUser1.getIdToken()
   testData.users.u4FBClient = firebaseConfig.clientSdk.initializeApp(config.firebase.testClientSdkKeyJsonPath, 'u4FBClient')
-  const authUser2 = await testData.users.u4FBClient.auth().signInWithEmailAndPassword(u4.email, u4.password)
+  const authUser2 = (await testData.users.u4FBClient.auth().signInWithEmailAndPassword(u4.email, u4.password)).user
   testData.users.u4Token = await authUser2.getIdToken()
 
   // prepare http request client with signed-in user's ID token in authorization header
