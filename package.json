@@ -1,4 +1,5 @@
 {
+  "name": "majorna-ui",
   "dependencies": {
     "@fortawesome/fontawesome": "^1.1.8",
     "@fortawesome/fontawesome-free-brands": "^5.0.13",

@@ -42,6 +42,7 @@ suite('db', () => {
 
   test('updateMjMetaStatsIfRequired', async () => {
     // todo: add 5000+ txs and make sure that they are properly paginated and only 5000 reads occur (otherwise we can hit firestore limit)
+    // todo: also make sure that startAt, stopBefore conditions are working correctly and it's not starting all the way back from 1st tx etc.
     const now = new Date()
     const metaBefore = await db.getMjMeta()
     assert(!metaBefore.monthly.txVolume)
