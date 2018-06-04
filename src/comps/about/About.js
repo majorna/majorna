@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 
 export default props =>
   <div className="mj-box flex-column">
+    <Link to="/">{'< Home'}</Link>
+
     <div className="is-size-5 has-text-centered">About Majorna</div>
     <div className="m-t-m">
       Majorna (mj) is an easy to use cryptocurrency.
