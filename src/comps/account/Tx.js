@@ -13,12 +13,12 @@ export default props => {
     <div><strong>Time:</strong> {tx.time.toLocaleString()}</div>
 
     {tx.from ?
-      <div className="m-t-m"><strong>From:</strong> {tx.fromName} - {tx.from}</div> :
-      <div className="m-t-m"><strong>From:</strong> {props.userDoc.name} - {props.user.uid}</div>}
+      <div className="m-t-m"><strong>From:</strong> {tx.from}{tx.fromName && ` (${tx.fromName})`}</div> :
+      <div className="m-t-m"><strong>From:</strong> {props.user.uid} ({props.userDoc.name})</div>}
 
     {tx.to ?
-      <div><strong>To:</strong> {tx.toName} - {tx.to}</div> :
-      <div><strong>To:</strong> {props.userDoc.name} - {props.user.uid}</div>}
+      <div><strong>To:</strong> {tx.to}{tx.toName && ` (${tx.toName})`}</div> :
+      <div><strong>To:</strong> {props.user.uid} ({props.userDoc.name})</div>}
 
     <div className="m-t-m"><strong>In Block:</strong></div>
     <small>(Transaction data might take up to a day to be indexed by GitHub)</small>
