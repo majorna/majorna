@@ -5,3 +5,5 @@ it('Tx', async () => {
   const fullStrArr = new Uint8Array(8)
   expect(await crypto.subtle.digest('SHA-256', fullStrArr.buffer))
 })
+
+// todo: verify getObj() complies with the schema
