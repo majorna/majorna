@@ -110,16 +110,18 @@ exports.updateMjMetaStatsIfRequired = async endTime => {
   previousMonthBeginning.setHours(0, 0, 0, 0)
   const limit = 500
   let volume = 0
-  let offset = 0
+  let totalQueried = 0
+  let lastQueriedDocumentTime = previousMonthBeginning
 
   console.log('starting mj meta stats update loop')
   while (true) {
-    console.log(`mj meta stats update loop is running with offset: ${offset}`)
-    const txsSnap = await txsColRef.where('time', '>=', previousMonthBeginning).where('time', '<', (endTime || previousMonthEnd)).offset(offset).limit(limit).get()
-    if (!txsSnap.size || offset > 1000000 /* infinite loop protection */) {
+    console.log(`mj meta stats update loop is running with total queried: ${totalQueried}, last queried time: ${lastQueriedDocumentTime}`)
+    const txsSnap = await txsColRef.orderBy('time').startAfter(lastQueriedDocumentTime).endBefore(endTime || previousMonthEnd).limit(limit).get()
+    if (!txsSnap.size || totalQueried > 1000000 /* infinite loop protection */) {
       break
     }
-    offset += txsSnap.size
+    lastQueriedDocumentTime = txsSnap.docs[txsSnap.size - 1].data().time
+    totalQueried += txsSnap.size
     txsSnap.docs.forEach(tx => { volume += tx.data().amount })
   }
 
