@@ -20,9 +20,9 @@ export default props => {
       <div><strong>To:</strong> {tx.toName} - {tx.to}</div> :
       <div><strong>To:</strong> {props.userDoc.name} - {props.user.uid}</div>}
 
-    <div className="m-t-m"><strong>In Block:</strong> <a href={githubLink} target="_blank" rel="noopener noreferrer">{githubLink}</a></div>
-
-    <small className="m-t-m">(Transaction data might take up to a day to be indexed by GitHub)</small>
+    <div className="m-t-m"><strong>In Block:</strong></div>
+    <small>(Transaction data might take up to a day to be indexed by GitHub)</small>
+    <a href={githubLink} target="_blank" rel="noopener noreferrer">{githubLink}</a>
 
     <div className="flex-row center-h m-t-m">
       <button className="button m-t-l" onClick={props.history.goBack}>Back</button>
