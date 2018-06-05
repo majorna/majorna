@@ -37,10 +37,11 @@ export default props =>
       Compromise of your account credentials may result in loss of your majorna, therefore it is highly recommended for you to enable 2-step verification in your connected accounts.
       If you choose to move your Majorna to a personal private key, you are responsible for its safety and security.
       Majorna project has no claim or liability on your holdings.
+      Majorna in your account does not give you any financial claim or rights in Majorna project.
     </div>
 
-    <div className="m-t-m">
-      Majorna in your account does not give you any financial claim or rights in Majorna project.
+    <strong className="m-t-m">No Guarantees</strong>
+    <div>
       Safety of your account and majorna in it is not guaranteed.
       Majorna is a young project and comprise of the entire network is a possibility.
       If Majorna fails as a project and stops operating, Majorna in your account will forever be lost.
