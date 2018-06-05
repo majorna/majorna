@@ -170,7 +170,7 @@ exports.createUserDoc = (user, uid) => firestore.runTransaction(async t => {
 
   console.log(`creating user: ${uid} - ${email} - ${name}`)
 
-  // increase market marketCap
+  // update meta doc
   const metaDoc = await t.get(mjMetaDocRef)
   const meta = metaDoc.data()
   t.update(mjMetaDocRef, {marketCap: meta.marketCap + initBalance, userCount: meta.userCount + 1})
@@ -227,8 +227,9 @@ exports.getTxsByTimeRange = async (startTime, endTime) => {
  * @param from - Sender ID.
  * @param to - Receiver ID.
  * @param amount - Transaction amount as integer.
+ * @param isAnon - If true, counterparty name will not be stored as tx metadata.
  */
-exports.makeTx = (from, to, amount) => firestore.runTransaction(async t => {
+exports.makeTx = (from, to, amount, isAnon) => firestore.runTransaction(async t => {
   assert(from, '"from" parameter is required')
   assert(to, '"to" parameter is required')
   assert(from !== to, '"from" and "to" parameters cannot be same')
@@ -267,9 +268,9 @@ exports.makeTx = (from, to, amount) => firestore.runTransaction(async t => {
   t.create(txRef, signedTx)
 
   // update user docs with tx and updated balances
-  addTxToUserDoc(sender, txRef.id, null, null, to, toName, time, amount)
+  addTxToUserDoc(sender, txRef.id, null, null, to, !isAnon && toName, time, amount)
   t.update(senderDocRef, {balance: sender.balance - amount, txs: sender.txs})
-  addTxToUserDoc(receiver, txRef.id, from, fromName, null, null, time, amount)
+  addTxToUserDoc(receiver, txRef.id, from, !isAnon && fromName, null, null, time, amount)
   t.update(receiverDocRef, {balance: receiver.balance + amount, txs: receiver.txs})
 
   return signedTx
@@ -427,9 +428,13 @@ function addTxToUserDoc (userData, txId, fromId, fromName, toId, toName, time, a
   assert(userData.id !== fromId && userData.id !== toId, 'txs array object should omit self referencing IDs, otherwise we cannot know if it is outgoing or incoming tx')
 
   if (fromId) {
-    userData.txs.unshift({id: txId, from: fromId, fromName, time, amount})
+    const tx = {id: txId, from: fromId, time, amount}
+    fromName && (tx.fromName = fromName)
+    userData.txs.unshift(tx)
   } else {
-    userData.txs.unshift({id: txId, to: toId, toName, time, amount})
+    const tx = {id: txId, to: toId, time, amount}
+    toName && (tx.toName = toName)
+    userData.txs.unshift(tx)
   }
 
   userData.txs.length > maxTxsInUserDoc && (userData.txs.length = maxTxsInUserDoc)

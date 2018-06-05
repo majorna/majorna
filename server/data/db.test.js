@@ -158,7 +158,9 @@ suite('db', () => {
     const tx = await db.getTx(newTx.id)
     assert(txUtils.verify(tx))
     assert(tx.from.id === from)
+    assert(!tx.from.name)
     assert(tx.to.id === to)
+    assert(!tx.to.name)
     assert(tx.time.getTime() === newTx.time.getTime())
     assert(tx.amount === amount)
 
@@ -181,10 +183,17 @@ suite('db', () => {
   })
 
   test('makeTx: anon', async () => {
-    // const from = '1'
-    // const to = '2'
-    // const amount = 2
-    // const tx = await db.makeTx(from, to, amount, true)
+    const from = '1'
+    const to = '2'
+    const amount = 2
+    const tx = await db.makeTx(from, to, amount, true)
+
+    assert(!tx.from.name)
+
+    // verify that sender name is not recorded in txs list of receiver user's doc
+    const receiver = await db.getUser(to)
+    const receiverTx = receiver.txs[0]
+    assert(!receiverTx.fromName)
   })
 
   test('makeTx: invalid', async () => {
