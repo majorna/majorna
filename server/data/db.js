@@ -268,7 +268,7 @@ exports.makeTx = (from, to, amount, isAnon) => firestore.runTransaction(async t 
   t.create(txRef, signedTx)
 
   // update user docs with tx and updated balances
-  addTxToUserDoc(sender, txRef.id, null, null, to, !isAnon && toName, time, amount)
+  addTxToUserDoc(sender, txRef.id, null, null, to, toName, time, amount)
   t.update(senderDocRef, {balance: sender.balance - amount, txs: sender.txs})
   addTxToUserDoc(receiver, txRef.id, from, !isAnon && fromName, null, null, time, amount)
   t.update(receiverDocRef, {balance: receiver.balance + amount, txs: receiver.txs})
@@ -432,9 +432,7 @@ function addTxToUserDoc (userData, txId, fromId, fromName, toId, toName, time, a
     fromName && (tx.fromName = fromName)
     userData.txs.unshift(tx)
   } else {
-    const tx = {id: txId, to: toId, time, amount}
-    toName && (tx.toName = toName)
-    userData.txs.unshift(tx)
+    userData.txs.unshift({id: txId, to: toId, toName, time, amount})
   }
 
   userData.txs.length > maxTxsInUserDoc && (userData.txs.length = maxTxsInUserDoc)
