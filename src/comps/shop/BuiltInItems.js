@@ -32,28 +32,32 @@ export default [
     name: 'Bitcoin',
     unavailable: true,
     description: 'Get Bitcoin using your Majorna balance.',
-    fontIcon: 'fab fa-bitcoin'
+    fontIcon: 'fab fa-bitcoin',
+    widget: ExchangeRatesWidget
   },
   {
     id: 'ethereum',
     name: 'Ethereum',
     unavailable: true,
     description: 'Get Ethereum using your Majorna balance.',
-    fontIcon: 'fab fa-ethereum'
+    fontIcon: 'fab fa-ethereum',
+    widget: ExchangeRatesWidget
   },
   {
     id: 'usdollar',
     name: 'US Dollar',
     unavailable: true,
     description: 'Get US Dollar using your Majorna balance.',
-    fontIcon: 'fas fa-dollar-sign'
+    fontIcon: 'fas fa-dollar-sign',
+    widget: ExchangeRatesWidget
   },
   {
     id: 'euro',
     name: 'Euro',
     unavailable: true,
     description: 'Get Euro using your Majorna balance.',
-    fontIcon: 'fas fa-euro-sign'
+    fontIcon: 'fas fa-euro-sign',
+    widget: ExchangeRatesWidget
   },
   {
     id: 'reddit',
