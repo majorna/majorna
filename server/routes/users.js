@@ -10,6 +10,7 @@ exports.init = route.get('/users/init', async ctx => {
     await db.createUserDoc(ctx.state.user)
   } catch (e) {
     if (parseInt(e.code) === grpc.status.ALREADY_EXISTS) {
+      console.error(`user init was called for an pre-existing user: ${ctx.state.user.uid}`)
       ctx.status = 200
       return
     } else {
