@@ -44,7 +44,7 @@ export default props =>
     <div>
       Safety of your account and majorna in it is not guaranteed.
       Majorna is a young project and comprise of the entire network is a possibility.
-      If Majorna fails as a project and stops operating, Majorna in your account will forever be lost.
+      If Majorna fails as a project and stops operating before peer-to-peer network is in production, Majorna in your account may forever be lost.
       Majorna project and its developers does not give you any guarantees of any kind, or accept any liability of any kind.
     </div>
 
