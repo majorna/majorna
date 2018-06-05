@@ -1,8 +1,8 @@
 /**
- * Firebase:
+ * Firebase Admin SDK:
  * - API ref: https://firebase.google.com/docs/reference/admin/node/
- * - Changelog (firebase client - not firebase admin!): https://firebase.google.com/support/release-notes/js
- * - Changelog (firebase UI): https://github.com/firebase/firebaseui-web-react/releases
+ * - Changelog: https://firebase.google.com/support/release-notes/admin/node
+ * - Changelog (firebase client used in tests - not firebase admin!): https://firebase.google.com/support/release-notes/js
  *
  * Firestore:
  * - API ref: https://cloud.google.com/nodejs/docs/reference/firestore/latest/

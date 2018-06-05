@@ -25,7 +25,7 @@ export default props =>
       Majorna is an active project and it may or may not be successful.
       Majorna currently has no inherent value, and may or may not have any value in the future depending on public acceptance.
       Via using Majorna, you accept this.
-      However we believe that it has a great change of becoming a publicly accepted currency and a payment platform one day.
+      However we believe that it has a great chance of becoming a publicly accepted currency and a payment platform over time.
       Project is fully open source and will contribute to maturity of the cryptocurrency ecosystem regardless of the outcome.
     </div>
 

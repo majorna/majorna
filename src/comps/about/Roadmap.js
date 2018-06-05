@@ -7,7 +7,7 @@ export default props =>
 
     <div className="is-size-5 has-text-centered">Roadmap</div>
     <div className="m-t-m">
-      Following bullets summarise completed and planned tasks:
+      Following bullets summarize completed and planned tasks:
     </div>
 
     <div className="content">

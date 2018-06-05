@@ -23,6 +23,14 @@ suite('route: txs', () => {
       amount: 10
     })
     assert(res.status === 201)
+
+    // and anon
+    res = await testData.users.u1Request.post('/txs', {
+      to: '2',
+      amount: 3,
+      isAnon: true
+    })
+    assert(res.status === 201)
   })
 
   test('invalid tx', async () => {

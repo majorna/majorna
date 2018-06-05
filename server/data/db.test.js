@@ -41,6 +41,8 @@ suite('db', () => {
   })
 
   test('updateMjMetaStatsIfRequired', async () => {
+    // todo: add 5000+ txs and make sure that they are properly paginated and only 5000 reads occur (otherwise we can hit firestore limit)
+    // todo: also make sure that startAt, stopBefore conditions are working correctly and it's not starting all the way back from 1st tx etc.
     const now = new Date()
     const metaBefore = await db.getMjMeta()
     assert(!metaBefore.monthly.txVolume)
@@ -143,8 +145,12 @@ suite('db', () => {
     // make a valid tx
     const from = '1'
     const to = '2'
-    const senderInitBalance = (await db.getUser(from)).balance
-    const receiverInitBalance = (await db.getUser(to)).balance
+    const senderUser = await db.getUser(from)
+    const receiverUser = await db.getUser(to)
+    const fromName = senderUser.name
+    const toName = receiverUser.name
+    const senderInitBalance = senderUser.balance
+    const receiverInitBalance = receiverUser.balance
     const amount = 100
     const newTx = await db.makeTx(from, to, amount)
 
@@ -152,7 +158,9 @@ suite('db', () => {
     const tx = await db.getTx(newTx.id)
     assert(txUtils.verify(tx))
     assert(tx.from.id === from)
+    assert(!tx.from.name)
     assert(tx.to.id === to)
+    assert(!tx.to.name)
     assert(tx.time.getTime() === newTx.time.getTime())
     assert(tx.amount === amount)
 
@@ -161,6 +169,7 @@ suite('db', () => {
     assert(sender.balance === senderInitBalance - amount)
     const senderTx = sender.txs[0]
     assert(senderTx.to === to)
+    assert(senderTx.toName === toName)
     assert(senderTx.time.getTime() === newTx.time.getTime())
     assert(senderTx.amount === amount)
 
@@ -168,8 +177,23 @@ suite('db', () => {
     assert(receiver.balance === receiverInitBalance + amount)
     const receiverTx = receiver.txs[0]
     assert(receiverTx.from === from)
+    assert(receiverTx.fromName === fromName)
     assert(receiverTx.time.getTime() === newTx.time.getTime())
     assert(receiverTx.amount === amount)
+  })
+
+  test('makeTx: anon', async () => {
+    const from = '1'
+    const to = '2'
+    const amount = 2
+    const tx = await db.makeTx(from, to, amount, true)
+
+    assert(!tx.from.name)
+
+    // verify that sender name is not recorded in txs list of receiver user's doc
+    const receiver = await db.getUser(to)
+    const receiverTx = receiver.txs[0]
+    assert(!receiverTx.fromName)
   })
 
   test('makeTx: invalid', async () => {

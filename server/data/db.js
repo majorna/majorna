@@ -110,16 +110,18 @@ exports.updateMjMetaStatsIfRequired = async endTime => {
   previousMonthBeginning.setHours(0, 0, 0, 0)
   const limit = 500
   let volume = 0
-  let offset = 0
+  let totalQueried = 0
+  let lastQueriedDocumentTime = previousMonthBeginning
 
   console.log('starting mj meta stats update loop')
   while (true) {
-    console.log(`mj meta stats update loop is running with offset: ${offset}`)
-    const txsSnap = await txsColRef.where('time', '>=', previousMonthBeginning).where('time', '<', (endTime || previousMonthEnd)).offset(offset).limit(limit).get()
-    if (!txsSnap.size || offset > 1000000 /* infinite loop protection */) {
+    console.log(`mj meta stats update loop is running with total queried: ${totalQueried}, last queried time: ${lastQueriedDocumentTime}`)
+    const txsSnap = await txsColRef.orderBy('time').startAfter(lastQueriedDocumentTime).endBefore(endTime || previousMonthEnd).limit(limit).get()
+    if (!txsSnap.size || totalQueried > 1000000 /* infinite loop protection */) {
       break
     }
-    offset += txsSnap.size
+    lastQueriedDocumentTime = txsSnap.docs[txsSnap.size - 1].data().time
+    totalQueried += txsSnap.size
     txsSnap.docs.forEach(tx => { volume += tx.data().amount })
   }
 
@@ -168,7 +170,7 @@ exports.createUserDoc = (user, uid) => firestore.runTransaction(async t => {
 
   console.log(`creating user: ${uid} - ${email} - ${name}`)
 
-  // increase market marketCap
+  // update meta doc
   const metaDoc = await t.get(mjMetaDocRef)
   const meta = metaDoc.data()
   t.update(mjMetaDocRef, {marketCap: meta.marketCap + initBalance, userCount: meta.userCount + 1})
@@ -225,8 +227,9 @@ exports.getTxsByTimeRange = async (startTime, endTime) => {
  * @param from - Sender ID.
  * @param to - Receiver ID.
  * @param amount - Transaction amount as integer.
+ * @param isAnon - If true, counterparty name will not be stored as tx metadata.
  */
-exports.makeTx = (from, to, amount) => firestore.runTransaction(async t => {
+exports.makeTx = (from, to, amount, isAnon) => firestore.runTransaction(async t => {
   assert(from, '"from" parameter is required')
   assert(to, '"to" parameter is required')
   assert(from !== to, '"from" and "to" parameters cannot be same')
@@ -267,7 +270,7 @@ exports.makeTx = (from, to, amount) => firestore.runTransaction(async t => {
   // update user docs with tx and updated balances
   addTxToUserDoc(sender, txRef.id, null, null, to, toName, time, amount)
   t.update(senderDocRef, {balance: sender.balance - amount, txs: sender.txs})
-  addTxToUserDoc(receiver, txRef.id, from, fromName, null, null, time, amount)
+  addTxToUserDoc(receiver, txRef.id, from, !isAnon && fromName, null, null, time, amount)
   t.update(receiverDocRef, {balance: receiver.balance + amount, txs: receiver.txs})
 
   return signedTx
@@ -425,7 +428,9 @@ function addTxToUserDoc (userData, txId, fromId, fromName, toId, toName, time, a
   assert(userData.id !== fromId && userData.id !== toId, 'txs array object should omit self referencing IDs, otherwise we cannot know if it is outgoing or incoming tx')
 
   if (fromId) {
-    userData.txs.unshift({id: txId, from: fromId, fromName, time, amount})
+    const tx = {id: txId, from: fromId, time, amount}
+    fromName && (tx.fromName = fromName)
+    userData.txs.unshift(tx)
   } else {
     userData.txs.unshift({id: txId, to: toId, toName, time, amount})
   }

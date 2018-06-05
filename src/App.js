@@ -26,6 +26,7 @@ import Roadmap from './comps/about/Roadmap'
 import PrivateRoute from './comps/shared/PrivateRoute'
 import Modal from './comps/shared/Modal'
 import Terms from './comps/about/Terms'
+import Tx from './comps/account/Tx'
 
 export default withRouter(class extends Component {
   constructor(props) {
@@ -43,7 +44,7 @@ export default withRouter(class extends Component {
       signInOptions: [
         firebase.auth.GoogleAuthProvider.PROVIDER_ID
       ],
-      callbacks: {signInSuccess: () => false /* don't redirect anywhere */}
+      callbacks: {signInSuccessWithAuthResult: () => false /* don't redirect anywhere */}
     }
     if (config.app.isDev) {
       this.firebaseUIConfig.signInOptions.push(firebase.auth.EmailAuthProvider.PROVIDER_ID)
@@ -138,6 +139,7 @@ export default withRouter(class extends Component {
         <PrivateRoute path='/send' render={routeProps => <Send {...routeProps} userDoc={this.state.userDoc}/>} />
         <PrivateRoute path='/receive' render={routeProps => <Receive {...routeProps} user={this.state.user} acctQr={this.state.acctQr}/>} />
         <PrivateRoute path='/mine' render={routeProps => <Mine {...routeProps} db={this.db}/>} />
+        <PrivateRoute path='/tx/:id' render={routeProps => <Tx {...routeProps} user={this.state.user} userDoc={this.state.userDoc}/>} />
         <Redirect from='*' to='/'/>
       </Switch>
 
