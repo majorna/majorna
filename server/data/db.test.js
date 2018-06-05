@@ -145,8 +145,12 @@ suite('db', () => {
     // make a valid tx
     const from = '1'
     const to = '2'
-    const senderInitBalance = (await db.getUser(from)).balance
-    const receiverInitBalance = (await db.getUser(to)).balance
+    const senderUser = await db.getUser(from)
+    const receiverUser = await db.getUser(to)
+    const fromName = senderUser.name
+    const toName = receiverUser.name
+    const senderInitBalance = senderUser.balance
+    const receiverInitBalance = receiverUser.balance
     const amount = 100
     const newTx = await db.makeTx(from, to, amount)
 
@@ -163,6 +167,7 @@ suite('db', () => {
     assert(sender.balance === senderInitBalance - amount)
     const senderTx = sender.txs[0]
     assert(senderTx.to === to)
+    assert(senderTx.toName === toName)
     assert(senderTx.time.getTime() === newTx.time.getTime())
     assert(senderTx.amount === amount)
 
@@ -170,8 +175,16 @@ suite('db', () => {
     assert(receiver.balance === receiverInitBalance + amount)
     const receiverTx = receiver.txs[0]
     assert(receiverTx.from === from)
+    assert(receiverTx.fromName === fromName)
     assert(receiverTx.time.getTime() === newTx.time.getTime())
     assert(receiverTx.amount === amount)
+  })
+
+  test('makeTx: anon', async () => {
+    // const from = '1'
+    // const to = '2'
+    // const amount = 2
+    // const tx = await db.makeTx(from, to, amount, true)
   })
 
   test('makeTx: invalid', async () => {
