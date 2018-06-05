@@ -4,7 +4,7 @@ export default props =>
   <div className="mj-box flex-column">
     <div className="is-size-5 has-text-centered">Majorna Terms and Conditions</div>
     <div className="m-t-m">
-      Last updated: May 31, 2018.
+      Last updated: Jun 5, 2018.
     </div>
 
     <div className="m-t-m">
@@ -13,7 +13,7 @@ export default props =>
 
     <strong className="m-t-m">Definition of Majorna</strong>
     <div>
-      Majorna is a cryptocurrency.
+      Majorna (mj) is a cryptocurrency.
       All the Majorna on all the accounts along with all the transactions are stored and is visible at the <a href="https://github.com/majorna/blockchain" target="_blank" rel="noopener noreferrer">blockchain</a> repository.
       Via opening an account on Majorna, you become a counterpart to this agreement.
       You have the all rights to send, receive, hold, and mine Majorna on your account.
@@ -24,7 +24,7 @@ export default props =>
       All donations goes towards Majorna development and are non-refundable.
       Majorna is an active project and it may or may not be successful.
       Majorna currently has no inherent value, and may or may not have any value in the future depending on public acceptance.
-      Via using Majorna, you accept this.
+      Via using Majorna or donating to the project, you accept this.
       However we believe that it has a great chance of becoming a publicly accepted currency and a payment platform over time.
       Project is fully open source and will contribute to maturity of the cryptocurrency ecosystem regardless of the outcome.
     </div>
@@ -34,10 +34,17 @@ export default props =>
       All Majorna transactions including sending, receiving, mining, and donations are final and non-refundable.
       As the account holder, you are responsible for all your transactions.
       You are also responsible for keeping your connected accounts (i.e. Google) secure, as Majorna assumes no liability.
-      Compromise of your account credentials may result in loss of funds, therefore it is highly recommended for you to enable 2-step verification in your connected accounts.
-      If you choose to move your funds to a personal private key, you are responsible for its safety and security.
-      Majorna has no claim or liability on your funds, and Majorna accounts are not covered by deposit insurance currently, however we plan to add it as an option in the future.
+      Compromise of your account credentials may result in loss of your majorna, therefore it is highly recommended for you to enable 2-step verification in your connected accounts.
+      If you choose to move your Majorna to a personal private key, you are responsible for its safety and security.
+      Majorna project has no claim or liability on your holdings.
+    </div>
+
+    <div className="m-t-m">
       Majorna in your account does not give you any financial claim or rights in Majorna project.
+      Safety of your account and majorna in it is not guaranteed.
+      Majorna is a young project and comprise of the entire network is a possibility.
+      If Majorna fails as a project and stops operating, Majorna in your account will forever be lost.
+      Majorna project and its developers does not give you any guarantees of any kind, or accept any liability of any kind.
     </div>
 
     <strong className="m-t-m">Development Period</strong>
