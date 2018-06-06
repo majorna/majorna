@@ -12,7 +12,7 @@ export default [
       Contribute to Majorna development and get matching amount of Majorna within ~15 minutes that you can use freely on mainnet.
       You can donate with Bitcoin, Ethereum, or other cryptos.
       Donations are non-refundable.
-      You can report problems about donations to <a href={'mailto:support@' + config.hosting.domain} target="_blank" rel="noopener noreferrer">support@{config.hosting.domain}</a>.
+      You can report problems about donations to: <a href={'mailto:support@' + config.hosting.domain} target="_blank" rel="noopener noreferrer">support@{config.hosting.domain}</a>
     </React.Fragment>,
     imageUrl: mj,
     // stripeScriptUrl: 'https://js.stripe.com/v3/',
