@@ -5,14 +5,14 @@ console.log = (...args) => {
   const logLine = util.format.apply(null, args)
   process.stdout.write(logLine + '\n')
   try {
-    firebaseConfig.log.info(firebaseConfig.log.entry(logLine)).catch(e => process.stderr.write(e))
+    logLine && firebaseConfig.log.info(firebaseConfig.log.entry(logLine)).catch(e => process.stderr.write(e))
   } catch (e) { console.error(e) }
 }
 console.error = (...args) => {
   const logLine = util.format.apply(null, args)
   process.stderr.write(logLine + '\n')
   try {
-    firebaseConfig.log.error(firebaseConfig.log.entry(logLine)).catch(e => process.stderr.write(e))
+    logLine && firebaseConfig.log.error(firebaseConfig.log.entry(logLine)).catch(e => process.stderr.write(e))
   } catch (e) { console.error(e) }
 }
 
