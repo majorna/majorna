@@ -30,6 +30,8 @@ suite('blockchain', () => {
     const blockFile = await github.getFileContent(blockPath)
     const blockObj = block.fromJson(blockFile)
 
+    assert(blockObj.header.no === blockInfo.header.no)
+
     // now repeat again and verify the last inserted block with the previous one
     const blockInfo2 = await db.getBlockInfo()
     const blockPath2 = testConfig.getGitHubTestFile()
@@ -39,8 +41,7 @@ suite('blockchain', () => {
     const blockObj2 = block.fromJson(blockFile2)
 
     block.verify(blockObj2, blockObj.header)
-
-    // todo: verify that correct block no is inserted
+    assert(blockObj2.header.no === (blockInfo.header.no + 1))
   })
 
   test('insertBlockIfRequired', async () => {
