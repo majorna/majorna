@@ -27,6 +27,7 @@ import PrivateRoute from './comps/shared/PrivateRoute'
 import Modal from './comps/shared/Modal'
 import Terms from './comps/about/Terms'
 import Tx from './comps/account/Tx'
+import testRunner from './blockchain/testRunner'
 
 export default withRouter(class extends Component {
   constructor(props) {
@@ -107,6 +108,11 @@ export default withRouter(class extends Component {
         console.log('refreshed firebase auth ID token')
       }
     }, 15 * 60 * 1000)
+
+    // run tests when in dev mode
+    if (config.app.isDev) {
+      testRunner()
+    }
   }
 
   logout = async () => {
