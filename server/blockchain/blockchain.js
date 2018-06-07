@@ -23,11 +23,12 @@ exports.insertBlockSinceLastOne = async (now, blockInfo, customOldBlockPath) => 
     console.log(`previous block is not mined so skipping block creation`)
     return
   }
-  const newBlock = await db.insertBlock(txs, now)
-  const oldBlock = await db.getBlock(newBlock.header.no - 1)
+  // insert old block to storage first, in case it fails, we will skip new block creation and try again
+  const oldBlock = await db.getBlock(blockInfo.header.no - 1)
   let oldBlockPath = customOldBlockPath || exports.getBlockPath(oldBlock.header)
   config.app.isDev && (oldBlockPath += `-${new Date().getTime()}`)
   await github.createFile(block.toJson(oldBlock), oldBlockPath)
+  const newBlock = await db.insertBlock(txs, now)
   console.log(`inserted new block: no ${newBlock.header.no}, time: ${newBlock.header.time}, previous-nonce: ${oldBlock.header.nonce}`)
 }
 
