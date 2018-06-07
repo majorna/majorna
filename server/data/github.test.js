@@ -15,7 +15,7 @@ suite('github', () => {
   })
 
   test('createFile', async () => {
-    const path = testConfig.getGitHubTestFile()
+    const path = testConfig.getGitHubTestFilePath()
     const text = 'some-text-' + new Date().getTime()
     await github.createFile(text, path)
     const file = await github.getFileContent(path)
@@ -28,7 +28,7 @@ suite('github', () => {
   })
 
   test('upsertFile', async () => {
-    const testFilePath = testConfig.getGitHubTestFile()
+    const testFilePath = testConfig.getGitHubTestFilePath()
     const appendText = 'some-text-' + new Date().getTime()
     await github.upsertFile(appendText, testFilePath)
     const updatedFile = await github.getFileContent(testFilePath)

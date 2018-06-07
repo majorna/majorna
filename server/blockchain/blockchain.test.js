@@ -24,7 +24,7 @@ suite('blockchain', () => {
   test('insertBlockSinceLastOne', async () => {
     // create a new block and write the previous one to git repo
     const blockInfo = await db.getBlockInfo()
-    const blockPath = testConfig.getGitHubTestFile()
+    const blockPath = testConfig.getGitHubTestFilePath()
     await blockchain.insertBlockSinceLastOne(new Date(), blockInfo, blockPath)
 
     const blockFile = await github.getFileContent(blockPath)
@@ -34,7 +34,7 @@ suite('blockchain', () => {
 
     // now repeat again and verify the last inserted block with the previous one
     const blockInfo2 = await db.getBlockInfo()
-    const blockPath2 = testConfig.getGitHubTestFile()
+    const blockPath2 = testConfig.getGitHubTestFilePath()
     await blockchain.insertBlockSinceLastOne(new Date(), blockInfo2, blockPath2)
 
     const blockFile2 = await github.getFileContent(blockPath2)
@@ -42,6 +42,20 @@ suite('blockchain', () => {
 
     block.verify(blockObj2, blockObj.header)
     assert(blockObj2.header.no === (blockInfo.header.no + 1))
+
+    // and once more
+    let blockInfo3 = await db.getBlockInfo()
+    const miningRes = block.mineHeaderStr(blockInfo3.miner.headerStrWithoutNonce, blockInfo3.miner.targetDifficulty)
+    await db.giveMiningReward('1', miningRes.nonce)
+    blockInfo3 = await db.getBlockInfo()
+    const blockPath3 = testConfig.getGitHubTestFilePath()
+    await blockchain.insertBlockSinceLastOne(new Date(), blockInfo3, blockPath3)
+
+    const blockFile3 = await github.getFileContent(blockPath3)
+    const blockObj3 = block.fromJson(blockFile3)
+
+    block.verify(blockObj3, blockObj2.header)
+    assert(blockObj3.header.no === (blockInfo.header.no + 2))
   })
 
   test('insertBlockIfRequired', async () => {
@@ -52,7 +66,7 @@ suite('blockchain', () => {
     await db.makeTx('1', '2', 1)
     const tomorrow = new Date() // end search in tomorrow so we can pick up test tx from the database (5 min latency for ongoing txs stuff...)
     tomorrow.setDate(tomorrow.getDate() + 2)
-    const blockPath = testConfig.getGitHubTestFile()
+    const blockPath = testConfig.getGitHubTestFilePath()
 
     await blockchain.insertBlockIfRequired(tomorrow, blockPath)
 
@@ -67,7 +81,7 @@ suite('blockchain', () => {
     block.verify(newBlock, blockObj.header)
 
     // not required
-    const blockPath2 = testConfig.getGitHubTestFile()
+    const blockPath2 = testConfig.getGitHubTestFilePath()
     await blockchain.insertBlockIfRequired(tomorrow, blockPath2)
     let err
     try {
