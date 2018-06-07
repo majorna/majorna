@@ -13,7 +13,7 @@ export default props =>
 
     <strong className="m-t-m">Definition of Majorna</strong>
     <div>
-      Majorna (mj) is a cryptocurrency.
+      Majorna (mj) is a cryptocurrency as well as the name of the project associated with it.
       All the Majorna on all the accounts along with all the transactions are stored and is visible at the <a href="https://github.com/majorna/blockchain" target="_blank" rel="noopener noreferrer">blockchain</a> repository.
       Via opening an account on Majorna, you become a counterpart to this agreement.
       You have the all rights to send, receive, hold, and mine Majorna on your account.
