@@ -7,4 +7,6 @@ const bugsnagClient = bugsnag({
   collectUserIp: false,
   user: {id: '1234'} // todo: set user ID
 })
-bugsnagClient.notify(new Error('Test error'))
+
+// bugsnagClient.notify(new Error('Test error'))
+export default bugsnagClient
