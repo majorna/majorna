@@ -42,7 +42,7 @@ export default props =>
 
     <strong className="m-t-m">No Guarantees</strong>
     <div>
-      Safety or privacy of your account and majorna in it can not be guaranteed.
+      Safety or relevant data of your account and majorna in it can not be guaranteed.
       Majorna is a young project and comprise of the entire network is a possibility.
       If Majorna fails as a project and stops operating before peer-to-peer network is in production, Majorna in your account may forever be lost.
       Majorna project and its developers do not give you any guarantees of any kind, or accept any liability of any kind.
