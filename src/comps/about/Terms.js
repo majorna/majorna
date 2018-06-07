@@ -4,7 +4,7 @@ export default props =>
   <div className="mj-box flex-column">
     <div className="is-size-5 has-text-centered">Majorna Terms and Conditions</div>
     <div className="m-t-m">
-      Last updated: Jun 5, 2018.
+      Last updated: Jun 7, 2018.
     </div>
 
     <div className="m-t-m">
@@ -42,7 +42,7 @@ export default props =>
 
     <strong className="m-t-m">No Guarantees</strong>
     <div>
-      Safety of your account and majorna in it is not guaranteed.
+      Safety or privacy of your account and majorna in it can not be guaranteed.
       Majorna is a young project and comprise of the entire network is a possibility.
       If Majorna fails as a project and stops operating before peer-to-peer network is in production, Majorna in your account may forever be lost.
       Majorna project and its developers do not give you any guarantees of any kind, or accept any liability of any kind.
@@ -59,7 +59,7 @@ export default props =>
     <strong className="m-t-m">Privacy Policy</strong>
     <div>
       Majorna does not have access to your personally identifiable information outside of what 3rd party authentication providers supply.
-      Majorna only keeps minimal information required to associate your account to you and does not share it with 3rd parties.
+      Majorna only keeps minimal information required to associate your account to you.
       All the information that Majorna receives is listed by the authentication provider during first ever login.
       Majorna does not have access to your credentials.
     </div>
