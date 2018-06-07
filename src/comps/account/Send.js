@@ -14,7 +14,7 @@ export default class extends Component {
     receiver: '',
     amount: 0,
     isAnon: false,
-    receiverName: null,
+    receiverNameValid: null,
     error: null,
     step: 'start',
     sending: false
@@ -24,18 +24,18 @@ export default class extends Component {
     const receiverId = e.target.value
     this.setState({receiver: receiverId})
 
-    // get receiver name if exists
-    let receiverName
+    // check if the receiver is valid
+    let receiverNameValid
     if (receiverId) {
       try {
         const res = await server.users.get(receiverId)
         if (res.status === 200) {
           const user = await res.json()
-          receiverName = user.name
+          receiverNameValid = user.name
         }
       } catch (e) { console.error(e) }
     }
-    this.setState({receiverName})
+    this.setState({receiverNameValid})
   }
 
   handleAmount = e => {
@@ -128,7 +128,7 @@ export default class extends Component {
 
         <strong>Address</strong>
         <input className="input" type="text" value={this.state.receiver} onChange={this.handleReceiver}/>
-        {this.state.receiverName && <strong className="has-text-info">Name: {this.state.receiverName}</strong>}
+        {this.state.receiverNameValid && <strong className="has-text-info">Valid Receiver</strong>}
 
         <strong className="m-t-m">Amount</strong>
         <input className="input" type="number" value={this.state.amount} onChange={this.handleAmount}/>
