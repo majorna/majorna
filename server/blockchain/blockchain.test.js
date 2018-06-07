@@ -39,6 +39,8 @@ suite('blockchain', () => {
     const blockObj2 = block.fromJson(blockFile2)
 
     block.verify(blockObj2, blockObj.header)
+
+    // todo: verify that correct block no is inserted
   })
 
   test('insertBlockIfRequired', async () => {
