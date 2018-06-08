@@ -16,7 +16,7 @@ export default props =>
       Majorna (mj) is a cryptocurrency as well as the name of the project associated with it, which is not a commercial nor registered organization.
       All the Majorna on all the accounts along with all the transactions are stored and is visible at the <a href="https://github.com/majorna/blockchain" target="_blank" rel="noopener noreferrer">blockchain</a> repository.
       Via opening an account on Majorna, you become a counterpart to this agreement.
-      You have the all rights to send, receive, hold, and mine Majorna on your account.
+      You have the right to send, receive, and mine Majorna on your account.
     </div>
 
     <strong className="m-t-m">Donations</strong>
@@ -38,7 +38,7 @@ export default props =>
       Compromise of your account credentials may result in loss of your majorna, therefore it is highly recommended for you to enable 2-step verification in your connected accounts.
       If you choose to move your Majorna to a personal private key, you are responsible for its safety and security.
       Majorna in your account does not give you any rights or claim of any kind, in Majorna project, or from Majorna developers.
-      Majorna project assumes no liability on your account or holdings.
+      Majorna project assumes no liability of any kind on your account or Majorna in it.
     </div>
 
     <strong className="m-t-m">No Guarantees</strong>
