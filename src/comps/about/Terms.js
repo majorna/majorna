@@ -4,7 +4,7 @@ export default props =>
   <div className="mj-box flex-column">
     <div className="is-size-5 has-text-centered">Majorna Terms and Conditions</div>
     <div className="m-t-m">
-      Last updated: Jun 7, 2018.
+      Last updated: Jun 8, 2018.
     </div>
 
     <div className="m-t-m">
@@ -13,7 +13,7 @@ export default props =>
 
     <strong className="m-t-m">Definition of Majorna</strong>
     <div>
-      Majorna (mj) is a cryptocurrency as well as the name of the project associated with it.
+      Majorna (mj) is a cryptocurrency as well as the name of the project associated with it, which is not a commercial nor registered organization.
       All the Majorna on all the accounts along with all the transactions are stored and is visible at the <a href="https://github.com/majorna/blockchain" target="_blank" rel="noopener noreferrer">blockchain</a> repository.
       Via opening an account on Majorna, you become a counterpart to this agreement.
       You have the all rights to send, receive, hold, and mine Majorna on your account.
@@ -22,6 +22,7 @@ export default props =>
     <strong className="m-t-m">Donations</strong>
     <div>
       All donations goes towards Majorna development and are non-refundable.
+      Donations are private (hence a tax-related donation receipt can not be issued) and have no rights or privileges associated with them.
       Majorna is an active project and it may or may not be successful.
       Majorna currently has no inherent value, and may or may not have any value in the future depending on public acceptance.
       Via using Majorna or donating to the project, you accept this.
@@ -42,7 +43,7 @@ export default props =>
 
     <strong className="m-t-m">No Guarantees</strong>
     <div>
-      Safety or relevant data of your account and majorna in it can not be guaranteed.
+      Safety of your account, account data, and majorna in it can not be guaranteed.
       Majorna is a young project and comprise of the entire network is a possibility.
       If Majorna fails as a project and stops operating before peer-to-peer network is in production, Majorna in your account may forever be lost.
       Majorna project and its developers do not give you any guarantees of any kind, or accept any liability of any kind.
