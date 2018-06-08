@@ -37,8 +37,8 @@ export default props =>
       You are also responsible for keeping your connected accounts (i.e. Google) secure, as Majorna assumes no liability.
       Compromise of your account credentials may result in loss of your majorna, therefore it is highly recommended for you to enable 2-step verification in your connected accounts.
       If you choose to move your Majorna to a personal private key, you are responsible for its safety and security.
-      Majorna project has no claim or liability on your holdings.
-      Majorna in your account does not give you any financial claim or rights in Majorna project.
+      Majorna in your account does not give you any rights or claim of any kind, in Majorna project, or from Majorna developers.
+      Majorna project assumes no liability on your account or holdings.
     </div>
 
     <strong className="m-t-m">No Guarantees</strong>
@@ -47,6 +47,8 @@ export default props =>
       Majorna is a young project and comprise of the entire network is a possibility.
       If Majorna fails as a project and stops operating before peer-to-peer network is in production, Majorna in your account may forever be lost.
       Majorna project and its developers do not give you any guarantees of any kind, or accept any liability of any kind.
+      Majorna has the right to terminate your account at any time, with or without cause, with or without notice, with or without destroying all Majorna in it.
+      Accounts terminated due to malicious activity cannot be reopened.
     </div>
 
     <strong className="m-t-m">Development Period</strong>
