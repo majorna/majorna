@@ -13,7 +13,7 @@ export default class extends Component {
   state = {
     receiver: '',
     amount: 0,
-    isAnon: true,
+    showSenderName: false,
     receiverNameValid: null,
     error: null,
     step: 'start',
@@ -50,7 +50,7 @@ export default class extends Component {
     this.setState({amount: amount && parseInt(amount, 10)})
   }
 
-  handleIsAnon = e => this.setState({isAnon: e.target.checked})
+  handleShowSenderName = e => this.setState({showSenderName: e.target.checked})
 
   handleCancel = () => this.props.history.goBack()
 
@@ -73,7 +73,7 @@ export default class extends Component {
     let error
     this.setState({error, sending: true})
     try {
-      const res = await server.txs.make(this.state.receiver, this.state.amount, this.state.isAnon)
+      const res = await server.txs.make(this.state.receiver, this.state.amount, this.state.showSenderName)
       if (res.status === 201) {
         this.setState({error, sending: false, step: 'complete'})
         return
@@ -134,7 +134,7 @@ export default class extends Component {
         <input className="input" type="number" value={this.state.amount} onChange={this.handleAmount}/>
 
         <label className="checkbox m-t-m">
-          <input type="checkbox" checked={this.state.isAnon} onChange={this.handleIsAnon}/> Hide my name from receiver <small>(your account address will still show)</small>
+          <input type="checkbox" checked={this.state.showSenderName} onChange={this.handleShowSenderName}/> Show my name to receiver
         </label>
 
         {this.state.error && <strong className="has-text-danger has-text-centered m-t-l">{this.state.error}</strong>}

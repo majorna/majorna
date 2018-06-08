@@ -227,9 +227,9 @@ exports.getTxsByTimeRange = async (startTime, endTime) => {
  * @param from - Sender ID.
  * @param to - Receiver ID.
  * @param amount - Transaction amount as integer.
- * @param isAnon - If true, counterparty name will not be stored as tx metadata.
+ * @param showSenderName - If true, sender name will be stored as tx metadata in receiver user doc's txs.
  */
-exports.makeTx = (from, to, amount, isAnon) => firestore.runTransaction(async t => {
+exports.makeTx = (from, to, amount, showSenderName) => firestore.runTransaction(async t => {
   assert(from, '"from" parameter is required')
   assert(to, '"to" parameter is required')
   assert(from !== to, '"from" and "to" parameters cannot be same')
@@ -270,7 +270,7 @@ exports.makeTx = (from, to, amount, isAnon) => firestore.runTransaction(async t 
   // update user docs with tx and updated balances
   addTxToUserDoc(sender, txRef.id, null, null, to, toName, time, amount)
   t.update(senderDocRef, {balance: sender.balance - amount, txs: sender.txs})
-  addTxToUserDoc(receiver, txRef.id, from, !isAnon && fromName, null, null, time, amount)
+  addTxToUserDoc(receiver, txRef.id, from, showSenderName && fromName, null, null, time, amount)
   t.update(receiverDocRef, {balance: receiver.balance + amount, txs: receiver.txs})
 
   return signedTx

@@ -7,12 +7,12 @@ suite('route: miners', () => {
     const id = testData.users.u1Auth.uid
     const res = await testData.users.u1Request.post('/miners', {id, lat: 0, lon: 123})
     assert(res.status === 201)
-    assert(res.data.miners.find(m => m.id === id))
+    assert(res.data.miners.find(m => m.lon === 123))
 
     // update location
     const res2 = await testData.users.u1Request.post('/miners', {id, lat: 1.234, lon: 0})
     assert(res2.status === 201)
-    assert(res2.data.miners.find(m => m.id === id))
+    assert(res2.data.miners.find(m => m.lat === 1.234))
 
     // invalid request
     const res3 = await testData.users.u1Request.post('/miners', {id, lon: 3.4})

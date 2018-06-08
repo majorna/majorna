@@ -24,11 +24,11 @@ suite('route: txs', () => {
     })
     assert(res.status === 201)
 
-    // and anon
+    // and showSenderName
     res = await testData.users.u1Request.post('/txs', {
       to: '2',
       amount: 3,
-      isAnon: true
+      showSenderName: true
     })
     assert(res.status === 201)
   })
