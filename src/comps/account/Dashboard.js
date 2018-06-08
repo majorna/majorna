@@ -24,7 +24,7 @@ export default props => {
             <Area type='monotone' dataKey='mj' unit="$" stroke='DarkOrange' fill='Wheat'/>
           </AreaChart>
         </ResponsiveContainer>
-        <small><i>* (placeholder price until exchange is implemented)</i></small>
+        <small><i>* (placeholder price until exchange is implemented, currently mj has no inherent value)</i></small>
       </div>
 
       <div className="mj-box flex-column w-s">
