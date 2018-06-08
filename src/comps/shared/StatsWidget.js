@@ -5,7 +5,7 @@ export default props =>
   <div className="mj-box stats-grid">
     <div className="flex-column center-all">
       <strong className="is-size-5 has-text-success">${props.mjMetaDoc.val}</strong>
-      Current Price
+      Current Price (placeholder)
     </div>
     <div className="flex-column center-all">
       <strong className="is-size-5 has-text-success">${fm(Math.round(props.mjMetaDoc.marketCap * props.mjMetaDoc.val))}</strong>
