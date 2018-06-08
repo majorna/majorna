@@ -24,7 +24,7 @@ export default props =>
       All donations goes towards Majorna development and are non-refundable.
       Donations are private (hence a tax-related donation receipt can not be issued) and have no rights or privileges associated with them.
       Majorna is an active project and it may or may not be successful.
-      Majorna currently has no inherent value, and may or may not have any value in the future depending on public acceptance.
+      Majorna currently has no inherent value and is not a legal tender, and it may or may not have any value in the future depending on public acceptance.
       Via using Majorna or donating to the project, you accept this.
       However we believe that it has a great chance of becoming a publicly accepted currency and a payment platform over time.
       Project is fully open source and will contribute to maturity of the cryptocurrency ecosystem regardless of the outcome.
