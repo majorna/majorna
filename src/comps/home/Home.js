@@ -62,7 +62,7 @@ export default props =>
       <div className="flex-column flex-grow-1">
         <div className="is-size-5">Open Development Model</div>
         Majorna team intents to fund development via providing services around the currency (i.e. payment services).
-        The team is also responsible for continuous monitoring and maintenance of the system.
+        The team is also in charge of continuous monitoring and maintenance of the system.
       </div>
     </div>
 
