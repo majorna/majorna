@@ -47,7 +47,7 @@ export default props =>
       Majorna is a young project and comprise of the entire network is a possibility.
       If Majorna fails as a project and stops operating before peer-to-peer network is in production, Majorna in your account may forever be lost.
       Majorna project and its developers do not give you any guarantees of any kind, or accept any liability of any kind.
-      Majorna has the right to terminate your account at any time, with or without cause, with or without notice, with or without refunding any Majorna in it (ability to move Majorna from account to a private key is a work-in-progress).
+      Majorna has the right to terminate your account at any time during the development period (see below), with or without cause, with or without notice, with or without refunding any Majorna in it (ability to move Majorna from account to a private key is a work-in-progress).
       Accounts terminated due to malicious activity cannot be reopened.
     </div>
 
