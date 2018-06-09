@@ -8,7 +8,7 @@ export default props =>
       Current Supply
     </div>
     <div className="flex-column center-all">
-      <strong className="is-size-5 has-text-success">{fm(Math.round(props.mjMetaDoc.monthly.txVolume))} mj</strong>
+      <strong className="is-size-5 has-text-success">{fm(props.mjMetaDoc.monthly.txVolume / (1000 * 1000))}M mj</strong>
       Tx Volume (monthly)
     </div>
     <div className="flex-column center-all">
