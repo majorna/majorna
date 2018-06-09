@@ -21,7 +21,7 @@ export default props =>
 
     <strong className="m-t-m">No Value</strong>
     <div>
-      Majorna has no inherent value and is not sold.
+      Majorna has no inherent value, is not a legal tender, and is not sold.
       Majorna is a young project and has no exchange.
       Sending and receiving Majorna does not result in exchange of any value.
       Technically speaking, at this stage of the project, having Majorna is no different than having Monopoly money.
@@ -32,7 +32,7 @@ export default props =>
       All donations goes towards Majorna development and are non-refundable.
       Donations are private (hence a tax-related donation receipt can not be issued) and have no rights or privileges associated with them.
       Majorna is an active project and it may or may not be successful.
-      Majorna currently has no inherent value and is not a legal tender, and it may or may not have any value in the future depending on public acceptance.
+      Majorna currently has no inherent value, and it may or may not have any value in the future depending on public acceptance.
       Via using Majorna or donating to the project, you accept this.
       However we believe that it has a great chance of becoming a publicly accepted currency and a payment platform over time.
       Project is fully open source and will contribute to maturity of the cryptocurrency ecosystem regardless of the outcome.
@@ -40,7 +40,7 @@ export default props =>
 
     <strong className="m-t-m">No Liability or Claim</strong>
     <div>
-      All Majorna transactions including sending, receiving, mining, and donations are final and non-refundable.
+      All Majorna transactions including sending, receiving, and mining are final.
       As the account holder, you are responsible for all your transactions.
       You are also responsible for keeping your connected accounts (i.e. Google) secure, as Majorna assumes no liability.
       Compromise of your account credentials may result in loss of your majorna, therefore it is highly recommended for you to enable 2-step verification in your connected accounts.
@@ -55,7 +55,7 @@ export default props =>
       Majorna is a young project and comprise of the entire network is a possibility.
       If Majorna fails as a project and stops operating before peer-to-peer network is in production, Majorna in your account may forever be lost.
       Majorna project and its developers do not give you any guarantees of any kind, or accept any liability of any kind.
-      Majorna has the right to terminate your account at any time during the development period (see below), with or without cause, with or without notice, with or without refunding any Majorna in it (ability to move Majorna from account to a private key is a work-in-progress).
+      Majorna has the right to terminate your account at any time during the development period (see below), with or without cause, with or without notice, with or without destroying any Majorna in it (ability to move Majorna from account to a private key is a work-in-progress).
       Accounts terminated due to malicious activity cannot be reopened.
     </div>
 
