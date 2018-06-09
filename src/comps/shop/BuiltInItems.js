@@ -28,34 +28,34 @@ export default [
     coinbaseUrlFn: server.shop.getCoinbaseCommerceChargeUrl,
     widget: ExchangeRatesWidget
   },
-  {
-    id: 'bitcoin',
-    name: 'Bitcoin',
-    unavailable: true,
-    description: 'Get Bitcoin using your Majorna balance.',
-    fontIcon: 'fab fa-bitcoin'
-  },
-  {
-    id: 'ethereum',
-    name: 'Ethereum',
-    unavailable: true,
-    description: 'Get Ethereum using your Majorna balance.',
-    fontIcon: 'fab fa-ethereum'
-  },
-  {
-    id: 'usdollar',
-    name: 'US Dollar',
-    unavailable: true,
-    description: 'Get US Dollar using your Majorna balance.',
-    fontIcon: 'fas fa-dollar-sign'
-  },
-  {
-    id: 'euro',
-    name: 'Euro',
-    unavailable: true,
-    description: 'Get Euro using your Majorna balance.',
-    fontIcon: 'fas fa-euro-sign'
-  },
+  // {
+  //   id: 'bitcoin',
+  //   name: 'Bitcoin',
+  //   unavailable: true,
+  //   description: 'Get Bitcoin using your Majorna balance.',
+  //   fontIcon: 'fab fa-bitcoin'
+  // },
+  // {
+  //   id: 'ethereum',
+  //   name: 'Ethereum',
+  //   unavailable: true,
+  //   description: 'Get Ethereum using your Majorna balance.',
+  //   fontIcon: 'fab fa-ethereum'
+  // },
+  // {
+  //   id: 'usdollar',
+  //   name: 'US Dollar',
+  //   unavailable: true,
+  //   description: 'Get US Dollar using your Majorna balance.',
+  //   fontIcon: 'fas fa-dollar-sign'
+  // },
+  // {
+  //   id: 'euro',
+  //   name: 'Euro',
+  //   unavailable: true,
+  //   description: 'Get Euro using your Majorna balance.',
+  //   fontIcon: 'fas fa-euro-sign'
+  // },
   {
     id: 'reddit',
     name: 'Send to Reddit',
