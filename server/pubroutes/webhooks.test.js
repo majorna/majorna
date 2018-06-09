@@ -68,15 +68,15 @@ suite('pubroute: webhooks', () => {
     const sig = hmac.digest('hex')
 
     // record initial stats
-    const initMeta = await db.getMjMeta()
+    // const initMeta = await db.getMjMeta()
+    // const amountMj = 10.12 / initMeta.val
     const receiverInitBalance = (await db.getUser('1')).balance
-    const amountMj = 10.12 / initMeta.val
 
     const res = await testData.users.anonRequest.post('/webhooks/coinbase-commerce', payload, {headers: {'X-CC-Webhook-Signature': sig}})
     assert(res.status === 200)
 
     // validate that user received mj
     const receiver = await db.getUser('1')
-    assert(receiver.balance === receiverInitBalance + amountMj)
+    assert(receiver.balance === receiverInitBalance)
   })
 })
