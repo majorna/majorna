@@ -12,8 +12,8 @@ export default [
       Donations are non-refundable.
       They are appreciated but never asked.
       All donations are private (hence a tax-related donation receipt can not be issued) and have no rights or privileges associated with them.
+      You will <strong>not</strong> get Majorna for donations, but you can always mine it.
       Thank you for supporting us on our journey to become a publicly accepted payment platform and a cryptocurrency.
-      You can report problems about donations to: <a href={'mailto:support@' + config.hosting.domain} target="_blank" rel="noopener noreferrer">support@{config.hosting.domain}</a>
     </React.Fragment>,
     imageUrl: mj,
     // stripeScriptUrl: 'https://js.stripe.com/v3/',
