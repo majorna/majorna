@@ -12,7 +12,7 @@ export default props => {
   return (
     <React.Fragment>
       <div className="mj-box flex-column p-s">
-        <div className="is-size-5 has-text-centered"><span className="faded">Market Cap:</span> mj{fm(props.mjMetaDoc.marketCap)}</div>
+        <div className="is-size-5 has-text-centered"><span className="faded">Current Supply:</span> mj{fm(props.mjMetaDoc.marketCap)}</div>
         <ResponsiveContainer width="100%" height={300}>
           <AreaChart data={getChartData(props.mjMetaDoc)}>
             <XAxis dataKey="t"/>
@@ -21,7 +21,7 @@ export default props => {
             <Area type='monotone' dataKey='mj' unit="$" stroke='DarkOrange' fill='Wheat'/>
           </AreaChart>
         </ResponsiveContainer>
-        <small><i>(placeholder graph until exchange is implemented, currently mj has no inherent value)</i></small>
+        <small><i>(placeholder value graph until exchange is implemented, currently mj has no inherent value)</i></small>
       </div>
 
       <div className="mj-box flex-column w-s">

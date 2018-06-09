@@ -12,7 +12,7 @@ export const fm = new Intl.NumberFormat().format
 export const fn = new Intl.NumberFormat().format
 
 /**
- * Generate static chart data for a single value (useful for pre-trading price display)
+ * Generate static chart data for a single value (useful as a placeholder)
  * @param meta - Meta document.
  */
 export function getChartData(meta) {
