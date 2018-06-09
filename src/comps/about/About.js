@@ -31,7 +31,7 @@ export default props =>
     <strong className="m-t-m">Majorna Supply</strong>
     <div>
       Max Majorna supply allocated for public distribution is denoted on the front page (this is subject to change).
-      Current Majorna supply denotes the currently distributed amount; through mining or donations.
+      Current Majorna supply denotes the currently distributed amount.
     </div>
 
     <div className="content m-t-m">
