@@ -4,7 +4,7 @@ export default props =>
   <div className="mj-box flex-column">
     <div className="is-size-5 has-text-centered">Majorna Terms and Conditions</div>
     <div className="m-t-m">
-      Last updated: Jun 8, 2018.
+      Last updated: Jun 9, 2018.
     </div>
 
     <div className="m-t-m">
@@ -17,6 +17,14 @@ export default props =>
       All the Majorna on all the accounts along with all the transactions are stored and is visible at the <a href="https://github.com/majorna/blockchain" target="_blank" rel="noopener noreferrer">blockchain</a> repository.
       Via opening an account on Majorna, you become a counterpart to this agreement.
       You have the right to send, receive, and mine Majorna on your account.
+    </div>
+
+    <strong className="m-t-m">No Value</strong>
+    <div>
+      Majorna has no inherent value and is not sold.
+      Majorna is a young project and has no exchange.
+      Sending and receiving Majorna does not result in exchange of any value.
+      Technically speaking, at this stage of the project, having Majorna is no different than having Monopoly money.
     </div>
 
     <strong className="m-t-m">Donations</strong>
@@ -65,6 +73,7 @@ export default props =>
       Majorna only keeps minimal information required to associate your account to you.
       All the information that Majorna receives is listed by the authentication provider during first ever login.
       Majorna does not have access to your credentials.
+      Location information displayed on the miner map is anonymous.
     </div>
 
     <strong className="m-t-m">Updates to the Terms and Conditions</strong>
