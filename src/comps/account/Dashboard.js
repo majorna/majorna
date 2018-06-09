@@ -18,7 +18,7 @@ export default props => {
             <XAxis dataKey="t"/>
             <YAxis orientation="right"/>
             <Tooltip/>
-            <Area type='monotone' dataKey='mj' unit="$" stroke='DarkOrange' fill='Wheat'/>
+            <Area type='monotone' dataKey='mj' stroke='DarkOrange' fill='Wheat'/>
           </AreaChart>
         </ResponsiveContainer>
         <small><i>(placeholder value graph until exchange is implemented, currently mj has no inherent value)</i></small>
