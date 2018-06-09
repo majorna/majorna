@@ -108,7 +108,7 @@ export default class extends Component {
       </div>
     } else {
       return <div ref={ref => this.container = ref} className="mj-box flex-column center-all box-center w-m">
-        <div className="is-size-5 has-text-centered">Get - {this.item.name}</div>
+        <div className="is-size-5 has-text-centered">{this.item.name}</div>
 
         {this.item.fontIcon && <i className={this.item.fontIcon + ' m-t-m'} style={{width: 150, height: 150}}/>}
 

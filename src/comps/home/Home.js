@@ -62,8 +62,8 @@ export default props =>
       <i className="flex-order-1 m-l-m fas fa-credit-card" style={{width: 110, height: 120}}/>
       <div className="flex-column flex-grow-1">
         <div className="is-size-5">Open Development Model</div>
-        Majorna team intents to fund development via providing services around the currency (i.e. payment services).
-        The team is also in charge of continuous monitoring and maintenance of the system.
+        All activity by Majorna team is publicly shared on Reddit and GitHub.
+        You can contribute to the project via discussions, suggestions, bug reports, or coding.
       </div>
     </div>
 

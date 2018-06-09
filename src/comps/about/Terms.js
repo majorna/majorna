@@ -30,10 +30,9 @@ export default props =>
     <div>
       All donations goes towards Majorna development and are non-refundable.
       Donations are private (hence a tax-related donation receipt can not be issued) and have no rights or privileges associated with them.
-      Majorna is an active project and it may or may not be successful.
-      Majorna has no inherent value, and it may or may not have any value in the future depending on public acceptance.
+      Majorna is an active project and it may or may not ever implement an exchange.
+      Majorna has no inherent value, and it may or may not have any value in the future.
       Via using Majorna or donating to the project, you accept this.
-      However we believe that it has a great chance of becoming a publicly accepted currency and a payment platform over time.
       Project is fully open source and will contribute to maturity of the cryptocurrency ecosystem regardless of the outcome.
     </div>
 
@@ -78,7 +77,7 @@ export default props =>
     <strong className="m-t-m">Updates to the Terms and Conditions</strong>
     <div>
       Terms and conditions are updated occasionally, and you can find the last updated time at the beginning of this agreement.
-      You are required to review the updates occasionally, as continuing to use Majorna means agreeing to the updated terms and conditions.
+      Continuing to use Majorna means agreeing to the updated terms and conditions.
     </div>
 
     <div className="flex-row center-h m-t-l">

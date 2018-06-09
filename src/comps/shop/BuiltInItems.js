@@ -7,7 +7,7 @@ import config from '../../data/config'
 export default [
   {
     id: 'majorna',
-    name: 'Majorna',
+    name: 'Donate',
     description: () => <React.Fragment>
       Contribute to Majorna development and get matching amount of Majorna within ~15 minutes that you can use freely on mainnet.
       You can donate with Bitcoin, Ethereum, or other cryptos.
