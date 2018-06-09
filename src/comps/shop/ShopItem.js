@@ -70,7 +70,9 @@ export default class extends Component {
       this.container.appendChild(stripeCheckoutScript)
     }
 
-    if (this.item.coinbaseUrlFn) {
+    if (this.item.coinbaseUrl) {
+      this.setState({coinbaseUrl: this.item.coinbaseUrl})
+    } else if (this.item.coinbaseUrlFn) {
       const urlRes = await this.item.coinbaseUrlFn()
       const urlData = await urlRes.json()
       this.setState({coinbaseUrl: urlData.chargeUrl})

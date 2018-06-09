@@ -9,10 +9,10 @@ export default [
     name: 'Donate',
     description: () => <React.Fragment>
       Contribute to Majorna development using Bitcoin, Ethereum, or other cryptos.
-      Donations are non-refundable.
+      Donations are anonymous and non-refundable.
       They are appreciated but never asked.
       All donations are private (hence a tax-related donation receipt can not be issued) and have no rights or privileges associated with them.
-      You will <strong>not</strong> get Majorna for donations, but you can always mine it.
+      <strong> You will NOT get Majorna for donations</strong>, but you can always mine it.
       Thank you for supporting us on our journey to become a publicly accepted payment platform and a cryptocurrency.
     </React.Fragment>,
     imageUrl: mj,
@@ -26,7 +26,8 @@ export default [
       amount: 0
     },
     // widget: ExchangeRatesWidget,
-    coinbaseUrlFn: server.shop.getCoinbaseCommerceChargeUrl
+    // coinbaseUrlFn: server.shop.getCoinbaseCommerceChargeUrl
+    coinbaseUrl: 'https://commerce.coinbase.com/checkout/3e67bb92-c9e8-42c3-a832-48f8bfc67e84'
   },
   // {
   //   id: 'bitcoin',
