@@ -9,8 +9,10 @@ export default [
     name: 'Donate',
     description: () => <React.Fragment>
       Contribute to Majorna development using Bitcoin, Ethereum, or other cryptos.
-      Remember that Majorna is a new project and mj has no value so donate only to support the project.
       Donations are non-refundable.
+      They are appreciated but never asked.
+      All donations are private (hence a tax-related donation receipt can not be issued) and have no rights or privileges associated with them.
+      Thank you for supporting us on our journey to become a publicly accepted payment platform and a cryptocurrency.
       You can report problems about donations to: <a href={'mailto:support@' + config.hosting.domain} target="_blank" rel="noopener noreferrer">support@{config.hosting.domain}</a>
     </React.Fragment>,
     imageUrl: mj,
