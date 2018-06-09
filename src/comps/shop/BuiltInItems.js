@@ -1,6 +1,5 @@
 import React from 'react'
 import mj from '../../res/mj.png'
-import ExchangeRatesWidget from '../shared/ExchangeRatesWidget'
 import server from '../../data/server'
 import config from '../../data/config'
 
@@ -9,10 +8,9 @@ export default [
     id: 'majorna',
     name: 'Donate',
     description: () => <React.Fragment>
-      Contribute to Majorna development and get matching amount of Majorna within ~15 minutes that you can use freely on mainnet.
-      You can donate with Bitcoin, Ethereum, or other cryptos.
-      Donations are non-refundable.
+      Contribute to Majorna development using Bitcoin, Ethereum, or other cryptos.
       Remember that Majorna is a new project and mj has no value so donate only to support the project.
+      Donations are non-refundable.
       You can report problems about donations to: <a href={'mailto:support@' + config.hosting.domain} target="_blank" rel="noopener noreferrer">support@{config.hosting.domain}</a>
     </React.Fragment>,
     imageUrl: mj,
@@ -25,8 +23,8 @@ export default [
       allowRememberMe: false,
       amount: 0
     },
-    coinbaseUrlFn: server.shop.getCoinbaseCommerceChargeUrl,
-    widget: ExchangeRatesWidget
+    // widget: ExchangeRatesWidget,
+    coinbaseUrlFn: server.shop.getCoinbaseCommerceChargeUrl
   },
   // {
   //   id: 'bitcoin',
