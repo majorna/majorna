@@ -13,8 +13,8 @@ export default class extends Component {
   state = {
     receiver: '',
     amount: 0,
-    isAnon: false,
-    receiverName: null,
+    showSenderName: false,
+    receiverNameValid: null,
     error: null,
     step: 'start',
     sending: false
@@ -24,18 +24,18 @@ export default class extends Component {
     const receiverId = e.target.value
     this.setState({receiver: receiverId})
 
-    // get receiver name if exists
-    let receiverName
+    // check if the receiver is valid
+    let receiverNameValid
     if (receiverId) {
       try {
         const res = await server.users.get(receiverId)
         if (res.status === 200) {
           const user = await res.json()
-          receiverName = user.name
+          receiverNameValid = user.name
         }
       } catch (e) { console.error(e) }
     }
-    this.setState({receiverName})
+    this.setState({receiverNameValid})
   }
 
   handleAmount = e => {
@@ -50,7 +50,7 @@ export default class extends Component {
     this.setState({amount: amount && parseInt(amount, 10)})
   }
 
-  handleIsAnon = e => this.setState({isAnon: e.target.value})
+  handleShowSenderName = e => this.setState({showSenderName: e.target.checked})
 
   handleCancel = () => this.props.history.goBack()
 
@@ -73,7 +73,7 @@ export default class extends Component {
     let error
     this.setState({error, sending: true})
     try {
-      const res = await server.txs.make(this.state.receiver, this.state.amount, this.state.isAnon)
+      const res = await server.txs.make(this.state.receiver, this.state.amount, this.state.showSenderName)
       if (res.status === 201) {
         this.setState({error, sending: false, step: 'complete'})
         return
@@ -128,13 +128,13 @@ export default class extends Component {
 
         <strong>Address</strong>
         <input className="input" type="text" value={this.state.receiver} onChange={this.handleReceiver}/>
-        {this.state.receiverName && <strong className="has-text-info">Name: {this.state.receiverName}</strong>}
+        {this.state.receiverNameValid && <strong className="has-text-info">Valid Receiver</strong>}
 
         <strong className="m-t-m">Amount</strong>
         <input className="input" type="number" value={this.state.amount} onChange={this.handleAmount}/>
 
         <label className="checkbox m-t-m">
-          <input type="checkbox" value={this.state.isAnon} onChange={this.handleIsAnon}/> Hide my name from receiver <small>(your account address will still show)</small>
+          <input type="checkbox" checked={this.state.showSenderName} onChange={this.handleShowSenderName}/> Show my name to receiver
         </label>
 
         {this.state.error && <strong className="has-text-danger has-text-centered m-t-l">{this.state.error}</strong>}

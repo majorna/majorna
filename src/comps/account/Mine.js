@@ -102,7 +102,7 @@ export default class extends Component {
       <div><strong>Collected Rewards:</strong> mj{fm(this.state.collectedReward)}</div>
 
       <div className="m-t-m" style={{maxWidth: '30rem'}}>
-        <strong>Miner Map:</strong>
+        <strong>Node Map:</strong>
         <ResponsiveContainer width="100%" aspect={2}>
           <ScatterChart style={{backgroundImage: `url(${worldMap})`, backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%', backgroundPosition: '1rem center'}}>
             <XAxis dataKey={'lon'} type="number" domain={[-180, 180]} hide/>

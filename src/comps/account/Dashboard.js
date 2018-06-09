@@ -12,10 +12,7 @@ export default props => {
   return (
     <React.Fragment>
       <div className="mj-box flex-column p-s">
-        <div className="is-size-5 has-text-centered"><span className="faded">Majorna Price:</span> ${props.mjMetaDoc.val}*</div>
-        <div className="is-size-5 has-text-centered">
-          <span className="faded">Market Cap:</span> ${fm(props.mjMetaDoc.marketCap * props.mjMetaDoc.val)} <small>(mj{fm(props.mjMetaDoc.marketCap)})</small>
-        </div>
+        <div className="is-size-5 has-text-centered"><span className="faded">Current Supply:</span> mj{fm(props.mjMetaDoc.marketCap)}</div>
         <ResponsiveContainer width="100%" height={300}>
           <AreaChart data={getChartData(props.mjMetaDoc)}>
             <XAxis dataKey="t"/>
@@ -24,11 +21,11 @@ export default props => {
             <Area type='monotone' dataKey='mj' unit="$" stroke='DarkOrange' fill='Wheat'/>
           </AreaChart>
         </ResponsiveContainer>
-        <small><i>* (fixed trading price until exchange opens)</i></small>
+        <small><i>(placeholder value graph until exchange is implemented, currently mj has no inherent value)</i></small>
       </div>
 
       <div className="mj-box flex-column w-s">
-        <div><strong>Balance</strong>: mj<strong>{fm(props.userDoc.balance)}</strong> (${fm(props.userDoc.balance * props.mjMetaDoc.val)})</div>
+        <div><strong>Balance</strong>: mj{fm(props.userDoc.balance)}</div>
         <div><strong>Address</strong>: <small>{props.user.uid}</small></div>
         <div><Link to="/receive"><img width="72" src={props.acctQr} alt={props.user.uid}/></Link></div>
       </div>
@@ -40,7 +37,7 @@ export default props => {
 
       <div className="mj-box w-s">
         {/*<Link to="/shop/majorna" className="button is-primary"><i className="fas fa-credit-card m-r-s"/>Get Majorna</Link>*/}
-        <Link to="/shop/majorna" className="button is-primary"><i className="fas fa-credit-card m-r-s"/>Donate & Get Majorna</Link>
+        <Link to="/shop/majorna" className="button is-primary"><i className="fas fa-credit-card m-r-s"/>Donate</Link>
         <Link to="/mine" className="button m-l-m"><i className="fas fa-th m-r-s"/>Mine</Link>
       </div>
 

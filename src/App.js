@@ -26,7 +26,8 @@ import Roadmap from './comps/about/Roadmap'
 import PrivateRoute from './comps/shared/PrivateRoute'
 import Modal from './comps/shared/Modal'
 import Terms from './comps/about/Terms'
-import Tx from './comps/account/Tx'
+import TxDetails from './comps/account/TxDetails'
+import testRunner from './blockchain/testRunner'
 
 export default withRouter(class extends Component {
   constructor(props) {
@@ -107,6 +108,11 @@ export default withRouter(class extends Component {
         console.log('refreshed firebase auth ID token')
       }
     }, 15 * 60 * 1000)
+
+    // run tests when in dev mode
+    if (config.app.isDev) {
+      testRunner()
+    }
   }
 
   logout = async () => {
@@ -139,7 +145,7 @@ export default withRouter(class extends Component {
         <PrivateRoute path='/send' render={routeProps => <Send {...routeProps} userDoc={this.state.userDoc}/>} />
         <PrivateRoute path='/receive' render={routeProps => <Receive {...routeProps} user={this.state.user} acctQr={this.state.acctQr}/>} />
         <PrivateRoute path='/mine' render={routeProps => <Mine {...routeProps} db={this.db}/>} />
-        <PrivateRoute path='/tx/:id' render={routeProps => <Tx {...routeProps} user={this.state.user} userDoc={this.state.userDoc}/>} />
+        <PrivateRoute path='/tx/:id' render={routeProps => <TxDetails {...routeProps} user={this.state.user} userDoc={this.state.userDoc}/>} />
         <Redirect from='*' to='/'/>
       </Switch>
 

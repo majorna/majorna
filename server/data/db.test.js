@@ -147,7 +147,6 @@ suite('db', () => {
     const to = '2'
     const senderUser = await db.getUser(from)
     const receiverUser = await db.getUser(to)
-    const fromName = senderUser.name
     const toName = receiverUser.name
     const senderInitBalance = senderUser.balance
     const receiverInitBalance = receiverUser.balance
@@ -177,15 +176,17 @@ suite('db', () => {
     assert(receiver.balance === receiverInitBalance + amount)
     const receiverTx = receiver.txs[0]
     assert(receiverTx.from === from)
-    assert(receiverTx.fromName === fromName)
+    assert(!receiverTx.fromName)
     assert(receiverTx.time.getTime() === newTx.time.getTime())
     assert(receiverTx.amount === amount)
   })
 
-  test('makeTx: anon', async () => {
+  test('makeTx: showName', async () => {
     const from = '1'
     const to = '2'
     const amount = 2
+    const senderUser = await db.getUser(from)
+    const fromName = senderUser.name
     const tx = await db.makeTx(from, to, amount, true)
 
     assert(!tx.from.name)
@@ -193,7 +194,7 @@ suite('db', () => {
     // verify that sender name is not recorded in txs list of receiver user's doc
     const receiver = await db.getUser(to)
     const receiverTx = receiver.txs[0]
-    assert(!receiverTx.fromName)
+    assert(receiverTx.fromName === fromName)
   })
 
   test('makeTx: invalid', async () => {

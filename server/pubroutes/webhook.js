@@ -21,7 +21,7 @@ exports.coinbaseCommerce = route.post('/webhooks/coinbase-commerce', async ctx =
 
   // webhook payload is legit so log the details
   const data = ctx.request.body
-  // todo: only log 'charge:confirmed' since 'charge:created' will include test calls (or create test CB account)
+  // todo: create test CB account so we won't see test calls in production logs
   console.log('Incoming valid Coinbase Commerce webhook:', JSON.stringify(data, null, 2))
 
   if (data.event.type !== 'charge:confirmed') {

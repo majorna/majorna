@@ -13,7 +13,7 @@ exports.send = route.post('/txs', async ctx => {
   const from = utils.stripPrefix(ctx.state.user.uid)
   const to = utils.stripPrefix(txBody.to)
 
-  await db.makeTx(from, to, txBody.amount, txBody.isAnon)
+  await db.makeTx(from, to, txBody.amount, txBody.showSenderName)
 
   ctx.status = 201
 })

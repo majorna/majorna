@@ -147,6 +147,10 @@ body {
     color: grey;
 }
 
+.wrap-text {
+    word-wrap: break-word;
+}
+
 /* colors */
 .bg-white {
     background-color: white;

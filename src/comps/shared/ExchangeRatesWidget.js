@@ -19,13 +19,12 @@ export default class extends Component {
 
   render = () =>
     <div className="flex-column">
-      <strong>Exchange Rates</strong>
       {!this.state.btcMj ?
         <div className="mj-box center-all spinner"/> :
         <div className="mj-box">
-          1 USD = {fm(Math.round(1 / this.props.mjMetaDoc.val))} mj <br/>
-          1 Bitcoin = {this.state.btcMj} mj <br/>
-          1 Ethereum = {this.state.ethMj} mj
+          {/*1 USD = {fm(Math.round(1 / this.props.mjMetaDoc.val))} mj <br/>*/}
+          1 Bitcoin ~ {this.state.btcMj} mj <br/>
+          1 Ethereum ~ {this.state.ethMj} mj
         </div>
       }
     </div>

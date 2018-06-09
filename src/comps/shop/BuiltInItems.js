@@ -12,7 +12,8 @@ export default [
       Contribute to Majorna development and get matching amount of Majorna within ~15 minutes that you can use freely on mainnet.
       You can donate with Bitcoin, Ethereum, or other cryptos.
       Donations are non-refundable.
-      You can report problems about donations to <a href={'mailto:support@' + config.hosting.domain} target="_blank" rel="noopener noreferrer">support@{config.hosting.domain}</a>.
+      Remember that Majorna is a new project and mj has no value so donate only to support the project.
+      You can report problems about donations to: <a href={'mailto:support@' + config.hosting.domain} target="_blank" rel="noopener noreferrer">support@{config.hosting.domain}</a>
     </React.Fragment>,
     imageUrl: mj,
     // stripeScriptUrl: 'https://js.stripe.com/v3/',
@@ -27,34 +28,34 @@ export default [
     coinbaseUrlFn: server.shop.getCoinbaseCommerceChargeUrl,
     widget: ExchangeRatesWidget
   },
-  {
-    id: 'bitcoin',
-    name: 'Bitcoin',
-    unavailable: true,
-    description: 'Get Bitcoin using your Majorna balance.',
-    fontIcon: 'fab fa-bitcoin'
-  },
-  {
-    id: 'ethereum',
-    name: 'Ethereum',
-    unavailable: true,
-    description: 'Get Ethereum using your Majorna balance.',
-    fontIcon: 'fab fa-ethereum'
-  },
-  {
-    id: 'usdollar',
-    name: 'US Dollar',
-    unavailable: true,
-    description: 'Get US Dollar using your Majorna balance.',
-    fontIcon: 'fas fa-dollar-sign'
-  },
-  {
-    id: 'euro',
-    name: 'Euro',
-    unavailable: true,
-    description: 'Get Euro using your Majorna balance.',
-    fontIcon: 'fas fa-euro-sign'
-  },
+  // {
+  //   id: 'bitcoin',
+  //   name: 'Bitcoin',
+  //   unavailable: true,
+  //   description: 'Get Bitcoin using your Majorna balance.',
+  //   fontIcon: 'fab fa-bitcoin'
+  // },
+  // {
+  //   id: 'ethereum',
+  //   name: 'Ethereum',
+  //   unavailable: true,
+  //   description: 'Get Ethereum using your Majorna balance.',
+  //   fontIcon: 'fab fa-ethereum'
+  // },
+  // {
+  //   id: 'usdollar',
+  //   name: 'US Dollar',
+  //   unavailable: true,
+  //   description: 'Get US Dollar using your Majorna balance.',
+  //   fontIcon: 'fas fa-dollar-sign'
+  // },
+  // {
+  //   id: 'euro',
+  //   name: 'Euro',
+  //   unavailable: true,
+  //   description: 'Get Euro using your Majorna balance.',
+  //   fontIcon: 'fas fa-euro-sign'
+  // },
   {
     id: 'reddit',
     name: 'Send to Reddit',

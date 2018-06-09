@@ -9,7 +9,7 @@ const firebaseConfig = require('./firebase')
 
 let koaApp
 
-exports.getGitHubTestFile = () => 'testfiles/testfile-' + new Date().getTime()
+exports.getGitHubTestFilePath = () => 'testfiles/testfile-' + new Date().getTime()
 
 /**
  * Global test setup and teardown.

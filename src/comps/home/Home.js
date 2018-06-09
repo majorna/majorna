@@ -27,7 +27,8 @@ export default props =>
       <div className="flex-column flex-grow-1 m-l-m">
         <div className="is-size-5">Simple Cryptocurrency</div>
         Easy to use digital currency in your browser.
-        Log in with your Google account to start sending, receiving, and mining Majorna.
+        It currently has no exchange or value but you can still send, receive, and mine it.
+        Log in with your Google account to start using Majorna.
         <Link to='/login'>+mj500 balance for new accounts.</Link>
       </div>
     </div>
@@ -62,7 +63,7 @@ export default props =>
       <div className="flex-column flex-grow-1">
         <div className="is-size-5">Open Development Model</div>
         Majorna team intents to fund development via providing services around the currency (i.e. payment services).
-        The team is also responsible for continuous monitoring and overall safety of the system.
+        The team is also in charge of continuous monitoring and maintenance of the system.
       </div>
     </div>
 

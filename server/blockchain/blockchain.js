@@ -17,17 +17,18 @@ exports.getBlockPath = blockHeader => `${blockHeader.time.getUTCFullYear()}/${bl
  * @param customOldBlockPath - Only used for testing. Useful for creating same block in git repo without overwriting the same one.
  */
 exports.insertBlockSinceLastOne = async (now, blockInfo, customOldBlockPath) => {
-  const txs = await db.getTxsByTimeRange(blockInfo.header.time, now)
-  // don't allow empty block, except for initial block (so users can start mining right away)
+  // don't allow non-mined blocks, except for initial block (so users can start mining right away)
   if (!blockInfo.header.nonce && blockInfo.header.no > 2) {
     console.log(`previous block is not mined so skipping block creation`)
     return
   }
-  const newBlock = await db.insertBlock(txs, now)
-  const oldBlock = await db.getBlock(newBlock.header.no - 1)
+  // insert old block to storage first, in case it fails, we will skip new block creation and try again
+  const oldBlock = await db.getBlock(blockInfo.header.no)
   let oldBlockPath = customOldBlockPath || exports.getBlockPath(oldBlock.header)
   config.app.isDev && (oldBlockPath += `-${new Date().getTime()}`)
   await github.createFile(block.toJson(oldBlock), oldBlockPath)
+  const txs = await db.getTxsByTimeRange(blockInfo.header.time, now)
+  const newBlock = await db.insertBlock(txs, now)
   console.log(`inserted new block: no ${newBlock.header.no}, time: ${newBlock.header.time}, previous-nonce: ${oldBlock.header.nonce}`)
 }
 

@@ -23,7 +23,7 @@ export default props => {
 
     <div className="m-t-m"><strong>In Block:</strong></div>
     <small>(Transaction data might take up to a day to be indexed by GitHub)</small>
-    <a href={githubLink} target="_blank" rel="noopener noreferrer">{githubLink}</a>
+    <a className="wrap-text" href={githubLink} target="_blank" rel="noopener noreferrer">{githubLink}</a>
 
     <div className="flex-row center-h m-t-m">
       <button className="button m-t-l" onClick={props.history.goBack}>Back</button>

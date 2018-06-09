@@ -17,7 +17,7 @@ export default {
     get: id => get('/users/' + id)
   },
   txs: {
-    make: (to, amount, isAnon) => postJson('/txs', {to, amount, isAnon})
+    make: (to, amount, showSenderName) => postJson('/txs', {to, amount, showSenderName})
   },
   blocks: {
     create: nonce => postJson('/blocks', {nonce})
