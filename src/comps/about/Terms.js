@@ -21,10 +21,9 @@ export default props =>
 
     <strong className="m-t-m">No Value</strong>
     <div>
-      Majorna has no inherent value, is not a legal tender, and is not sold.
+      Majorna currently has no inherent value, is not a legal tender, and is not sold.
       Majorna is a young project and has no exchange.
       Sending and receiving Majorna does not result in exchange of any value.
-      Technically speaking, at this stage of the project, having Majorna is no different than having Monopoly money.
     </div>
 
     <strong className="m-t-m">Donations</strong>
