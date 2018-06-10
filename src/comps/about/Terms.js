@@ -41,7 +41,7 @@ export default props =>
       All Majorna transactions including sending, receiving, and mining are final.
       As the account holder, you are responsible for all your transactions.
       You are also responsible for keeping your connected accounts (i.e. Google) secure, as Majorna assumes no liability.
-      Compromise of your account credentials may result in loss of your majorna, therefore it is highly recommended for you to enable 2-step verification in your connected accounts.
+      Compromise of your account credentials may result in loss of your Majorna, therefore it is highly recommended for you to enable 2-step verification in your connected accounts.
       If you choose to move your Majorna to a personal private key, you are responsible for its safety and security.
       Majorna in your account does not give you any rights or claim of any kind, in Majorna project, or from Majorna developers.
       Majorna project assumes no liability of any kind on your account or Majorna in it.

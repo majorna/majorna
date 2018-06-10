@@ -1,7 +1,5 @@
 import React from 'react'
 import mj from '../../res/mj.png'
-import server from '../../data/server'
-import config from '../../data/config'
 
 export default [
   {
