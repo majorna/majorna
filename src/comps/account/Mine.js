@@ -132,6 +132,8 @@ export default class extends Component {
           <div><strong>Previous Block Hash:</strong> <small>{this.state.blockInfo.header.prevHash}</small></div>
           <div><strong>Merkle Root:</strong> <small>{this.state.blockInfo.header.merkleRoot}</small></div>
 
+          <div className="m-t-s"><strong>Disclaimer:</strong> Majorna currently has no value, and may or may not have any value in the future. Don't get too carried away with mining!</div>
+
           {/*<strong className="m-t-m">Peers</strong>*/}
           {/*<div><strong>Online Peers:</strong> ?</div>*/}
           {/*<div><strong>Global Hash Rate:</strong> ?</div>*/}
