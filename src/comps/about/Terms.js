@@ -4,7 +4,7 @@ export default props =>
   <div className="mj-box flex-column">
     <div className="is-size-5 has-text-centered">Majorna Terms and Conditions</div>
     <div className="m-t-m">
-      Last updated: Jun 9, 2018.
+      Last updated: Jun 10, 2018.
     </div>
 
     <div className="m-t-m">
@@ -21,7 +21,7 @@ export default props =>
 
     <strong className="m-t-m">No Value</strong>
     <div>
-      Majorna has no inherent value, is not a legal tender, and is not sold.
+      Majorna has no value, is not a legal tender, and is not sold.
       Majorna is a young project and has no exchange.
       Sending and receiving Majorna does not result in exchange of any value.
     </div>
@@ -31,7 +31,7 @@ export default props =>
       All donations goes towards Majorna development and are non-refundable.
       Donations are private (hence a tax-related donation receipt can not be issued) and have no rights or privileges associated with them.
       Majorna is an active project and it may or may not ever implement an exchange.
-      Majorna has no inherent value, and it may or may not have any value in the future.
+      Majorna has no value, and it may or may not have any value in the future.
       Via using Majorna or donating to the project, you accept this.
       Project is fully open source and will contribute to maturity of the cryptocurrency ecosystem regardless of the outcome.
     </div>
@@ -49,7 +49,7 @@ export default props =>
 
     <strong className="m-t-m">No Guarantees</strong>
     <div>
-      Safety of your account, account data, and majorna in it can not be guaranteed.
+      Safety of your account, account data, and Majorna in it can not be guaranteed.
       Majorna is a young project and comprise of the entire network is a possibility.
       If Majorna fails as a project and stops operating before peer-to-peer network is in production, Majorna in your account may forever be lost.
       Majorna project and its developers do not give you any guarantees of any kind, or accept any liability of any kind.
