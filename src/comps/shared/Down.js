@@ -21,7 +21,7 @@ export default () =>
 
     <div className="m-t-m">
       <strong>All contributions/donations to this point are eligible for refund. </strong>
-      To request a refund, reach out to <a href={'mailto:support@' + config.hosting.domain} target="_blank" rel="noopener noreferrer">support@{config.hosting.domain}</a> (cc to getmajorna@gmail.com for extra security) within 30 days (till July 14) using the email associated with your Google account, and provide a link to your Bitcoin transaction as a security measure.
+      To request a refund, reach out to <a href={'mailto:support@' + config.hosting.domain} target="_blank" rel="noopener noreferrer">support@{config.hosting.domain}</a> (cc to getmajorna@gmail.com for extra security) within 30 days (till July 14) using the email associated with your Google account, and provide a link to your Bitcoin transaction as a security measure, as well as the Bitcoin address that you would like your refund to be sent.
       Any non-refunded donation will be put towards future development.
     </div>
 
