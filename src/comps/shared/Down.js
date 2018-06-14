@@ -20,8 +20,8 @@ export default () =>
     </div>
 
     <div className="m-t-m">
-      <strong>All contributions/donations will be refunded. </strong>
-      Reach out to <a href={'mailto:support@' + config.hosting.domain} target="_blank" rel="noopener noreferrer">support@{config.hosting.domain}</a> within 30 days using the email associated with your Google account, and provide a link to your transaction as a security measure.
+      <strong>All contributions/donations to this point are eligible for refund. </strong>
+      To request a refund, reach out to <a href={'mailto:support@' + config.hosting.domain} target="_blank" rel="noopener noreferrer">support@{config.hosting.domain}</a> (cc to getmajorna@gmail.com for extra security) within 30 days using the email associated with your Google account, and provide a link to your transaction as a security measure.
       Any non-refunded donation will be put towards future development.
     </div>
 
