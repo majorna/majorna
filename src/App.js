@@ -28,6 +28,7 @@ import Modal from './comps/shared/Modal'
 import Terms from './comps/about/Terms'
 import TxDetails from './comps/account/TxDetails'
 import testRunner from './blockchain/testRunner'
+import Down from './comps/shared/Down'
 
 export default withRouter(class extends Component {
   constructor(props) {
@@ -131,21 +132,28 @@ export default withRouter(class extends Component {
 
       <Modal clearNotification={this.clearNotification}>{this.state.notification}</Modal>
 
+      {/*<Switch>*/}
+        {/*<Route exact path='/' render={routeProps => <Home {...routeProps} mjMetaDoc={this.state.mjMetaDoc}/>} />*/}
+        {/*<Route path='/about/tech' component={Tech} />*/}
+        {/*<Route path='/about/roadmap' component={Roadmap} />*/}
+        {/*<Route path='/about/terms' component={Terms} />*/}
+        {/*<Route path='/about' component={About} />*/}
+        {/*<Route path='/login' render={routeProps => <Login {...routeProps} uiConfig={this.firebaseUIConfig} firebaseAuth={this.firebaseAuth}/>} />*/}
+        {/*<Route path='/dashboard' render={routeProps => <Dashboard {...routeProps} user={this.state.user} acctQr={this.state.acctQr} userDoc={this.state.userDoc} mjMetaDoc={this.state.mjMetaDoc}/>} />*/}
+        {/*<PrivateRoute path='/profile' render={routeProps => <Profile {...routeProps} user={this.state.user}/>} />*/}
+        {/*<PrivateRoute path='/shop/:id' render={routeProps => <ShopItem {...routeProps} mjMetaDoc={this.state.mjMetaDoc} user={this.state.user} showNotification={this.showNotification}/>} />*/}
+        {/*<PrivateRoute path='/shop' component={Shop} />*/}
+        {/*<PrivateRoute path='/send' render={routeProps => <Send {...routeProps} userDoc={this.state.userDoc}/>} />*/}
+        {/*<PrivateRoute path='/receive' render={routeProps => <Receive {...routeProps} user={this.state.user} acctQr={this.state.acctQr}/>} />*/}
+        {/*<PrivateRoute path='/mine' render={routeProps => <Mine {...routeProps} db={this.db}/>} />*/}
+        {/*<PrivateRoute path='/tx/:id' render={routeProps => <TxDetails {...routeProps} user={this.state.user} userDoc={this.state.userDoc}/>} />*/}
+        {/*<Redirect from='*' to='/'/>*/}
+      {/*</Switch>*/}
+
       <Switch>
-        <Route exact path='/' render={routeProps => <Home {...routeProps} mjMetaDoc={this.state.mjMetaDoc}/>} />
-        <Route path='/about/tech' component={Tech} />
-        <Route path='/about/roadmap' component={Roadmap} />
+        <Route exact path='/' component={Down} />
         <Route path='/about/terms' component={Terms} />
-        <Route path='/about' component={About} />
-        <Route path='/login' render={routeProps => <Login {...routeProps} uiConfig={this.firebaseUIConfig} firebaseAuth={this.firebaseAuth}/>} />
-        <Route path='/dashboard' render={routeProps => <Dashboard {...routeProps} user={this.state.user} acctQr={this.state.acctQr} userDoc={this.state.userDoc} mjMetaDoc={this.state.mjMetaDoc}/>} />
         <PrivateRoute path='/profile' render={routeProps => <Profile {...routeProps} user={this.state.user}/>} />
-        <PrivateRoute path='/shop/:id' render={routeProps => <ShopItem {...routeProps} mjMetaDoc={this.state.mjMetaDoc} user={this.state.user} showNotification={this.showNotification}/>} />
-        <PrivateRoute path='/shop' component={Shop} />
-        <PrivateRoute path='/send' render={routeProps => <Send {...routeProps} userDoc={this.state.userDoc}/>} />
-        <PrivateRoute path='/receive' render={routeProps => <Receive {...routeProps} user={this.state.user} acctQr={this.state.acctQr}/>} />
-        <PrivateRoute path='/mine' render={routeProps => <Mine {...routeProps} db={this.db}/>} />
-        <PrivateRoute path='/tx/:id' render={routeProps => <TxDetails {...routeProps} user={this.state.user} userDoc={this.state.userDoc}/>} />
         <Redirect from='*' to='/'/>
       </Switch>
 
