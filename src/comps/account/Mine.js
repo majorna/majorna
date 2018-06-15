@@ -102,7 +102,7 @@ export default class extends Component {
       <div><strong>Collected Rewards:</strong> mj{fm(this.state.collectedReward)}</div>
 
       <div className="m-t-m" style={{maxWidth: '30rem'}}>
-        <strong>Node Map:</strong>
+        <strong>Miner Map:</strong>
         <ResponsiveContainer width="100%" aspect={2}>
           <ScatterChart style={{backgroundImage: `url(${worldMap})`, backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%', backgroundPosition: '1rem center'}}>
             <XAxis dataKey={'lon'} type="number" domain={[-180, 180]} hide/>
@@ -131,6 +131,8 @@ export default class extends Component {
           <div><strong>Nonce:</strong> {fn(this.state.blockInfo.header.nonce || 0)}</div>
           <div><strong>Previous Block Hash:</strong> <small>{this.state.blockInfo.header.prevHash}</small></div>
           <div><strong>Merkle Root:</strong> <small>{this.state.blockInfo.header.merkleRoot}</small></div>
+
+          <div className="m-t-s"><strong>Disclaimer:</strong> Majorna currently has no value, and may or may not have any value in the future. Don't get too carried away with mining!</div>
 
           {/*<strong className="m-t-m">Peers</strong>*/}
           {/*<div><strong>Online Peers:</strong> ?</div>*/}

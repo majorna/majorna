@@ -4,7 +4,7 @@ export default props =>
   <div className="mj-box flex-column">
     <div className="is-size-5 has-text-centered">Majorna Terms and Conditions</div>
     <div className="m-t-m">
-      Last updated: Jun 9, 2018.
+      Last updated: Jun 10, 2018.
     </div>
 
     <div className="m-t-m">
@@ -21,20 +21,18 @@ export default props =>
 
     <strong className="m-t-m">No Value</strong>
     <div>
-      Majorna has no inherent value, is not a legal tender, and is not sold.
+      Majorna has no value, is not a legal tender, and is not sold.
       Majorna is a young project and has no exchange.
       Sending and receiving Majorna does not result in exchange of any value.
-      Technically speaking, at this stage of the project, having Majorna is no different than having Monopoly money.
     </div>
 
     <strong className="m-t-m">Donations</strong>
     <div>
       All donations goes towards Majorna development and are non-refundable.
       Donations are private (hence a tax-related donation receipt can not be issued) and have no rights or privileges associated with them.
-      Majorna is an active project and it may or may not be successful.
-      Majorna currently has no inherent value, and it may or may not have any value in the future depending on public acceptance.
+      Majorna is an active project and it may or may not ever implement an exchange.
+      Majorna has no value, and it may or may not have any value in the future.
       Via using Majorna or donating to the project, you accept this.
-      However we believe that it has a great chance of becoming a publicly accepted currency and a payment platform over time.
       Project is fully open source and will contribute to maturity of the cryptocurrency ecosystem regardless of the outcome.
     </div>
 
@@ -43,7 +41,7 @@ export default props =>
       All Majorna transactions including sending, receiving, and mining are final.
       As the account holder, you are responsible for all your transactions.
       You are also responsible for keeping your connected accounts (i.e. Google) secure, as Majorna assumes no liability.
-      Compromise of your account credentials may result in loss of your majorna, therefore it is highly recommended for you to enable 2-step verification in your connected accounts.
+      Compromise of your account credentials may result in loss of your Majorna, therefore it is highly recommended for you to enable 2-step verification in your connected accounts.
       If you choose to move your Majorna to a personal private key, you are responsible for its safety and security.
       Majorna in your account does not give you any rights or claim of any kind, in Majorna project, or from Majorna developers.
       Majorna project assumes no liability of any kind on your account or Majorna in it.
@@ -51,7 +49,7 @@ export default props =>
 
     <strong className="m-t-m">No Guarantees</strong>
     <div>
-      Safety of your account, account data, and majorna in it can not be guaranteed.
+      Safety of your account, account data, and Majorna in it can not be guaranteed.
       Majorna is a young project and comprise of the entire network is a possibility.
       If Majorna fails as a project and stops operating before peer-to-peer network is in production, Majorna in your account may forever be lost.
       Majorna project and its developers do not give you any guarantees of any kind, or accept any liability of any kind.
@@ -61,10 +59,8 @@ export default props =>
 
     <strong className="m-t-m">Development Period</strong>
     <div>
-      Until a final v1.0 release, Majorna platform will be under rapid development.
-      Currently all transactions and mining activity is on mainnet.
-      However until wider security analysis and a v1.0 <a href="https://github.com/majorna/majorna/releases" target="_blank" rel="noopener noreferrer">release</a>, occasional hardforks and downtime is expected.
-      All the forks and relevant activity will always be on blockchain repository.
+      Until a final v1.0 <a href="https://github.com/majorna/majorna/releases" target="_blank" rel="noopener noreferrer">release</a>, Majorna platform will be under rapid development.
+      Occasional downtime, hardforks, or even full scale reverts are expected, and due to this, Majorna is not fit for production use yet.
     </div>
 
     <strong className="m-t-m">Privacy Policy</strong>
@@ -79,7 +75,7 @@ export default props =>
     <strong className="m-t-m">Updates to the Terms and Conditions</strong>
     <div>
       Terms and conditions are updated occasionally, and you can find the last updated time at the beginning of this agreement.
-      You are required to review the updates occasionally, as continuing to use Majorna means agreeing to the updated terms and conditions.
+      Continuing to use Majorna means agreeing to the updated terms and conditions.
     </div>
 
     <div className="flex-row center-h m-t-l">

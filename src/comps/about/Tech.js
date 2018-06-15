@@ -13,7 +13,7 @@ export default props =>
     <strong id="mining" className="m-t-m">Mining</strong>
     <div>
       Mining is a means of solving a cryptographically hard problem utilizing your computers processor(s).
-      Mining secures majorna transactions via preventing duplicates, so people cannot spend more money than they have.
+      Mining secures majorna transactions via preventing duplicates, so people cannot spend more than they have.
       As the mining reward, you get some majorna, which in turn helps distribute the currency to users.
     </div>
 

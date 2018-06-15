@@ -3,38 +3,35 @@ import { Link } from 'react-router-dom'
 
 export default props =>
   <div className="mj-box flex-column">
-    <Link to="/">{'< Home'}</Link>
-
     <div className="is-size-5 has-text-centered">About Majorna</div>
     <div className="m-t-m">
       Majorna (mj) is an easy to use cryptocurrency.
+      Currently it has no value or obligations so perfectly safe for enthusiasts to experiment with cryptocurrencies.
       It is available in browser, without any need for special software.
       All transaction logs are kept at GitHub <a href="https://github.com/majorna/blockchain" target="_blank" rel="noopener noreferrer">blockchain repo</a>.
       All transaction are transparent and logs are publicly accessible, whereas sender and receiver identities are anonymous.
-      This makes your account balance provable and secure, while keeping your identity hidden (there are also plans to make transactions themselves anonymous).
+      This makes your transactions provable, while keeping your identity hidden (there are also plans to make transactions themselves anonymous).
     </div>
 
     <strong className="m-t-m">Why Cryptocurrency</strong>
     <div>
       Majorna is a cryptocurrency that works both with delegated trust (for scalability) and with a decentralized and trustless peer-to-peer network (work in progress).
-      Being a <a href="https://en.wikipedia.org/wiki/Cryptocurrency" target="_blank" rel="noopener noreferrer">cryptocurrency</a> means your money does not need to be stored physically; it is a digitally signed information.
+      Being a <a href="https://en.wikipedia.org/wiki/Cryptocurrency" target="_blank" rel="noopener noreferrer">cryptocurrency</a> means your assets does not need to be stored physically; it is a digitally signed information.
       Being decentralized means that your account does not belong to an institution, all account information is duplicated across the globe, and you hold the key.
-      Via memorizing your private key, you can have all your money, in your memory!
+      Via memorizing your private key, you can have all your assets, in your memory!
       And only you can spend it using your private key.
     </div>
 
     <strong className="m-t-m">Why Majorna</strong>
     <div>
-      Ease of use is a key to becoming a publicly accepted payment platform and currency.
+      Ease of use is a key to becoming a publicly accepted cryptocurrency.
       Majorna prioritizes simplicity and ease of use via an "all in your browser" approach.
-      Further services around the platform will also be designed with the same ease of use in mind.
     </div>
 
     <strong className="m-t-m">Majorna Supply</strong>
     <div>
-      Max Majorna supply allocated for public distribution is denoted on the front page.
-      Matching amount will be allocated for Majorna Fund after supply cap is reached (this is subject to change).
-      Current Majorna supply denotes the currently distributed amount; through mining or donations.
+      Max Majorna supply allocated for public distribution is denoted on the front page (this is subject to change).
+      Current Majorna supply denotes the currently distributed amount.
     </div>
 
     <div className="content m-t-m">

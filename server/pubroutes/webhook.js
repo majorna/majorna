@@ -1,7 +1,7 @@
 const crypto = require('crypto')
 const route = require('koa-route')
 const config = require('../config/config')
-const db = require('../data/db')
+// const db = require('../data/db')
 
 /**
  * Accept payments through Coinbase Commerce: https://commerce.coinbase.com/docs/api/#webhooks
@@ -32,14 +32,14 @@ exports.coinbaseCommerce = route.post('/webhooks/coinbase-commerce', async ctx =
 
   // event data is charge resource: https://commerce.coinbase.com/docs/api/#charge-resource
   const charge = data.event.data
-  const userId = charge.metadata.userId
+  // const userId = charge.metadata.userId
   const lastPayment = charge.payments.pop()
   if (lastPayment.value.local.currency !== 'USD') {
     throw new Error(`Expected Coinbase Commerce payment in USD, got: ${lastPayment.value.local.currency}`)
   }
-  const usdAmount = lastPayment.value.local.amount
+  // const usdAmount = lastPayment.value.local.amount
 
-  await db.giveMj(userId, usdAmount)
+  // await db.giveMj(userId, usdAmount)
 
   ctx.status = 200
 })

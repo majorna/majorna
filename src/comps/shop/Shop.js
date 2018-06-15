@@ -21,6 +21,6 @@ export default props =>
     </div>
 
     <div className="mj-box flex-column center-all">
-      <button className="button is-info" disabled><i className="fas fa-sign-in-alt m-r-s"/>Merchant Login</button>
+      <button className="button" onClick={props.history.goBack}>Back</button>
     </div>
   </React.Fragment>
