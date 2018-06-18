@@ -27,7 +27,6 @@ export default props =>
       <div className="flex-column flex-grow-1 m-l-m">
         <div className="is-size-5">Simple Cryptocurrency</div>
         Easy to use digital currency in your browser.
-        Currently it has no value or obligations so perfectly safe for enthusiasts to experiment with cryptocurrencies.
         Log in with your Google account to start sending, receiving, and mining Majorna.
         <Link to='/login'>+mj500 balance for new accounts.</Link>
       </div>
@@ -40,6 +39,7 @@ export default props =>
         {/*Trustless and decentralized with simple in-browser miner.*/}
         {/*Peer-to-peer payments without a central authority.*/}
         {/*Horizontal scalability through delegated trust.*/}
+        {/*<span>Visit <Link to='/about'>About</Link> section for development goals.</span>*/}
         <div className="is-size-5">Gradual Decentralization</div>
         Simple in-browser miner.
         Upcoming decentralized and trustless peer-to-peer network.
@@ -62,8 +62,8 @@ export default props =>
       <i className="flex-order-1 m-l-m fas fa-credit-card" style={{width: 110, height: 120}}/>
       <div className="flex-column flex-grow-1">
         <div className="is-size-5">Open Development Model</div>
-        All activity by Majorna team is publicly shared on Reddit and GitHub.
-        You can contribute to the project via discussions, suggestions, bug reports, or coding.
+        Majorna team intents to fund development via providing services around the currency (i.e. payment services).
+        The team is also is in charge of continuous monitoring and maintenance of the system.
       </div>
     </div>
 
