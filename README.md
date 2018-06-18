@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/majorna/majorna.svg?branch=master)](https://travis-ci.org/majorna/majorna)
 
 Majorna is an in-browser cryptocurrency utilizing web technologies including [WebRTC](https://en.wikipedia.org/wiki/WebRTC) and [Web Crypto API](https://en.wikipedia.org/wiki/Web_cryptography_API).
-This repo contains source code for all Majorna components including server, miner, and web UI.
+This repo contains source code for all of Majorna components.
 
 ## Blockchain
 Blockchain (ledger of all transactions) is kept in its [own repo](https://github.com/majorna/blockchain).
