@@ -12,6 +12,7 @@
     "@google-cloud/logging": "1.2.0",
     "@octokit/rest": "15.8.2",
     "axios": "0.18.0",
+    "firebase": "5.0.4",
     "firebase-admin": "5.12.1",
     "kcors": "2.2.1",
     "koa": "2.5.1",
