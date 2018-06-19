@@ -21,7 +21,7 @@ export default props => {
             <Area type='monotone' dataKey='mj' stroke='DarkOrange' fill='Wheat'/>
           </AreaChart>
         </ResponsiveContainer>
-        <small><i>(placeholder value graph for a possible future exchange, currently mj has no value)</i></small>
+        <small><i>(static value graph for a until exchange opens)</i></small>
       </div>
 
       <div className="mj-box flex-column w-s">

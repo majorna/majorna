@@ -10,7 +10,6 @@ export default [
       Donations are anonymous and non-refundable.
       They are appreciated but never asked.
       All donations are private (hence a tax-related donation receipt can not be issued) and have no rights or privileges associated with them.
-      <strong> You will NOT get Majorna for donations</strong>, but you can always mine it.
       Thank you for supporting us on our journey to become a publicly accepted payment platform and a cryptocurrency.
     </React.Fragment>,
     imageUrl: mj,
