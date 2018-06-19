@@ -68,7 +68,7 @@ export default props =>
     <strong className="m-t-m">Updates to the Terms and Conditions</strong>
     <div>
       Terms and conditions are updated occasionally, and you can find the last updated time at the beginning of this agreement.
-      Continuing to use Majorna means agreeing to the updated terms and conditions.
+      You are required to review the updates occasionally, as continuing to use Majorna means agreeing to the updated terms and conditions.
     </div>
 
     <strong className="m-t-m">Copyright</strong>
