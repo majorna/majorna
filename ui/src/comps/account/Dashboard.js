@@ -22,7 +22,7 @@ export default props => {
             <Area type='monotone' dataKey='mj' stroke='DarkOrange' fill='Wheat'/>
           </AreaChart>
         </ResponsiveContainer>
-        <small><i>(static value graph for a until exchange opens)</i></small>
+        <small><i>(static value graph until exchange opens)</i></small>
       </div>
 
       <TestnetWidget/>

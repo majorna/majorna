@@ -268,7 +268,7 @@ exports.makeTx = (from, to, amount, showSenderName) => firestore.runTransaction(
   t.create(txRef, signedTx)
 
   // update user docs with tx and updated balances
-  addTxToUserDoc(sender, txRef.id, null, null, to, toName, time, amount)
+  addTxToUserDoc(sender, txRef.id, null, null, to, null, time, amount)
   t.update(senderDocRef, {balance: sender.balance - amount, txs: sender.txs})
   addTxToUserDoc(receiver, txRef.id, from, showSenderName && fromName, null, null, time, amount)
   t.update(receiverDocRef, {balance: receiver.balance + amount, txs: receiver.txs})
