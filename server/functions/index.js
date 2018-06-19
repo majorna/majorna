@@ -1,4 +1,5 @@
 // todo: needs update based on: https://firebase.google.com/docs/functions/beta-v1-diff
+// or just use app engine standard with node.js 10+ support, which is new
 
 // const functions = require('firebase-functions');
 // const firebase = require('firebase-admin');

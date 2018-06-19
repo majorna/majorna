@@ -23,6 +23,7 @@ export default props =>
         <li>☐ Blockchain explorer.</li>
         <li>☐ Payment services (hosted payment page, widget, button).</li>
         <li>☐ 3rd party integrations and bots.</li>
+        <li>☐ Mainnet launch.</li>
         <li>☐ Exchange.</li>
         <li>☐ Mobile apps.</li>
         <li>☐ Shop/Merchant SDK.</li>

@@ -4,7 +4,7 @@ export default props =>
   <div className="mj-box flex-column">
     <div className="is-size-5 has-text-centered">Majorna Terms and Conditions</div>
     <div className="m-t-m">
-      Last updated: Jun 10, 2018.
+      Last updated: Jun 19, 2018.
     </div>
 
     <div className="m-t-m">
@@ -19,21 +19,12 @@ export default props =>
       You have the right to send, receive, and mine Majorna on your account.
     </div>
 
-    <strong className="m-t-m">No Value</strong>
+    <strong className="m-t-m">Development Period and Testnet</strong>
     <div>
-      Majorna has no value, is not a legal tender, and is not sold.
-      Majorna is a young project and has no exchange.
-      Sending and receiving Majorna does not result in exchange of any value.
-    </div>
-
-    <strong className="m-t-m">Donations</strong>
-    <div>
-      All donations goes towards Majorna development and are non-refundable.
-      Donations are private (hence a tax-related donation receipt can not be issued) and have no rights or privileges associated with them.
-      Majorna is an active project and it may or may not ever implement an exchange.
-      Majorna has no value, and it may or may not have any value in the future.
-      Via using Majorna or donating to the project, you accept this.
-      Project is fully open source and will contribute to maturity of the cryptocurrency ecosystem regardless of the outcome.
+      Until a final v1.0 <a href="https://github.com/majorna/majorna/releases" target="_blank" rel="noopener noreferrer">release</a>, Majorna platform will be under rapid development.
+      Occasional downtime, hardforks, or even full scale reverts are expected, and due to this, Majorna is not fit for production use yet.
+      Majorna in testnet has no value, is not a legal tender, and is not sold.
+      Sending and receiving Majorna in testnet does not result in exchange of any value.
     </div>
 
     <strong className="m-t-m">No Liability or Claim</strong>
@@ -53,14 +44,16 @@ export default props =>
       Majorna is a young project and comprise of the entire network is a possibility.
       If Majorna fails as a project and stops operating before peer-to-peer network is in production, Majorna in your account may forever be lost.
       Majorna project and its developers do not give you any guarantees of any kind, or accept any liability of any kind.
-      Majorna has the right to terminate your account at any time during the development period (see below), with or without cause, with or without notice, with or without destroying any Majorna in it (ability to move Majorna from account to a private key is a work-in-progress).
+      Majorna has the right to terminate your account at any time during the development period, with or without cause, with or without notice, with or without destroying any Majorna in it (ability to move Majorna from account to a private key is a work-in-progress).
       Accounts terminated due to malicious activity cannot be reopened.
     </div>
 
-    <strong className="m-t-m">Development Period</strong>
+    <strong className="m-t-m">Donations</strong>
     <div>
-      Until a final v1.0 <a href="https://github.com/majorna/majorna/releases" target="_blank" rel="noopener noreferrer">release</a>, Majorna platform will be under rapid development.
-      Occasional downtime, hardforks, or even full scale reverts are expected, and due to this, Majorna is not fit for production use yet.
+      All donations goes towards Majorna development.
+      Donations are anonymous and non-refundable.
+      They are appreciated but never asked.
+      All donations are private (hence a tax-related donation receipt can not be issued) and have no rights or privileges associated with them.
     </div>
 
     <strong className="m-t-m">Privacy Policy</strong>
@@ -75,7 +68,28 @@ export default props =>
     <strong className="m-t-m">Updates to the Terms and Conditions</strong>
     <div>
       Terms and conditions are updated occasionally, and you can find the last updated time at the beginning of this agreement.
-      Continuing to use Majorna means agreeing to the updated terms and conditions.
+      You are required to review the updates occasionally, as continuing to use Majorna means agreeing to the updated terms and conditions.
+    </div>
+
+    <strong className="m-t-m">Copyright</strong>
+    <div>
+      Permission is hereby granted, free of charge, to any person obtaining a copy
+      of this software and associated documentation files (the "Software"), to deal
+      in the Software without restriction, including without limitation the rights
+      to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+      copies of the Software, and to permit persons to whom the Software is
+      furnished to do so, subject to the following conditions:
+
+      The above copyright notice and this permission notice shall be included in all
+      copies or substantial portions of the Software.
+
+      THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+      IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+      FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+      AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+      LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+      SOFTWARE.
     </div>
 
     <div className="flex-row center-h m-t-l">

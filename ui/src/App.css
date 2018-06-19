@@ -101,6 +101,10 @@ body {
     margin-right: 0.5rem;
 }
 
+.m-r-xs {
+    margin-right: 0.25rem;
+}
+
 .m-l-xl {
     margin-left: 2rem;
 }

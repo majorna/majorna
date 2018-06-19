@@ -3,6 +3,7 @@ import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from 'rec
 import { Link } from 'react-router-dom'
 import { fm, getChartData } from '../../data/utils'
 import StatsWidget from '../shared/StatsWidget'
+import TestnetWidget from '../shared/TestnetWidget'
 
 export default props => {
   if (!props.userDoc || !props.mjMetaDoc) {
@@ -21,8 +22,10 @@ export default props => {
             <Area type='monotone' dataKey='mj' stroke='DarkOrange' fill='Wheat'/>
           </AreaChart>
         </ResponsiveContainer>
-        <small><i>(placeholder value graph for a possible future exchange, currently mj has no value)</i></small>
+        <small><i>(static value graph for a until exchange opens)</i></small>
       </div>
+
+      <TestnetWidget/>
 
       <div className="mj-box flex-column w-s">
         <div><strong>Balance</strong>: mj{fm(props.userDoc.balance)}</div>
