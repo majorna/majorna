@@ -8,6 +8,7 @@ export default {
     assert(getSampleTx())
     const fullStrArr = new Uint8Array(8)
     assert(await crypto.subtle.digest('SHA-256', fullStrArr.buffer))
+    assert.equal(true, true)
   },
 
   'json stringify': () => {

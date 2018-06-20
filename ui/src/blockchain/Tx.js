@@ -18,7 +18,7 @@ export default class Tx {
   }
 
   constructor (sig, id, fromId, fromBalance, toId, toBalance, time, amount) {
-    assert(typeof sig === 'string')
+    assert.equal(typeof sig,'string')
 
     this.sig = sig
     this.id = id
