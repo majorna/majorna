@@ -30,8 +30,6 @@ export default class Tx {
     }
     this.time = time
     this.amount = amount
-
-    // todo: verify the Tx so that each field is non-null and non-empty (with verifyTx?)
   }
 
   /**
@@ -50,15 +48,15 @@ export default class Tx {
   sign = () => { this.sig = crypto.signText(this.getStr()) }
 
   /**
-   * Verifies the tx's signature.
+   * Verifies the tx's signature, asynchronously.
    */
-  verifySig = () => crypto.verifyText(this.sig, this.getStr()) // todo: this should throw
+  verifySig = async () => crypto.verifyText(this.sig, this.getStr()) // todo: this should throw
 
   /**
-   * Verifies the tx.
+   * Verifies the tx, asynchronously.
    * Returns true if tx is valid. Throws an AssertionError with a relevant message, if the verification fails.
    */
-  verify = () => {
+  verify = async () => {
     // verify schema
     assert(typeof this.sig === 'string', 'Signature must be a non-empty string.')
     assert(this.sig.length === 92 || this.sig.length === 96, `Signature length is invalid. Expected ${92} or ${96}, got ${this.sig.length}.`)
@@ -72,6 +70,6 @@ export default class Tx {
 
     // verify contents
     assert(this.from.id !== this.to.id, 'To and From IDs cannot be the same.')
-    this.verifySig()
+    await this.verifySig()
   }
 }
