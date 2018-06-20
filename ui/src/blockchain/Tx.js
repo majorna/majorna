@@ -60,14 +60,14 @@ export default class Tx {
    */
   verify = () => {
     // verify schema
-    assert.equal(typeof sig, 'string')
-    assert.equal(typeof id, 'string')
-    assert.equal(typeof fromId, 'string')
-    assert.equal(typeof fromBalance, 'number')
-    assert.equal(typeof toId, 'string')
-    assert.equal(typeof toBalance, 'number')
-    assert(time instanceof Date)
-    assert.equal(typeof amount, 'number')
+    assert(this.sig && typeof this.sig === 'string', 'Signature must be a non-empty string.')
+    assert(this.id && typeof this.id, 'string', 'ID must be a string.')
+    assert(typeof this.fromId, 'string', 'From ID must be a string.')
+    assert(typeof this.fromBalance, 'number', '"From Balance" must be a number.')
+    assert(typeof this.toId, 'string', 'To ID must be a string.')
+    assert(typeof this.toBalance, 'number', '"To Balance" must be a number.')
+    assert(this.time instanceof Date, 'Time must be a Date object.')
+    assert(typeof this.amount, 'number', 'Amount must be a number.')
 
     // verify contents
     this.verifySig()
