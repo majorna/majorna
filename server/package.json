@@ -6,7 +6,8 @@
     "start": "node index.js",
     "test": "npm run lint && NODE_ENV=test mocha **/*test.js --recursive --timeout 60s --ui tdd",
     "lint": "standard --fix",
-    "deploy": "git subtree push --prefix server heroku master"
+    "deploy": "git subtree push --prefix server heroku master",
+    "deploy-force": "git push heroku `git subtree split --prefix server master`:master --force"
   },
   "dependencies": {
     "@google-cloud/logging": "1.2.0",
