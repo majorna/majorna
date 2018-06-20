@@ -18,8 +18,6 @@ export default class Tx {
   }
 
   constructor (sig, id, fromId, fromBalance, toId, toBalance, time, amount) {
-    assert.equal(typeof sig,'string')
-
     this.sig = sig
     this.id = id
     this.from = {
@@ -58,7 +56,20 @@ export default class Tx {
 
   /**
    * Verifies the tx.
-   * Returns true if tx is valid. Throws an assert.AssertionError with a relevant message, if the verification fails.
+   * Returns true if tx is valid. Throws an AssertionError with a relevant message, if the verification fails.
    */
-  verify = () => this.verifySig() // todo: verify schema & contents too (as we do with block.verify)
+  verify = () => {
+    // verify schema
+    assert.equal(typeof sig, 'string')
+    assert.equal(typeof id, 'string')
+    assert.equal(typeof fromId, 'string')
+    assert.equal(typeof fromBalance, 'number')
+    assert.equal(typeof toId, 'string')
+    assert.equal(typeof toBalance, 'number')
+    assert(time instanceof Date)
+    assert.equal(typeof amount, 'number')
+
+    // verify contents
+    this.verifySig()
+  }
 }
