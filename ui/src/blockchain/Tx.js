@@ -1,3 +1,5 @@
+import assert from './assert'
+
 export default class Tx {
   // todo: verify that this does not end up in json text after JSON.stringify()
   static schema = {
@@ -16,6 +18,8 @@ export default class Tx {
   }
 
   constructor (sig, id, fromId, fromBalance, toId, toBalance, time, amount) {
+    assert(typeof sig === 'string')
+
     this.sig = sig
     this.id = id
     this.from = {
