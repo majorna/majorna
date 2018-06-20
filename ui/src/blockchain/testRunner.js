@@ -5,13 +5,14 @@ const tests = {Tx}
 export default () => {
   console.log('[Tests]')
   Object.entries(tests).forEach(t => {
+    console.log(`[${t[0]}]`)
     Object.entries(t[1]).forEach(async c => {
-      let res = `\t${t[0]}: ${c[0]}`
+      let res = `${c[0]}`
       try {
         await (c[1]())
-        console.log(`${res}: pass`)
+        console.log(`\t[Pass] ${res}`)
       } catch (e) {
-        console.error(`${res}: fail: ${e}`)
+        console.error(`\t[Fail] ${res}: ${e}`)
       }
     })
   })
