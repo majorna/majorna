@@ -52,7 +52,7 @@ export default class Tx {
   /**
    * Verifies the tx's signature.
    */
-  verifySig = () => crypto.verifyText(this.sig, this.getStr())
+  verifySig = () => crypto.verifyText(this.sig, this.getStr()) // todo: this should throw
 
   /**
    * Verifies the tx.
@@ -60,17 +60,18 @@ export default class Tx {
    */
   verify = () => {
     // verify schema
-    assert(this.sig && typeof this.sig === 'string', 'Signature must be a non-empty string.')
-    assert(this.id && typeof this.id === 'string', 'ID must be a non-empty string.')
-    assert(this.from.id && typeof this.from.id === 'string', 'From ID must be a non-empty string.')
-    assert(this.from.balance >= 0 && typeof this.from.balance === 'number', '"From Balance" must be a number that is greater than or equal to 0.')
-    assert(this.to.id && typeof this.to.id === 'string', 'To ID must be a non-empty string.')
-    assert(this.to.balance >= 0 && typeof this.to.balance === 'number', '"To Balance" must be a number that is greater than or equal to 0.')
-    assert(this.time && this.time instanceof Date, 'Time must be a Date object.')
-    assert(this.amount > 0 && typeof this.amount === 'number', 'Amount must be a number that is greater than 0.')
+    assert(typeof this.sig === 'string', 'Signature must be a non-empty string.')
+    assert(this.sig.length === 92 || this.sig.length === 96, `Signature length is invalid. Expected ${92} or ${96}, got ${this.sig.length}.`)
+    assert(typeof this.id === 'string' && this.id.length > 0, 'ID must be a non-empty string.')
+    assert(typeof this.from.id === 'string' && this.from.id.length > 0, 'From ID must be a non-empty string.')
+    assert(typeof this.from.balance === 'number' && this.from.balance >= 0, '"From Balance" must be a number that is greater than or equal to 0.')
+    assert(typeof this.to.id === 'string' && this.to.id.length > 0, 'To ID must be a non-empty string.')
+    assert(typeof this.to.balance === 'number' && this.to.balance >= 0, '"To Balance" must be a number that is greater than or equal to 0.')
+    assert(this.time instanceof Date, 'Time object must be an instance of Date class.')
+    assert(typeof this.amount === 'number' && this.amount > 0, 'Amount must be a number that is greater than 0.')
 
     // verify contents
-    // todo: to and from cannot be the same (backport more stuff from block.js)
+    assert(this.from.id !== this.to.id, 'To and From IDs cannot be the same.')
     this.verifySig()
   }
 }
