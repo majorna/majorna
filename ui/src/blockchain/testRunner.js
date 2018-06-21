@@ -1,7 +1,7 @@
 import Tx from './Tx.e2e'
-import config from '../data/config'
+import crypto from './crypto.e2e'
 
-const tests = {Tx}
+const tests = {Tx, crypto}
 
 export default () => {
   console.log('[Tests]')
