@@ -1,23 +1,32 @@
-import Tx from './Tx.e2e'
 import crypto from './crypto.e2e'
+import Tx from './Tx.e2e'
 
-const tests = {Tx, crypto}
+const testSuites = Object.entries({crypto, Tx})
 
-export default () => {
+export default async () => {
   console.log('[Tests START]')
-  Object.entries(tests).forEach(t => {
-    console.log(`[${t[0]}]`)
-    Object.entries(t[1]).forEach(async c => {
-      let res = `${c[0]}`
+
+  for (let i = 0; i < testSuites.length; i++) {
+    const testSuite = testSuites[i]
+    const testSuiteName = testSuite[0]
+    const tests = Object.entries(testSuite[1])
+
+    console.log(`[${testSuiteName}]`)
+    for (let j = 0; j < tests.length; j++) {
+      const testCase = tests[j]
+      const testCaseName = testCase[0]
+      const test = testCase[1]
+
       try {
-        await (c[1]())
-        console.log(`\t[Pass] ${res}`)
+        await test()
+        console.log(`\t[Pass] ${testCaseName}`)
       } catch (e) {
-        console.error(`\t[Fail] ${res}: ${e}`)
+        console.error(`\t[Fail] ${testCaseName}: ${e}`)
         // todo: test that this works in dev mode to
         // config.app.isProd && bugsnag.notify(`Blockchain test failure: ${res}: ${e}`)
       }
-    })
-  })
+    }
+  }
+
   console.log('[Tests END]')
 }
