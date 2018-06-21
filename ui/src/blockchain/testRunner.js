@@ -1,6 +1,5 @@
 import Tx from './Tx.e2e'
 import config from '../data/config'
-import bugsnag from '../data/bugsnag'
 
 const tests = {Tx}
 
@@ -16,7 +15,7 @@ export default () => {
       } catch (e) {
         console.error(`\t[Fail] ${res}: ${e}`)
         // todo: test that this works in dev mode to
-        config.app.isProd && bugsnag.notify(`Blockchain test failure: ${res}: ${e}`)
+        // config.app.isProd && bugsnag.notify(`Blockchain test failure: ${res}: ${e}`)
       }
     })
   })

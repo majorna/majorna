@@ -260,7 +260,7 @@ exports.makeTx = (from, to, amount, showSenderName) => firestore.runTransaction(
     throw new utils.UserVisibleError(`receiver ID:${to} does not exist`)
   }
   const receiver = receiverDoc.data()
-  const toName = receiver.name
+  // todo: const toName = receiver.name (only show if in user's contacts)
 
   // add tx to txs collection
   const txRef = txsColRef.doc()

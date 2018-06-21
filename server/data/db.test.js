@@ -147,7 +147,7 @@ suite('db', () => {
     const to = '2'
     const senderUser = await db.getUser(from)
     const receiverUser = await db.getUser(to)
-    const toName = receiverUser.name
+    // const toName = receiverUser.name
     const senderInitBalance = senderUser.balance
     const receiverInitBalance = receiverUser.balance
     const amount = 100
@@ -168,7 +168,7 @@ suite('db', () => {
     assert(sender.balance === senderInitBalance - amount)
     const senderTx = sender.txs[0]
     assert(senderTx.to === to)
-    assert(senderTx.toName === toName)
+    // todo: assert(senderTx.toName === toName) (only show if in user's contacts)
     assert(senderTx.time.getTime() === newTx.time.getTime())
     assert(senderTx.amount === amount)
 
