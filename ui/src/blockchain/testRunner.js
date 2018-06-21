@@ -4,7 +4,7 @@ import crypto from './crypto.e2e'
 const tests = {Tx, crypto}
 
 export default () => {
-  console.log('[Tests]')
+  console.log('[Tests START]')
   Object.entries(tests).forEach(t => {
     console.log(`[${t[0]}]`)
     Object.entries(t[1]).forEach(async c => {
@@ -19,4 +19,5 @@ export default () => {
       }
     })
   })
+  console.log('[Tests END]')
 }

@@ -7,7 +7,7 @@ const domain = 'getmajorna.com'
 /**
  * Global UI configuration.
  */
-export default {
+const config = {
   app: {
     env,
     isDev,
@@ -22,18 +22,10 @@ export default {
     token: null // lazy initialized
   },
   crypto: {
-    algo: 'SHA256',
+    algo: 'ECDSA',
     encoding: 'base64', // todo: can use DER encoding for signature and save ~20bytes: https://stackoverflow.com/a/39651457/628273 (or compressed ec sig for further reduction)
-    // only for testing and dev
-    privateKey: `-----BEGIN EC PRIVATE KEY-----
-MHQCAQEEIHZ9HWFXtortTsbEOOjPZ6hIMDTiFVWX552YWW5aZHlgoAcGBSuBBAAK
-oUQDQgAE2yLEGhHZMiClLt4rHm6Kajo2qsRRQMUW3PqHOBnECvFkwXZstFNGyZD4
-SVbeNVCQy7nXERlaQ7Kvt4dgZTp1UA==
------END EC PRIVATE KEY-----`,
-    publicKey: `-----BEGIN PUBLIC KEY-----
-MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAE2yLEGhHZMiClLt4rHm6Kajo2qsRRQMUW
-3PqHOBnECvFkwXZstFNGyZD4SVbeNVCQy7nXERlaQ7Kvt4dgZTp1UA==
------END PUBLIC KEY-----`
+    privateKey: null,
+    publicKey: null
   },
   stripe: {
     publishableKey: isDev ? 'pk_test_98A7TrR0G8W7SyUIdjoQytZj' : 'pk_live_5a1IQUuynng65TjcwmnGQkvY'
@@ -42,3 +34,11 @@ MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAE2yLEGhHZMiClLt4rHm6Kajo2qsRRQMUW
     blockUrl: isProd ? 'https://github.com/majorna/blockchain/search?q=' : 'https://github.com/majorna/test-blockchain/search?q='
   }
 }
+
+config.initKeys = async () => {
+  const keyPair = await crypto.subtle.generateKey({name: 'ECDSA', namedCurve: 'P-256'}, false, ['sign', 'verify'])
+  config.crypto.privateKey = keyPair.privateKey
+  config.crypto.publicKey = keyPair.publicKey
+}
+
+export default config

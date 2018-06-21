@@ -1,7 +1,10 @@
-// import assert from './assert'
-// import { signText, verifyText } from './crypto'
+import assert from './assert'
+import config from '../data/config'
+import { signText, verifyText } from './crypto'
 
 export default {
+  init: config.initKeys,
+
   'sign and verify': async () => {
     // const text = 'lorem ipsum dolor'
     // const sig = signText(text)
