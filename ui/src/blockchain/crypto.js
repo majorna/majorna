@@ -11,7 +11,7 @@ export async function signText(text) {
     config.crypto.privateKey,
     textEncoder.encode(text)
   )
-  return sigBuff
+  return btoa(String.fromCharCode(...new Uint8Array(sigBuff)))
 }
 
 /**
@@ -19,12 +19,20 @@ export async function signText(text) {
  * Returned promise resolves to a boolean.
  */
 export function verifyText(sig, text) {
-  const asig = btoa(String.fromCharCode(...new Uint8Array(sig)))
-
   return crypto.subtle.verify(
     {name: config.crypto.signAlgo, hash: config.crypto.hashAlgo},
     config.crypto.publicKey,
-    sig instanceof ArrayBuffer ? sig : textEncoder.encode(atob(asig)),
+    sig instanceof ArrayBuffer ? sig : base64ToArrayBuffer(sig),
     text instanceof ArrayBuffer ? text : textEncoder.encode(text)
   )
+}
+
+function base64ToArrayBuffer(base64) {
+  const binary_string =  window.atob(base64)
+  const len = binary_string.length
+  const bytes = new Uint8Array(len)
+  for (let i = 0; i < len; i++)        {
+    bytes[i] = binary_string.charCodeAt(i)
+  }
+  return bytes
 }
