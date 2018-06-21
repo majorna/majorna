@@ -1,7 +1,5 @@
-const env = window.document.URL.includes('http://localhost:3000')
-  ? 'development' :
-  (navigator.userAgent.includes('Node.js') || navigator.userAgent.includes('jsdom'))
-    ? 'test' : 'production'
+const env = navigator.userAgent.includes('Node.js') || navigator.userAgent.includes('jsdom') ? 'test' :
+  window.document.URL.includes('http://localhost:3000') ? 'development' : 'production'
 const isDev = env === 'development'
 const isTest = env === 'test'
 const isProd = env === 'production'
