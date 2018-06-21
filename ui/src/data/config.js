@@ -1,5 +1,9 @@
-const env = window.document.URL.includes('http://localhost:3000') ? 'development' : 'production'
+const env = window.document.URL.includes('http://localhost:3000')
+  ? 'development' :
+  (navigator.userAgent.includes('Node.js') || navigator.userAgent.includes('jsdom'))
+    ? 'test' : 'production'
 const isDev = env === 'development'
+const isTest = env === 'test'
 const isProd = env === 'production'
 
 const domain = 'getmajorna.com'
@@ -11,6 +15,7 @@ const config = {
   app: {
     env,
     isDev,
+    isTest,
     isProd,
   },
   hosting: {

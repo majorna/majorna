@@ -1,5 +1,6 @@
 import config from '../data/config'
-const textEncoder = new TextEncoder('utf-8')
+window.TextEncoder = window.TextEncoder || class {}
+const textEncoder = new window.TextEncoder('utf-8')
 
 /**
  * Signs given text, asynchronously.
