@@ -2,7 +2,7 @@ class AssertionError extends Error {}
 
 export default function assert(condition, description) {
   if (!condition) {
-    throw new AssertionError(description || 'Assertion error.')
+    throw new AssertionError(description || `Expected truthy value got ${condition}`)
   }
 }
 

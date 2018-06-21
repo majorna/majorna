@@ -6,7 +6,7 @@ const textEncoder = new TextEncoder('utf-8')
  * Returned promise resolves to the signature.
  */
 export function signText(text) {
-  return crypto.subtle.sign(config.crypto.algo, config.crypto.privateKey, textEncoder.encode(text))
+  return crypto.subtle.sign({name: config.crypto.signAlgo, hash: config.crypto.hashAlgo}, config.crypto.privateKey, textEncoder.encode(text))
 }
 
 /**
@@ -14,5 +14,5 @@ export function signText(text) {
  * Returned promise resolves to a boolean.
  */
 export function verifyText(sig, text) {
-  return crypto.subtle.verify(config.crypto.algo, config.crypto.publicKey, sig, text)
+  return crypto.subtle.verify({name: config.crypto.signAlgo, hash: config.crypto.hashAlgo}, config.crypto.publicKey, textEncoder.encode(sig), textEncoder.encode(text))
 }
