@@ -1,7 +1,7 @@
 import assert from './assert'
 import Tx from './Tx'
 
-const getSampleTx = () => new Tx('abc123', '123', '1', 500, '2', 500, new Date(), 20)
+const getSampleTx = () => new Tx('abc123', '123', '1', 500, '2', 500, new Date(), 25)
 
 export default {
   'constructor: verifies params': async () => {
