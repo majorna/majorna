@@ -19,10 +19,10 @@ export default props =>
       </div>
     </div>
 
-    <TestnetWidget/>
-
     {/* Majorna stats from firestore/mj/meta document */}
     {!props.mjMetaDoc ? <div className="mj-box center-all spinner"/> : <StatsWidget mjMetaDoc={props.mjMetaDoc} />}
+
+    <TestnetWidget/>
 
     {/* Media items with key Majorna facts */}
     <div className="mj-box align-start">
