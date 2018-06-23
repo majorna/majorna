@@ -6,16 +6,20 @@ const getSampleTx = () => new Tx(null, 'tx-123', '1', 500, '2', 500, new Date(),
 export default {
   verify: async () => {
     const tx = getSampleTx()
+    try {
+      await tx.verify()
+    } catch (e) {
+      assert.equal(e.type, 'AssertionError')
+    }
     await tx.sign()
     await tx.verify()
   },
 
-  'json stringify': () => {
+  'json stringify': async () => {
     const tx = getSampleTx()
+    await tx.sign()
     const jsonStr = JSON.stringify(tx)
-    const parsedTx = JSON.parse(jsonStr)
-    assert(!parsedTx.schema)
+    const txObj = Tx.getObjFromJson(jsonStr)
+    await txObj.verify()
   }
 }
-
-// todo: verify getObj() complies with the schema
