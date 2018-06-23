@@ -4,7 +4,7 @@ import Tx from './Tx'
 const getSampleTx = () => new Tx(null, 'tx-123', '1', 500, '2', 500, new Date(), 25)
 
 export default {
-  verify: async () => {
+  'verify': async () => {
     // unsigned tx
     const tx = getSampleTx()
     try {

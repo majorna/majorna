@@ -3,7 +3,7 @@ import config from '../data/config'
 import { signText, verifyText } from './crypto'
 
 export default {
-  init: config.initKeys,
+  'init': config.initKeys,
 
   'sign and verify': async () => {
     const text = 'lorem ipsum dolor'
