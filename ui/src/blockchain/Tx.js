@@ -43,11 +43,19 @@ export default class Tx {
    */
   static getObj = tx => new Tx(tx.sig, tx.id, tx.from.id, tx.from.balance, tx.to.id, tx.to.balance, tx.time, tx.amount)
 
+  /**
+   * Deserializes given tx json into a tx object with correct Date type.
+   */
   static getObjFromJson = txJson => {
     const parsedTx = JSON.parse(txJson)
     parsedTx.time = new Date(parsedTx.time)
     return Tx.getObj(parsedTx)
   }
+
+  /**
+   * Serializes the tx into JSON string.
+   */
+  toJson = () => JSON.stringify(this)
 
   /**
    * Concatenates the the given tx into a regular string, fit for hashing.
@@ -65,9 +73,4 @@ export default class Tx {
    * Verifies the tx's signature, asynchronously.
    */
   verifySig = async () => assert(await crypto.verifyText(this.sig, this.getStr()), 'Invalid tx signature.')
-
-  /**
-   * Serializes the tx into JSON string.
-   */
-  toJson = JSON.stringify(this)
 }

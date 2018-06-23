@@ -5,12 +5,15 @@ const getSampleTx = () => new Tx(null, 'tx-123', '1', 500, '2', 500, new Date(),
 
 export default {
   verify: async () => {
+    // unsigned tx
     const tx = getSampleTx()
     try {
       await tx.verify()
     } catch (e) {
       assert.equal(e.type, 'AssertionError')
     }
+
+    // signed tx
     await tx.sign()
     await tx.verify()
   },
@@ -18,7 +21,7 @@ export default {
   'json stringify': async () => {
     const tx = getSampleTx()
     await tx.sign()
-    const jsonStr = JSON.stringify(tx)
+    const jsonStr = tx.toJson()
     const txObj = Tx.getObjFromJson(jsonStr)
     await txObj.verify()
   }

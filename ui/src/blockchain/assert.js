@@ -1,5 +1,5 @@
 class AssertionError extends Error {
-  type = 'AssertionError' // due to: https://github.com/facebook/create-react-app/issues/2952
+  type = 'AssertionError' // since 'e instanceof AssertionError' is false: https://github.com/facebook/create-react-app/issues/2952
 }
 
 export default function assert(condition, description) {
