@@ -27,7 +27,7 @@ import PrivateRoute from './comps/shared/PrivateRoute'
 import Modal from './comps/shared/Modal'
 import Terms from './comps/about/Terms'
 import TxDetails from './comps/account/TxDetails'
-import testRunner from './blockchain/testRunner'
+import testRunner from './blockchain/test-runner'
 
 export default withRouter(class extends Component {
   constructor(props) {
