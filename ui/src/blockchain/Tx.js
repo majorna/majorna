@@ -24,7 +24,7 @@ export default class Tx {
   verify = async () => {
     // verify schema
     assert(typeof this.sig === 'string', 'Signature must be a non-empty string.')
-    assert(this.sig.length === 92 || this.sig.length === 96, `Signature length is invalid. Expected ${92} or ${96}, got ${this.sig.length}.`)
+    assert(this.sig.length === 88, `Signature length is invalid. Expected ${88}, got ${this.sig.length}.`)
     assert(typeof this.id === 'string' && this.id.length > 0, 'ID must be a non-empty string.')
     assert(typeof this.from.id === 'string' && this.from.id.length > 0, 'From ID must be a non-empty string.')
     assert(typeof this.from.balance === 'number' && this.from.balance >= this.amount, '"From Balance" must be a number that is greater than or equal to the amount being sent.')
@@ -39,22 +39,24 @@ export default class Tx {
   }
 
   /**
-   * Concatenates the the given tx into a regular string, fit for hashing.
-   */
-  getStr = () => '' + this.id + this.from.id + this.from.balance + this.to.id + this.to.balance + this.time.getTime() + this.amount
-
-  /**
    * Creates a valid tx object out of a given object. Extra fields will not be used.
    */
   static getObj = tx => new Tx(tx.sig, tx.id, tx.from.id, tx.from.balance, tx.to.id, tx.to.balance, tx.time, tx.amount)
 
   /**
-   * Signs the tx with majorna certificate.
+   * Concatenates the the given tx into a regular string, fit for hashing.
    */
-  sign = () => { this.sig = crypto.signText(this.getStr()) }
+  getStr = () => '' + this.id + this.from.id + this.from.balance + this.to.id + this.to.balance + this.time.getTime() + this.amount
+
+  /**
+   * Signs the tx with majorna certificate, asynchronously.
+   */
+  sign = async () => { this.sig = await crypto.signText(this.getStr()) }
 
   /**
    * Verifies the tx's signature, asynchronously.
    */
-  verifySig = async () => crypto.verifyText(this.sig, this.getStr()) // todo: this should throw
+  verifySig = async () => {
+    assert(await crypto.verifyText(this.sig, this.getStr()), 'Invalid tx signature.')
+  }
 }
