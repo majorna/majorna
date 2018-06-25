@@ -1,7 +1,14 @@
 export default class {
-  leaves = []
-  levels = []
-  isReady = false
+  tree = [
+    leaves = [],
+    levels = []
+  ]
+
+  addLeaves = async items => {
+    for (let i = 0; i < items.length; i++) {
+      tree.leaves.push(_getBuffer(hashFunction(value)))
+    }
+  }
 }
 
 
@@ -30,26 +37,6 @@ function MerkleTools(treeOptions) {
   tree.leaves = []
   tree.levels = []
   tree.isReady = false
-
-  /// /////////////////////////////////////////
-  // Public Primary functions
-  /// /////////////////////////////////////////
-
-  // Resets the current tree to empty
-  this.resetTree = function () {
-    tree = {}
-    tree.leaves = []
-    tree.levels = []
-    tree.isReady = false
-  }
-
-  // Add a leaf to the tree
-  // Accepts hash value as a Buffer or hex string
-  this.addLeaf = function (value, doHash) {
-    tree.isReady = false
-    if (doHash) value = hashFunction(value)
-    tree.leaves.push(_getBuffer(value))
-  }
 
   // Add a leaves to the tree
   // Accepts hash values as an array of Buffers or hex strings
