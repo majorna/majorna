@@ -12,7 +12,7 @@ export async function signText(text) {
     config.crypto.privateKey,
     textEncoder.encode(text)
   )
-  return btoa(String.fromCharCode(...new Uint8Array(sigBuff)))
+  return btoa(String.fromCharCode(...new Uint8Array(sigBuff))) // todo: can use hex instead since fromCharCode is utf-16 on browser and utf-8 in node
 }
 
 /**
