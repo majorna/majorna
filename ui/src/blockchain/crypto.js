@@ -1,6 +1,19 @@
 import config from '../data/config'
 window.TextEncoder = window.TextEncoder || class {}
-const textEncoder = new window.TextEncoder('utf-8')
+const textEncoder = new window.TextEncoder(config.crypto.textEncoding)
+
+// todo: can use hex instead since fromCharCode is utf-16 on browser and utf-8 in node
+export const bufferToBase64 = buffer => btoa(String.fromCharCode(...new Uint8Array(buffer)))
+
+export function base64ToArrayBuffer(base64) {
+  const binary_string =  window.atob(base64)
+  const len = binary_string.length
+  const bytes = new Uint8Array(len)
+  for (let i = 0; i < len; i++)        {
+    bytes[i] = binary_string.charCodeAt(i)
+  }
+  return bytes
+}
 
 export const bufferToHex = buffer => Array.from(new Uint8Array(buffer)).map(b => b.toString(16).padStart(2, '0')).join('')
 
@@ -26,7 +39,7 @@ export async function signText(text) {
     config.crypto.privateKey,
     textEncoder.encode(text)
   )
-  return bufferToBase64(sigBuff)
+  return bufferToBase64(sigBuff) // todo: can use DER encoding for signature and save ~20bytes: https://stackoverflow.com/a/39651457/628273 (or compressed ec sig for further reduction)
 }
 
 /**
@@ -40,18 +53,4 @@ export function verifyText(sig, text) {
     sig instanceof ArrayBuffer ? sig : base64ToArrayBuffer(sig),
     text instanceof ArrayBuffer ? text : textEncoder.encode(text)
   )
-}
-
-// todo: can use hex instead since fromCharCode is utf-16 on browser and utf-8 in node
-
-const bufferToBase64 = buffer => btoa(String.fromCharCode(...new Uint8Array(buffer)))
-
-function base64ToArrayBuffer(base64) {
-  const binary_string =  window.atob(base64)
-  const len = binary_string.length
-  const bytes = new Uint8Array(len)
-  for (let i = 0; i < len; i++)        {
-    bytes[i] = binary_string.charCodeAt(i)
-  }
-  return bytes
 }

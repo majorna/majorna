@@ -1,12 +1,18 @@
 import assert from './assert'
 import config from '../data/config'
-import { bufferToHex, hexToBuffer, signText, verifyText } from './crypto'
+import { bufferToBase64, base64ToArrayBuffer, bufferToHex, hexToBuffer, signText, verifyText } from './crypto'
+
+const buffer = new Uint8Array([0, 1, 2, 42, 100, 101, 102, 255])
 
 export default {
   'init': config.initKeys,
 
+  'base64': () => {
+    const bufferParsed = base64ToArrayBuffer(bufferToBase64(buffer))
+    assert(buffer.every((v, i) => v === bufferParsed[i]))
+  },
+
   'hex': () => {
-    const buffer = new Uint8Array([0, 1, 2, 42, 100, 101, 102, 255])
     const bufferParsed = hexToBuffer(bufferToHex(buffer))
     assert(buffer.every((v, i) => v === bufferParsed[i]))
   },

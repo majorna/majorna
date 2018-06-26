@@ -27,7 +27,7 @@ const config = {
   crypto: {
     signAlgo: 'ECDSA',
     hashAlgo: 'SHA-256',
-    encoding: 'base64', // todo: can use DER encoding for signature and save ~20bytes: https://stackoverflow.com/a/39651457/628273 (or compressed ec sig for further reduction)
+    textEncoding: 'utf-8',
     privateKey: null,
     publicKey: null
   },
