@@ -1,6 +1,6 @@
 export default class {
   tree = {
-    leaves: [], // flat array of ArrayBuffer of item hashes
+    leaves: [], // item hashes: array of ArrayBuffer(s)
     levels: []
   }
 
@@ -20,7 +20,7 @@ export default class {
 
   getMerkleRoot = () => this.tree.levels[0][0]
 
-  // todo: getProof & validateProof and add tests & publish package
+  // todo: getProof & validateProof and add tests
 }
 
 async function calcNextLevel(topLevel) {

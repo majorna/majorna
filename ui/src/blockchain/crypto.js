@@ -3,6 +3,16 @@ window.TextEncoder = window.TextEncoder || class {}
 const textEncoder = new window.TextEncoder('utf-8')
 
 /**
+ * Hashes given ArrayBuffer object, asynchronously.
+ */
+export const hash = buffer => crypto.subtle.digest({name: config.crypto.hashAlgo}, buffer)
+
+/**
+ * Hashes given ArrayBuffer object to text, asynchronously.
+ */
+export const hashToText = async buffer => hex(await hash(buffer))
+
+/**
  * Signs given text, asynchronously.
  * Returned promise resolves to the signature.
  */
@@ -12,7 +22,7 @@ export async function signText(text) {
     config.crypto.privateKey,
     textEncoder.encode(text)
   )
-  return btoa(String.fromCharCode(...new Uint8Array(sigBuff))) // todo: can use hex instead since fromCharCode is utf-16 on browser and utf-8 in node
+  return bufferToBase64(sigBuff)
 }
 
 /**
@@ -28,6 +38,10 @@ export function verifyText(sig, text) {
   )
 }
 
+// todo: can use hex instead since fromCharCode is utf-16 on browser and utf-8 in node
+
+const bufferToBase64 = buffer => btoa(String.fromCharCode(...new Uint8Array(buffer)))
+
 function base64ToArrayBuffer(base64) {
   const binary_string =  window.atob(base64)
   const len = binary_string.length
@@ -37,3 +51,5 @@ function base64ToArrayBuffer(base64) {
   }
   return bytes
 }
+
+const hex = buffer => Array.from(new Uint8Array(buffer)).map(b => b.toString(16).padStart(2, '0')).join('')
