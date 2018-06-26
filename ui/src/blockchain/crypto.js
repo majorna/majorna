@@ -15,9 +15,15 @@ export function base64ToArrayBuffer(base64) {
   return bytes
 }
 
+/**
+ * Convert given ArrayBuffer instance to hexadecimal string.
+ */
 export const bufferToHex = buffer => Array.from(new Uint8Array(buffer)).map(b => b.toString(16).padStart(2, '0')).join('')
 
-export const hexToBuffer = hex => new Uint8Array(hex.match(/[\da-f]{2}/gi).map(h => parseInt(h, 16)))
+/**
+ * Convert given hexadecimal string to ArrayBuffer.
+ */
+export const hexToBuffer = hex => new Uint8Array(hex.match(/[\da-f]{2}/gi).map(h => parseInt(h, 16))).buffer
 
 /**
  * Hashes given ArrayBuffer object, asynchronously.
