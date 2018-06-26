@@ -1,6 +1,6 @@
 import config from '../data/config'
 window.TextEncoder = window.TextEncoder || class {}
-const textEncoder = new window.TextEncoder(config.crypto.textEncoding)
+const textEncoder = new window.TextEncoder(config.crypto.textEncoding) // todo: drop this and always use ArrayBuffer? / at least internally in Tx/Block classes
 
 /**
  * Convert given ArrayBuffer instance to hexadecimal string.
