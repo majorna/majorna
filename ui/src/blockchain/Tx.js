@@ -24,7 +24,7 @@ export default class Tx {
   verify = async () => {
     // verify schema
     assert(typeof this.sig === 'string', 'Signature must be a non-empty string.')
-    assert(this.sig.length === 88, `Signature length is invalid. Expected ${88}, got ${this.sig.length}.`)
+    assert(this.sig.length === 128, `Signature length is invalid. Expected ${128}, got ${this.sig.length}.`)
     assert(typeof this.id === 'string' && this.id.length > 0, 'ID must be a non-empty string.')
     assert(typeof this.from.id === 'string' && this.from.id.length > 0, 'From ID must be a non-empty string.')
     assert(typeof this.from.balance === 'number' && this.from.balance >= this.amount, '"From Balance" must be a number that is greater than or equal to the amount being sent.')

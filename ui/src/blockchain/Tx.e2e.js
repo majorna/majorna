@@ -22,6 +22,7 @@ export default {
     const tx = getSampleTx()
     await tx.sign()
     const jsonStr = tx.toJson()
+    console.log(tx)
     const txObj = Tx.getObjFromJson(jsonStr)
     await txObj.verify()
   }
