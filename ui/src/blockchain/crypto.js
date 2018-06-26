@@ -2,6 +2,10 @@ import config from '../data/config'
 window.TextEncoder = window.TextEncoder || class {}
 const textEncoder = new window.TextEncoder('utf-8')
 
+export const bufferToHex = buffer => Array.from(new Uint8Array(buffer)).map(b => b.toString(16).padStart(2, '0')).join('')
+
+export const hexToBuffer = hex => new Uint8Array(hex.match(/[\da-f]{2}/gi).map(h => parseInt(h, 16)))
+
 /**
  * Hashes given ArrayBuffer object, asynchronously.
  */
@@ -10,7 +14,7 @@ export const hash = buffer => crypto.subtle.digest({name: config.crypto.hashAlgo
 /**
  * Hashes given ArrayBuffer object to text, asynchronously.
  */
-export const hashToText = async buffer => hex(await hash(buffer))
+export const hashToText = async buffer => bufferToBase64(await hash(buffer))
 
 /**
  * Signs given text, asynchronously.
@@ -51,5 +55,3 @@ function base64ToArrayBuffer(base64) {
   }
   return bytes
 }
-
-const hex = buffer => Array.from(new Uint8Array(buffer)).map(b => b.toString(16).padStart(2, '0')).join('')

@@ -1,9 +1,15 @@
 import assert from './assert'
 import config from '../data/config'
-import { signText, verifyText } from './crypto'
+import { bufferToHex, hexToBuffer, signText, verifyText } from './crypto'
 
 export default {
   'init': config.initKeys,
+
+  'hex': () => {
+    const buffer = new Uint8Array([0, 1, 2, 42, 100, 101, 102, 255])
+    const bufferParsed = hexToBuffer(bufferToHex(buffer))
+    assert(buffer.every((v, i) => v === bufferParsed[i]))
+  },
 
   'sign and verify': async () => {
     const text = 'lorem ipsum dolor'
