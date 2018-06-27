@@ -22,7 +22,7 @@ export default {
     const tx = getSampleTx()
     await tx.sign()
     const jsonStr = tx.toJson()
-    console.log(tx)
+    assert(jsonStr.split('\n')[0] === '{', 'tx json should be indented')
     const txObj = Tx.getObjFromJson(jsonStr)
     await txObj.verify()
   }

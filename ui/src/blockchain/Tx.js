@@ -55,7 +55,7 @@ export default class Tx {
   /**
    * Serializes the tx into JSON string.
    */
-  toJson = () => JSON.stringify(this)
+  toJson = () => JSON.stringify(this, null, 2)
 
   /**
    * Concatenates the the given tx into a regular string, fit for hashing.
