@@ -1,6 +1,7 @@
 import config from '../data/config'
 window.TextEncoder = window.TextEncoder || class {}
-const textEncoder = new window.TextEncoder(config.crypto.textEncoding) // todo: drop this and always use ArrayBuffer? / at least internally in Tx/Block classes
+// todo: drop this and always use ArrayBuffer? / at least internally in Tx/Block classes
+const textEncoder = new window.TextEncoder(config.crypto.textEncoding)
 
 /**
  * Convert given ArrayBuffer instance to hexadecimal string.
@@ -23,34 +24,25 @@ export const hash = buffer => crypto.subtle.digest({name: config.crypto.hashAlgo
 export const hashStr = str => hash(textEncoder.encode(str))
 
 /**
- * Hashes given ArrayBuffer object to text, asynchronously.
+ * Hashes given ArrayBuffer object to string, asynchronously.
  */
-export const hashToText = async buffer => bufferToHex(await hash(buffer))
+export const hashToStr = async buffer => bufferToHex(await hash(buffer))
 
 /**
- * Signs given text, asynchronously.
- * Returned promise resolves to the signature.
+ * Signs given string, asynchronously. Returned promise resolves to the signature.
  */
-export async function signText(text) {
-  const sigBuff = await crypto.subtle.sign(
-    {name: config.crypto.signAlgo, hash: config.crypto.hashAlgo},
-    config.crypto.privateKey,
-    text instanceof ArrayBuffer ? text : textEncoder.encode(text)
-  )
-
-  // todo: can use DER encoding for signature and save ~20bytes: https://stackoverflow.com/a/39651457/628273 (or compressed ec sig for further reduction)
-  return bufferToHex(sigBuff)
-}
+export const signStr = async str => bufferToHex(await crypto.subtle.sign( // todo: use compressed ec sig (50% reduction) + DER encoding for signature and save ~20bytes: https://stackoverflow.com/a/39651457/628273
+  {name: config.crypto.signAlgo, hash: config.crypto.hashAlgo},
+  config.crypto.privateKey,
+  textEncoder.encode(str)
+))
 
 /**
- * Verifies given text with signature, asynchronously.
- * Returned promise resolves to a boolean.
+ * Verifies given string with signature, asynchronously. Returned promise resolves to a boolean.
  */
-export function verifyText(sig, text) {
-  return crypto.subtle.verify(
-    {name: config.crypto.signAlgo, hash: config.crypto.hashAlgo},
-    config.crypto.publicKey,
-    sig instanceof ArrayBuffer ? sig : hexToBuffer(sig),
-    text instanceof ArrayBuffer ? text : textEncoder.encode(text)
-  )
-}
+export const verifyStr = (sig, str) => crypto.subtle.verify(
+  {name: config.crypto.signAlgo, hash: config.crypto.hashAlgo},
+  config.crypto.publicKey,
+  hexToBuffer(sig),
+  textEncoder.encode(str)
+)

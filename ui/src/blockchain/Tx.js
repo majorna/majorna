@@ -66,11 +66,11 @@ export default class Tx {
    * Signs the tx with majorna certificate, asynchronously.
    */
   sign = async () => {
-    this.sig = await crypto.signText(this.getStr())
+    this.sig = await crypto.signStr(this.getStr())
   }
 
   /**
    * Verifies the tx's signature, asynchronously.
    */
-  verifySig = async () => assert(await crypto.verifyText(this.sig, this.getStr()), 'Invalid tx signature.')
+  verifySig = async () => assert(await crypto.verifyStr(this.sig, this.getStr()), 'Invalid tx signature.')
 }
