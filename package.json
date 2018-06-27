@@ -6,6 +6,7 @@
     "start": "npm start --prefix server & npm start --prefix ui",
     "build": "npm run build --prefix ui",
     "test": "npm test --prefix server && npm run test-coverage --prefix ui",
-    "deploy": "npm run build && firebase deploy && npm run deploy --prefix server"
+    "deploy": "npm run build && firebase deploy && npm run deploy --prefix server",
+    "outdated": "(npm outdated || true) && (npm outdated --prefix ui || true) && (npm outdated --prefix server || true)"
   }
 }

@@ -33,8 +33,6 @@ MAJORNA_TX_SIGN_PUBLIC_KEY_PATH # alternative
 
 MAJORNA_COINBASE_COMMERCE_API_KEY
 MAJORNA_COINBASE_COMMERCE_WEBHOOK_SHARED_SECRET
-
-MAJORNA_STRIPE_SECRET_KEY
 ```
 
 Following environment variables are required to run the tests:
@@ -47,8 +45,6 @@ MAJORNA_GITHUB_TOKEN
 
 MAJORNA_COINBASE_COMMERCE_API_KEY
 MAJORNA_COINBASE_COMMERCE_WEBHOOK_SHARED_SECRET
-
-MAJORNA_STRIPE_TEST_SECRET_KEY
 ```
 
 ### Heroku Push
@@ -78,7 +74,7 @@ Server:
 * Firebase Hosting
 * Firebase Auth: sign-in methods: authorized domains
 * console.developers.google.com/apis/credentials/oauthclient/ -> allowed redirect urls (test with new user registration)
-* Coinbase Commerce/Stripe webhooks, company email/website/support configurations, whitelisted hosted widget domains
+* Coinbase Commerce webhooks, company email/website/support configurations, whitelisted hosted widget domains
 * GitHub organization description/majorna repo description
 * Reddit
 * Blog

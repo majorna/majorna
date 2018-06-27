@@ -2,7 +2,6 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import mj from '../../res/mj.png'
 import StatsWidget from '../shared/StatsWidget'
-import TestnetWidget from '../shared/TestnetWidget'
 
 export default props =>
   <React.Fragment>
@@ -18,8 +17,6 @@ export default props =>
         </div>
       </div>
     </div>
-
-    <TestnetWidget/>
 
     {/* Majorna stats from firestore/mj/meta document */}
     {!props.mjMetaDoc ? <div className="mj-box center-all spinner"/> : <StatsWidget mjMetaDoc={props.mjMetaDoc} />}
