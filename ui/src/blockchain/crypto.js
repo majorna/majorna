@@ -18,6 +18,11 @@ export const hexToBuffer = hexStr => new Uint8Array(hexStr.match(/[\da-f]{2}/gi)
 export const hash = buffer => crypto.subtle.digest({name: config.crypto.hashAlgo}, buffer)
 
 /**
+ * Hashes given string, asynchronously.
+ */
+export const hashStr = str => hash(textEncoder.encode(str))
+
+/**
  * Hashes given ArrayBuffer object to text, asynchronously.
  */
 export const hashToText = async buffer => bufferToHex(await hash(buffer))
