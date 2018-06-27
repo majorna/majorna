@@ -58,19 +58,24 @@ export default class Tx {
   toJson = () => JSON.stringify(this, null, 2)
 
   /**
+   * Concatenates the the given tx into a regular string (excluding signature field), fit for signing.
+   */
+  toSigningString = () => '' + this.id + this.from.id + this.from.balance + this.to.id + this.to.balance + this.time.getTime() + this.amount
+
+  /**
    * Concatenates the the given tx into a regular string, fit for hashing.
    */
-  getStr = () => '' + this.id + this.from.id + this.from.balance + this.to.id + this.to.balance + this.time.getTime() + this.amount
+  toString = () => '' + this.sig + this.toSigningString()
 
   /**
    * Signs the tx with majorna certificate, asynchronously.
    */
   sign = async () => {
-    this.sig = await crypto.signStr(this.getStr())
+    this.sig = await crypto.signStr(this.toSigningString())
   }
 
   /**
    * Verifies the tx's signature, asynchronously.
    */
-  verifySig = async () => assert(await crypto.verifyStr(this.sig, this.getStr()), 'Invalid tx signature.')
+  verifySig = async () => assert(await crypto.verifyStr(this.sig, this.toSigningString()), 'Invalid tx signature.')
 }
