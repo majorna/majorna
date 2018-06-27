@@ -1,7 +1,8 @@
 import crypto from './crypto.e2e'
+import Merkle from './Merkle.e2e'
 import Tx from './Tx.e2e'
 
-const testSuites = Object.entries({crypto, Tx})
+const testSuites = Object.entries({crypto, Merkle, Tx})
 
 export default async () => {
   console.log('[Tests START]')

@@ -1,7 +1,9 @@
 import assert from './assert'
+import Merkle from './Merkle'
 
 export default {
-  'sign and verify': async () => {
-    assert(true)
+  'make and verify': async () => {
+    const merkle = new Merkle()
+    assert(merkle)
   }
 }
