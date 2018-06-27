@@ -1,26 +1,33 @@
 import { hash, hashStr, bufferToHex } from './crypto'
-export default class {
+
+export default class Merkle {
   leaves = [] // item hashes: array of ArrayBuffer(s)
+  levels = [] // 2D merkle schema that is fit for console.log(merkle.levels) so you will get a nicely styled diagram
 
-  levels = []
+  static create = async items => {
+    const merkle = new Merkle()
 
-  addLeaves = async items => {
     for (let i = 0; i < items.length; i++) {
       const itemHash = await hashStr(items[i])
-      this.leaves.push(itemHash)
+      merkle.leaves.push(itemHash)
     }
 
-    this.levels.unshift(this.leaves)
-    while (this.levels[0].length > 1) {
-      this.levels.unshift(await calcNextLevel(this.levels[0]))
+    merkle.levels.unshift(merkle.leaves)
+    while (merkle.levels[0].length > 1) {
+      merkle.levels.unshift(await calcNextLevel(merkle.levels[0]))
     }
+
+    return merkle
   }
 
   getMerkleRoot = () => bufferToHex(this.levels[0][0])
 
   getProof = () => {}
 
-  validateProof = () => {}
+  validateProof = () => {
+    // todo: merkle-tools checks the proof without checking the tree depth hence enabling: https://en.wikipedia.org/wiki/Merkle_tree#Second_preimage_attack
+    // we already store txCount in header so can easily verify the tree depth ourselves on top of merkle-tools path verification
+  }
 }
 
 async function calcNextLevel(topLevel) {
