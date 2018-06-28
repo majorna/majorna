@@ -31,8 +31,8 @@ export default class Block {
   }
 
   /**
-   * Verifies the tx, asynchronously.
-   * Returns true if tx is valid. Throws an AssertionError with a relevant message, if the verification fails.
+   * Verifies the block, asynchronously.
+   * Returns true if block is valid. Throws an AssertionError with a relevant message, if the verification fails.
    */
   verify = async () => {
     // verify schema
@@ -52,7 +52,7 @@ export default class Block {
   }
 
   /**
-   * Creates a tx object out of a given object.
+   * Creates a block object out of a given plain object.
    */
   static getObj = tx => new Block(tx.sig, tx.id, tx.from.id, tx.from.balance, tx.to.id, tx.to.balance, tx.time, tx.amount)
 

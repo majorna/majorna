@@ -39,7 +39,7 @@ export default class Tx {
   }
 
   /**
-   * Creates a tx object out of a given object.
+   * Creates a tx object out of a given plain object.
    */
   static getObj = tx => new Tx(tx.sig, tx.id, tx.from.id, tx.from.balance, tx.to.id, tx.to.balance, tx.time, tx.amount)
 
