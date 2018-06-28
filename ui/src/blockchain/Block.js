@@ -86,23 +86,28 @@ export default class Block {
 
   /**
    * Concatenates the the given block into a regular string, fit for signing.
+   * Nonce as the first item to be consistent with mining string.
    */
-  toSigningString = () => '' + this.id + this.from.id + this.from.balance + this.to.id + this.to.balance + this.time.getTime() + this.amount
+  toSigningString = () => '' + this.header.nonce + this.header.no + this.header.prevHash + this.header.txCount +
+  this.header.merkleRoot + this.header.time.getTime() + this.header.minDifficulty
 
   /**
    * Concatenates the the given block into a regular string, fit for hashing.
+   * Puts the nonce first to prevent internal hash state from being reused. In future we can add more memory intensive prefixes.
+   * @param difficulty - If specified, this difficulty will be used instead of the one in header.
    */
-  toMiningString = () => '' + this.sig + this.toSigningString()
+  toMiningString = difficulty => '' + this.header.no + this.header.prevHash + this.header.txCount +
+  this.header.merkleRoot + this.header.time.getTime() + (difficulty || this.header.minDifficulty)
 
   /**
-   * Signs the tx with majorna certificate, asynchronously.
+   * Signs the block with majorna certificate, asynchronously.
    */
   sign = async () => {
     this.sig = await signStr(this.toSigningString())
   }
 
   /**
-   * Verifies the tx's signature, asynchronously.
+   * Verifies the block's signature, asynchronously.
    */
-  verifySig = async () => assert(await verifyStr(this.sig, this.toSigningString()), 'Invalid tx signature.')
+  verifySig = async () => assert(await verifyStr(this.sig, this.toSigningString()), 'Invalid block signature.')
 }
