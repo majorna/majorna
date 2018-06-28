@@ -1,20 +1,33 @@
 import assert from './assert'
 import { signStr, verifyStr } from './crypto'
 
+export const getGenesisBlock = () => ({
+  sig: '',
+  header: {
+    no: 1,
+    prevHash: '',
+    txCount: 0,
+    merkleRoot: '',
+    time: new Date('01 Jan 2018 00:00:00 UTC'),
+    minDifficulty: 0,
+    nonce: 0
+  },
+  txs: []
+})
+
 export default class Block {
-  constructor (sig, id, fromId, fromBalance, toId, toBalance, time, amount) {
-    this.sig = sig // signature of the tx, signed by the sender (or majorna on behalf of sender)
-    this.id = id // ID of the transaction
-    this.from = {
-      id: fromId, // ID of the sender
-      balance: fromBalance // balance of sender before transaction
+  constructor (sig, no, prevHash, txCount, merkleRoot, time, minDifficulty, nonce, txs) {
+    this.sig = sig // optional: if given, difficulty and nonce are not obligatory
+    this.header = {
+      no,
+      prevHash,
+      txCount,
+      merkleRoot,
+      time,
+      minDifficulty, // optional: if sig is not present, should be > 0
+      nonce // optional: if sig is not present, should be > 0
     }
-    this.to = {
-      id: toId, // ID of the receiver
-      balance: toBalance // balance of receiver before transaction
-    }
-    this.time = time // time of the transaction
-    this.amount = amount // amount being sent
+    this.txs = txs
   }
 
   /**
