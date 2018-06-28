@@ -1,5 +1,6 @@
 import assert from './assert'
 import { signStr, verifyStr } from './crypto'
+import Merkle from './Merkle'
 
 export const getGenesisBlock = () => ({
   sig: '',
@@ -52,33 +53,55 @@ export default class Block {
   }
 
   /**
-   * Creates a block object out of a given plain object.
+   * Creates a block with given txs and previous block, asynchronously.
    */
-  static getObj = bl => new Block(bl.sig, bl.no, bl.prevHash, bl.txCount, bl.merkleRoot, bl.time, bl.minDifficulty, bl.nonce, bl.txs)
-
-  /**
-   * Deserializes given tx json into a tx object with correct Date type.
-   */
-  static getObjFromJson = txJson => {
-    const parsedTx = JSON.parse(txJson)
-    parsedTx.time = new Date(parsedTx.time)
-    return Tx.getObj(parsedTx)
+  static create = async (txs, prevBlock, now = new Date()) => {
+    txs = txs.map(tx => Tx.getObj(tx))
+    return new Block(
+      '',
+      prevBlock.no + 1,
+      await prevBlock.getHeaderHash(),
+      txs.length,
+      (txs.length && Merkle.create(txs).root) || '', // block are allowed to have no txs in them
+      now,
+      0,
+      0,
+      txs
+    )
   }
 
   /**
-   * Serializes the tx into JSON string.
+   * Creates a block object out of a given plain object.
+   */
+  static getObj = bl => new Block(
+    bl.sig,
+    bl.header.no, bl.header.prevHash, bl.header.txCount, bl.header.merkleRoot, bl.header.time, bl.header.minDifficulty, bl.header.nonce,
+    bl.txs
+  )
+
+  /**
+   * Deserializes given tx json into a tx object with correct Date type.k
+   */
+  static getObjFromJson = blockJson => {
+    const parsedBlock = JSON.parse(blockJson)
+    parsedBlock.header.time = new Date(parsedBlock.header.time)
+    return Block.getObj(parsedBlock)
+  }
+
+  /**
+   * Serializes the block into JSON string.
    */
   toJson = () => JSON.stringify(this, null, 2)
 
   /**
-   * Concatenates the the given tx into a regular string (excluding signature field), fit for signing.
+   * Concatenates the the given block into a regular string, fit for signing.
    */
   toSigningString = () => '' + this.id + this.from.id + this.from.balance + this.to.id + this.to.balance + this.time.getTime() + this.amount
 
   /**
-   * Concatenates the the given tx into a regular string, fit for hashing.
+   * Concatenates the the given block into a regular string, fit for hashing.
    */
-  toString = () => '' + this.sig + this.toSigningString()
+  toMiningString = () => '' + this.sig + this.toSigningString()
 
   /**
    * Signs the tx with majorna certificate, asynchronously.
