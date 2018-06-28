@@ -54,7 +54,7 @@ export default class Block {
   /**
    * Creates a block object out of a given plain object.
    */
-  static getObj = tx => new Block(tx.sig, tx.id, tx.from.id, tx.from.balance, tx.to.id, tx.to.balance, tx.time, tx.amount)
+  static getObj = bl => new Block(bl.sig, bl.no, bl.prevHash, bl.txCount, bl.merkleRoot, bl.time, bl.minDifficulty, bl.nonce, bl.txs)
 
   /**
    * Deserializes given tx json into a tx object with correct Date type.
