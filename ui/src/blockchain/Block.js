@@ -2,20 +2,6 @@ import assert from './assert'
 import { signStr, verifyStr } from './crypto'
 import Merkle from './Merkle'
 
-export const getGenesisBlock = () => ({
-  sig: '',
-  header: {
-    no: 1,
-    prevHash: '',
-    txCount: 0,
-    merkleRoot: '',
-    time: new Date('01 Jan 2018 00:00:00 UTC'),
-    minDifficulty: 0,
-    nonce: 0
-  },
-  txs: []
-})
-
 export default class Block {
   constructor (sig, no, prevHash, txCount, merkleRoot, time, minDifficulty, nonce, txs) {
     this.sig = sig // optional: if given, difficulty and nonce are not obligatory
@@ -51,6 +37,11 @@ export default class Block {
     assert(this.from.id !== this.to.id, 'To and From IDs cannot be the same.')
     await this.verifySig()
   }
+
+  /**
+   * Very first block ever.
+   */
+  static getGenesis = () => new Block('', 1, '', 0, '', new Date('01 Jan 2018 00:00:00 UTC'), 0, 0, [])
 
   /**
    * Creates a block with given txs and previous block, asynchronously.
