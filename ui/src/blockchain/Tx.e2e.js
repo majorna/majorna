@@ -26,4 +26,6 @@ export default {
     const txObj = Tx.getObjFromJson(jsonStr)
     await txObj.verify()
   }
+
+  // todo: verify the tx verification with positive/negative cases as we do in svr/block.test.js
 }
