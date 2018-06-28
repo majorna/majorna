@@ -64,20 +64,17 @@ export default class Block {
   /**
    * Creates a block object out of a given plain object.
    */
-  static getObj = bl => new Block(
-    bl.sig,
-    bl.header.no, bl.header.prevHash, bl.header.txCount, bl.header.merkleRoot, bl.header.time, bl.header.minDifficulty, bl.header.nonce,
-    bl.txs
+  static getObj = bo => new Block(
+    bo.sig,
+      bo.header.no, bo.header.prevHash, bo.header.txCount, bo.header.merkleRoot,
+      bo.header.time instanceof Date ? bo.header.time : new Date(bo.header.time), bo.header.minDifficulty, bo.header.nonce,
+    bo.txs.map(tx => Tx.getObj(tx))
   )
 
   /**
-   * Deserializes given tx json into a tx object with correct Date type.k
+   * Deserializes given tx json into a tx object with correct Date type.
    */
-  static getObjFromJson = blockJson => {
-    const parsedBlock = JSON.parse(blockJson)
-    parsedBlock.header.time = new Date(parsedBlock.header.time)
-    return Block.getObj(parsedBlock)
-  }
+  static getObjFromJson = blockJson => Block.getObj(JSON.parse(blockJson))
 
   /**
    * Serializes the block into JSON string.
@@ -89,7 +86,7 @@ export default class Block {
    * Nonce as the first item to be consistent with mining string.
    */
   toSigningString = () => '' + this.header.nonce + this.header.no + this.header.prevHash + this.header.txCount +
-  this.header.merkleRoot + this.header.time.getTime() + this.header.minDifficulty
+    this.header.merkleRoot + this.header.time.getTime() + this.header.minDifficulty
 
   /**
    * Concatenates the the given block into a regular string, fit for hashing.
@@ -97,7 +94,7 @@ export default class Block {
    * @param difficulty - If specified, this difficulty will be used instead of the one in header.
    */
   toMiningString = difficulty => '' + this.header.no + this.header.prevHash + this.header.txCount +
-  this.header.merkleRoot + this.header.time.getTime() + (difficulty || this.header.minDifficulty)
+    this.header.merkleRoot + this.header.time.getTime() + (difficulty || this.header.minDifficulty)
 
   /**
    * Signs the block with majorna certificate, asynchronously.

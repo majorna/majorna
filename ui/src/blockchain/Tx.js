@@ -41,16 +41,13 @@ export default class Tx {
   /**
    * Creates a tx object out of a given plain object.
    */
-  static getObj = tx => new Tx(tx.sig, tx.id, tx.from.id, tx.from.balance, tx.to.id, tx.to.balance, tx.time, tx.amount)
+  static getObj = tx =>
+    new Tx(tx.sig, tx.id, tx.from.id, tx.from.balance, tx.to.id, tx.to.balance, tx.time instanceof Date ? tx.time : new Date(tx.time), tx.amount)
 
   /**
    * Deserializes given tx json into a tx object with correct Date type.
    */
-  static getObjFromJson = txJson => {
-    const parsedTx = JSON.parse(txJson)
-    parsedTx.time = new Date(parsedTx.time)
-    return Tx.getObj(parsedTx)
-  }
+  static getObjFromJson = txJson => Tx.getObj(JSON.parse(txJson))
 
   /**
    * Serializes the tx into JSON string.
