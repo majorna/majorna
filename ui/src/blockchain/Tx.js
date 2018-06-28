@@ -1,5 +1,5 @@
 import assert from './assert'
-import * as crypto from './crypto'
+import { signStr, verifyStr } from './crypto'
 
 export default class Tx {
   constructor (sig, id, fromId, fromBalance, toId, toBalance, time, amount) {
@@ -71,11 +71,11 @@ export default class Tx {
    * Signs the tx with majorna certificate, asynchronously.
    */
   sign = async () => {
-    this.sig = await crypto.signStr(this.toSigningString())
+    this.sig = await signStr(this.toSigningString())
   }
 
   /**
    * Verifies the tx's signature, asynchronously.
    */
-  verifySig = async () => assert(await crypto.verifyStr(this.sig, this.toSigningString()), 'Invalid tx signature.')
+  verifySig = async () => assert(await verifyStr(this.sig, this.toSigningString()), 'Invalid tx signature.')
 }
