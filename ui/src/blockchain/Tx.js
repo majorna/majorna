@@ -1,5 +1,5 @@
 import assert from './assert'
-import { signStr, verifyStr } from './crypto'
+import { hashStr, signStr, verifyStr } from './crypto'
 
 export default class Tx {
   constructor (sig, id, fromId, fromBalance, toId, toBalance, time, amount) {
@@ -60,9 +60,9 @@ export default class Tx {
   toSigningString = () => '' + this.id + this.from.id + this.from.balance + this.to.id + this.to.balance + this.time.getTime() + this.amount
 
   /**
-   * Concatenates the the given tx into a regular string, fit for hashing.
+   * Returns the hash of the tx, asynchronously.
    */
-  toString = () => '' + this.sig + this.toSigningString()
+  hash = () => hashStr('' + this.sig + this.toSigningString())
 
   /**
    * Signs the tx with majorna certificate, asynchronously.

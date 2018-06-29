@@ -1,6 +1,7 @@
 import assert from './assert'
-import { signStr, verifyStr } from './crypto'
+import { hashStr, signStr, verifyStr } from './crypto'
 import Merkle from './Merkle'
+import Tx from './Tx'
 
 export default class Block {
   constructor (sig, no, prevHash, txCount, merkleRoot, time, minDifficulty, nonce, txs) {
@@ -21,7 +22,7 @@ export default class Block {
    * Verifies the block, asynchronously.
    * Returns true if block is valid. Throws an AssertionError with a relevant message, if the verification fails.
    */
-  verify = async () => {
+  verify = async prevBlock => {
     // verify schema
     assert(typeof this.sig === 'string', 'Signature must be a non-empty string.')
     assert(this.sig.length === 128, `Signature length is invalid. Expected ${128}, got ${this.sig.length}.`)
@@ -51,7 +52,7 @@ export default class Block {
     return new Block(
       '',
       prevBlock.no + 1,
-      await prevBlock.getHeaderHash(),
+      await prevBlock.hash(),
       txs.length,
       (txs.length && Merkle.create(txs).root) || '', // block are allowed to have no txs in them
       now,
@@ -95,6 +96,11 @@ export default class Block {
    */
   toMiningString = difficulty => '' + this.header.no + this.header.prevHash + this.header.txCount +
     this.header.merkleRoot + this.header.time.getTime() + (difficulty || this.header.minDifficulty)
+
+  /**
+   * Returns the hash of the block, asynchronously.
+   */
+  hash = () => hashStr('' + this.sig + this.toSigningString())
 
   /**
    * Signs the block with majorna certificate, asynchronously.

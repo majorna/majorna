@@ -1,29 +1,12 @@
 import assert from './assert'
-import Tx from './Tx'
+import Block from './Block'
 
-const getSampleTx = () => new Tx(null, 'tx-123', '1', 500, '2', 500, new Date(), 25)
+const getSampleBlock = () => new Block('', 2, 0, '', new Date(), 0, 0, [])
 
 export default {
-  'verify': async () => {
+  'ctor': async () => {
     // unsigned tx
-    const tx = getSampleTx()
-    try {
-      await tx.verify()
-    } catch (e) {
-      assert.equal(e.type, 'AssertionError')
-    }
-
-    // signed tx
-    await tx.sign()
-    await tx.verify()
+    const block = getSampleBlock()
+    assert(block)
   },
-
-  'json stringify': async () => {
-    const tx = getSampleTx()
-    await tx.sign()
-    const jsonStr = tx.toJson()
-    assert(jsonStr.split('\n')[0] === '{', 'tx json should be indented')
-    const txObj = Tx.getObjFromJson(jsonStr)
-    await txObj.verify()
-  }
 }
