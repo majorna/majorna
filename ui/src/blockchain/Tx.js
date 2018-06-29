@@ -50,7 +50,7 @@ export default class Tx {
   static getObjFromJson = txJson => Tx.getObj(JSON.parse(txJson))
 
   /**
-   * Serializes the tx into JSON string.
+   * Serializes the tx into JSON string with indentation.
    */
   toJson = () => JSON.stringify(this, null, 2)
 
@@ -65,7 +65,7 @@ export default class Tx {
   hash = () => hashStr('' + this.sig + this.toSigningString())
 
   /**
-   * Signs the tx with majorna certificate, asynchronously.
+   * Signs the tx, asynchronously.
    */
   sign = async () => {
     this.sig = await signStr(this.toSigningString())
