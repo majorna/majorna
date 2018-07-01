@@ -9,4 +9,8 @@ export default {
     const block = getSampleBlock()
     assert(block)
   },
+
+  'genesis': () => {
+    assert(Block.getGenesis().no === 1)
+  }
 }

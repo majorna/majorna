@@ -6,15 +6,15 @@ import Tx from './Tx'
 export default class Block {
   constructor (sig, no, prevHash, txCount, merkleRoot, time, minDifficulty, nonce, txs) {
     this.sig = sig // optional: if given, difficulty and nonce are not obligatory
-    this.header = {
-      no,
-      prevHash,
-      txCount,
-      merkleRoot,
-      time,
-      minDifficulty, // optional: if sig is not present, should be > 0
-      nonce // optional: if sig is not present, should be > 0
-    }
+
+    this.no = no
+    this.prevHash = prevHash
+    this.txCount = txCount
+    this.merkleRoot = merkleRoot
+    this.time = time
+    this.minDifficulty = minDifficulty  // optional: if sig is not present, should be > 0
+    this.nonce = nonce // optional: if sig is not present, should be > 0
+
     this.txs = txs
   }
 
@@ -67,8 +67,8 @@ export default class Block {
    */
   static getObj = bo => new Block(
     bo.sig,
-      bo.header.no, bo.header.prevHash, bo.header.txCount, bo.header.merkleRoot,
-      bo.header.time instanceof Date ? bo.header.time : new Date(bo.header.time), bo.header.minDifficulty, bo.header.nonce,
+      bo.no, bo.prevHash, bo.txCount, bo.merkleRoot,
+      bo.time instanceof Date ? bo.time : new Date(bo.time), bo.minDifficulty, bo.nonce,
     bo.txs.map(tx => Tx.getObj(tx))
   )
 
@@ -86,16 +86,16 @@ export default class Block {
    * Concatenates the the given block into a regular string, fit for signing.
    * Nonce as the first item to be consistent with mining string.
    */
-  toSigningString = () => '' + this.header.nonce + this.header.no + this.header.prevHash + this.header.txCount +
-    this.header.merkleRoot + this.header.time.getTime() + this.header.minDifficulty
+  toSigningString = () => '' + this.nonce + this.no + this.prevHash + this.txCount +
+    this.merkleRoot + this.time.getTime() + this.minDifficulty
 
   /**
    * Concatenates the the given block into a regular string, fit for hashing.
    * Puts the nonce first to prevent internal hash state from being reused. In future we can add more memory intensive prefixes.
-   * @param difficulty - If specified, this difficulty will be used instead of the one in header.
+   * @param difficulty - If specified, this difficulty will be used instead of the one in
    */
-  toMiningString = difficulty => '' + this.header.no + this.header.prevHash + this.header.txCount +
-    this.header.merkleRoot + this.header.time.getTime() + (difficulty || this.header.minDifficulty)
+  toMiningString = difficulty => '' + this.no + this.prevHash + this.txCount +
+    this.merkleRoot + this.time.getTime() + (difficulty || this.minDifficulty)
 
   /**
    * Returns the hash of the block, asynchronously.
