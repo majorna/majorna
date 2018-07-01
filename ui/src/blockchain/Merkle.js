@@ -5,11 +5,11 @@ export default class Merkle {
   levels = [] // 2D merkle schema that is fit for console.log(merkle.levels) so you will get a nicely styled diagram
   root
 
-  static create = async items => {
+  static create = async (items, hashItems) => {
     const m = new Merkle()
 
     for (let i = 0; i < items.length; i++) {
-      const itemHash = await hashStr(items[i])
+      const itemHash = hashItems ? await hashStr(items[i]) : items[i]
       m.leaves.push(itemHash)
     }
 
