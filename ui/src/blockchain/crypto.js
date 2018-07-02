@@ -1,4 +1,5 @@
 import config from '../data/config'
+import assert from './assert'
 window.TextEncoder = window.TextEncoder || class {}
 // todo: drop this and always use ArrayBuffer? / at least internally in Tx/Block classes
 const textEncoder = new window.TextEncoder(config.crypto.textEncoding)
@@ -33,11 +34,12 @@ export const signStr = async str => bufferToHex(await crypto.subtle.sign( // tod
 ))
 
 /**
- * Verifies given string with signature, asynchronously. Returned promise resolves to a boolean.
+ * Verifies given string with hex encoded signature, asynchronously.
+ * Throws an AssertionError if signature is invalid.
  */
-export const verifyStr = (sig, str) => crypto.subtle.verify(
+export const verifyStr = async (sig, str, failureDescription) => assert(await crypto.subtle.verify(
   {name: config.crypto.signAlgo, hash: config.crypto.hashAlgo},
   config.crypto.publicKey,
   hexToBuffer(sig),
   textEncoder.encode(str)
-)
+), failureDescription || 'Invalid signature.')

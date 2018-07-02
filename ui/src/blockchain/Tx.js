@@ -47,8 +47,9 @@ export default class Tx {
 
   /**
    * Verifies the tx's signature, asynchronously.
+   * Throws an AssertionError if signature is invalid.
    */
-  verifySig = async () => assert(await verifyStr(this.sig, this._toSigningString()), 'Invalid tx signature.')
+  verifySig = () => verifyStr(this.sig, this._toSigningString(), 'Invalid tx signature.')
 
   /**
    * Verifies the tx, asynchronously.

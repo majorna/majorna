@@ -76,8 +76,9 @@ export default class Block {
 
   /**
    * Verifies the block's signature, asynchronously.
+   * Throws an AssertionError if signature is invalid.
    */
-  verifySig = async () => assert(await verifyStr(this.sig, this._toSigningString()), 'Invalid block signature.')
+  verifySig = () => verifyStr(this.sig, this._toSigningString(), 'Invalid block signature.')
 
   /**
    * Verifies the block, asynchronously.

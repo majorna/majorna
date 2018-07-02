@@ -18,11 +18,13 @@ export default {
   'sign and verify': async () => {
     const text = 'lorem ipsum dolor'
     const sig = await signStr(text)
-    assert(await verifyStr(sig, text))
+    await verifyStr(sig, text)
+    await assert.throws(() => verifyStr(sig + 'aa', text))
+    await assert.throws(() => verifyStr(sig, text + 'a'))
 
     const text2 = 'asdf89u -098sd7fsadufih sadfh0isaudf09-2ui3/;sd3/.,mOI_(*YT*(^FTIDTXipf90as.sdafsdas djf-9i1j?KJPOih-9?oiuasdf83348'
     const sig2 = await signStr(text2)
-    assert(await verifyStr(sig2, text2))
+    await verifyStr(sig2, text2)
 
     assert(sig2.length === 128)
   }
