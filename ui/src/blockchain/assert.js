@@ -14,7 +14,7 @@ assert.equal = function (a, b, description) {
   }
 }
 
-assert.throws = async function (fn) {
+assert.throws = async function (fn, expectedErrorMsg) {
   let err
   try {
     await fn()
@@ -22,6 +22,9 @@ assert.throws = async function (fn) {
     err = e
   }
   assert(err, 'Expected exception but did not get one.')
+  expectedErrorMsg && assert(
+    err.message.toLowerCase().includes(expectedErrorMsg.toLowerCase()),
+    `Expected error message: "${err.message.toLowerCase()}" to include: "${expectedErrorMsg.toLowerCase()}".`)
 }
 
 assert.AssertionError = AssertionError

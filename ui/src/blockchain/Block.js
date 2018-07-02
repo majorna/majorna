@@ -109,7 +109,7 @@ export default class Block {
     }
 
     // verify contents
-    const prevBlockHash = prevBlock.hash()
+    const prevBlockHash = await prevBlock.hash()
     assert(this.prevHash === prevBlockHash, `Given previous block hash does not match. Expected ${prevBlockHash}, got ${this.prevHash}.`)
     if (this.txCount) {
       const merkleRoot = (await Merkle.create(this.txs.map(tx => tx.hash()))).root

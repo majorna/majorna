@@ -43,8 +43,10 @@ export default {
     const genesis = Block.getGenesis()
     const blockNo2 = await Block.create(await getSampleTxs(), genesis)
     assert(blockNo2 instanceof Block)
-    await assert.throws(() => blockNo2.verify(genesis))
+    await assert.throws(() => blockNo2.verify(genesis), 'invalid block signature')
 
+    // todo: always accept/return arraybuffer from crypto methods?
+    // below test breaks because of this
     // await blockNo2.sign()
     // blockNo2.verify(genesis)
   }

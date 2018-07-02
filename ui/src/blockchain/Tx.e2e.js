@@ -7,6 +7,7 @@ export default {
   'verify': async () => {
     // unsigned tx
     const tx = getSampleTx()
+    await assert.throws(() => tx.verify(), 'signature must be a non-empty string')
     try {
       await tx.verify()
     } catch (e) {
