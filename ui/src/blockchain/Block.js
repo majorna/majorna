@@ -34,7 +34,7 @@ export default class Block {
         prevBlock.no + 1,
         await prevBlock.hash(),
         txs.length,
-        (txs.length && Merkle.create(txs.map(tx => tx.hash())).root) || '', // block are allowed to have no txs in them
+        (txs.length && (await Merkle.create(txs.map(tx => tx.hash()))).root) || '', // block are allowed to have no txs in them
         now,
         0,
         0,
