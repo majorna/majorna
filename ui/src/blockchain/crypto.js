@@ -14,19 +14,14 @@ export const bufferToHex = buffer => Array.from(new Uint8Array(buffer)).map(b =>
 export const hexToBuffer = hexStr => new Uint8Array(hexStr.match(/[\da-f]{2}/gi).map(h => parseInt(h, 16))).buffer
 
 /**
- * Hashes given ArrayBuffer object, asynchronously.
+ * Hashes given ArrayBuffer object, asynchronously. Returns hash as ArrayBuffer.
  */
 export const hash = buffer => crypto.subtle.digest({name: config.crypto.hashAlgo}, buffer)
 
 /**
- * Hashes given string, asynchronously.
+ * Hashes given string, asynchronously. Returns hash as ArrayBuffer.
  */
 export const hashStr = str => hash(textEncoder.encode(str))
-
-/**
- * Hashes given ArrayBuffer object to string, asynchronously.
- */
-export const hashToStr = async buffer => bufferToHex(await hash(buffer))
 
 /**
  * Signs given string, asynchronously. Returned promise resolves to the signature.

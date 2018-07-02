@@ -1,10 +1,25 @@
 import { hash, hashStr, bufferToHex } from './crypto'
 
 export default class Merkle {
-  leaves = [] // item hashes: array of ArrayBuffer(s)
-  levels = [] // 2D merkle schema that is fit for console.log(merkle.levels) so you will get a nicely styled diagram
+  /**
+   * Item hashes: An array of ArrayBuffers.
+   */
+  leaves = []
+
+  /**
+   * 2D Merkle schema that is fit for console.log(merkle.levels) so you will get a nicely styled diagram.
+   */
+  levels = []
+
+  /**
+   * Hex encoded Merkle root.
+   */
   root
 
+  /**
+   * Construct a Merkle tree with given hash array, asynchronously.
+   * If a string array is given instead of a hash array, set hashItems to true.
+   */
   static create = async (items, hashItems) => {
     const m = new Merkle()
 
