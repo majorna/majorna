@@ -24,7 +24,7 @@ export const stopMining = () => {
  *
  * todo: this is copy/paste from svr/block.js so better used a shared lib
  */
-function getHashDifficulty(hash) {
+export function getHashDifficulty(hash) {
   let difficulty = 0
 
   for (let i = 0; i < hash.length; i++) {
