@@ -63,36 +63,21 @@ export default class Block {
   toJson = () => JSON.stringify(this, null, 2)
 
   /**
-   * Concatenates the the given block into a regular string, fit for signing.
-   * Nonce as the first item to be consistent with mining string.
-   */
-  toSigningString = () => '' + this.nonce + this.no + this.prevHash + this.txCount +
-    this.merkleRoot + this.time.getTime() + this.minDifficulty
-
-  /**
-   * Concatenates the the given block into a regular string, fit for hashing.
-   * Puts the nonce first to prevent internal hash state from being reused. In future we can add more memory intensive prefixes.
-   * @param difficulty - If specified, this difficulty will be used instead of the one in
-   */
-  toMiningString = difficulty => '' + this.no + this.prevHash + this.txCount +
-    this.merkleRoot + this.time.getTime() + (difficulty || this.minDifficulty)
-
-  /**
    * Returns the hash of the block, asynchronously.
    */
-  hash = () => hashStr('' + this.sig + this.toSigningString())
+  hash = () => hashStr('' + this.sig + this._toSigningString())
 
   /**
    * Signs the block with majorna certificate, asynchronously.
    */
   sign = async () => {
-    this.sig = await signStr(this.toSigningString())
+    this.sig = await signStr(this._toSigningString())
   }
 
   /**
    * Verifies the block's signature, asynchronously.
    */
-  verifySig = async () => assert(await verifyStr(this.sig, this.toSigningString()), 'Invalid block signature.')
+  verifySig = async () => assert(await verifyStr(this.sig, this._toSigningString()), 'Invalid block signature.')
 
   /**
    * Verifies the block, asynchronously.
@@ -114,4 +99,17 @@ export default class Block {
     assert(this.from.id !== this.to.id, 'To and From IDs cannot be the same.')
     await this.verifySig()
   }
+
+  /**
+   * Concatenates the the given block into a regular string, fit for hashing.
+   * Puts the nonce first to prevent internal hash state from being reused. In future we can add more memory intensive prefixes.
+   * @param difficulty - If specified, this difficulty will be used instead of the one in
+   */
+  _toMiningString = difficulty => '' + this.no + this.prevHash + this.txCount + this.merkleRoot + this.time.getTime() + (difficulty || this.minDifficulty)
+
+  /**
+   * Concatenates the the given block into a regular string, fit for signing.
+   * Nonce as the first item to be consistent with mining string.
+   */
+  _toSigningString = () => '' + this.nonce + this._toMiningString()
 }
