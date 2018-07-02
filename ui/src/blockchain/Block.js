@@ -87,7 +87,7 @@ export default class Block {
     // verify schema
     assert(prevBlock && typeof prevBlock.no === 'number' && prevBlock.no >= 1, `Null or invalid previous block: ${prevBlock}`)
     assert(this.no === prevBlock.no + 1, `Block number is not correct. Expected ${prevBlock.no + 1}, got ${this.no}.`)
-    assert(typeof this.from.id === 'string', 'Previous block hash should be a string.')
+    assert(typeof this.prevHash === 'string', 'Previous block hash should be a string.')
     assert(this.prevHash.length === 64, `Previous block hash length is invalid. Expected ${64}, got ${this.prevHash.length}.`)
     assert(this.txCount === this.txs.length, `Tx count in does not match the actual tx count in block. Expected ${this.txs.length}, got ${this.txCount}.`)
     if (this.txCount) {

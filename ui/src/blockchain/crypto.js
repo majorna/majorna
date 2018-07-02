@@ -24,7 +24,7 @@ export const hash = buffer => crypto.subtle.digest({name: config.crypto.hashAlgo
 export const hashStr = str => hash(textEncoder.encode(str))
 
 /**
- * Signs given string, asynchronously. Returned promise resolves to the signature.
+ * Signs given string, asynchronously. Returned promise resolves to the hex encoded signature.
  */
 export const signStr = async str => bufferToHex(await crypto.subtle.sign( // todo: use compressed ec sig (50% reduction) + DER encoding for signature and save ~20bytes: https://stackoverflow.com/a/39651457/628273
   {name: config.crypto.signAlgo, hash: config.crypto.hashAlgo},
