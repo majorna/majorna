@@ -34,26 +34,21 @@ export default class Tx {
   toJson = () => JSON.stringify(this, null, 2)
 
   /**
-   * Concatenates the the given tx into a regular string (excluding signature field), fit for signing.
-   */
-  toSigningString = () => '' + this.id + this.from.id + this.from.balance + this.to.id + this.to.balance + this.time.getTime() + this.amount
-
-  /**
    * Returns the hash of the tx, asynchronously.
    */
-  hash = () => hashStr('' + this.sig + this.toSigningString())
+  hash = () => hashStr('' + this.sig + this._toSigningString())
 
   /**
    * Signs the tx, asynchronously.
    */
   sign = async () => {
-    this.sig = await signStr(this.toSigningString())
+    this.sig = await signStr(this._toSigningString())
   }
 
   /**
    * Verifies the tx's signature, asynchronously.
    */
-  verifySig = async () => assert(await verifyStr(this.sig, this.toSigningString()), 'Invalid tx signature.')
+  verifySig = async () => assert(await verifyStr(this.sig, this._toSigningString()), 'Invalid tx signature.')
 
   /**
    * Verifies the tx, asynchronously.
@@ -75,4 +70,9 @@ export default class Tx {
     assert(this.from.id !== this.to.id, 'To and From IDs cannot be the same.')
     await this.verifySig()
   }
+
+  /**
+   * Concatenates the the given tx into a regular string (excluding signature field), fit for signing.
+   */
+  _toSigningString = () => '' + this.id + this.from.id + this.from.balance + this.to.id + this.to.balance + this.time.getTime() + this.amount
 }
