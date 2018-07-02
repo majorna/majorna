@@ -85,19 +85,45 @@ export default class Block {
    */
   verify = async prevBlock => {
     // verify schema
-    assert(typeof this.sig === 'string', 'Signature must be a non-empty string.')
-    assert(this.sig.length === 128, `Signature length is invalid. Expected ${128}, got ${this.sig.length}.`)
-    assert(typeof this.id === 'string' && this.id.length > 0, 'ID must be a non-empty string.')
-    assert(typeof this.from.id === 'string' && this.from.id.length > 0, 'From ID must be a non-empty string.')
-    assert(typeof this.from.balance === 'number' && this.from.balance >= this.amount, '"From Balance" must be a number that is greater than or equal to the amount being sent.')
-    assert(typeof this.to.id === 'string' && this.to.id.length > 0, 'To ID must be a non-empty string.')
-    assert(typeof this.to.balance === 'number' && this.to.balance >= 0, '"To Balance" must be a number that is greater than or equal to 0.')
+    assert(prevBlock && typeof prevBlock.no === 'number' && prevBlock.no >= 1, `Null or invalid previous block: ${prevBlock}`)
+    assert(this.no === prevBlock.no + 1, `Block number is not correct. Expected ${prevBlock.no + 1}, got ${this.no}.`)
+    assert(typeof this.from.id === 'string', 'Previous block hash should be a string.')
+    assert(this.prevHash.length === 64, `Previous block hash length is invalid. Expected ${64}, got ${this.prevHash.length}.`)
+    assert(this.txCount === this.txs.length, `Tx count in does not match the actual tx count in block. Expected ${this.txs.length}, got ${this.txCount}.`)
+    if (this.txCount) {
+      assert(typeof this.merkleRoot === 'string' && this.merkleRoot.length > 0, 'Merkle root should be a non-empty string.')
+      assert(this.merkleRoot.length === 64, `Merkle root length is invalid. Expected ${64}, got ${this.merkleRoot.length}.`)
+    } else {
+      assert(this.merkleRoot === '', 'Merkle root should be an empty string if block contains no txs.')
+    }
     assert(this.time instanceof Date, 'Time object must be an instance of Date class.')
-    assert(typeof this.amount === 'number' && this.amount > 0, 'Amount must be a number that is greater than 0.')
+    assert(this.time.getTime() > Block.getGenesis().time.getTime(), 'Block time is invalid or is before the genesis.')
+    if (this.sig) {
+      assert(this.sig.length === 128, `Signature length is invalid. Expected ${128}, got ${this.sig.length}.`)
+      this.minDifficulty > 0 && assert(this.nonce > 0, 'Nonce should be > 0 if difficulty is > 0.')
+      this.nonce > 0 && assert(this.minDifficulty > 0, 'Difficulty should be > 0 if nonce is > 0.')
+    } else {
+      assert(this.minDifficulty > 0, 'Block difficulty should be > 0 for unsigned blocks.')
+      assert(this.nonce > 0, 'Block nonce should be > 0 for unsigned blocks.')
+    }
 
     // verify contents
-    assert(this.from.id !== this.to.id, 'To and From IDs cannot be the same.')
-    await this.verifySig()
+    const prevBlockHash = prevBlock.hash()
+    assert(this.prevHash === prevBlockHash, `Given previous block hash does not match. Expected ${prevBlockHash}, got ${this.prevHash}.`)
+    if (this.txCount) {
+      const merkleRoot = (await Merkle.create(this.txs.map(tx => tx.hash()))).root
+      assert(this.merkleRoot === merkleRoot, `Merkle root is not valid. Expected ${merkleRoot}, got ${this.merkleRoot}`)
+      for (const tx of this.txs) assert(tx.verify(), `One of the txs in given block was invalid. Invalid tx: ${tx}`)
+    }
+    if (this.sig) {
+      await this.verifySig()
+    }
+    if (!this.sig || this.minDifficulty > 0 || this.nonce > 0) {
+      const hash = exports.hashHeaderToBuffer(this)
+      const difficulty = exports.getHashDifficulty(hash)
+      assert(difficulty >= this.minDifficulty,
+        `Nonce does not match claimed difficulty. Expected difficulty ${this.minDifficulty}, got ${difficulty} (hash: ${hash.toString('base64')}).`)
+    }
   }
 
   /**

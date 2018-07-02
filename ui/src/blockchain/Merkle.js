@@ -14,7 +14,7 @@ export default class Merkle {
   /**
    * Hex encoded Merkle root.
    */
-  root
+  root = ''
 
   /**
    * Construct a Merkle tree with given hash array, asynchronously.
