@@ -119,10 +119,10 @@ export default class Block {
       await this.verifySig()
     }
     if (!this.sig || this.minDifficulty > 0 || this.nonce > 0) {
-      const hash = exports.hashHeaderToBuffer(this)
+      const hash = await this.hash()
       const difficulty = exports.getHashDifficulty(hash)
       assert(difficulty >= this.minDifficulty,
-        `Nonce does not match claimed difficulty. Expected difficulty ${this.minDifficulty}, got ${difficulty} (hash: ${hash.toString('base64')}).`)
+        `Nonce does not match claimed difficulty. Expected difficulty ${this.minDifficulty}, got ${difficulty} (hash: ${hash}).`)
     }
   }
 
