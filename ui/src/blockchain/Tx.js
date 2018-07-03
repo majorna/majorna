@@ -34,7 +34,7 @@ export default class Tx {
   toJson = () => JSON.stringify(this, null, 2)
 
   /**
-   * Returns the hash of the tx, asynchronously.
+   * Returns the hash of the tx as ArrayBuffer, asynchronously.
    */
   hash = () => hashStrToBuffer('' + this.sig + this._toSigningString())
 

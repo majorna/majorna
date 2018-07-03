@@ -1,5 +1,5 @@
 import assert from './assert'
-import { hashStrToHexStr, signStrToHexStr, verifyStrWithHexStrSig } from './crypto'
+import { convertHexStrToBuffer, hashStrToHexStr, signStrToHexStr, verifyStrWithHexStrSig } from './crypto'
 import Merkle from './Merkle'
 import Tx from './Tx'
 
@@ -63,7 +63,7 @@ export default class Block {
   toJson = () => JSON.stringify(this, null, 2)
 
   /**
-   * Returns the hash of the block, asynchronously.
+   * Returns the hash of the block as hex encoded string, asynchronously.
    */
   hash = () => hashStrToHexStr('' + this.nonce + this._toMiningString())
 
@@ -121,7 +121,7 @@ export default class Block {
     }
     if (!this.sig || this.minDifficulty > 0 || this.nonce > 0) {
       const hash = await this.hash()
-      const difficulty = exports.getHashDifficulty(hash)
+      const difficulty = this.getHashDifficulty(new Uint8Array(convertHexStrToBuffer(hash)))
       assert(difficulty >= this.minDifficulty,
         `Nonce does not match claimed difficulty. Expected difficulty ${this.minDifficulty}, got ${difficulty} (hash: ${hash}).`)
     }
