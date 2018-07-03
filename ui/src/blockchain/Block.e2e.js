@@ -55,5 +55,18 @@ export default {
 
     blockNo2.sig = 'xxxxx' + blockNo2.sig.substring(5, blockNo2.sig.length)
     await assert.throws(() => blockNo2.verify(genesis), 'invalid block signature')
+  },
+
+  'toJson, fromJson': async () => {
+    const genesis = Block.getGenesis()
+    const newBlock = await Block.create(await getSampleTxs(), genesis)
+    await newBlock.sign()
+
+    const blockJson = newBlock.toJson()
+    const parsedBlock = Block.getObjFromJson(blockJson)
+
+    await parsedBlock.verify(genesis)
+    assert(parsedBlock.time.getTime() === newBlock.time.getTime())
+    assert(parsedBlock.txs[0].time.getTime() === newBlock.txs[0].time.getTime())
   }
 }

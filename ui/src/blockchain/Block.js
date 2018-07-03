@@ -97,7 +97,7 @@ export default class Block {
    */
   verify = async prevBlock => {
     // verify schema
-    assert(prevBlock && typeof prevBlock.no === 'number' && prevBlock.no >= 1, `Null or invalid previous block: ${prevBlock}`)
+    assert(prevBlock && typeof prevBlock.no === 'number' && prevBlock.no >= 1, `Null or invalid previous block given: ${prevBlock}`)
     assert(this.no === prevBlock.no + 1, `Block number is not correct. Expected ${prevBlock.no + 1}, got ${this.no}.`)
     assert(typeof this.prevHash === 'string', 'Previous block hash should be a string.')
     assert(this.prevHash.length === 64, `Previous block hash length is invalid. Expected ${64}, got ${this.prevHash.length}.`)
