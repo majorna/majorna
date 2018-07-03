@@ -36,7 +36,7 @@ export default class Tx {
   /**
    * Returns the hash of the tx as ArrayBuffer, asynchronously.
    */
-  hash = () => hashStrToBuffer('' + this.sig + this._toSigningString())
+  hashToBuffer = () => hashStrToBuffer('' + this.sig + this._toSigningString())
 
   /**
    * Signs the tx, asynchronously.

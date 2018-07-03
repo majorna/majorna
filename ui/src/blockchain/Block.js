@@ -1,7 +1,8 @@
 import assert from './assert'
-import { convertHexStrToBuffer, hashStrToHexStr, signStrToHexStr, verifyStrWithHexStrSig } from './crypto'
+import { convertBufferToHexStr, hashStrToBuffer, signStrToHexStr, verifyStrWithHexStrSig } from './crypto'
 import Merkle from './Merkle'
 import Tx from './Tx'
+import * as node from '../data/node'
 
 export default class Block {
   constructor (sig, no, prevHash, txCount, merkleRoot, time, minDifficulty, nonce, txs) {
@@ -32,9 +33,9 @@ export default class Block {
     return new Block(
       '',
         prevBlock.no + 1,
-        await prevBlock.hash(),
+        await prevBlock.hashToHexStr(),
         txs.length,
-        (txs.length && (await Merkle.create(txs.map(tx => tx.hash()))).root) || '', // block are allowed to have no txs in them
+        (txs.length && (await Merkle.create(txs.map(tx => tx.hashToBuffer()))).root) || '', // block are allowed to have no txs in them
         now,
         0,
         0,
@@ -63,9 +64,19 @@ export default class Block {
   toJson = () => JSON.stringify(this, null, 2)
 
   /**
+   * Returns the hash of the block as ArrayBuffer, asynchronously.
+   */
+  hashToBuffer = () => hashStrToBuffer('' + this.nonce + this._toMiningString())
+
+  /**
    * Returns the hash of the block as hex encoded string, asynchronously.
    */
-  hash = () => hashStrToHexStr('' + this.nonce + this._toMiningString())
+  hashToHexStr = async () => convertBufferToHexStr(await this.hashToBuffer())
+
+  /**
+   * Returns the block hash difficulty as an integer, asynchronously.
+   */
+  getHashDifficulty = async () => node.getHashDifficulty(new Uint8Array(await this.hashToBuffer()))
 
   /**
    * Signs the block with majorna certificate, asynchronously.
@@ -109,10 +120,10 @@ export default class Block {
     }
 
     // verify contents
-    const prevBlockHash = await prevBlock.hash()
+    const prevBlockHash = await prevBlock.hashToHexStr()
     assert(this.prevHash === prevBlockHash, `Given previous block hash does not match. Expected ${prevBlockHash}, got ${this.prevHash}.`)
     if (this.txCount) {
-      const merkleRoot = (await Merkle.create(this.txs.map(tx => tx.hash()))).root
+      const merkleRoot = (await Merkle.create(this.txs.map(tx => tx.hashToBuffer()))).root
       assert(this.merkleRoot === merkleRoot, `Merkle root is not valid. Expected ${merkleRoot}, got ${this.merkleRoot}`)
       for (const tx of this.txs) assert(tx.verify(), `One of the txs in given block was invalid. Invalid tx: ${tx}`)
     }
@@ -120,10 +131,9 @@ export default class Block {
       await this.verifySig()
     }
     if (!this.sig || this.minDifficulty > 0 || this.nonce > 0) {
-      const hash = await this.hash()
-      const difficulty = this.getHashDifficulty(new Uint8Array(convertHexStrToBuffer(hash)))
+      const difficulty = await this.getHashDifficulty()
       assert(difficulty >= this.minDifficulty,
-        `Nonce does not match claimed difficulty. Expected difficulty ${this.minDifficulty}, got ${difficulty} (hash: ${hash}).`)
+        `Nonce does not match claimed difficulty. Expected difficulty ${this.minDifficulty}, got ${difficulty} (hash: ${await this.hashToHexStr()}).`)
     }
   }
 

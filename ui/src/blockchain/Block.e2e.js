@@ -41,7 +41,7 @@ export default {
 
   'hash': async () => {
     const genesis = Block.getGenesis()
-    const hash = await genesis.hash()
+    const hash = await genesis.hashToHexStr()
     assert(hash.length === 64)
   },
 
