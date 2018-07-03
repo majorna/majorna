@@ -1,4 +1,4 @@
-import { hash, hashStr, bufferToHex } from './crypto'
+import { hashBufferToBuffer, hashStrToBuffer, convertBufferToHexStr } from './crypto'
 
 export default class Merkle {
   /**
@@ -24,7 +24,7 @@ export default class Merkle {
     const m = new Merkle()
 
     for (let i = 0; i < items.length; i++) {
-      const itemHash = hashItems ? await hashStr(items[i]) : items[i]
+      const itemHash = hashItems ? await hashStrToBuffer(items[i]) : items[i]
       m.leaves.push(itemHash)
     }
 
@@ -33,7 +33,7 @@ export default class Merkle {
       m.levels.unshift(await calcNextLevel(m.levels[0]))
     }
 
-    m.root = bufferToHex(m.levels[0][0])
+    m.root = convertBufferToHexStr(m.levels[0][0])
     return m
   }
 
@@ -56,7 +56,7 @@ async function calcNextLevel(topLevel) {
       const node = new Uint8Array(item1.length + item2.length)
       node.set(item1)
       node.set(item2, item1.length)
-      nodes.push(await hash(node.buffer))
+      nodes.push(await hashBufferToBuffer(node.buffer))
     } else {
       // this is an odd ending node, promote up to the next level by itself
       nodes.push(topLevel[x])

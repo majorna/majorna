@@ -39,15 +39,21 @@ export default {
     assert(genesis2.no === 1)
   },
 
+  'hash': async () => {
+    const genesis = Block.getGenesis()
+    const hash = await genesis.hash()
+    assert(hash.length === 64)
+  },
+
   'create': async () => {
     const genesis = Block.getGenesis()
     const blockNo2 = await Block.create(await getSampleTxs(), genesis)
     assert(blockNo2 instanceof Block)
-    await assert.throws(() => blockNo2.verify(genesis), 'invalid block signature')
 
-    // todo: always accept/return arraybuffer from crypto methods?
-    // below test breaks because of this
-    // await blockNo2.sign()
-    // blockNo2.verify(genesis)
+    await blockNo2.sign()
+    await blockNo2.verify(genesis)
+
+    blockNo2.sig = 'xxxxx' + blockNo2.sig.substring(5, blockNo2.sig.length)
+    await assert.throws(() => blockNo2.verify(genesis), 'invalid block signature')
   }
 }

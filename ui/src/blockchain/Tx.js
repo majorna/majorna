@@ -1,5 +1,5 @@
 import assert from './assert'
-import { hashStr, signStr, verifyStr } from './crypto'
+import { hashStrToBuffer, signStrToHexStr, verifyStrWithHexStrSig } from './crypto'
 
 export default class Tx {
   constructor (sig, id, fromId, fromBalance, toId, toBalance, time, amount) {
@@ -36,20 +36,20 @@ export default class Tx {
   /**
    * Returns the hash of the tx, asynchronously.
    */
-  hash = () => hashStr('' + this.sig + this._toSigningString())
+  hash = () => hashStrToBuffer('' + this.sig + this._toSigningString())
 
   /**
    * Signs the tx, asynchronously.
    */
   sign = async () => {
-    this.sig = await signStr(this._toSigningString())
+    this.sig = await signStrToHexStr(this._toSigningString())
   }
 
   /**
    * Verifies the tx's signature, asynchronously.
    * Throws an AssertionError if signature is invalid.
    */
-  verifySig = () => verifyStr(this.sig, this._toSigningString(), 'Invalid tx signature.')
+  verifySig = () => verifyStrWithHexStrSig(this.sig, this._toSigningString(), 'Invalid tx signature.')
 
   /**
    * Verifies the tx, asynchronously.

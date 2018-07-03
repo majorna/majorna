@@ -1,5 +1,5 @@
 import assert from './assert'
-import { hashStr, signStr, verifyStr } from './crypto'
+import { hashStrToHexStr, signStrToHexStr, verifyStrWithHexStrSig } from './crypto'
 import Merkle from './Merkle'
 import Tx from './Tx'
 
@@ -65,20 +65,20 @@ export default class Block {
   /**
    * Returns the hash of the block, asynchronously.
    */
-  hash = () => hashStr('' + this.nonce + this._toMiningString())
+  hash = () => hashStrToHexStr('' + this.nonce + this._toMiningString())
 
   /**
    * Signs the block with majorna certificate, asynchronously.
    */
   sign = async () => {
-    this.sig = await signStr(this._toSigningString())
+    this.sig = await signStrToHexStr(this._toSigningString())
   }
 
   /**
    * Verifies the block's signature, asynchronously.
    * Throws an AssertionError if signature is invalid.
    */
-  verifySig = () => verifyStr(this.sig, this._toSigningString(), 'Invalid block signature.')
+  verifySig = () => verifyStrWithHexStrSig(this.sig, this._toSigningString(), 'Invalid block signature.')
 
   /**
    * Verifies the block, asynchronously.
