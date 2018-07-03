@@ -14,6 +14,12 @@ assert.equal = function (a, b, description) {
   }
 }
 
+assert.notEqual = function (a, b, description) {
+  if (!(a !== b)) {
+    throw new AssertionError(description || `Expected ${a} !== ${b}`)
+  }
+}
+
 assert.throws = async function (fn, expectedErrorMsg) {
   let err
   try {

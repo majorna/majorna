@@ -68,5 +68,19 @@ export default {
     await parsedBlock.verify(genesis)
     assert(parsedBlock.time.getTime() === newBlock.time.getTime())
     assert(parsedBlock.txs[0].time.getTime() === newBlock.txs[0].time.getTime())
+  },
+
+  'sign, verifySign': async () => {
+    // make sure that signing does not invalidate a block
+    const genesis = Block.getGenesis()
+    const signedBlock = await Block.create(await getSampleTxs(), genesis)
+    await signedBlock.sign()
+    await signedBlock.verifySig()
+
+    // sign same block a second time and make sure that signatures turn out different (ec signing uses rng) but still valid
+    const oldSig = signedBlock.sig
+    await signedBlock.sign()
+    await signedBlock.verifySig()
+    assert.notEqual(oldSig, signedBlock.sig)
   }
 }
