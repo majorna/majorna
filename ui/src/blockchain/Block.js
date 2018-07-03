@@ -5,17 +5,17 @@ import Tx from './Tx'
 
 export default class Block {
   constructor (sig, no, prevHash, txCount, merkleRoot, time, minDifficulty, nonce, txs) {
-    this.sig = sig // optional: if given, difficulty and nonce are not obligatory
+    this.sig = sig || '' // optional: if given, difficulty and nonce are not obligatory
 
-    this.no = no
-    this.prevHash = prevHash
-    this.txCount = txCount
-    this.merkleRoot = merkleRoot
-    this.time = time
-    this.minDifficulty = minDifficulty  // optional: if sig is not present, should be > 0
-    this.nonce = nonce // optional: if sig is not present, should be > 0
+    this.no = no || 1
+    this.prevHash = prevHash || ''
+    this.txCount = txCount || 0
+    this.merkleRoot = merkleRoot || ''
+    this.time = time || new Date()
+    this.minDifficulty = minDifficulty || 0  // optional: if sig is not present, should be > 0
+    this.nonce = nonce || 0 // optional: if sig is not present, should be > 0
 
-    this.txs = txs
+    this.txs = txs || []
   }
 
   /**
@@ -65,7 +65,7 @@ export default class Block {
   /**
    * Returns the hash of the block, asynchronously.
    */
-  hash = () => hashStr('' + this.sig + this._toSigningString())
+  hash = () => hashStr('' + this.nonce + this._toMiningString())
 
   /**
    * Signs the block with majorna certificate, asynchronously.
@@ -130,13 +130,12 @@ export default class Block {
   /**
    * Concatenates the the given block into a regular string, fit for hashing.
    * Puts the nonce first to prevent internal hash state from being reused. In future we can add more memory intensive prefixes.
-   * @param difficulty - If specified, this difficulty will be used instead of the one in
+   * @param difficulty - If specified, this difficulty will be used instead of the one in the block.
    */
-  _toMiningString = difficulty => '' + this.no + this.prevHash + this.txCount + this.merkleRoot + this.time.getTime() + (difficulty || this.minDifficulty)
+  _toMiningString = difficulty => '' + this.sig + this._toSigningString() + (difficulty || this.minDifficulty)
 
   /**
    * Concatenates the the given block into a regular string, fit for signing.
-   * Nonce as the first item to be consistent with mining string.
    */
-  _toSigningString = () => '' + this.nonce + this._toMiningString()
+  _toSigningString = () => '' + this.no + this.prevHash + this.txCount + this.merkleRoot + this.time.getTime()
 }
