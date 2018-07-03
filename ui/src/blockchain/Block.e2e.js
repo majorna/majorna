@@ -108,5 +108,69 @@ export default {
     // hash4[1] = 200
     // const difficulty4 = getHashDifficulty(hash4)
     // assert(difficulty4 === 7)
+  },
+
+  'verify': async () => {
+    // verify the fields of assertion error
+    try {
+      assert(2 === 4, 'lorem')
+    } catch (e) {
+      assert(e.type === 'AssertionError')
+      assert(e.message === 'lorem')
+    }
+
+    // verify assert.throws validation
+    await assert.throws(async () => { throw new Error('wow') }, 'wow')
+
+    // // verify a valid signed and mined block
+    // const genesisHeader = block.getGenesisBlock().header
+    // const signedBlock = block.create(txs, genesisHeader)
+    // block.sign(signedBlock)
+    // block.verify(signedBlock, genesisHeader)
+    // const minedBlock = block.create(txs, genesisHeader)
+    // minedBlock.header.minDifficulty = 1
+    // block.mineBlock(minedBlock)
+    // block.verify(minedBlock, genesisHeader)
+    //
+    // // invalid sig
+    // const noSigBlock = block.create(txs, genesisHeader)
+    // assert.throws(() => block.verify(noSigBlock), e => e.message.includes('previous block'))
+    // assert.throws(() => block.verify(noSigBlock, genesisHeader), e => e.message.includes('difficulty'))
+    //
+    // // invalid nonce
+    // const invalidNonceBlock = block.create(txs, genesisHeader)
+    // invalidNonceBlock.header.minDifficulty = 60
+    // invalidNonceBlock.header.nonce = 100
+    // assert.throws(() => block.verify(invalidNonceBlock, genesisHeader), e => e.message.includes('claimed difficulty'))
+    //
+    // // invalid prev hash
+    // const invalidPrevHashBlock = block.create(txs, genesisHeader)
+    // block.sign(invalidPrevHashBlock)
+    // invalidPrevHashBlock.header.prevHash = 'Ypy9HtozxoOUejr7SLdqPbsJsBB39wqdzCcBOv3gaZ2O'
+    // assert.throws(() => block.verify(invalidPrevHashBlock, genesisHeader), e => e.message.includes('previous block header hash'))
+    //
+    // // invalid tx count
+    // const invalidTxCountBlock = block.create(txs, genesisHeader)
+    // block.sign(invalidTxCountBlock)
+    // invalidTxCountBlock.header.txCount = 5
+    // assert.throws(() => block.verify(invalidTxCountBlock, genesisHeader), e => e.message.includes('count in header'))
+    //
+    // // invalid merkle root
+    // const invalidMerkleRootBlock = block.create(txs, genesisHeader)
+    // block.sign(invalidMerkleRootBlock)
+    // invalidMerkleRootBlock.header.merkleRoot = '4aMCaTeNGYtd9Wgcz4j4X6SNzCtHYhUZQPG9pUG9Xz7T'
+    // assert.throws(() => block.verify(invalidMerkleRootBlock, genesisHeader), e => e.message.includes('root is not valid'))
+    //
+    // // invalid time
+    // const invalidTimeBlock = block.create(txs, genesisHeader)
+    // block.sign(invalidTimeBlock)
+    // invalidTimeBlock.header.time = new Date('01 Jan 2010 00:00:00 UTC')
+    // assert.throws(() => block.verify(invalidTimeBlock, genesisHeader), e => e.message.includes('time is invalid'))
+    //
+    // // invalid tx
+    // const invalidTxBlock = block.create(txs, genesisHeader)
+    // block.sign(invalidTxBlock)
+    // invalidTxBlock.txs[0].sig = '12234'
+    // assert.throws(() => block.verify(invalidTxBlock, genesisHeader), e => e.message.includes('txs in given'))
   }
 }
