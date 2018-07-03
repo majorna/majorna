@@ -1,4 +1,5 @@
 import { getCryptoRandStr } from './utils'
+import { getHashDifficulty } from '../blockchain/Block'
 
 export const receiveTxs = () => {
   // no duplicates
@@ -16,40 +17,6 @@ let interval
 export const stopMining = () => {
   interval && clearInterval(interval)
   interval = null
-}
-
-/**
- * Accepts a hash as an Uint8Array array, returns the difficulty as an integer.
- * Node.js Buffer implement Uint8Array API so buffer instances are also acceptable.
- *
- * todo: this is copy/paste from svr/block.js so better used a shared lib
- */
-export function getHashDifficulty(hash) {
-  let difficulty = 0
-
-  for (let i = 0; i < hash.length; i++) {
-    if (hash[i] === 0) {
-      difficulty += 8
-      continue
-    } else if (hash[i] === 1) {
-      difficulty += 7
-    } else if (hash[i] < 4) {
-      difficulty += 6
-    } else if (hash[i] < 8) {
-      difficulty += 5
-    } else if (hash[i] < 16) {
-      difficulty += 4
-    } else if (hash[i] < 32) {
-      difficulty += 3
-    } else if (hash[i] < 64) {
-      difficulty += 2
-    } else if (hash[i] < 128) {
-      difficulty += 1
-    }
-    break
-  }
-
-  return difficulty
 }
 
 /**

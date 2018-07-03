@@ -2,7 +2,6 @@ import assert from './assert'
 import { convertBufferToHexStr, hashStrToBuffer, signStrToHexStr, verifyStrWithHexStrSig } from './crypto'
 import Merkle from './Merkle'
 import Tx from './Tx'
-import * as node from '../data/node'
 
 export default class Block {
   constructor (sig, no, prevHash, txCount, merkleRoot, time, minDifficulty, nonce, txs) {
@@ -76,7 +75,7 @@ export default class Block {
   /**
    * Returns the block hash difficulty as an integer, asynchronously.
    */
-  getHashDifficulty = async () => node.getHashDifficulty(new Uint8Array(await this.hashToBuffer()))
+  getHashDifficulty = async () => getHashDifficulty(new Uint8Array(await this.hashToBuffer()))
 
   /**
    * Signs the block with majorna certificate, asynchronously.
@@ -148,4 +147,36 @@ export default class Block {
    * Concatenates the the given block into a regular string, fit for signing.
    */
   _toSigningString = () => '' + this.no + this.prevHash + this.txCount + this.merkleRoot + this.time.getTime()
+}
+
+/**
+ * Accepts a hash as an Uint8Array array, returns the hash's (nonce's) difficulty as an integer.
+ * Node.js Buffer implement Uint8Array API so buffer instances are also acceptable.
+ */
+export function getHashDifficulty(hash) {
+  let difficulty = 0
+
+  for (let i = 0; i < hash.length; i++) {
+    if (hash[i] === 0) {
+      difficulty += 8
+      continue
+    } else if (hash[i] === 1) {
+      difficulty += 7
+    } else if (hash[i] < 4) {
+      difficulty += 6
+    } else if (hash[i] < 8) {
+      difficulty += 5
+    } else if (hash[i] < 16) {
+      difficulty += 4
+    } else if (hash[i] < 32) {
+      difficulty += 3
+    } else if (hash[i] < 64) {
+      difficulty += 2
+    } else if (hash[i] < 128) {
+      difficulty += 1
+    }
+    break
+  }
+
+  return difficulty
 }
