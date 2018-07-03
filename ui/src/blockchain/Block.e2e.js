@@ -1,5 +1,5 @@
 import assert from './assert'
-import Block from './Block'
+import Block, { getHashDifficulty } from './Block'
 import Tx from './Tx'
 
 const getSampleBlock = () => new Block('', 2, 0, '', new Date(), 0, 0, [])
@@ -82,5 +82,31 @@ export default {
     await signedBlock.sign()
     await signedBlock.verifySig()
     assert.notEqual(oldSig, signedBlock.sig)
+  },
+
+  'getHashDifficulty': () => {
+    // using Uint8Array
+    const hash = new Uint8Array(3)
+    hash[0] = 0
+    hash[1] = 0
+    hash[2] = 16
+    const difficulty = getHashDifficulty(hash)
+    assert(difficulty === 19)
+
+    const hash2 = new Uint8Array(0)
+    const difficulty2 = getHashDifficulty(hash2)
+    assert(difficulty2 === 0)
+
+    const hash3 = new Uint8Array(1)
+    hash3[0] = 128
+    const difficulty3 = getHashDifficulty(hash3)
+    assert(difficulty3 === 0)
+
+    // using Buffer
+    // const hash4 = Buffer.alloc(2)
+    // hash4[0] = 1
+    // hash4[1] = 200
+    // const difficulty4 = getHashDifficulty(hash4)
+    // assert(difficulty4 === 7)
   }
 }
