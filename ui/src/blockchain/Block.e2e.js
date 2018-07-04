@@ -127,10 +127,11 @@ export default {
     const signedBlock = await Block.create(await getSampleTxs(), genesis)
     await signedBlock.sign()
     await signedBlock.verify(genesis)
-    // const minedBlock = block.create(txs, genesisHeader)
-    // minedBlock.header.minDifficulty = 1
-    // block.mineBlock(minedBlock)
-    // block.verify(minedBlock, genesisHeader)
+
+    const minedBlock = await Block.create(await getSampleTxs(), genesis)
+    minedBlock.minDifficulty = 1
+    await minedBlock.mine()
+    await minedBlock.verify(genesis)
 
     // // invalid sig
     // const noSigBlock = block.create(txs, genesisHeader)
