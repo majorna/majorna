@@ -1,3 +1,4 @@
+import assert from './assert.e2e'
 import crypto from './crypto.e2e'
 import Merkle from './Merkle.e2e'
 import Tx from './Tx.e2e'
@@ -5,7 +6,7 @@ import Block from './Block.e2e'
 import config from '../data/config'
 import bugsnag from '../data/bugsnag'
 
-const testSuites = Object.entries({crypto, Merkle, Tx, Block})
+const testSuites = Object.entries({assert, crypto, Merkle, Tx, Block})
 
 export default async () => {
   console.log('[Tests START]')

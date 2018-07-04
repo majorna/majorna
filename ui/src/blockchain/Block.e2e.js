@@ -102,26 +102,17 @@ export default {
     const difficulty3 = getHashDifficulty(hash3)
     assert(difficulty3 === 0)
 
-    // using Buffer
-    // const hash4 = Buffer.alloc(2)
-    // hash4[0] = 1
-    // hash4[1] = 200
-    // const difficulty4 = getHashDifficulty(hash4)
-    // assert(difficulty4 === 7)
+    if (!window) {
+      // using Buffer
+      const hash4 = Buffer.alloc(2)
+      hash4[0] = 1
+      hash4[1] = 200
+      const difficulty4 = getHashDifficulty(hash4)
+      assert(difficulty4 === 7)
+    }
   },
 
   'verify': async () => {
-    // verify the fields of assertion error
-    try {
-      assert(2 === 4, 'lorem')
-    } catch (e) {
-      assert(e.type === 'AssertionError')
-      assert(e.message === 'lorem')
-    }
-
-    // verify assert.throws validation
-    await assert.throws(async () => { throw new Error('wow') }, 'wow')
-
     // verify a valid signed and mined block
     const txs = await getSampleTxs()
     const genesis = Block.getGenesis()
