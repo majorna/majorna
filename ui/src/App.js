@@ -110,7 +110,7 @@ export default withRouter(class extends Component {
     }, 15 * 60 * 1000)
 
     // run tests when in dev mode
-    if (config.app.isDev) {
+    if (!config.app.isTest) {
       testRunner()
     }
   }

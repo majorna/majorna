@@ -1,15 +1,30 @@
-import { hash, hashStr, bufferToHex } from './crypto'
+import { hashBufferToBuffer, hashStrToBuffer, convertBufferToHexStr } from './crypto'
 
 export default class Merkle {
-  leaves = [] // item hashes: array of ArrayBuffer(s)
-  levels = [] // 2D merkle schema that is fit for console.log(merkle.levels) so you will get a nicely styled diagram
-  root
+  /**
+   * Item hashes: An array of ArrayBuffers.
+   */
+  leaves = []
 
-  static create = async items => {
+  /**
+   * 2D Merkle schema that is fit for console.log(merkle.levels) so you will get a nicely styled diagram.
+   */
+  levels = []
+
+  /**
+   * Hex encoded Merkle root.
+   */
+  root = ''
+
+  /**
+   * Construct a Merkle tree with given hash array, asynchronously.
+   * If a string array is given instead of a hash array, set hashItems to true.
+   */
+  static create = async (items, hashItems) => {
     const m = new Merkle()
 
     for (let i = 0; i < items.length; i++) {
-      const itemHash = await hashStr(items[i])
+      const itemHash = hashItems ? await hashStrToBuffer(items[i]) : items[i]
       m.leaves.push(itemHash)
     }
 
@@ -18,7 +33,7 @@ export default class Merkle {
       m.levels.unshift(await calcNextLevel(m.levels[0]))
     }
 
-    m.root = bufferToHex(m.levels[0][0])
+    m.root = convertBufferToHexStr(m.levels[0][0])
     return m
   }
 
@@ -41,7 +56,7 @@ async function calcNextLevel(topLevel) {
       const node = new Uint8Array(item1.length + item2.length)
       node.set(item1)
       node.set(item2, item1.length)
-      nodes.push(await hash(node.buffer))
+      nodes.push(await hashBufferToBuffer(node.buffer))
     } else {
       // this is an odd ending node, promote up to the next level by itself
       nodes.push(topLevel[x])

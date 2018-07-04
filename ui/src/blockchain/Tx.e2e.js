@@ -7,6 +7,7 @@ export default {
   'verify': async () => {
     // unsigned tx
     const tx = getSampleTx()
+    await assert.throws(() => tx.verify(), 'signature must be a non-empty string')
     try {
       await tx.verify()
     } catch (e) {
@@ -26,4 +27,6 @@ export default {
     const txObj = Tx.getObjFromJson(jsonStr)
     await txObj.verify()
   }
+
+  // todo: verify the tx verification with positive/negative cases as we do in svr/block.test.js
 }

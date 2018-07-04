@@ -1,5 +1,5 @@
 import assert from './assert'
-import * as crypto from './crypto'
+import { hashStrToBuffer, signStrToHexStr, verifyStrWithHexStrSig } from './crypto'
 
 export default class Tx {
   constructor (sig, id, fromId, fromBalance, toId, toBalance, time, amount) {
@@ -16,6 +16,40 @@ export default class Tx {
     this.time = time // time of the transaction
     this.amount = amount // amount being sent
   }
+
+  /**
+   * Creates a tx object out of a given plain object.
+   */
+  static getObj = tx =>
+    new Tx(tx.sig, tx.id, tx.from.id, tx.from.balance, tx.to.id, tx.to.balance, tx.time instanceof Date ? tx.time : new Date(tx.time), tx.amount)
+
+  /**
+   * Deserializes given tx json into a tx object with correct Date type.
+   */
+  static getObjFromJson = txJson => Tx.getObj(JSON.parse(txJson))
+
+  /**
+   * Serializes the tx into JSON string with indentation.
+   */
+  toJson = () => JSON.stringify(this, null, 2)
+
+  /**
+   * Returns the hash of the tx as ArrayBuffer, asynchronously.
+   */
+  hashToBuffer = () => hashStrToBuffer('' + this.sig + this._toSigningString())
+
+  /**
+   * Signs the tx, asynchronously.
+   */
+  sign = async () => {
+    this.sig = await signStrToHexStr(this._toSigningString())
+  }
+
+  /**
+   * Verifies the tx's signature, asynchronously.
+   * Throws an AssertionError if signature is invalid.
+   */
+  verifySig = () => verifyStrWithHexStrSig(this.sig, this._toSigningString(), 'Invalid tx signature.')
 
   /**
    * Verifies the tx, asynchronously.
@@ -39,43 +73,7 @@ export default class Tx {
   }
 
   /**
-   * Creates a tx object out of a given object.
-   */
-  static getObj = tx => new Tx(tx.sig, tx.id, tx.from.id, tx.from.balance, tx.to.id, tx.to.balance, tx.time, tx.amount)
-
-  /**
-   * Deserializes given tx json into a tx object with correct Date type.
-   */
-  static getObjFromJson = txJson => {
-    const parsedTx = JSON.parse(txJson)
-    parsedTx.time = new Date(parsedTx.time)
-    return Tx.getObj(parsedTx)
-  }
-
-  /**
-   * Serializes the tx into JSON string.
-   */
-  toJson = () => JSON.stringify(this, null, 2)
-
-  /**
    * Concatenates the the given tx into a regular string (excluding signature field), fit for signing.
    */
-  toSigningString = () => '' + this.id + this.from.id + this.from.balance + this.to.id + this.to.balance + this.time.getTime() + this.amount
-
-  /**
-   * Concatenates the the given tx into a regular string, fit for hashing.
-   */
-  toString = () => '' + this.sig + this.toSigningString()
-
-  /**
-   * Signs the tx with majorna certificate, asynchronously.
-   */
-  sign = async () => {
-    this.sig = await crypto.signStr(this.toSigningString())
-  }
-
-  /**
-   * Verifies the tx's signature, asynchronously.
-   */
-  verifySig = async () => assert(await crypto.verifyStr(this.sig, this.toSigningString()), 'Invalid tx signature.')
+  _toSigningString = () => '' + this.id + this.from.id + this.from.balance + this.to.id + this.to.balance + this.time.getTime() + this.amount
 }
