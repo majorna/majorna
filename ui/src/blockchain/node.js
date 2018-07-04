@@ -1,5 +1,5 @@
-import { getCryptoRandStr } from './utils'
-import { getHashDifficulty } from '../blockchain/Block'
+import { getCryptoRandStr } from '../data/utils'
+import { getHashDifficulty } from './Block'
 
 export const receiveTxs = () => {
   // no duplicates

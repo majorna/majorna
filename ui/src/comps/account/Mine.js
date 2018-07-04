@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { fm, fn } from '../../data/utils'
 import server from '../../data/server'
-import { mineBlock, stopMining } from '../../data/node'
+import { mineBlock, stopMining } from '../../blockchain/node'
 import { ResponsiveContainer, Scatter, ScatterChart, XAxis, YAxis } from 'recharts'
 import worldMap from '../../res/world_map.svg'
 import { Link } from 'react-router-dom'
