@@ -145,6 +145,16 @@ export default class Block {
   }
 
   /**
+   * Mines a block until a nonce of required minimum difficulty is found, asynchronously.
+   */
+  mine = async () => {
+    while (await this.getHashDifficulty() < this.minDifficulty) {
+      this.nonce++
+    }
+    console.log(`mined block with difficulty: ${await this.getHashDifficulty()} (min: ${this.minDifficulty}), nonce: ${this.nonce}, hash: ${await this.hashToHexStr()}`)
+  }
+
+  /**
    * Concatenates the the given block into a regular string, fit for hashing.
    * Puts the nonce first to prevent internal hash state from being reused. In future we can add more memory intensive prefixes.
    * @param difficulty - If specified, this difficulty will be used instead of the one in the block.
