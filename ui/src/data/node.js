@@ -11,7 +11,9 @@ export const receiveBlock = () => {
   // validate each tx signature unless block is signed by a trusted key
 }
 
-export const initSimplePeer = () => {}
+export const initPeerConns = () => {
+  // todo: init data channel based on: https://github.com/feross/simple-peer#data-channels
+}
 
 let interval
 export const stopMining = () => {
