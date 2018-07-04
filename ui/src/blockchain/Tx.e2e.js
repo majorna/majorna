@@ -14,17 +14,18 @@ export default {
   },
 
   'verify': async () => {
-    // unsigned tx
-    const tx = getSampleTx()
-    await assert.throws(() => tx.verify(), 'signature must be a non-empty string')
+    // valid sig
+    const signedTx = getSampleTx()
+    await signedTx.sign()
+    await signedTx.verify()
+
+    // invalid sig
+    const unsignedTx = getSampleTx()
+    await assert.throws(() => unsignedTx.verify(), 'signature must be a non-empty string')
     try {
-      await tx.verify()
+      await unsignedTx.verify()
     } catch (e) {
       assert.equal(e.type, 'AssertionError')
     }
-
-    // signed tx
-    await tx.sign()
-    await tx.verify()
   }
 }
