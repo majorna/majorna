@@ -25,6 +25,7 @@ export default async () => {
       } catch (e) {
         console.error(`\t[Fail] ${testCaseName}: ${e}`)
         // todo: test that this works in dev mode to
+        // todo: disabled due to: https://github.com/bugsnag/bugsnag-js/issues/344
         // config.app.isProd && bugsnag.notify(`Blockchain test failure: ${res}: ${e}`)
       }
     }

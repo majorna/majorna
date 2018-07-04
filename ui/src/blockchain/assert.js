@@ -8,15 +8,15 @@ export default function assert(condition, failureDescription) {
   }
 }
 
-assert.equal = function (a, b, description) {
+assert.equal = function (a, b, failureDescription) {
   if (a !== b) {
-    throw new AssertionError(description || `Expected ${a} === ${b}`)
+    throw new AssertionError(failureDescription || `Expected ${a} === ${b}`)
   }
 }
 
-assert.notEqual = function (a, b, description) {
+assert.notEqual = function (a, b, failureDescription) {
   if (!(a !== b)) {
-    throw new AssertionError(description || `Expected ${a} !== ${b}`)
+    throw new AssertionError(failureDescription || `Expected ${a} !== ${b}`)
   }
 }
 
@@ -31,6 +31,16 @@ assert.throws = async function (fn, expectedErrorMsgIncludes) {
   expectedErrorMsgIncludes && assert(
     err.message.toLowerCase().includes(expectedErrorMsgIncludes.toLowerCase()),
     `Expected error message: "${err.message.toLowerCase()}" to include: "${expectedErrorMsgIncludes.toLowerCase()}".`)
+}
+
+assert.doesNotThrow = async function (fn, failureDescription) {
+  try {
+    await fn()
+  } catch (e) {
+    throw new AssertionError(failureDescription
+      ? (typeof failureDescription === 'string' ? failureDescription : failureDescription(e))
+      : `Expected no error, got one: ${e}`)
+  }
 }
 
 assert.AssertionError = AssertionError

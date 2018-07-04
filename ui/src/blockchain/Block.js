@@ -134,7 +134,7 @@ export default class Block {
     if (this.txCount) {
       const merkleRoot = (await Merkle.create(this.txs.map(tx => tx.hashToBuffer()))).root
       assert(this.merkleRoot === merkleRoot, `Merkle root is not valid. Expected ${merkleRoot}, got ${this.merkleRoot}`)
-      for (const tx of this.txs) assert(tx.verify(), `One of the txs in given block was invalid. Invalid tx: ${tx}`)
+      for (const tx of this.txs) await assert.doesNotThrow(() => tx.verify(), e => `One of the txs in given block was invalid. Invalid tx: ${tx.toJson()}. Assertion error: ${e}.`)
     }
     if (this.sig) {
       await this.verifySig()

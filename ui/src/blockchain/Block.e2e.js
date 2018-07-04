@@ -123,77 +123,76 @@ export default {
     await assert.throws(async () => { throw new Error('wow') }, 'wow')
 
     // verify a valid signed and mined block
+    const txs = await getSampleTxs()
     const genesis = Block.getGenesis()
-    const signedBlock = await Block.create(await getSampleTxs(), genesis)
+    const signedBlock = await Block.create(txs, genesis)
     await signedBlock.sign()
     await signedBlock.verify(genesis)
 
-    const minedBlock = await Block.create(await getSampleTxs(), genesis)
+    const minedBlock = await Block.create(txs, genesis)
     minedBlock.minDifficulty = 1
     await minedBlock.mine()
     await minedBlock.verify(genesis)
 
-    // // invalid sig
-    // const noSigBlock = block.create(txs, genesisHeader)
-    // assert.throws(() => block.verify(noSigBlock), e => e.message.includes('previous block'))
-    // assert.throws(() => block.verify(noSigBlock, genesisHeader), e => e.message.includes('difficulty'))
-    //
-    // // invalid nonce
-    // const invalidNonceBlock = block.create(txs, genesisHeader)
-    // invalidNonceBlock.header.minDifficulty = 60
-    // invalidNonceBlock.header.nonce = 100
-    // assert.throws(() => block.verify(invalidNonceBlock, genesisHeader), e => e.message.includes('claimed difficulty'))
-    //
-    // // invalid prev hash
-    // const invalidPrevHashBlock = block.create(txs, genesisHeader)
-    // block.sign(invalidPrevHashBlock)
-    // invalidPrevHashBlock.header.prevHash = 'Ypy9HtozxoOUejr7SLdqPbsJsBB39wqdzCcBOv3gaZ2O'
-    // assert.throws(() => block.verify(invalidPrevHashBlock, genesisHeader), e => e.message.includes('previous block header hash'))
-    //
-    // // invalid tx count
-    // const invalidTxCountBlock = block.create(txs, genesisHeader)
-    // block.sign(invalidTxCountBlock)
-    // invalidTxCountBlock.header.txCount = 5
-    // assert.throws(() => block.verify(invalidTxCountBlock, genesisHeader), e => e.message.includes('count in header'))
-    //
-    // // invalid merkle root
-    // const invalidMerkleRootBlock = block.create(txs, genesisHeader)
-    // block.sign(invalidMerkleRootBlock)
-    // invalidMerkleRootBlock.header.merkleRoot = '4aMCaTeNGYtd9Wgcz4j4X6SNzCtHYhUZQPG9pUG9Xz7T'
-    // assert.throws(() => block.verify(invalidMerkleRootBlock, genesisHeader), e => e.message.includes('root is not valid'))
-    //
-    // // invalid time
-    // const invalidTimeBlock = block.create(txs, genesisHeader)
-    // block.sign(invalidTimeBlock)
-    // invalidTimeBlock.header.time = new Date('01 Jan 2010 00:00:00 UTC')
-    // assert.throws(() => block.verify(invalidTimeBlock, genesisHeader), e => e.message.includes('time is invalid'))
-    //
-    // // invalid tx
-    // const invalidTxBlock = block.create(txs, genesisHeader)
-    // block.sign(invalidTxBlock)
-    // invalidTxBlock.txs[0].sig = '12234'
-    // assert.throws(() => block.verify(invalidTxBlock, genesisHeader), e => e.message.includes('txs in given'))
+    // invalid sig
+    const noSigBlock = await Block.create(txs, genesis)
+    await assert.throws(() => noSigBlock.verify(), 'previous block')
+    await assert.throws(() => noSigBlock.verify(genesis), 'difficulty')
+
+    // invalid nonce
+    const invalidNonceBlock = await Block.create(txs, genesis)
+    invalidNonceBlock.minDifficulty = 600
+    invalidNonceBlock.nonce = 100
+    await assert.throws(() => invalidNonceBlock.verify(genesis), 'claimed difficulty')
+
+    // invalid prev hash
+    const invalidPrevHashBlock = await Block.create(txs, genesis)
+    await invalidPrevHashBlock.sign()
+    invalidPrevHashBlock.prevHash = 'Ypy9HtozxoOUejr7SLdqPbsJsBB39wqdzCcBOv3gaZ2O'
+    await assert.throws(() => invalidPrevHashBlock.verify(genesis), 'previous block hash')
+
+    // invalid tx count
+    const invalidTxCountBlock = await Block.create(txs, genesis)
+    await invalidTxCountBlock.sign()
+    invalidTxCountBlock.txCount = 5
+    await assert.throws(() => invalidTxCountBlock.verify(genesis), 'count in')
+
+    // invalid merkle root
+    const invalidMerkleRootBlock = await Block.create(txs, genesis)
+    await invalidMerkleRootBlock.sign()
+    invalidMerkleRootBlock.merkleRoot = '4aMCaTeNGYtd9Wgcz4j4X6SNzCtHYhUZQPG9pUG9Xz7Tghsadpfiuhsadf098372'
+    await assert.throws(() => invalidMerkleRootBlock.verify(genesis), 'root is not valid')
+
+    // invalid time
+    const invalidTimeBlock = await Block.create(txs, genesis)
+    await invalidTimeBlock.sign()
+    invalidTimeBlock.time = new Date('01 Jan 2010 00:00:00 UTC')
+    await assert.throws(() => invalidTimeBlock.verify(genesis), 'time is invalid')
+
+    // invalid tx
+    const invalidTxBlock = await Block.create(txs, genesis)
+    await invalidTxBlock.sign()
+    invalidTxBlock.txs[0].sig = '12234'
+    await assert.throws(() => invalidTxBlock.verify(genesis), 'txs in given')
   },
 
   'mineBlock': () => {
-    // const genesisHeader = block.getGenesisBlock().header
-    // const minedBlock = block.create(txs, genesisHeader)
-    // minedBlock.header.minDifficulty = 8
+    // const minedBlock = await Block.create(await getSampleTxs(), genesis)
+    // minedBlock.minDifficulty = 8
     // const miningRes = block.mineBlock(minedBlock)
     //
     // assert(miningRes.hashBase64.substring(0, 1) === 'A')
-    // assert(minedBlock.header.nonce > 0)
+    // assert(minedBlock.nonce > 0)
     //
-    // block.verify(minedBlock, genesisHeader)
+    // block.verify(minedBlock, genesis)
   },
 
   'mineBlock with empty txs': () => {
-    // const genesisHeader = block.getGenesisBlock().header
     // const emptyTxs = []
-    // const minedBlock = block.create(emptyTxs, genesisHeader)
-    // minedBlock.header.minDifficulty = 4
+    // const minedBlock = block.create(emptyTxs, genesis)
+    // minedBlock.minDifficulty = 4
     // block.mineBlock(minedBlock)
     //
-    // block.verify(minedBlock, genesisHeader)
+    // block.verify(minedBlock, genesis)
   }
 }
