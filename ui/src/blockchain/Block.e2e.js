@@ -176,23 +176,25 @@ export default {
     await assert.throws(() => invalidTxBlock.verify(genesis), 'txs in given')
   },
 
-  'mineBlock': () => {
-    // const minedBlock = await Block.create(await getSampleTxs(), genesis)
-    // minedBlock.minDifficulty = 8
-    // const miningRes = block.mineBlock(minedBlock)
-    //
-    // assert(miningRes.hashBase64.substring(0, 1) === 'A')
-    // assert(minedBlock.nonce > 0)
-    //
-    // block.verify(minedBlock, genesis)
+  'mineBlock': async () => {
+    const genesis = Block.getGenesis()
+    const minedBlock = await Block.create(await getSampleTxs(), genesis)
+    minedBlock.minDifficulty = 8
+    await minedBlock.mine()
+
+    assert((await minedBlock.hashToHexStr()).substring(0, 2) === '00')
+    assert(minedBlock.nonce > 0)
+
+    await minedBlock.verify(genesis)
   },
 
-  'mineBlock with empty txs': () => {
-    // const emptyTxs = []
-    // const minedBlock = block.create(emptyTxs, genesis)
-    // minedBlock.minDifficulty = 4
-    // block.mineBlock(minedBlock)
-    //
-    // block.verify(minedBlock, genesis)
+  'mineBlock with empty txs': async () => {
+    const genesis = Block.getGenesis()
+    const emptyTxs = []
+    const minedBlock = await Block.create(emptyTxs, genesis)
+    minedBlock.minDifficulty = 4
+    await minedBlock.mine()
+
+    await minedBlock.verify(genesis)
   }
 }
