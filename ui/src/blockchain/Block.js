@@ -155,6 +155,11 @@ export default class Block {
   }
 
   /**
+   * Returns the mining reward for a block given the difficulty.
+   */
+  getBlockReward = difficultyRewardMultiplier => Math.round(this.minDifficulty * difficultyRewardMultiplier)
+
+  /**
    * Concatenates the the given block into a regular string, fit for hashing.
    * Puts the nonce first to prevent internal hash state from being reused. In future we can add more memory intensive prefixes.
    * @param difficulty - If specified, this difficulty will be used instead of the one in the block.
