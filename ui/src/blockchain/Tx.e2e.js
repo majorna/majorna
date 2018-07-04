@@ -19,7 +19,8 @@ export default {
     await signedTx.sign()
     await signedTx.verify()
 
-    // invalid sig
+    // todo: backport empty/invalid tests to block
+    // empty sig
     const unsignedTx = getSampleTx()
     await assert.throws(() => unsignedTx.verify(), 'signature must be a non-empty string')
     try {
@@ -27,5 +28,23 @@ export default {
     } catch (e) {
       assert.equal(e.type, 'AssertionError')
     }
+
+    // invalid sig
+    const invalidIdTx = getSampleTx()
+    await invalidIdTx.sign()
+    invalidIdTx.id = 123456789
+    await assert.throws(() => invalidIdTx.verify(), 'id must be') // todo: this should throw sig error!
+
+    // invalid id
+    // const invalidIdTx = getSampleTx()
+    // await invalidIdTx.sign()
+    // invalidIdTx.id = 123
+    // await assert.throws(() => invalidIdTx.verify(), 'id must be')
+
+    // invalid time
+    // const invalidTimeTx = getSampleTx()
+    // invalidTimeTx.time = new Date('01 Jan 2010 00:00:00 UTC')
+    // await invalidTimeTx.sign()
+    // await assert.throws(() => invalidTimeTx.verify(), 'time object')
   }
 }
