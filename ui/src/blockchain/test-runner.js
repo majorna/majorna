@@ -26,9 +26,7 @@ export default async () => {
         console.log(`\t[Pass] ${testCaseName}`)
       } catch (e) {
         console.error(`\t[Fail] ${testCaseName}: ${e}`)
-        // todo: test that this works in dev mode to
-        // todo: disabled due to: https://github.com/bugsnag/bugsnag-js/issues/344
-        config.app.isProd && bugsnag.notify(`Test failure: ${testCaseName}: ${e}`)
+        config.app.isProd && bugsnag.notify(`Test failure: ${testSuiteName}: ${testCaseName}: ${e}`)
       }
     }
   }
