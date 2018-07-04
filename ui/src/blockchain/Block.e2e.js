@@ -82,6 +82,11 @@ export default {
     await signedBlock.sign()
     await signedBlock.verifySig()
     assert.notEqual(oldSig, signedBlock.sig)
+
+    // invalid sig
+    const invalidSigBlock = await Block.create(await getSampleTxs(), genesis)
+    invalidSigBlock.sig = '12344309823714098217340982173402137649283146021398472309721340923142221134123423141234128237498721364982314618497231984072310497'
+    await assert.throws(() => invalidSigBlock.verify(genesis), 'invalid block sig')
   },
 
   'getHashDifficulty': () => {
@@ -125,7 +130,7 @@ export default {
     await minedBlock.mine()
     await minedBlock.verify(genesis)
 
-    // invalid sig
+    // empty sig
     const noSigBlock = await Block.create(txs, genesis)
     await assert.throws(() => noSigBlock.verify(), 'previous block')
     await assert.throws(() => noSigBlock.verify(genesis), 'difficulty')
