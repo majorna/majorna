@@ -173,5 +173,27 @@ export default {
     // block.sign(invalidTxBlock)
     // invalidTxBlock.txs[0].sig = '12234'
     // assert.throws(() => block.verify(invalidTxBlock, genesisHeader), e => e.message.includes('txs in given'))
+  },
+
+  'mineBlock': () => {
+    // const genesisHeader = block.getGenesisBlock().header
+    // const minedBlock = block.create(txs, genesisHeader)
+    // minedBlock.header.minDifficulty = 8
+    // const miningRes = block.mineBlock(minedBlock)
+    //
+    // assert(miningRes.hashBase64.substring(0, 1) === 'A')
+    // assert(minedBlock.header.nonce > 0)
+    //
+    // block.verify(minedBlock, genesisHeader)
+  },
+
+  'mineBlock with empty txs': () => {
+    // const genesisHeader = block.getGenesisBlock().header
+    // const emptyTxs = []
+    // const minedBlock = block.create(emptyTxs, genesisHeader)
+    // minedBlock.header.minDifficulty = 4
+    // block.mineBlock(minedBlock)
+    //
+    // block.verify(minedBlock, genesisHeader)
   }
 }

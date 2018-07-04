@@ -147,10 +147,7 @@ export default class Block {
   /**
    * Mines a block until a nonce of required minimum difficulty is found, asynchronously.
    */
-  mine = async () => {
-    for (this.nonce++; await this.getHashDifficulty() < this.minDifficulty; this.nonce++) {}
-    console.log(`mined block with difficulty: ${await this.getHashDifficulty()} (min: ${this.minDifficulty}), nonce: ${this.nonce}, hash: ${await this.hashToHexStr()}`)
-  }
+  mine = async () => { for (this.nonce++; await this.getHashDifficulty() < this.minDifficulty; this.nonce++) {} }
 
   /**
    * Returns the mining reward for a block given the difficulty.
