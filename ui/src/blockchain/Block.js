@@ -91,6 +91,16 @@ export default class Block {
   verifySig = () => verifyStrWithHexStrSig(this.sig, this._toSigningString(), 'Invalid block signature.')
 
   /**
+   * Verifies that block hash (nonce) is greater than or equal to the minimum expected block difficulty, asynchronously.
+   * Throws an AssertionError if hash difficulty is not sufficient.
+   */
+  verifyHashDifficulty = async () => {
+    const difficulty = await this.getHashDifficulty()
+    assert(difficulty >= this.minDifficulty,
+      `Nonce does not match claimed difficulty. Expected difficulty ${this.minDifficulty}, got ${difficulty} (hash: ${await this.hashToHexStr()}).`)
+  }
+
+  /**
    * Verifies the block, asynchronously.
    * Returns true if block is valid. Throws an AssertionError with a relevant message, if the verification fails.
    */
@@ -130,9 +140,7 @@ export default class Block {
       await this.verifySig()
     }
     if (!this.sig || this.minDifficulty > 0 || this.nonce > 0) {
-      const difficulty = await this.getHashDifficulty()
-      assert(difficulty >= this.minDifficulty,
-        `Nonce does not match claimed difficulty. Expected difficulty ${this.minDifficulty}, got ${difficulty} (hash: ${await this.hashToHexStr()}).`)
+      await this.verifyHashDifficulty()
     }
   }
 

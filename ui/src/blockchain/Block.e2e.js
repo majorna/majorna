@@ -122,16 +122,16 @@ export default {
     // verify assert.throws validation
     await assert.throws(async () => { throw new Error('wow') }, 'wow')
 
-    // // verify a valid signed and mined block
-    // const genesisHeader = block.getGenesisBlock().header
-    // const signedBlock = block.create(txs, genesisHeader)
-    // block.sign(signedBlock)
-    // block.verify(signedBlock, genesisHeader)
+    // verify a valid signed and mined block
+    const genesis = Block.getGenesis()
+    const signedBlock = await Block.create(await getSampleTxs(), genesis)
+    await signedBlock.sign()
+    await signedBlock.verify(genesis)
     // const minedBlock = block.create(txs, genesisHeader)
     // minedBlock.header.minDifficulty = 1
     // block.mineBlock(minedBlock)
     // block.verify(minedBlock, genesisHeader)
-    //
+
     // // invalid sig
     // const noSigBlock = block.create(txs, genesisHeader)
     // assert.throws(() => block.verify(noSigBlock), e => e.message.includes('previous block'))
