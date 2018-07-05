@@ -30,7 +30,7 @@ exports.insertBlockSinceLastOne = async (now, blockInfo, customOldBlockPath) => 
     await github.createFile(block.toJson(oldBlock), oldBlockPath)
   } catch (e) {
     // this happens when file was inserted but github failed to ack
-    if (!e.message.includes('"sha" wasn\'t supplied')) throw e
+    if (!(e.message.includes('sha') && e.message.includes('wasn\'t supplied'))) throw e
   }
   const txs = await db.getTxsByTimeRange(blockInfo.header.time, now)
   const newBlock = await db.insertBlock(txs, now)
