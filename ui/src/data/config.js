@@ -15,6 +15,7 @@ const config = {
     isDev,
     isTest,
     isProd,
+    isTestnet: false
   },
   hosting: {
     domain,
