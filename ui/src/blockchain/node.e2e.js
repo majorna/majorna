@@ -1,17 +1,17 @@
 import Peer from 'simple-peer'
 
 export default {
-  'webrtc single peer': () => {
+  'webrtc single peer': () => new Promise((resolve, reject) => {
     const peer1 = new Peer({initiator: true, trickle: false})
     const peer2 = new Peer({trickle: false})
 
     peer1.on('signal', data => peer2.signal(data))
     peer2.on('signal', data => peer1.signal(data))
 
-    peer1.on('connect', () => peer1.send('hey peer2, how is it going?'))
+    peer2.on('data', data => data.toString() === 'peer1msg' ? resolve() : reject(`got unexpected message from peer 1: ${data}`))
 
-    peer2.on('data', data => console.log('got a message from peer1: ' + data))
-  },
+    peer1.on('connect', () => peer1.send('peer1msg'))
+  }),
 
   'webrtc mesh network': () => {
     // // create mesh channels
