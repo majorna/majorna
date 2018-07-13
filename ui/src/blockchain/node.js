@@ -1,6 +1,5 @@
 import { getCryptoRandStr } from '../data/utils'
 import { getHashDifficulty } from './Block'
-import Peer from 'simple-peer'
 
 export const receiveTxs = () => {
   // no duplicates
@@ -13,28 +12,6 @@ export const receiveBlock = () => {
 }
 
 export const initPeerConns = () => {
-  const p = new Peer({initiator: true})
-
-  p.on('error', e => console.error(e))
-
-  p.on('signal', data => {
-    console.log('SIGNAL', JSON.stringify(data))
-    document.querySelector('#outgoing').textContent = JSON.stringify(data)
-  })
-
-  // document.querySelector('form').addEventListener('submit', function (ev) {
-  //   ev.preventDefault()
-  //   p.signal(JSON.parse(document.querySelector('#incoming').value))
-  // })
-
-  p.on('connect', function () {
-    console.log('CONNECT')
-    p.send('whatever' + Math.random())
-  })
-
-  p.on('data', function (data) {
-    console.log('data: ' + data)
-  })
 }
 
 let interval
