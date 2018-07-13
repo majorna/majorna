@@ -5,6 +5,9 @@ export default {
     const peer1 = new Peer({initiator: true, trickle: false})
     const peer2 = new Peer({trickle: false})
 
+    peer1.on('error', e => reject(e))
+    peer2.on('error', e => reject(e))
+
     peer1.on('signal', data => peer2.signal(data))
     peer2.on('signal', data => peer1.signal(data))
 
