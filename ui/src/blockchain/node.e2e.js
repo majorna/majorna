@@ -26,7 +26,11 @@ export default {
     peer1.on('signal', data => peer2.signal(data))
     peer2.on('signal', data => peer1.signal(data))
 
-    peer2.on('data', data => data.toString() === 'peer1msg' ? resolve() : reject(`got unexpected message from peer 1: ${data}`))
+    peer2.on('data', data => {
+      peer1.destroy()
+      peer2.destroy()
+      data.toString() === 'peer1msg' ? resolve() : reject(`got unexpected message from peer 1: ${data}`)
+    })
 
     peer1.on('connect', () => peer1.send('peer1msg'))
   }),
