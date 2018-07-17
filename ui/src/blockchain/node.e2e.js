@@ -11,7 +11,7 @@ export default {
           urls: 'stun:global.stun.twilio.com:3478?transport=udp'
         },
         {
-          url: 'turn:numb.viagenie.ca',
+          urls: 'turn:numb.viagenie.ca',
           username: 'peer2peer@pokemail.net',
           credential: 'peer2peer'
         }
