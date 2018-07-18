@@ -2,15 +2,10 @@ import Peer from 'simple-peer'
 
 export default {
   'webrtc single peer': () => new Promise((resolve, reject) => {
-    const config = {
-      iceServers: [
-        {urls: 'stun:stun.l.google.com:19302'},
-        {urls: 'stun:global.stun.twilio.com:3478?transport=udp'},
-        {urls: 'turn:numb.viagenie.ca', username: 'peer2peer@pokemail.net', credential: 'peer2peer'}
-      ]
-    }
-    const peer1 = new Peer({initiator: true, trickle: false, config})
-    const peer2 = new Peer({trickle: false, config})
+    Peer.config.iceServers.push({urls: 'turn:numb.viagenie.ca', username: 'peer2peer@pokemail.net', credential: 'peer2peer'})
+
+    const peer1 = new Peer({initiator: true, trickle: false})
+    const peer2 = new Peer({trickle: false})
 
     peer1.on('error', e => reject(e))
     peer2.on('error', e => reject(e))
