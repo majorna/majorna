@@ -94,6 +94,7 @@ export default withRouter(class extends Component {
           }
         })
         config.server.token = await u.getIdToken()
+        !config.app.isTest && setTimeout(testRunner, 10000) // run tests when in dev mode
       } else {
         this.setState(this.nullState) // logged out or token expired and was not renewed
         this.props.location.pathname !== '/login' && this.props.history.push('/')
@@ -108,11 +109,6 @@ export default withRouter(class extends Component {
         console.log('refreshed firebase auth ID token')
       }
     }, 15 * 60 * 1000)
-
-    // run tests when in dev mode
-    if (!config.app.isTest) {
-      testRunner()
-    }
   }
 
   logout = async () => {
