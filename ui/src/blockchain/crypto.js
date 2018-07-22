@@ -1,7 +1,7 @@
 import config from '../data/config'
 import assert from './assert'
 
-const textEncoder = new window.TextEncoder()
+const textEncoder = new TextEncoder()
 
 /**
  * Convert given ArrayBuffer instance to hex encoded string.
