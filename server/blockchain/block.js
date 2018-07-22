@@ -5,11 +5,11 @@ const txsUtils = require('./txs')
 const txUtils = require('./tx')
 
 const hashArr = new Uint8Array(2 * 1024 * 1024)
-function getHeaderStrHash(str) {
+function getHeaderStrHash (str) {
   const headerArr = new Uint8Array(Buffer.from(str, 'utf8'))
   hashArr.set(headerArr)
   hashArr.fill(0, headerArr.length, 1000)
-  return crypto.hashTextToBuffer(hashArr.buffer)
+  return crypto.hashTextToBuffer(hashArr)
 }
 
 /**
@@ -85,7 +85,7 @@ exports.getHeaderStr = (blockHeader, skipNonce, difficulty) =>
  * Returns the hash of a given block header.
  */
 exports.hashHeader = blockHeader => exports.hashHeaderToBuffer(blockHeader).toString(crypto.encoding)
-exports.hashHeaderToBuffer = blockHeader => crypto.hashTextToBuffer(exports.getHeaderStr(blockHeader))
+exports.hashHeaderToBuffer = blockHeader => getHeaderStrHash(exports.getHeaderStr(blockHeader))
 
 /**
  * Signs a block with majorna certificate.
@@ -155,7 +155,7 @@ exports.verify = (block, prevBlockHeader) => {
 }
 
 /**
- * Accepts a hash as an Uint8Array array, returns the difficulty as an integer.
+ * Accepts a hash as an Uint8Array/Buffer, returns the difficulty as an integer.
  * Node.js Buffer implement Uint8Array API so buffer instances are also acceptable.
  */
 exports.getHashDifficulty = hash => {
@@ -189,7 +189,7 @@ exports.getHashDifficulty = hash => {
 /**
  * Hashes given header string with optional nonce and calculates difficulty.
  */
-exports.getHashDifficultyFromStr = (headerStr, nonce = '') => exports.getHashDifficulty(crypto.hashTextToBuffer('' + nonce + headerStr))
+exports.getHashDifficultyFromStr = (headerStr, nonce = '') => exports.getHashDifficulty(getHeaderStrHash('' + nonce + headerStr))
 
 /**
  * Calculates nonce (mines) until a hash of required difficulty is found for the block.
@@ -211,7 +211,7 @@ exports.mineHeaderStr = (blockHeaderStr, targetDifficulty) => {
   let nonce = 0
   while (true) {
     nonce++
-    hashBuffer = crypto.hashTextToBuffer(nonce + blockHeaderStr)
+    hashBuffer = getHeaderStrHash(nonce + blockHeaderStr)
     difficulty = exports.getHashDifficulty(hashBuffer)
     if (difficulty >= targetDifficulty) {
       const hashBase64 = hashBuffer.toString('base64')
