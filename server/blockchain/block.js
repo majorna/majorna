@@ -4,6 +4,8 @@ const crypto = require('./crypto')
 const txsUtils = require('./txs')
 const txUtils = require('./tx')
 
+// const hashArr = new Uint8Array(2 * 1024 * 1024)
+
 /**
  * Returns a new copy of the genesis block; the very first block of the blockchain.
  */
@@ -76,7 +78,7 @@ exports.getHeaderStr = (blockHeader, skipNonce, difficulty) =>
 /**
  * Returns the hash of a given block header.
  */
-exports.hashHeader = blockHeader => crypto.hashText(exports.getHeaderStr(blockHeader))
+exports.hashHeader = blockHeader => exports.hashHeaderToBuffer(blockHeader).toString(crypto.encoding)
 exports.hashHeaderToBuffer = blockHeader => crypto.hashTextToBuffer(exports.getHeaderStr(blockHeader))
 
 /**
