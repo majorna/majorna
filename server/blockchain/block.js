@@ -4,7 +4,13 @@ const crypto = require('./crypto')
 const txsUtils = require('./txs')
 const txUtils = require('./tx')
 
-// const hashArr = new Uint8Array(2 * 1024 * 1024)
+const hashArr = new Uint8Array(2 * 1024 * 1024)
+function getHeaderStrHash(str) {
+  const headerArr = new Uint8Array(Buffer.from(str, 'utf8'))
+  hashArr.set(headerArr)
+  hashArr.fill(0, headerArr.length, 1000)
+  return crypto.hashTextToBuffer(hashArr.buffer)
+}
 
 /**
  * Returns a new copy of the genesis block; the very first block of the blockchain.
