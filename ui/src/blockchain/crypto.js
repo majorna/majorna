@@ -1,8 +1,7 @@
 import config from '../data/config'
 import assert from './assert'
-window.TextEncoder = window.TextEncoder || class {}
-// todo: drop this and always use ArrayBuffer? / at least internally in Tx/Block classes
-const textEncoder = new window.TextEncoder(config.crypto.textEncoding)
+
+const textEncoder = new window.TextEncoder()
 
 /**
  * Convert given ArrayBuffer instance to hex encoded string.
