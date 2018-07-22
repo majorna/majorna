@@ -9,7 +9,7 @@ function getHeaderStrHash (str) {
   const headerArr = Buffer.from(str, 'utf8')
   hashArr.set(headerArr)
   hashArr.fill(0, headerArr.length, 1000)
-  return crypto.hashTextToBuffer(hashArr)
+  return crypto.hashTextOrBufferToBuffer(hashArr)
 }
 
 /**
@@ -91,14 +91,14 @@ exports.hashHeaderToBuffer = blockHeader => getHeaderStrHash(exports.getHeaderSt
  * Signs a block with majorna certificate.
  */
 exports.sign = block => {
-  block.sig = crypto.signText(exports.getHeaderStr(block.header))
+  block.sig = crypto.signTextOrBuffer(exports.getHeaderStr(block.header))
   return block
 }
 
 /**
  * Verifies a given block's signature.
  */
-exports.verifySignature = block => crypto.verifyText(block.sig, exports.getHeaderStr(block.header))
+exports.verifySignature = block => crypto.verifyTextOrBuffer(block.sig, exports.getHeaderStr(block.header))
 
 /**
  * Hashes a given block header and checks if the nonce matches the claimed difficulty.
