@@ -288,7 +288,7 @@ exports.insertBlock = (txs, now) => firestore.runTransaction(async t => {
   // create new block with the given txs and with reference to previous block header
   const newBlock = blockUtils.create(txs, blockInfo.header, now)
   blockUtils.sign(newBlock)
-  // todo: blockUtils.verify(newBlock, blockInfo.header)
+  blockUtils.verify(newBlock, blockInfo.header)
 
   // insert the new block
   const newBlockRef = blocksColRef.doc(newBlock.header.no.toString())
