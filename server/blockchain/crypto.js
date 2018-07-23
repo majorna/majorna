@@ -3,7 +3,7 @@ const config = require('../config/config')
 
 exports.algo = 'SHA256'
 // todo: can use DER encoding for signature and save ~20bytes: https://stackoverflow.com/a/39651457/628273 (or compressed ec sig for further reduction)
-exports.encoding = 'base64'
+exports.encoding = 'hex'
 
 exports.hashTextOrBufferToBuffer = text => crypto.createHash(exports.algo).update(text).digest()
 

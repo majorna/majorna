@@ -11,16 +11,15 @@ suite('crypto', () => {
     const sig2 = crypto.signTextOrBuffer(text2)
     assert(crypto.verifyTextOrBuffer(sig2, text2))
 
-    assert(sig2.length === 92 || sig2.length === 96)
+    assert(sig2.length === 140 || sig2.length === 142 || sig2.length === 144)
   })
 
   test('hash', () => {
-    const obj = {stuff: 'loremipsum'}
-    const text = JSON.stringify(obj)
-    const hash = 'dIg1zb/3Caq5LJnoBnKprd19JRYylKg/CMAB09nPFXA=' // calculated with another tool
+    const jsonText = '{"stuff":"loremipsum"}'
+    const hash = '748835cdbff709aab92c99e80672a9addd7d25163294a83f08c001d3d9cf1570' // calculated with another tool
 
-    const calcHash = crypto.hashTextOrBuffer(text)
+    const calcHash = crypto.hashTextOrBuffer(jsonText)
     assert(calcHash === hash)
-    assert(calcHash.length === 44)
+    assert(calcHash.length === 64)
   })
 })

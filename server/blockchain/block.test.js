@@ -101,7 +101,7 @@ suite('block', () => {
     // invalid prev hash
     const invalidPrevHashBlock = block.create(txs, genesisHeader)
     block.sign(invalidPrevHashBlock)
-    invalidPrevHashBlock.header.prevHash = 'Ypy9HtozxoOUejr7SLdqPbsJsBB39wqdzCcBOv3gaZ2O'
+    invalidPrevHashBlock.header.prevHash = 'Ypy9HtozxoOUejr7SLdqPBB39wqdzLdqPBB39wqLdqPBB39wqCcBOv3gaZ2O5gfr'
     assert.throws(() => block.verify(invalidPrevHashBlock, genesisHeader), e => e.message.includes('previous block header hash'))
 
     // invalid tx count
@@ -113,7 +113,7 @@ suite('block', () => {
     // invalid merkle root
     const invalidMerkleRootBlock = block.create(txs, genesisHeader)
     block.sign(invalidMerkleRootBlock)
-    invalidMerkleRootBlock.header.merkleRoot = '4aMCaTeNGYtd9Wgcz4j4X6SNzCtHYhUZQPG9pUG9Xz7T'
+    invalidMerkleRootBlock.header.merkleRoot = '4aMCaTeNGYtd9Wgcz4j4X6SNzCtHYhUZQPG9pUG9Xz7T3kjhasd08hosdajb32hd'
     assert.throws(() => block.verify(invalidMerkleRootBlock, genesisHeader), e => e.message.includes('root is not valid'))
 
     // invalid time
@@ -161,7 +161,7 @@ suite('block', () => {
     minedBlock.header.minDifficulty = 8
     const miningRes = block.mineBlock(minedBlock)
 
-    assert(miningRes.hashBase64.substring(0, 1) === 'A')
+    assert(miningRes.hashHex.substring(0, 1) === '0')
     assert(minedBlock.header.nonce > 0)
 
     block.verify(minedBlock, genesisHeader)

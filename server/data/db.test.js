@@ -247,7 +247,7 @@ suite('db', () => {
     // mine->reward->mine->reward loop
     let lastDifficulty = 0
     let totalReward = 0
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 4; i++) {
       const blockInfo = await db.getBlockInfo()
       assert(blockInfo.miner.targetDifficulty === lastDifficulty + config.blockchain.blockDifficultyIncrementStep)
 
