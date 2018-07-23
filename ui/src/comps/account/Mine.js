@@ -129,8 +129,8 @@ export default class extends Component {
           <div><strong>Transaction Count:</strong> {this.state.blockInfo.header.txCount}</div>
           <div><strong>Min Difficulty:</strong> {this.state.blockInfo.header.minDifficulty}</div>
           <div><strong>Nonce:</strong> {fn(this.state.blockInfo.header.nonce || 0)}</div>
-          <div><strong>Previous Block Hash:</strong> <small>{this.state.blockInfo.header.prevHash}</small></div>
-          <div><strong>Merkle Root:</strong> <small>{this.state.blockInfo.header.merkleRoot}</small></div>
+          <div><strong>Previous Block Hash:</strong> <small className="wrap-text">{this.state.blockInfo.header.prevHash}</small></div>
+          <div><strong>Merkle Root:</strong> <small className="wrap-text">{this.state.blockInfo.header.merkleRoot}</small></div>
 
           {/*<strong className="m-t-m">Peers</strong>*/}
           {/*<div><strong>Online Peers:</strong> ?</div>*/}
