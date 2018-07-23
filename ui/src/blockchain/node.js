@@ -1,5 +1,5 @@
-import { getCryptoRandStr } from '../data/utils'
 import { getHashDifficulty } from './Block'
+import { getCryptoRandStr, convertBufferToHexStr } from './crypto'
 
 export const receiveTxs = () => {
   // no duplicates
@@ -35,7 +35,7 @@ export const mineBlock = async (headerStr, targetDifficulty, progressCb, minedBl
   const textEncoder = new TextEncoder()
   const fullStrArr = new Uint8Array(2 * 1024 * 1024)
   const headerStrBuffer = textEncoder.encode(nonceSuffix + headerStr)
-  let nonceBuffer, hashBuffer, hashArray, base64String, difficulty
+  let nonceBuffer, hashBuffer, hashArray, hexString, difficulty
 
   const intervalTime = 1000 //ms
   const localInterval = interval = setInterval(() => {
@@ -62,8 +62,8 @@ export const mineBlock = async (headerStr, targetDifficulty, progressCb, minedBl
     difficulty = getHashDifficulty(hashArray)
 
     if (difficulty >= targetDifficulty && localInterval === interval) {
-      base64String = btoa(String.fromCharCode(...hashArray))
-      console.log(`mined block with difficulty: ${difficulty} (target: ${targetDifficulty}), time: ${elapsedTime}s, nonce: ${nonce} (suffix: ${nonceSuffix}), hash: ${base64String}`)
+      hexString = convertBufferToHexStr(hashArray)
+      console.log(`mined block with difficulty: ${difficulty} (target: ${targetDifficulty}), time: ${elapsedTime}s, nonce: ${nonce} (suffix: ${nonceSuffix}), hash: ${hexString}`)
       stopMining()
       await minedBlockCb(nonce + nonceSuffix)
       break
