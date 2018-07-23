@@ -42,7 +42,7 @@ exports.getObj = tx => ({
  */
 exports.sign = tx => {
   const sigTx = exports.getObj(tx)
-  sigTx.sig = crypto.signTextOrBuffer(exports.getStr(sigTx))
+  sigTx.sig = crypto.signTextOrBufferToText(exports.getStr(sigTx))
   return sigTx
 }
 

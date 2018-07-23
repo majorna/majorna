@@ -4,11 +4,17 @@ const crypto = require('./crypto')
 const txsUtils = require('./txs')
 const txUtils = require('./tx')
 
-const hashArr = Buffer.alloc(2 * 1024 * 1024)
+const hashArrTemplate32 = new Uint32Array(2 * 256 * 1024)
+let seed = 5647382910 % 2147483647
+for (let i = 0; i < hashArrTemplate32.length; i++) hashArrTemplate32[i] = (seed = seed * 16807 % 2147483647)
+const hashArrTemplate = new Uint8Array(hashArrTemplate32.buffer)
+
+const hashArr = Buffer.alloc(2 * 1024 * 1024, hashArrTemplate)
+
 function getHeaderStrHash (str) {
+  hashArr.fill(hashArrTemplate, 0, 5000) // so hashArr will not have data overwritten by a longer previous headerArr
   const headerArr = Buffer.from(str, 'utf8')
   hashArr.set(headerArr)
-  hashArr.fill(0, headerArr.length, 1000)
   return crypto.hashTextOrBufferToBuffer(hashArr)
 }
 
@@ -91,7 +97,7 @@ exports.hashHeaderToBuffer = blockHeader => getHeaderStrHash(exports.getHeaderSt
  * Signs a block with majorna certificate.
  */
 exports.sign = block => {
-  block.sig = crypto.signTextOrBuffer(exports.getHeaderStr(block.header))
+  block.sig = crypto.signTextOrBufferToText(exports.getHeaderStr(block.header))
   return block
 }
 

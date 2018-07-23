@@ -1,5 +1,5 @@
 import { getHashDifficulty } from './Block'
-import { getCryptoRandStr, convertBufferToHexStr } from './crypto'
+import { getCryptoRandStr, convertBufferToHexStr, getFullHashStrBuffer } from './crypto'
 
 export const receiveTxs = () => {
   // no duplicates
@@ -33,7 +33,7 @@ export const mineBlock = async (headerStr, targetDifficulty, progressCb, minedBl
   let lastNonce = 0
   let prevNonceLen = 0
   const textEncoder = new TextEncoder()
-  const fullStrArr = new Uint8Array(2 * 1024 * 1024)
+  const fullStrArr = new Uint8Array(getFullHashStrBuffer())
   const headerStrBuffer = textEncoder.encode(nonceSuffix + headerStr)
   let nonceBuffer, hashBuffer, hashArray, hexString, difficulty
 

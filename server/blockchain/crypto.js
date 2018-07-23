@@ -7,8 +7,8 @@ exports.encoding = 'hex'
 
 exports.hashTextOrBufferToBuffer = text => crypto.createHash(exports.algo).update(text).digest()
 
-exports.hashTextOrBuffer = text => exports.hashTextOrBufferToBuffer(text).toString(exports.encoding)
+exports.hashTextOrBufferToText = text => exports.hashTextOrBufferToBuffer(text).toString(exports.encoding)
 
-exports.signTextOrBuffer = text => crypto.createSign(exports.algo).update(text).sign(config.crypto.privateKey, exports.encoding)
+exports.signTextOrBufferToText = text => crypto.createSign(exports.algo).update(text).sign(config.crypto.privateKey, exports.encoding)
 
 exports.verifyTextOrBuffer = (sig, text) => crypto.createVerify(exports.algo).update(text).verify(config.crypto.publicKey, sig, exports.encoding)
