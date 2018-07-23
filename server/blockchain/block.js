@@ -4,6 +4,20 @@ const crypto = require('./crypto')
 const txsUtils = require('./txs')
 const txUtils = require('./tx')
 
+const hashArrTemplate32 = new Uint32Array(2 * 256 * 1024)
+let seed = 5647382910 % 2147483647
+for (let i = 0; i < hashArrTemplate32.length; i++) hashArrTemplate32[i] = (seed = seed * 16807 % 2147483647)
+const hashArrTemplate = new Uint8Array(hashArrTemplate32.buffer)
+
+const hashArr = Buffer.alloc(2 * 1024 * 1024, hashArrTemplate)
+
+function getHeaderStrHash (str) {
+  hashArr.fill(hashArrTemplate, 0, 5000) // so hashArr will not have data overwritten by a longer previous headerArr
+  const headerArr = Buffer.from(str, 'utf8')
+  hashArr.set(headerArr)
+  return crypto.hashTextOrBufferToBuffer(hashArr)
+}
+
 /**
  * Returns a new copy of the genesis block; the very first block of the blockchain.
  */
@@ -31,7 +45,7 @@ exports.create = (txs, prevBlockHeader, now = new Date()) => {
       no: prevBlockHeader.no + 1,
       prevHash: exports.hashHeader(prevBlockHeader),
       txCount: txs.length,
-      merkleRoot: (txs.length && txsUtils.createMerkle(txs).getMerkleRoot().toString('base64')) || '', // block are allowed to have no txs in them
+      merkleRoot: (txs.length && txsUtils.createMerkle(txs).getMerkleRoot().toString('hex')) || '', // block are allowed to have no txs in them
       time: now,
       minDifficulty: 0,
       nonce: 0
@@ -76,21 +90,21 @@ exports.getHeaderStr = (blockHeader, skipNonce, difficulty) =>
 /**
  * Returns the hash of a given block header.
  */
-exports.hashHeader = blockHeader => crypto.hashText(exports.getHeaderStr(blockHeader))
-exports.hashHeaderToBuffer = blockHeader => crypto.hashTextToBuffer(exports.getHeaderStr(blockHeader))
+exports.hashHeader = blockHeader => exports.hashHeaderToBuffer(blockHeader).toString(crypto.encoding)
+exports.hashHeaderToBuffer = blockHeader => getHeaderStrHash(exports.getHeaderStr(blockHeader))
 
 /**
  * Signs a block with majorna certificate.
  */
 exports.sign = block => {
-  block.sig = crypto.signText(exports.getHeaderStr(block.header))
+  block.sig = crypto.signTextOrBufferToText(exports.getHeaderStr(block.header))
   return block
 }
 
 /**
  * Verifies a given block's signature.
  */
-exports.verifySignature = block => crypto.verifyText(block.sig, exports.getHeaderStr(block.header))
+exports.verifySignature = block => crypto.verifyTextOrBuffer(block.sig, exports.getHeaderStr(block.header))
 
 /**
  * Hashes a given block header and checks if the nonce matches the claimed difficulty.
@@ -106,18 +120,18 @@ exports.verify = (block, prevBlockHeader) => {
   assert(prevBlockHeader && prevBlockHeader.no, 'Invalid previous block header.')
   assert(block.header.no === prevBlockHeader.no + 1, `Block header number is not correct. Expected ${prevBlockHeader.no + 1}, got ${block.header.no}.`)
   assert(block.header.prevHash, 'Previous block hash should be provided.')
-  assert(block.header.prevHash.length === 44, `Previous block hash length is invalid. Expected ${44}, got ${block.header.prevHash.length}.`)
+  assert(block.header.prevHash.length === 64, `Previous block hash length is invalid. Expected ${64}, got ${block.header.prevHash.length}.`)
   assert(block.header.txCount === block.txs.length, `Tx count in header does not match the actual tx count in block. Expected ${block.txs.length}, got ${block.header.txCount}.`)
   if (block.header.txCount) {
     assert(block.header.merkleRoot, 'Merkle root should be provided.')
-    assert(block.header.merkleRoot.length === 44, `Merkle root length is invalid. Expected ${44}, got ${block.header.merkleRoot.length}.`)
+    assert(block.header.merkleRoot.length === 64, `Merkle root length is invalid. Expected ${64}, got ${block.header.merkleRoot.length}.`)
   } else {
     assert(block.header.merkleRoot === '', 'Merkle root should be an empty string if block contains no txs.')
   }
   assert(block.header.time, 'Block header does not have a time.')
   assert(block.header.time.getTime() > exports.getGenesisBlock().header.time.getTime(), 'Block time is invalid or is before the genesis.')
   if (block.sig) {
-    assert(block.sig.length === 92 || block.sig.length === 96, `Block signature length is invalid. Expected ${92} or ${96}, got ${block.sig.length}.`)
+    assert(block.sig.length === 140 || block.sig.length === 142 || block.sig.length === 144, `Block signature length is invalid. Expected ${140}, ${142} or ${144}, got ${block.sig.length}.`)
     block.header.minDifficulty > 0 && assert(block.header.nonce > 0, 'Nonce should be > 0 if difficulty is > 0.')
     block.header.nonce > 0 && assert(block.header.minDifficulty > 0, 'Difficulty should be > 0 if nonce is > 0.')
   } else {
@@ -129,7 +143,7 @@ exports.verify = (block, prevBlockHeader) => {
   const prevBlockHash = exports.hashHeader(prevBlockHeader)
   assert(block.header.prevHash === prevBlockHash, `Given previous block header hash does not match. Expected ${prevBlockHash}, got ${block.header.prevHash}.`)
   if (block.header.txCount) {
-    const merkleRoot = txsUtils.createMerkle(block.txs).getMerkleRoot().toString('base64')
+    const merkleRoot = txsUtils.createMerkle(block.txs).getMerkleRoot().toString('hex')
     assert(block.header.merkleRoot === merkleRoot, `Merkle root is not valid. Expected ${merkleRoot}, got ${block.header.merkleRoot}`)
     block.txs.forEach(tx => assert(txUtils.verify(tx), `One of the txs in given block was invalid. Invalid tx: ${tx}`))
   }
@@ -140,14 +154,14 @@ exports.verify = (block, prevBlockHeader) => {
     const hash = exports.hashHeaderToBuffer(block.header)
     const difficulty = exports.getHashDifficulty(hash)
     assert(difficulty >= block.header.minDifficulty,
-      `Nonce does not match claimed difficulty. Expected difficulty ${block.header.minDifficulty}, got ${difficulty} (hash: ${hash.toString('base64')}).`)
+      `Nonce does not match claimed difficulty. Expected difficulty ${block.header.minDifficulty}, got ${difficulty} (hash: ${hash.toString('hex')}).`)
   }
 
   return true
 }
 
 /**
- * Accepts a hash as an Uint8Array array, returns the difficulty as an integer.
+ * Accepts a hash as an Uint8Array/Buffer, returns the difficulty as an integer.
  * Node.js Buffer implement Uint8Array API so buffer instances are also acceptable.
  */
 exports.getHashDifficulty = hash => {
@@ -181,7 +195,7 @@ exports.getHashDifficulty = hash => {
 /**
  * Hashes given header string with optional nonce and calculates difficulty.
  */
-exports.getHashDifficultyFromStr = (headerStr, nonce = '') => exports.getHashDifficulty(crypto.hashTextToBuffer('' + nonce + headerStr))
+exports.getHashDifficultyFromStr = (headerStr, nonce = '') => exports.getHashDifficulty(getHeaderStrHash('' + nonce + headerStr))
 
 /**
  * Calculates nonce (mines) until a hash of required difficulty is found for the block.
@@ -203,12 +217,12 @@ exports.mineHeaderStr = (blockHeaderStr, targetDifficulty) => {
   let nonce = 0
   while (true) {
     nonce++
-    hashBuffer = crypto.hashTextToBuffer(nonce + blockHeaderStr)
+    hashBuffer = getHeaderStrHash(nonce + blockHeaderStr)
     difficulty = exports.getHashDifficulty(hashBuffer)
     if (difficulty >= targetDifficulty) {
-      const hashBase64 = hashBuffer.toString('base64')
-      console.log(`mined block with difficulty: ${difficulty} (target: ${targetDifficulty}), nonce: ${nonce}, hash: ${hashBase64}`)
-      return {hashBuffer, hashBase64, difficulty, nonce}
+      const hashHex = hashBuffer.toString('hex')
+      console.log(`mined block with difficulty: ${difficulty} (target: ${targetDifficulty}), nonce: ${nonce}, hash: ${hashHex}`)
+      return {hashBuffer, hashHex, difficulty, nonce}
     }
   }
 }

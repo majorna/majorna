@@ -1,8 +1,7 @@
 import config from '../data/config'
 import assert from './assert'
-window.TextEncoder = window.TextEncoder || class {}
-// todo: drop this and always use ArrayBuffer? / at least internally in Tx/Block classes
-const textEncoder = new window.TextEncoder(config.crypto.textEncoding)
+
+const textEncoder = new TextEncoder()
 
 /**
  * Convert given ArrayBuffer instance to hex encoded string.
@@ -48,3 +47,24 @@ export const verifyStrWithHexStrSig = async (sig, str, failureDescription) => as
   convertHexStrToBuffer(sig),
   textEncoder.encode(str)
 ), failureDescription || 'Invalid signature.')
+
+
+/**
+ * Creates and returns a crypto secure random string.
+ */
+export function getCryptoRandStr() {
+  const arr = new Uint16Array(1)
+  crypto.getRandomValues(arr)
+  return arr[0].toString()
+}
+
+/**
+ * Creates and returns the array buffer that needs to be used to write hash buffer over to.
+ * Uses optimized version of the Park-Miller PRNG: http://www.firstpr.com.au/dsp/rand31/
+ */
+export function getFullHashStrBuffer() {
+  const arr = new Uint32Array(2 * 256 * 1024)
+  let seed = 5647382910 % 2147483647
+  for (let i = 0; i < arr.length; i++) arr[i] = (seed = seed * 16807 % 2147483647)
+  return arr.buffer
+}

@@ -1,11 +1,15 @@
+import assert from './assert.e2e'
 import crypto from './crypto.e2e'
 import Merkle from './Merkle.e2e'
 import Tx from './Tx.e2e'
 import Block from './Block.e2e'
+import node from './node.e2e'
 import config from '../data/config'
 import bugsnag from '../data/bugsnag'
 
-const testSuites = Object.entries({crypto, Merkle, Tx, Block})
+const testTimeout = 30 // seconds
+
+const testSuites = Object.entries({assert, crypto, Merkle, Tx, Block, node})
 
 export default async () => {
   console.log('[Tests START]')
@@ -22,7 +26,9 @@ export default async () => {
       const test = testCase[1]
 
       try {
-        await test()
+        await Promise.race([
+          test(),
+          new Promise((resolve, reject) => setTimeout(() => reject(`test case did not complete in ${testTimeout} seconds`), testTimeout * 1000))])
         console.log(`\t[Pass] ${testCaseName}`)
       } catch (e) {
         console.error(`\t[Fail] ${testCaseName}: ${e}`)

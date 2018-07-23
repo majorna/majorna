@@ -39,12 +39,3 @@ export function toClipboard(text) {
   document.execCommand('copy')
   document.body.removeChild(input)
 }
-
-/**
- * Creates and returns a crypto secure random string.
- */
-export function getCryptoRandStr() {
-  const arr = new Uint16Array(1)
-  crypto.getRandomValues(arr)
-  return arr[0].toString()
-}

@@ -42,14 +42,14 @@ exports.getObj = tx => ({
  */
 exports.sign = tx => {
   const sigTx = exports.getObj(tx)
-  sigTx.sig = crypto.signText(exports.getStr(sigTx))
+  sigTx.sig = crypto.signTextOrBufferToText(exports.getStr(sigTx))
   return sigTx
 }
 
 /**
  * Verifies a given tx's signature.
  */
-exports.verifySig = tx => crypto.verifyText(tx.sig, exports.getStr(tx))
+exports.verifySig = tx => crypto.verifyTextOrBuffer(tx.sig, exports.getStr(tx))
 
 /**
  * Verifies the given tx.

@@ -82,6 +82,11 @@ export default {
     await signedBlock.sign()
     await signedBlock.verifySig()
     assert.notEqual(oldSig, signedBlock.sig)
+
+    // invalid sig
+    const invalidSigBlock = await Block.create(await getSampleTxs(), genesis)
+    invalidSigBlock.sig = '12344309823714098217340982173402137649283146021398472309721340923142221134123423141234128237498721364982314618497231984072310497'
+    await assert.throws(() => invalidSigBlock.verify(genesis), 'invalid block sig')
   },
 
   'getHashDifficulty': () => {
@@ -102,26 +107,17 @@ export default {
     const difficulty3 = getHashDifficulty(hash3)
     assert(difficulty3 === 0)
 
-    // using Buffer
-    // const hash4 = Buffer.alloc(2)
-    // hash4[0] = 1
-    // hash4[1] = 200
-    // const difficulty4 = getHashDifficulty(hash4)
-    // assert(difficulty4 === 7)
+    if (!window) {
+      // using Buffer
+      const hash4 = Buffer.alloc(2)
+      hash4[0] = 1
+      hash4[1] = 200
+      const difficulty4 = getHashDifficulty(hash4)
+      assert(difficulty4 === 7)
+    }
   },
 
   'verify': async () => {
-    // verify the fields of assertion error
-    try {
-      assert(2 === 4, 'lorem')
-    } catch (e) {
-      assert(e.type === 'AssertionError')
-      assert(e.message === 'lorem')
-    }
-
-    // verify assert.throws validation
-    await assert.throws(async () => { throw new Error('wow') }, 'wow')
-
     // verify a valid signed and mined block
     const txs = await getSampleTxs()
     const genesis = Block.getGenesis()
@@ -134,7 +130,7 @@ export default {
     await minedBlock.mine()
     await minedBlock.verify(genesis)
 
-    // invalid sig
+    // empty sig
     const noSigBlock = await Block.create(txs, genesis)
     await assert.throws(() => noSigBlock.verify(), 'previous block')
     await assert.throws(() => noSigBlock.verify(genesis), 'difficulty')
@@ -176,23 +172,25 @@ export default {
     await assert.throws(() => invalidTxBlock.verify(genesis), 'txs in given')
   },
 
-  'mineBlock': () => {
-    // const minedBlock = await Block.create(await getSampleTxs(), genesis)
-    // minedBlock.minDifficulty = 8
-    // const miningRes = block.mineBlock(minedBlock)
-    //
-    // assert(miningRes.hashBase64.substring(0, 1) === 'A')
-    // assert(minedBlock.nonce > 0)
-    //
-    // block.verify(minedBlock, genesis)
+  'mineBlock': async () => {
+    const genesis = Block.getGenesis()
+    const minedBlock = await Block.create(await getSampleTxs(), genesis)
+    minedBlock.minDifficulty = 8
+    await minedBlock.mine()
+
+    assert((await minedBlock.hashToHexStr()).substring(0, 2) === '00')
+    assert(minedBlock.nonce > 0)
+
+    await minedBlock.verify(genesis)
   },
 
-  'mineBlock with empty txs': () => {
-    // const emptyTxs = []
-    // const minedBlock = block.create(emptyTxs, genesis)
-    // minedBlock.minDifficulty = 4
-    // block.mineBlock(minedBlock)
-    //
-    // block.verify(minedBlock, genesis)
+  'mineBlock with empty txs': async () => {
+    const genesis = Block.getGenesis()
+    const emptyTxs = []
+    const minedBlock = await Block.create(emptyTxs, genesis)
+    minedBlock.minDifficulty = 4
+    await minedBlock.mine()
+
+    await minedBlock.verify(genesis)
   }
 }

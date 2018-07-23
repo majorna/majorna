@@ -1,0 +1,1 @@
+global.TextEncoder = global.TextEncoder || class {}

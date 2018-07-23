@@ -5,7 +5,7 @@ service cloud.firestore {
       allow get: if request.auth.uid == userId;
     }
 
-    // these metadata are public
+    // publicly readable meta docs
     match /meta/mj {
       allow read;
     }
