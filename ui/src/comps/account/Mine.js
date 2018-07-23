@@ -30,18 +30,20 @@ export default class extends Component {
 
   componentDidMount = async () => {
     // 3rd party service can fail here so waking server is enough even if request fails
-    try {
-      // get rough location so we can populate miner map
-      const locationRes = await server.miners.getLocation()
-      const location = locationRes.status === 200 && await locationRes.json()
+    new Promise(async () => {
+      try {
+        // get rough location so we can populate miner map
+        const locationRes = await server.miners.getLocation()
+        const location = locationRes.status === 200 && await locationRes.json()
 
-      // set miner location for miner map (also wakes server up)
-      const minersRes = await server.miners.post(location.latitude, location.longitude)
-      const minersData = await minersRes.json()
-      this.setState({miners: minersData.miners})
-    } catch (e) {
-      console.error(e)
-    }
+        // set miner location for miner map (also wakes server up)
+        const minersRes = await server.miners.post(location.latitude, location.longitude)
+        const minersData = await minersRes.json()
+        this.setState({miners: minersData.miners})
+      } catch (e) {
+        console.error(e)
+      }
+    })
 
     // start network requests
     this.fbUnsubBlockInfoMetaDocSnapshot = this.props.db.collection('meta').doc('blockInfo').onSnapshot(async doc => {
