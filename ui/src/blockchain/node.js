@@ -33,7 +33,7 @@ export const mineBlock = async (headerStr, targetDifficulty, progressCb, minedBl
   let lastNonce = 0
   let prevNonceLen = 0
   const textEncoder = new TextEncoder()
-  const fullStrArr = new Uint8Array(getFullHashStrBuffer())
+  const blockHashPalette = new Uint8Array(getFullHashStrBuffer())
   const headerStrBuffer = textEncoder.encode(nonceSuffix + headerStr)
   let nonceBuffer, hashBuffer, hashArray, hexString, difficulty
 
@@ -52,12 +52,12 @@ export const mineBlock = async (headerStr, targetDifficulty, progressCb, minedBl
   while (localInterval === interval) {
     nonce++
     nonceBuffer = textEncoder.encode(nonce.toString())
-    fullStrArr.set(nonceBuffer)
+    blockHashPalette.set(nonceBuffer)
     if (nonceBuffer.length > prevNonceLen) {
       prevNonceLen = nonceBuffer.length
-      fullStrArr.set(headerStrBuffer, nonceBuffer.length)
+      blockHashPalette.set(headerStrBuffer, nonceBuffer.length)
     }
-    hashBuffer = await crypto.subtle.digest(alg, fullStrArr.buffer)
+    hashBuffer = await crypto.subtle.digest(alg, blockHashPalette.buffer)
     hashArray = new Uint8Array(hashBuffer)
     difficulty = getHashDifficulty(hashArray)
 

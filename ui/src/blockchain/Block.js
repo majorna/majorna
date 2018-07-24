@@ -1,7 +1,15 @@
 import assert from './assert'
-import { convertBufferToHexStr, hashStrToBuffer, signStrToHexStr, verifyStrWithHexStrSig } from './crypto'
+import {
+  convertBufferToHexStr,
+  getFullHashStrBuffer,
+  hashStrToBuffer,
+  signStrToHexStr,
+  verifyStrWithHexStrSig
+} from './crypto'
 import Merkle from './Merkle'
 import Tx from './Tx'
+
+const blockHashPalette = new Uint8Array(getFullHashStrBuffer())
 
 export default class Block {
   constructor (sig, no, prevHash, txCount, merkleRoot, time, minDifficulty, nonce, txs) {
@@ -147,7 +155,9 @@ export default class Block {
   /**
    * Mines a block until a nonce of required minimum difficulty is found, asynchronously.
    */
-  mine = async () => { for (this.nonce++; await this.getHashDifficulty() < this.minDifficulty; this.nonce++) {} }
+  mine = async () => {
+    for (this.nonce++; await this.getHashDifficulty() < this.minDifficulty; this.nonce++) {}
+  }
 
   /**
    * Returns the mining reward for a block given the difficulty.
