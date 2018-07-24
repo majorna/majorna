@@ -53,7 +53,7 @@ export const mineBlock = async (headerStr, targetDifficulty, progressCb, minedBl
     nonce++
     nonceBuffer = textEncoder.encode(nonce.toString())
     blockHashPalette.set(nonceBuffer)
-    if (nonceBuffer.length > prevNonceLen) {
+    if (nonceBuffer.length !== prevNonceLen) {
       prevNonceLen = nonceBuffer.length
       blockHashPalette.set(headerStrBuffer, nonceBuffer.length)
     }

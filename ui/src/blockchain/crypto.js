@@ -48,7 +48,6 @@ export const verifyStrWithHexStrSig = async (sig, str, failureDescription) => as
   textEncoder.encode(str)
 ), failureDescription || 'Invalid signature.')
 
-
 /**
  * Creates and returns a crypto secure random string.
  */
