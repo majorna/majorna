@@ -58,12 +58,21 @@ export function getCryptoRandStr() {
 }
 
 /**
- * Creates and returns the array buffer that needs to be used to write hash buffer over to.
+ * Creates and returns the ArrayBuffer that needs to be used to write hash buffer over to.
  * Uses optimized version of the Park-Miller PRNG: http://www.firstpr.com.au/dsp/rand31/
  */
-export function getFullHashStrBuffer() {
-  const arr = new Uint32Array(2 * 256 * 1024)
+export function getBlockHashPalette() {
+  const len = 2 * 256 * 1024
+  let loop = 0
+  if (!blockHashPalette) {
+    blockHashPalette = new Uint32Array(len)
+    loop = len
+  } else {
+    loop = 5 * 1024
+  }
+
   let seed = 5647382910 % 2147483647
-  for (let i = 0; i < arr.length; i++) arr[i] = (seed = seed * 16807 % 2147483647)
-  return arr.buffer
+  for (let i = 0; i < loop; i++) blockHashPalette[i] = (seed = seed * 16807 % 2147483647)
+  return blockHashPalette.buffer
 }
+let blockHashPalette

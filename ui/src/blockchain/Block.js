@@ -1,15 +1,12 @@
 import assert from './assert'
 import {
   convertBufferToHexStr,
-  getFullHashStrBuffer,
   hashStrToBuffer,
   signStrToHexStr,
   verifyStrWithHexStrSig
 } from './crypto'
 import Merkle from './Merkle'
 import Tx from './Tx'
-
-const blockHashPalette = new Uint8Array(getFullHashStrBuffer())
 
 export default class Block {
   constructor (sig, no, prevHash, txCount, merkleRoot, time, minDifficulty, nonce, txs) {
