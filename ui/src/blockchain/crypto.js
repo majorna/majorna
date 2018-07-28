@@ -62,13 +62,13 @@ export function getCryptoRandStr() {
  * Uses optimized version of the Park-Miller PRNG: http://www.firstpr.com.au/dsp/rand31/
  */
 export function getBlockHashPalette() {
-  const len = 2 * 256 * 1024
+  const paletteLen = 2 * 256 * 1024
   let loop = 0
   if (!blockHashPalette) {
-    blockHashPalette = new Uint32Array(len)
-    loop = len
+    blockHashPalette = new Uint32Array(paletteLen)
+    loop = paletteLen
   } else {
-    loop = 5 * 1024
+    loop = (2 * 1024) / 4
   }
 
   let seed = 5647382910 % 2147483647
