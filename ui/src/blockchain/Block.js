@@ -1,12 +1,14 @@
 import assert from './assert'
 import {
-  convertBufferToHexStr,
+  convertBufferToHexStr, getBlockHashPalette, hashBufferToBuffer,
   hashStrToBuffer,
   signStrToHexStr,
   verifyStrWithHexStrSig
 } from './crypto'
 import Merkle from './Merkle'
 import Tx from './Tx'
+
+const textEncoder = new TextEncoder()
 
 export default class Block {
   constructor (sig, no, prevHash, txCount, merkleRoot, time, minDifficulty, nonce, txs) {
@@ -70,7 +72,11 @@ export default class Block {
   /**
    * Returns the hash of the block as ArrayBuffer, asynchronously.
    */
-  hashToBuffer = () => hashStrToBuffer('' + this.nonce + this._toMiningString())
+  hashToBuffer = () => {
+    const blockHashPalette = new Uint8Array(getBlockHashPalette())
+    blockHashPalette.set(textEncoder.encode('' + this.nonce + this._toMiningString()))
+    return hashBufferToBuffer(blockHashPalette.buffer)
+  }
 
   /**
    * Returns the hash of the block as hex encoded string, asynchronously.
@@ -153,7 +159,11 @@ export default class Block {
    * Mines a block until a nonce of required minimum difficulty is found, asynchronously.
    */
   mine = async () => {
-    for (this.nonce++; await this.getHashDifficulty() < this.minDifficulty; this.nonce++) {}
+    let blockHashPalette = getBlockHashPalette()
+    let lastNonceLen = 0
+    for (this.nonce++; await this.getHashDifficulty() < this.minDifficulty; this.nonce++) {
+
+    }
   }
 
   /**
