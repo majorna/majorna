@@ -161,7 +161,7 @@ export default class Block {
     let blockHashPalette = new Uint8Array(getBlockHashPalette())
     const headerStrBuff = textEncoder.encode(this._toMiningString())
     let nonceBuff, hashBuff, prevNonceLen
-    for (this.nonce++; getHashDifficulty(hashBuff) < this.minDifficulty; this.nonce++) {
+    for (this.nonce++; hashBuff && getHashDifficulty(hashBuff) < this.minDifficulty; this.nonce++) {
       nonceBuff = textEncoder.encode(this.nonce.toString())
       blockHashPalette.set(nonceBuff)
       if (nonceBuff.length !== prevNonceLen) {
