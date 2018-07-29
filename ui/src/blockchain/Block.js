@@ -1,7 +1,6 @@
 import assert from './assert'
 import {
   convertBufferToHexStr, getBlockHashPalette, hashBufferToBuffer,
-  hashStrToBuffer,
   signStrToHexStr,
   verifyStrWithHexStrSig
 } from './crypto'
@@ -159,10 +158,17 @@ export default class Block {
    * Mines a block until a nonce of required minimum difficulty is found, asynchronously.
    */
   mine = async () => {
-    let blockHashPalette = getBlockHashPalette()
-    let lastNonceLen = 0
-    for (this.nonce++; await this.getHashDifficulty() < this.minDifficulty; this.nonce++) {
-
+    let blockHashPalette = new Uint8Array(getBlockHashPalette())
+    const headerStrBuff = textEncoder.encode(this._toMiningString())
+    let nonceBuff, hashBuff, prevNonceLen
+    for (this.nonce++; getHashDifficulty(hashBuff) < this.minDifficulty; this.nonce++) {
+      nonceBuff = textEncoder.encode(this.nonce.toString())
+      blockHashPalette.set(nonceBuff)
+      if (nonceBuff.length !== prevNonceLen) {
+        prevNonceLen = nonceBuff.length
+        blockHashPalette.set(headerStrBuff, nonceBuff.length)
+      }
+      hashBuff = await hashBufferToBuffer(blockHashPalette.buffer)
     }
   }
 
