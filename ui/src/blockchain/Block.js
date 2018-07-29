@@ -170,6 +170,7 @@ export default class Block {
       }
       hashBuff = new Uint8Array(await hashBufferToBuffer(blockHashPalette.buffer))
     }
+    this.nonce--
   }
 
   /**

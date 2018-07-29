@@ -18,9 +18,11 @@ export default async () => {
   const allTests = testSuites.map(ts => Object.entries(ts[1]).map(tc => tc)).reduce((a, b) => [...a, ...b])
   const onlyTestCase = allTests.find(tc => tc[0].startsWith('O'))
   if (onlyTestCase) {
-    console.log(onlyTestCase[0].substring(1))
+    console.log('Running single test case:', onlyTestCase[0].substring(1))
     await config.initKeys()
     await onlyTestCase[1]()
+    console.log('Success')
+    return
   }
 
   // run tests
