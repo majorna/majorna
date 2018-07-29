@@ -14,6 +14,16 @@ const testSuites = Object.entries({assert, crypto, Merkle, Tx, Block, node})
 export default async () => {
   console.log('[Tests START]')
 
+  // run test marked as ONLY
+  const allTests = testSuites.map(ts => Object.entries(ts[1]).map(tc => tc)).reduce((a, b) => [...a, ...b])
+  const onlyTestCase = allTests.find(tc => tc[0].startsWith('O'))
+  if (onlyTestCase) {
+    console.log(onlyTestCase[0].substring(1))
+    await config.initKeys()
+    await onlyTestCase[1]()
+  }
+
+  // run tests
   for (let i = 0; i < testSuites.length; i++) {
     const testSuite = testSuites[i]
     const testSuiteName = testSuite[0]
