@@ -96,7 +96,7 @@ export default withRouter(class extends Component {
         config.server.token = await u.getIdToken()
         // run tests when in dev or production mode
         config.app.isDev && testRunner()
-        config.app.isProd && setTimeout(testRunner, 10000)
+        config.app.isProd && setTimeout(testRunner, 10 * 1000)
       } else {
         this.setState(this.nullState) // logged out or token expired and was not renewed
         this.props.location.pathname !== '/login' && this.props.history.push('/')
