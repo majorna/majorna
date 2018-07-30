@@ -5,8 +5,11 @@ const txsUtils = require('./txs')
 const txUtils = require('./tx')
 
 const hashArrTemplate32 = new Uint32Array(2 * 256 * 1024)
-let seed = 5647382910 % 2147483647
-for (let i = 0; i < hashArrTemplate32.length; i++) hashArrTemplate32[i] = (seed = seed * 16807 % 2147483647)
+let seed = 20180101 % 2147483647
+for (let i = 0; i < hashArrTemplate32.length; i++) {
+  hashArrTemplate32[i] = 0
+  for (let j = 0; j < 64; j++) hashArrTemplate32[i] += (seed = seed * 16807 % 2147483647)
+}
 const hashArrTemplate = new Uint8Array(hashArrTemplate32.buffer)
 
 const hashArr = Buffer.alloc(2 * 1024 * 1024, hashArrTemplate)
