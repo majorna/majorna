@@ -63,18 +63,20 @@ export function getCryptoRandStr() {
  */
 export function getBlockHashPalette() {
   const bytesPerInt = 4 // int32
-  const paletteLen = 2 * (1024 / bytesPerInt) * 1024
-  let loop = 0
+  const paletteLen = 2 * 1024 * 1024 / bytesPerInt
+  let totalLoop = paletteLen, innerLoop = 64
   if (!blockHashPalette) {
     blockHashPalette = new Uint32Array(paletteLen)
-    loop = paletteLen
   } else {
-    loop = 2 * (1024 / bytesPerInt)
+    totalLoop = 2 * 1024 / bytesPerInt
   }
 
   // will start repeating at 2^31 - 1 = 2 * 1024 * 1024 * 1024 - 1 = 2147483647 iterations
   let seed = 20180101 % 2147483647
-  for (let i = 0; i < loop; i++) blockHashPalette[i] = (seed = seed * 16807 % 2147483647) + (seed = seed * 16807 % 2147483647)
+  for (let i = 0; i < totalLoop; i++) {
+    blockHashPalette[i] = 0
+    for (let j = 0; j < innerLoop; j++) blockHashPalette[i] += (seed = seed * 16807 % 2147483647)
+  }
   return blockHashPalette.buffer
 }
 let blockHashPalette

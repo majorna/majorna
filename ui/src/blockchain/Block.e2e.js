@@ -175,10 +175,10 @@ export default {
   'mineBlock': async () => {
     const genesis = Block.getGenesis()
     const minedBlock = await Block.create(await getSampleTxs(), genesis)
-    minedBlock.minDifficulty = 8
+    minedBlock.minDifficulty = 6
     await minedBlock.mine()
 
-    assert((await minedBlock.hashToHexStr()).substring(0, 2) === '00')
+    assert((await minedBlock.hashToHexStr()).substring(0, 1) === '0')
     assert(minedBlock.nonce > 0)
 
     await minedBlock.verify(genesis)
