@@ -1,7 +1,7 @@
 import assert from './assert'
 import config from '../data/config'
 import {
-  convertBufferToHexStr, convertHexStrToBuffer, hashStrToHexStr, signStrToHexStr,
+  convertBufferToHexStr, convertHexStrToBuffer, getBlockHashPalette, hashStrToHexStr, signStrToHexStr,
   verifyStrWithHexStrSig
 } from './crypto'
 
@@ -38,5 +38,12 @@ export default {
     await verifyStrWithHexStrSig(sig2, text2)
 
     assert(sig2.length === 128)
+  },
+
+  'getBlockHashPalette': () => {
+    const t0 = performance.now()
+    assert(getBlockHashPalette())
+    const t1 = performance.now()
+    assert(30 < t1 - t0 < 300)
   }
 }
