@@ -57,6 +57,7 @@ export function getCryptoRandStr() {
   return arr[0].toString()
 }
 
+let blockHashPalette // lazy init the large palette memory
 /**
  * Creates and returns the ArrayBuffer that needs to be used to write hash buffer over to.
  * Uses optimized version of the Park-Miller PRNG: http://www.firstpr.com.au/dsp/rand31/
@@ -79,4 +80,3 @@ export function getBlockHashPalette() {
   }
   return blockHashPalette.buffer
 }
-let blockHashPalette

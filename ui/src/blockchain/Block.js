@@ -83,9 +83,19 @@ export default class Block {
   hashToHexStr = async () => convertBufferToHexStr(await this.hashToBuffer())
 
   /**
+   *
+   * Returns the hash of the block + hash palette, as ArrayBuffer, asynchronously.
+   */
+  hashToBufferUsingHashPalette = () => {
+    const blockHashPalette = new Uint8Array(getBlockHashPalette())
+    blockHashPalette.set(textEncoder.encode('' + this.nonce + this._toMiningString()))
+    return hashBufferToBuffer(blockHashPalette.buffer)
+  }
+
+  /**
    * Returns the block hash difficulty as an integer, asynchronously.
    */
-  getHashDifficulty = async () => getHashDifficulty(new Uint8Array(await this.hashToBuffer()))
+  getHashDifficulty = async () => getHashDifficulty(new Uint8Array(await this.hashToBufferUsingHashPalette()))
 
   /**
    * Signs the block with majorna certificate, asynchronously.
