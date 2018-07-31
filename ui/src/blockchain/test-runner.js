@@ -11,6 +11,10 @@ const testTimeout = 30 // seconds
 
 const testSuites = Object.entries({assert, crypto, Merkle, Tx, Block, node})
 
+// let other components know if tests are currently running
+let running = Promise.resolve()
+export const testRunnerStatus = () => running
+
 export default async () => {
   console.log('[Tests START]')
 
@@ -26,6 +30,9 @@ export default async () => {
     console.log('Success')
     return
   }
+
+  let done
+  running = new Promise(resolve => done = resolve)
 
   // run tests
   for (let i = 0; i < testSuites.length; i++) {
@@ -50,6 +57,8 @@ export default async () => {
       }
     }
   }
+
+  done()
 
   console.log('[Tests END]')
 }

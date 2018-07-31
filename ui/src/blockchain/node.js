@@ -1,5 +1,6 @@
 import { getHashDifficulty } from './Block'
 import { getCryptoRandStr, convertBufferToHexStr, getBlockHashPalette } from './crypto'
+import { testRunnerStatus } from './test-runner'
 
 export const receiveTxs = () => {
   // no duplicates
@@ -20,6 +21,8 @@ export const stopMining = () => {
   interval = null
 }
 
+export const isMining = () => interval
+
 /**
  * Returned promise is not resolved until a block is found.
  * Awaiting this function will block until a block is found or {stopMining} is called.
@@ -34,7 +37,6 @@ export const mineBlock = async (headerStr, targetDifficulty, progressCb, minedBl
   let prevNonceLen = 0
   const textEncoder = new TextEncoder()
   const blockHashPalette = new Uint8Array(getBlockHashPalette())
-  const headerStrBuffer = textEncoder.encode(nonceSuffix + headerStr)
   let nonceBuffer, hashBuffer, hashArray, hexString, difficulty
 
   const intervalTime = 1000 //ms
@@ -47,6 +49,10 @@ export const mineBlock = async (headerStr, targetDifficulty, progressCb, minedBl
     })
     lastNonce = nonce
   }, intervalTime)
+
+  // wait for test runner if tests are running
+  await testRunnerStatus()
+  const headerStrBuffer = textEncoder.encode(nonceSuffix + headerStr)
 
   console.log(`starting hash loop with interval ID: ${localInterval}, target difficulty: ${targetDifficulty}, nonce suffix: ${nonceSuffix}`)
   while (localInterval === interval) {

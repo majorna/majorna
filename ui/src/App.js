@@ -28,6 +28,7 @@ import Modal from './comps/shared/Modal'
 import Terms from './comps/about/Terms'
 import TxDetails from './comps/account/TxDetails'
 import testRunner from './blockchain/test-runner'
+import { isMining } from './blockchain/node'
 
 export default withRouter(class extends Component {
   constructor(props) {
@@ -94,8 +95,9 @@ export default withRouter(class extends Component {
           }
         })
         config.server.token = await u.getIdToken()
-        config.app.isDev && testRunner() // run tests
-        // config.app.isProd && setTimeout(testRunner, 10 * 1000)
+        // run tests
+        config.app.isDev && testRunner()
+        config.app.isProd && setTimeout(() => isMining() ? console.log('skipping tests since miner is running') : testRunner(), 10 * 1000)
       } else {
         this.setState(this.nullState) // logged out or token expired and was not renewed
         this.props.location.pathname !== '/login' && this.props.history.push('/')
