@@ -8,8 +8,6 @@ import {
 const buffer = new Uint8Array([0, 1, 2, 42, 100, 101, 102, 255]).buffer
 
 export default {
-  'init': config.initKeys,
-
   'hex': () => {
     const bufferParsed = convertHexStrToBuffer(convertBufferToHexStr(buffer))
     assert(bufferParsed instanceof ArrayBuffer)

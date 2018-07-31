@@ -14,12 +14,14 @@ const testSuites = Object.entries({assert, crypto, Merkle, Tx, Block, node})
 export default async () => {
   console.log('[Tests START]')
 
+  // todo: move initializers to a dedicated register method
+  await config.initKeys()
+
   // run test marked as ONLY
   const allTests = testSuites.map(ts => Object.entries(ts[1]).map(tc => tc)).reduce((a, b) => [...a, ...b])
   const onlyTestCase = allTests.find(tc => tc[0].startsWith('O'))
   if (onlyTestCase) {
     console.log('Running single test case:', onlyTestCase[0].substring(1))
-    await config.initKeys()
     await onlyTestCase[1]()
     console.log('Success')
     return
