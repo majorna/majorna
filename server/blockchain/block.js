@@ -97,6 +97,12 @@ exports.hashHeaderToStr = blockHeader =>
   crypto.hashTextOrBufferToBuffer(Buffer.from(exports.getHeaderStr(blockHeader), 'utf8')).toString(crypto.encoding)
 
 /**
+ * Returns the POW hash of a given block header.
+ */
+exports.hashHeaderToPowStr = blockHeader =>
+  getHeaderStrHashUsingHashPalette(exports.getHeaderStr(blockHeader)).toString(crypto.encoding)
+
+/**
  * Signs a block with majorna certificate.
  */
 exports.sign = block => {
