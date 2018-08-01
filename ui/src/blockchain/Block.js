@@ -1,6 +1,6 @@
 import assert from './assert'
 import {
-  convertBufferToHexStr, getBlockHashPalette, hashBufferToBuffer,
+  convertBufferToHexStr, getBlockHashPalette, hashBufferToBuffer, hashStrToBuffer,
   signStrToHexStr,
   verifyStrWithHexStrSig
 } from './crypto'
@@ -72,11 +72,7 @@ export default class Block {
   /**
    * Returns the hash of the block as ArrayBuffer, asynchronously.
    */
-  hashToBuffer = () => {
-    const blockHashPalette = new Uint8Array(getBlockHashPalette())
-    blockHashPalette.set(textEncoder.encode('' + this.nonce + this._toMiningString()))
-    return hashBufferToBuffer(blockHashPalette.buffer)
-  }
+  hashToBuffer = () => hashStrToBuffer(this._toBlockHashString())
 
   /**
    * Returns the hash of the block as hex encoded string, asynchronously.
@@ -89,7 +85,7 @@ export default class Block {
    */
   hashToBufferUsingHashPalette = () => {
     const blockHashPalette = new Uint8Array(getBlockHashPalette())
-    blockHashPalette.set(textEncoder.encode('' + this.nonce + this._toMiningString()))
+    blockHashPalette.set(textEncoder.encode(this._toBlockHashString()))
     return hashBufferToBuffer(blockHashPalette.buffer)
   }
 
@@ -190,16 +186,21 @@ export default class Block {
   getBlockReward = difficultyRewardMultiplier => Math.round(this.minDifficulty * difficultyRewardMultiplier)
 
   /**
-   * Concatenates the the given block into a regular string, fit for hashing.
+   * Concatenates the the block into a regular string, fit for POW hashing.
    * Puts the nonce first to prevent internal hash state from being reused. In future we can add more memory intensive prefixes.
    * @param difficulty - If specified, this difficulty will be used instead of the one in the block.
    */
   _toMiningString = difficulty => '' + this.sig + this._toSigningString() + (difficulty || this.minDifficulty)
 
   /**
-   * Concatenates the the given block into a regular string, fit for signing.
+   * Concatenates the the block into a regular string, fit for signing.
    */
   _toSigningString = () => '' + this.no + this.prevHash + this.txCount + this.merkleRoot + this.time.getTime()
+
+  /**
+   * Concatenates the the block into a regular string, fit for hashing.
+   */
+  _toBlockHashString = () => '' + this.nonce + this._toMiningString()
 }
 
 /**

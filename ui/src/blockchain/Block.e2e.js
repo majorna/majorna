@@ -1,6 +1,7 @@
 import assert from './assert'
 import Block, { getHashDifficulty } from './Block'
 import Tx from './Tx'
+import { convertBufferToHexStr } from './crypto'
 
 const getSampleBlock = () => new Block('', 2, 0, '', new Date(), 0, 0, [])
 
@@ -178,7 +179,7 @@ export default {
     minedBlock.minDifficulty = 6
     await minedBlock.mine()
 
-    assert((await minedBlock.hashToHexStr()).substring(0, 1) === '0')
+    assert(convertBufferToHexStr(await minedBlock.hashToBufferUsingHashPalette()).substring(0, 1) === '0')
     assert(minedBlock.nonce > 0)
 
     await minedBlock.verify(genesis)
