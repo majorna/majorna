@@ -13,6 +13,7 @@ export default class Block {
   constructor (sig, no, prevHash, txCount, merkleRoot, time, minDifficulty, nonce, txs) {
     this.sig = sig || '' // optional: if given, difficulty and nonce are not obligatory
 
+    this.version = 2
     this.no = no || 1
     this.prevHash = prevHash || ''
     this.txCount = txCount || 0

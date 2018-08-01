@@ -45,6 +45,7 @@ exports.create = (txs, prevBlockHeader, now = new Date()) => {
   return {
     sig: '',
     header: {
+      version: 2,
       no: prevBlockHeader.no + 1,
       prevHash: exports.hashHeaderToStr(prevBlockHeader),
       prevPow: exports.hashHeaderToPowStr(prevBlockHeader),
