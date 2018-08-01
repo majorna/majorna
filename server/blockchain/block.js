@@ -47,6 +47,7 @@ exports.create = (txs, prevBlockHeader, now = new Date()) => {
     header: {
       no: prevBlockHeader.no + 1,
       prevHash: exports.hashHeaderToStr(prevBlockHeader),
+      prevPow: exports.hashHeaderToPowStr(prevBlockHeader),
       txCount: txs.length,
       merkleRoot: (txs.length && txsUtils.createMerkle(txs).getMerkleRoot().toString('hex')) || '', // block are allowed to have no txs in them
       time: now,

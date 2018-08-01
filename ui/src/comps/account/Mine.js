@@ -126,14 +126,17 @@ export default class extends Component {
       {this.state.showDetails &&
         <small className="flex-column">
           <strong className="m-t-m">Current Block</strong>
-          <div><strong>No:</strong> {this.state.blockInfo.header.no}</div>
+          <div className="m-t-xs"><strong>No:</strong> {this.state.blockInfo.header.no}</div>
           <div><strong>Time:</strong> {this.state.blockInfo.header.time && this.state.blockInfo.header.time.toLocaleString()}</div>
           <div><strong>Transaction Count:</strong> {this.state.blockInfo.header.txCount}</div>
           <div><strong>Min Difficulty:</strong> {this.state.blockInfo.header.minDifficulty}</div>
           <div><strong>Nonce:</strong> {fn(this.state.blockInfo.header.nonce || 0)}</div>
-          <div><strong>Proof of Work:</strong> <small className="wrap-text">{this.state.blockInfo.pow}</small></div>
           <div><strong>Merkle Root:</strong> <small className="wrap-text">{this.state.blockInfo.header.merkleRoot}</small></div>
-          <div><strong>Previous Block Hash:</strong> <small className="wrap-text">{this.state.blockInfo.header.prevHash}</small></div>
+          <div><strong>Proof of Work:</strong> <small className="wrap-text">{this.state.blockInfo.pow}</small></div>
+
+          <strong className="m-t-m">Previous Block</strong>
+          <div className="m-t-xs"><strong>Hash:</strong> <small className="wrap-text">{this.state.blockInfo.header.prevHash}</small></div>
+          <div><strong>Proof of Work:</strong> <small className="wrap-text">{this.state.blockInfo.header.prevPow}</small></div>
 
           {/*<strong className="m-t-m">Peers</strong>*/}
           {/*<div><strong>Online Peers:</strong> ?</div>*/}
