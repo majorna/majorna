@@ -69,7 +69,7 @@ export const mineBlock = async (headerStr, targetDifficulty, progressCb, minedBl
 
     if (difficulty >= targetDifficulty && localInterval === interval) {
       hexString = convertBufferToHexStr(hashArray)
-      console.log(`mined block with difficulty: ${difficulty} (target: ${targetDifficulty}), time: ${elapsedTime}s, nonce: ${nonce} (suffix: ${nonceSuffix}), hash: ${hexString}`)
+      console.log(`mined block with difficulty: ${difficulty} (target: ${targetDifficulty}), time: ${elapsedTime}s, nonce: ${nonce} (suffix: ${nonceSuffix}), proof-of-work: ${hexString}`)
       stopMining()
       await minedBlockCb(nonce + nonceSuffix)
       break
