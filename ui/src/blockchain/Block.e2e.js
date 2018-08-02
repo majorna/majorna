@@ -201,6 +201,8 @@ export default {
     const fullBlock = new Block('signature', 'number', 'prevHash', 'txCount', 'merkleRoot', now, 'minDifficulty', 'nonce', 'txs')
     let hashStr = fullBlock._toBlockHashString()
 
+    assert(Object.keys(fullBlock).filter(key => typeof fullBlock[key] !== 'function').length === 10)
+
     assert(hashStr.startsWith('nonce'))
     hashStr = hashStr.substring('nonce'.length)
 
