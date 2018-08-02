@@ -186,6 +186,11 @@ export default class Block {
   getBlockReward = difficultyRewardMultiplier => Math.round(this.minDifficulty * difficultyRewardMultiplier)
 
   /**
+   * Concatenates the the block into a regular string, fit for hashing.
+   */
+  _toBlockHashString = () => '' + this.nonce + this._toMiningString()
+
+  /**
    * Concatenates the the block into a regular string, fit for POW hashing.
    * Puts the nonce first to prevent internal hash state from being reused. In future we can add more memory intensive prefixes.
    * @param difficulty - If specified, this difficulty will be used instead of the one in the block.
@@ -195,12 +200,7 @@ export default class Block {
   /**
    * Concatenates the the block into a regular string, fit for signing.
    */
-  _toSigningString = () => '' + this.no + this.prevHash + this.txCount + this.merkleRoot + this.time.getTime()
-
-  /**
-   * Concatenates the the block into a regular string, fit for hashing.
-   */
-  _toBlockHashString = () => '' + this.nonce + this._toMiningString()
+  _toSigningString = () => '' + this.version + this.no + this.prevHash + this.txCount + this.merkleRoot + this.time.getTime()
 }
 
 /**
