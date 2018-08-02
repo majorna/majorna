@@ -296,6 +296,7 @@ exports.insertBlock = (txs, now) => firestore.runTransaction(async t => {
 
   // update block info doc
   blockInfo.header = newBlock.header
+  blockInfo.pow = blockUtils.hashHeaderToPowStr(blockInfo.header)
   blockInfo.miner.targetDifficulty = config.blockchain.initialMinBlockDifficulty
   blockInfo.miner.reward = blockUtils.getBlockReward(blockInfo.miner.targetDifficulty)
   blockInfo.miner.headerStrWithoutNonce = blockUtils.getHeaderStr(newBlock.header, true, blockInfo.miner.targetDifficulty)
@@ -333,6 +334,7 @@ exports.giveMiningReward = (to, nonce) => firestore.runTransaction(async t => {
 
   // update block info
   blockInfo.header = lastBlock.header
+  blockInfo.pow = blockUtils.hashHeaderToPowStr(blockInfo.header)
   blockInfo.miner.targetDifficulty = givenNonceDifficulty + config.blockchain.blockDifficultyIncrementStep
   blockInfo.miner.reward = blockUtils.getBlockReward(blockInfo.miner.targetDifficulty)
   blockInfo.miner.headerStrWithoutNonce = blockUtils.getHeaderStr(lastBlock.header, true, blockInfo.miner.targetDifficulty)

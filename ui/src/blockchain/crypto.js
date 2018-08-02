@@ -48,7 +48,6 @@ export const verifyStrWithHexStrSig = async (sig, str, failureDescription) => as
   textEncoder.encode(str)
 ), failureDescription || 'Invalid signature.')
 
-
 /**
  * Creates and returns a crypto secure random string.
  */
@@ -58,13 +57,26 @@ export function getCryptoRandStr() {
   return arr[0].toString()
 }
 
+let blockHashPalette // lazy init the large palette memory
 /**
- * Creates and returns the array buffer that needs to be used to write hash buffer over to.
+ * Creates and returns the ArrayBuffer that needs to be used to write hash buffer over to.
  * Uses optimized version of the Park-Miller PRNG: http://www.firstpr.com.au/dsp/rand31/
  */
-export function getFullHashStrBuffer() {
-  const arr = new Uint32Array(2 * 256 * 1024)
-  let seed = 5647382910 % 2147483647
-  for (let i = 0; i < arr.length; i++) arr[i] = (seed = seed * 16807 % 2147483647)
-  return arr.buffer
+export function getBlockHashPalette() {
+  const bytesPerInt = 4 // int32
+  const paletteLen = 2 * 1024 * 1024 / bytesPerInt
+  let totalLoop = paletteLen, innerLoop = 64
+  if (!blockHashPalette) {
+    blockHashPalette = new Uint32Array(paletteLen)
+  } else {
+    totalLoop = 2 * 1024 / bytesPerInt
+  }
+
+  // will start repeating at 2^31 - 1 = 2 * 1024 * 1024 * 1024 - 1 = 2147483647 iterations
+  let seed = 20180101 % 2147483647
+  for (let i = 0; i < totalLoop; i++) {
+    blockHashPalette[i] = 0
+    for (let j = 0; j < innerLoop; j++) blockHashPalette[i] += (seed = seed * 16807 % 2147483647)
+  }
+  return blockHashPalette.buffer
 }

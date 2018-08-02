@@ -30,18 +30,20 @@ export default class extends Component {
 
   componentDidMount = async () => {
     // 3rd party service can fail here so waking server is enough even if request fails
-    try {
-      // get rough location so we can populate miner map
-      const locationRes = await server.miners.getLocation()
-      const location = locationRes.status === 200 && await locationRes.json()
+    new Promise(async () => {
+      try {
+        // get rough location so we can populate miner map
+        const locationRes = await server.miners.getLocation()
+        const location = locationRes.status === 200 && await locationRes.json()
 
-      // set miner location for miner map (also wakes server up)
-      const minersRes = await server.miners.post(location.latitude, location.longitude)
-      const minersData = await minersRes.json()
-      this.setState({miners: minersData.miners})
-    } catch (e) {
-      console.error(e)
-    }
+        // set miner location for miner map (also wakes server up)
+        const minersRes = await server.miners.post(location.latitude, location.longitude)
+        const minersData = await minersRes.json()
+        this.setState({miners: minersData.miners})
+      } catch (e) {
+        console.error(e)
+      }
+    })
 
     // start network requests
     this.fbUnsubBlockInfoMetaDocSnapshot = this.props.db.collection('meta').doc('blockInfo').onSnapshot(async doc => {
@@ -124,13 +126,18 @@ export default class extends Component {
       {this.state.showDetails &&
         <small className="flex-column">
           <strong className="m-t-m">Current Block</strong>
-          <div><strong>No:</strong> {this.state.blockInfo.header.no}</div>
+          <div className="m-t-xs"><strong>No:</strong> {this.state.blockInfo.header.no}</div>
+          <div><strong>Version:</strong> {this.state.blockInfo.header.version}</div>
           <div><strong>Time:</strong> {this.state.blockInfo.header.time && this.state.blockInfo.header.time.toLocaleString()}</div>
           <div><strong>Transaction Count:</strong> {this.state.blockInfo.header.txCount}</div>
           <div><strong>Min Difficulty:</strong> {this.state.blockInfo.header.minDifficulty}</div>
           <div><strong>Nonce:</strong> {fn(this.state.blockInfo.header.nonce || 0)}</div>
-          <div><strong>Previous Block Hash:</strong> <small className="wrap-text">{this.state.blockInfo.header.prevHash}</small></div>
           <div><strong>Merkle Root:</strong> <small className="wrap-text">{this.state.blockInfo.header.merkleRoot}</small></div>
+          <div><strong>Proof of Work:</strong> <small className="wrap-text">{this.state.blockInfo.pow}</small></div>
+
+          <strong className="m-t-m">Previous Block</strong>
+          <div className="m-t-xs"><strong>Hash:</strong> <small className="wrap-text">{this.state.blockInfo.header.prevHash}</small></div>
+          <div><strong>Proof of Work:</strong> <small className="wrap-text">{this.state.blockInfo.header.prevPow}</small></div>
 
           {/*<strong className="m-t-m">Peers</strong>*/}
           {/*<div><strong>Online Peers:</strong> ?</div>*/}

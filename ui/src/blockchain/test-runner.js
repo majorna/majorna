@@ -11,9 +11,30 @@ const testTimeout = 30 // seconds
 
 const testSuites = Object.entries({assert, crypto, Merkle, Tx, Block, node})
 
+// let other components know if tests are currently running
+let running = Promise.resolve()
+export const testRunnerStatus = () => running
+
 export default async () => {
   console.log('[Tests START]')
 
+  // todo: move initializers to a dedicated register method
+  await config.initKeys()
+
+  // run test marked as ONLY
+  const allTests = testSuites.map(ts => Object.entries(ts[1]).map(tc => tc)).reduce((a, b) => [...a, ...b])
+  const onlyTestCase = allTests.find(tc => tc[0].startsWith('O'))
+  if (onlyTestCase) {
+    console.log('Running single test case:', onlyTestCase[0].substring(1))
+    await onlyTestCase[1]()
+    console.log('Success')
+    return
+  }
+
+  let done
+  running = new Promise(resolve => done = resolve)
+
+  // run tests
   for (let i = 0; i < testSuites.length; i++) {
     const testSuite = testSuites[i]
     const testSuiteName = testSuite[0]
@@ -36,6 +57,8 @@ export default async () => {
       }
     }
   }
+
+  done()
 
   console.log('[Tests END]')
 }

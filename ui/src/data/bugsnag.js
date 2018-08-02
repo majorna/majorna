@@ -6,9 +6,9 @@ const bugsnagClient = !config.app.isTest ? bugsnag({
   autoBreadcrumbs: false,
   autoNotify: false,
 
-  // autoCaptureSessions: false,
-  // collectUserIp: false,
-  // user: {id: '1234'} // todo: set user ID and uncomment above 3 lines
+  autoCaptureSessions: false,
+  collectUserIp: false,
+  user: {id: '1234'} // todo: set user ID
 }) : {}
 
 // bugsnagClient.notify(new Error('Test error'))

@@ -1,12 +1,19 @@
 import assert from './assert'
-import { convertBufferToHexStr, hashStrToBuffer, signStrToHexStr, verifyStrWithHexStrSig } from './crypto'
+import {
+  convertBufferToHexStr, getBlockHashPalette, hashBufferToBuffer, hashStrToBuffer,
+  signStrToHexStr,
+  verifyStrWithHexStrSig
+} from './crypto'
 import Merkle from './Merkle'
 import Tx from './Tx'
+
+const textEncoder = new TextEncoder()
 
 export default class Block {
   constructor (sig, no, prevHash, txCount, merkleRoot, time, minDifficulty, nonce, txs) {
     this.sig = sig || '' // optional: if given, difficulty and nonce are not obligatory
 
+    this.version = 2
     this.no = no || 1
     this.prevHash = prevHash || ''
     this.txCount = txCount || 0
@@ -65,7 +72,7 @@ export default class Block {
   /**
    * Returns the hash of the block as ArrayBuffer, asynchronously.
    */
-  hashToBuffer = () => hashStrToBuffer('' + this.nonce + this._toMiningString())
+  hashToBuffer = () => hashStrToBuffer(this._toBlockHashString())
 
   /**
    * Returns the hash of the block as hex encoded string, asynchronously.
@@ -73,9 +80,19 @@ export default class Block {
   hashToHexStr = async () => convertBufferToHexStr(await this.hashToBuffer())
 
   /**
+   *
+   * Returns the hash of the block + hash palette, as ArrayBuffer, asynchronously.
+   */
+  hashToBufferUsingHashPalette = () => {
+    const blockHashPalette = new Uint8Array(getBlockHashPalette())
+    blockHashPalette.set(textEncoder.encode(this._toBlockHashString()))
+    return hashBufferToBuffer(blockHashPalette.buffer)
+  }
+
+  /**
    * Returns the block hash difficulty as an integer, asynchronously.
    */
-  getHashDifficulty = async () => getHashDifficulty(new Uint8Array(await this.hashToBuffer()))
+  getHashDifficulty = async () => getHashDifficulty(new Uint8Array(await this.hashToBufferUsingHashPalette()))
 
   /**
    * Signs the block with majorna certificate, asynchronously.
@@ -147,7 +164,21 @@ export default class Block {
   /**
    * Mines a block until a nonce of required minimum difficulty is found, asynchronously.
    */
-  mine = async () => { for (this.nonce++; await this.getHashDifficulty() < this.minDifficulty; this.nonce++) {} }
+  mine = async () => {
+    let blockHashPalette = new Uint8Array(getBlockHashPalette())
+    const headerStrBuff = textEncoder.encode(this._toMiningString())
+    let nonceBuff, hashBuff = new Uint8Array(0), prevNonceLen = 0
+    while (getHashDifficulty(hashBuff) < this.minDifficulty) {
+      this.nonce++
+      nonceBuff = textEncoder.encode(this.nonce.toString())
+      blockHashPalette.set(nonceBuff)
+      if (nonceBuff.length !== prevNonceLen) {
+        prevNonceLen = nonceBuff.length
+        blockHashPalette.set(headerStrBuff, nonceBuff.length)
+      }
+      hashBuff = new Uint8Array(await hashBufferToBuffer(blockHashPalette.buffer))
+    }
+  }
 
   /**
    * Returns the mining reward for a block given the difficulty.
@@ -155,16 +186,21 @@ export default class Block {
   getBlockReward = difficultyRewardMultiplier => Math.round(this.minDifficulty * difficultyRewardMultiplier)
 
   /**
-   * Concatenates the the given block into a regular string, fit for hashing.
+   * Concatenates the the block into a regular string, fit for hashing.
+   */
+  _toBlockHashString = () => '' + this.nonce + this._toMiningString()
+
+  /**
+   * Concatenates the the block into a regular string, fit for POW hashing.
    * Puts the nonce first to prevent internal hash state from being reused. In future we can add more memory intensive prefixes.
    * @param difficulty - If specified, this difficulty will be used instead of the one in the block.
    */
   _toMiningString = difficulty => '' + this.sig + this._toSigningString() + (difficulty || this.minDifficulty)
 
   /**
-   * Concatenates the the given block into a regular string, fit for signing.
+   * Concatenates the the block into a regular string, fit for signing.
    */
-  _toSigningString = () => '' + this.no + this.prevHash + this.txCount + this.merkleRoot + this.time.getTime()
+  _toSigningString = () => '' + this.version + this.no + this.prevHash + this.txCount + this.merkleRoot + this.time.getTime()
 }
 
 /**

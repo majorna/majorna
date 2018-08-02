@@ -5,13 +5,16 @@ const txsUtils = require('./txs')
 const txUtils = require('./tx')
 
 const hashArrTemplate32 = new Uint32Array(2 * 256 * 1024)
-let seed = 5647382910 % 2147483647
-for (let i = 0; i < hashArrTemplate32.length; i++) hashArrTemplate32[i] = (seed = seed * 16807 % 2147483647)
+let seed = 20180101 % 2147483647
+for (let i = 0; i < hashArrTemplate32.length; i++) {
+  hashArrTemplate32[i] = 0
+  for (let j = 0; j < 64; j++) hashArrTemplate32[i] += (seed = seed * 16807 % 2147483647)
+}
 const hashArrTemplate = new Uint8Array(hashArrTemplate32.buffer)
 
 const hashArr = Buffer.alloc(2 * 1024 * 1024, hashArrTemplate)
 
-function getHeaderStrHash (str) {
+function getHeaderStrHashUsingHashPalette (str) {
   hashArr.fill(hashArrTemplate, 0, 5000) // so hashArr will not have data overwritten by a longer previous headerArr
   const headerArr = Buffer.from(str, 'utf8')
   hashArr.set(headerArr)
@@ -42,8 +45,10 @@ exports.create = (txs, prevBlockHeader, now = new Date()) => {
   return {
     sig: '',
     header: {
+      version: 2,
       no: prevBlockHeader.no + 1,
-      prevHash: exports.hashHeader(prevBlockHeader),
+      prevHash: exports.hashHeaderToStr(prevBlockHeader),
+      prevPow: exports.hashHeaderToPowStr(prevBlockHeader),
       txCount: txs.length,
       merkleRoot: (txs.length && txsUtils.createMerkle(txs).getMerkleRoot().toString('hex')) || '', // block are allowed to have no txs in them
       time: now,
@@ -90,8 +95,14 @@ exports.getHeaderStr = (blockHeader, skipNonce, difficulty) =>
 /**
  * Returns the hash of a given block header.
  */
-exports.hashHeader = blockHeader => exports.hashHeaderToBuffer(blockHeader).toString(crypto.encoding)
-exports.hashHeaderToBuffer = blockHeader => getHeaderStrHash(exports.getHeaderStr(blockHeader))
+exports.hashHeaderToStr = blockHeader =>
+  crypto.hashTextOrBufferToBuffer(Buffer.from(exports.getHeaderStr(blockHeader), 'utf8')).toString(crypto.encoding)
+
+/**
+ * Returns the POW hash of a given block header.
+ */
+exports.hashHeaderToPowStr = blockHeader =>
+  getHeaderStrHashUsingHashPalette(exports.getHeaderStr(blockHeader)).toString(crypto.encoding)
 
 /**
  * Signs a block with majorna certificate.
@@ -140,7 +151,7 @@ exports.verify = (block, prevBlockHeader) => {
   }
 
   // verify contents
-  const prevBlockHash = exports.hashHeader(prevBlockHeader)
+  const prevBlockHash = exports.hashHeaderToStr(prevBlockHeader)
   assert(block.header.prevHash === prevBlockHash, `Given previous block header hash does not match. Expected ${prevBlockHash}, got ${block.header.prevHash}.`)
   if (block.header.txCount) {
     const merkleRoot = txsUtils.createMerkle(block.txs).getMerkleRoot().toString('hex')
@@ -151,10 +162,10 @@ exports.verify = (block, prevBlockHeader) => {
     assert(exports.verifySignature(block), 'Block signature verification failed.')
   }
   if (!block.sig || block.header.minDifficulty > 0 || block.header.nonce > 0) {
-    const hash = exports.hashHeaderToBuffer(block.header)
-    const difficulty = exports.getHashDifficulty(hash)
+    const headerStr = exports.getHeaderStr(block.header)
+    const difficulty = exports.getHashDifficultyFromStr(headerStr)
     assert(difficulty >= block.header.minDifficulty,
-      `Nonce does not match claimed difficulty. Expected difficulty ${block.header.minDifficulty}, got ${difficulty} (hash: ${hash.toString('hex')}).`)
+      `Nonce does not match claimed difficulty. Expected difficulty ${block.header.minDifficulty}, got ${difficulty} (hash: ${getHeaderStrHashUsingHashPalette(headerStr)}).`)
   }
 
   return true
@@ -195,7 +206,7 @@ exports.getHashDifficulty = hash => {
 /**
  * Hashes given header string with optional nonce and calculates difficulty.
  */
-exports.getHashDifficultyFromStr = (headerStr, nonce = '') => exports.getHashDifficulty(getHeaderStrHash('' + nonce + headerStr))
+exports.getHashDifficultyFromStr = (headerStr, nonce = '') => exports.getHashDifficulty(getHeaderStrHashUsingHashPalette('' + nonce + headerStr))
 
 /**
  * Calculates nonce (mines) until a hash of required difficulty is found for the block.
@@ -213,16 +224,16 @@ exports.mineBlock = (blockOrHeader) => {
  */
 exports.mineHeaderStr = (blockHeaderStr, targetDifficulty) => {
   let difficulty
-  let hashBuffer
+  let powHashBuffer
   let nonce = 0
   while (true) {
     nonce++
-    hashBuffer = getHeaderStrHash(nonce + blockHeaderStr)
-    difficulty = exports.getHashDifficulty(hashBuffer)
+    powHashBuffer = getHeaderStrHashUsingHashPalette(nonce + blockHeaderStr)
+    difficulty = exports.getHashDifficulty(powHashBuffer)
     if (difficulty >= targetDifficulty) {
-      const hashHex = hashBuffer.toString('hex')
-      console.log(`mined block with difficulty: ${difficulty} (target: ${targetDifficulty}), nonce: ${nonce}, hash: ${hashHex}`)
-      return {hashBuffer, hashHex, difficulty, nonce}
+      const powHashHex = powHashBuffer.toString('hex')
+      console.log(`mined block with difficulty: ${difficulty} (target: ${targetDifficulty}), nonce: ${nonce}, hash: ${powHashHex}`)
+      return {powHashBuffer, powHashHex, difficulty, nonce}
     }
   }
 }

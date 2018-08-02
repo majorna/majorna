@@ -161,7 +161,7 @@ suite('block', () => {
     minedBlock.header.minDifficulty = 8
     const miningRes = block.mineBlock(minedBlock)
 
-    assert(miningRes.hashHex.substring(0, 1) === '0')
+    assert(miningRes.powHashHex.substring(0, 1) === '0')
     assert(minedBlock.header.nonce > 0)
 
     block.verify(minedBlock, genesisHeader)

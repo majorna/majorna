@@ -1,6 +1,7 @@
 import assert from './assert'
 import Block, { getHashDifficulty } from './Block'
 import Tx from './Tx'
+import { convertBufferToHexStr } from './crypto'
 
 const getSampleBlock = () => new Block('', 2, 0, '', new Date(), 0, 0, [])
 
@@ -175,10 +176,10 @@ export default {
   'mineBlock': async () => {
     const genesis = Block.getGenesis()
     const minedBlock = await Block.create(await getSampleTxs(), genesis)
-    minedBlock.minDifficulty = 8
+    minedBlock.minDifficulty = 6
     await minedBlock.mine()
 
-    assert((await minedBlock.hashToHexStr()).substring(0, 2) === '00')
+    assert(convertBufferToHexStr(await minedBlock.hashToBufferUsingHashPalette()).substring(0, 1) === '0')
     assert(minedBlock.nonce > 0)
 
     await minedBlock.verify(genesis)
@@ -192,5 +193,43 @@ export default {
     await minedBlock.mine()
 
     await minedBlock.verify(genesis)
+  },
+
+  'verify hash string': () => {
+    const now = new Date()
+    const version = '2'
+    const fullBlock = new Block('signature', 'number', 'prevHash', 'txCount', 'merkleRoot', now, 'minDifficulty', 'nonce', 'txs')
+    let hashStr = fullBlock._toBlockHashString()
+
+    assert(Object.keys(fullBlock).filter(key => typeof fullBlock[key] !== 'function').length === 10)
+
+    assert(hashStr.startsWith('nonce'))
+    hashStr = hashStr.substring('nonce'.length)
+
+    assert(hashStr.startsWith('signature'))
+    hashStr = hashStr.substring('signature'.length)
+
+    assert(hashStr.startsWith(version))
+    hashStr = hashStr.substring(version.length)
+
+    assert(hashStr.startsWith('number'))
+    hashStr = hashStr.substring('number'.length)
+
+    assert(hashStr.startsWith('prevHash'))
+    hashStr = hashStr.substring('prevHash'.length)
+
+    assert(hashStr.startsWith('txCount'))
+    hashStr = hashStr.substring('txCount'.length)
+
+    assert(hashStr.startsWith('merkleRoot'))
+    hashStr = hashStr.substring('merkleRoot'.length)
+
+    assert(hashStr.startsWith(now.getTime().toString()))
+    hashStr = hashStr.substring(now.getTime().toString().length)
+
+    assert(hashStr.startsWith('minDifficulty'))
+    hashStr = hashStr.substring('minDifficulty'.length)
+
+    assert(hashStr === '')
   }
 }

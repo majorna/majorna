@@ -1,15 +1,13 @@
 import assert from './assert'
 import config from '../data/config'
 import {
-  convertBufferToHexStr, convertHexStrToBuffer, hashStrToHexStr, signStrToHexStr,
+  convertBufferToHexStr, convertHexStrToBuffer, getBlockHashPalette, hashStrToHexStr, signStrToHexStr,
   verifyStrWithHexStrSig
 } from './crypto'
 
 const buffer = new Uint8Array([0, 1, 2, 42, 100, 101, 102, 255]).buffer
 
 export default {
-  'init': config.initKeys,
-
   'hex': () => {
     const bufferParsed = convertHexStrToBuffer(convertBufferToHexStr(buffer))
     assert(bufferParsed instanceof ArrayBuffer)
@@ -38,5 +36,20 @@ export default {
     await verifyStrWithHexStrSig(sig2, text2)
 
     assert(sig2.length === 128)
+  },
+
+  'getBlockHashPalette': () => {
+    if (!config.app.isDev) {
+      return
+    }
+
+    const tNominal = 400 // ms
+    const t0 = performance.now()
+    const p = getBlockHashPalette()
+    const t1 = performance.now()
+    const td = t1 - t0
+    assert(p)
+    // console.log(`block hash palette was generated in: ${td}ms, expected nominal: ${tNominal}ms`)
+    assert(td > (tNominal - (tNominal * 0.2)) && td < (tNominal * 1.5))
   }
 }
