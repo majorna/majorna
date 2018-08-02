@@ -193,5 +193,41 @@ export default {
     await minedBlock.mine()
 
     await minedBlock.verify(genesis)
+  },
+
+  'verify hash string': () => {
+    const now = new Date()
+    const version = '2'
+    const fullBlock = new Block('signature', 'number', 'prevHash', 'txCount', 'merkleRoot', now, 'minDifficulty', 'nonce', 'txs')
+    let hashStr = fullBlock._toBlockHashString()
+
+    assert(hashStr.startsWith('nonce'))
+    hashStr = hashStr.substring('nonce'.length)
+
+    assert(hashStr.startsWith('signature'))
+    hashStr = hashStr.substring('signature'.length)
+
+    assert(hashStr.startsWith(version))
+    hashStr = hashStr.substring(version.length)
+
+    assert(hashStr.startsWith('number'))
+    hashStr = hashStr.substring('number'.length)
+
+    assert(hashStr.startsWith('prevHash'))
+    hashStr = hashStr.substring('prevHash'.length)
+
+    assert(hashStr.startsWith('txCount'))
+    hashStr = hashStr.substring('txCount'.length)
+
+    assert(hashStr.startsWith('merkleRoot'))
+    hashStr = hashStr.substring('merkleRoot'.length)
+
+    assert(hashStr.startsWith(now.getTime().toString()))
+    hashStr = hashStr.substring(now.getTime().toString().length)
+
+    assert(hashStr.startsWith('minDifficulty'))
+    hashStr = hashStr.substring('minDifficulty'.length)
+
+    assert(hashStr === '')
   }
 }
