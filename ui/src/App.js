@@ -28,7 +28,7 @@ import Modal from './comps/shared/Modal'
 import Terms from './comps/about/Terms'
 import TxDetails from './comps/account/TxDetails'
 import testRunner from './blockchain/test-runner'
-import { isMining } from './blockchain/node'
+import { isMining } from './blockchain/miner'
 
 export default withRouter(class extends Component {
   constructor(props) {
