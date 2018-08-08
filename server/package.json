@@ -3,8 +3,8 @@
     "node": ">=10 <11"
   },
   "scripts": {
-    "start": "node index.js",
-    "test": "npm run lint && NODE_ENV=test mocha **/*test.js --recursive --timeout 60s --ui tdd",
+    "start": "[[ $DEVENVS ]] && source $DEVENVS; node index.js",
+    "test": "[[ $DEVENVS ]] && source $DEVENVS; npm run lint && NODE_ENV=test mocha **/*test.js --recursive --timeout 60s --ui tdd",
     "lint": "standard --fix",
     "deploy": "cd .. && git subtree push --prefix server heroku master",
     "deploy-force": "cd .. && git push heroku `git subtree split --prefix server master`:master --force"
