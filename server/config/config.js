@@ -6,6 +6,11 @@ console.log(`config: ${env}`)
 
 const domain = 'getmajorna.com'
 
+// throw if required env vars are not defined
+if (!process.env.MAJORNA_FIREBASE_JSON) {
+  throw new Error('required environment variables are not defined')
+}
+
 // app config
 const app = {
   env,
