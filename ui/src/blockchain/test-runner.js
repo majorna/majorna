@@ -4,12 +4,13 @@ import Merkle from './Merkle.e2e'
 import Tx from './Tx.e2e'
 import Block from './Block.e2e'
 import Peer from './Peer.e2e'
+import PeerNetwork from './PeerNetwork.e2e'
 import config from '../data/config'
 import bugsnag from '../data/bugsnag'
 
 const testTimeout = 30 // seconds
 
-const testSuites = Object.entries({assert, crypto, Merkle, Tx, Block, Peer})
+const testSuites = Object.entries({assert, crypto, Merkle, Tx, Block, Peer, PeerNetwork})
 
 // let other components know if tests are currently running
 let running = Promise.resolve()

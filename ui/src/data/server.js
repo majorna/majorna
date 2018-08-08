@@ -32,6 +32,9 @@ export default {
   },
   coinbase: {
     usdExchangeRates: () => fetch('https://api.coinbase.com/v2/exchange-rates?currency=USD')
+  },
+  peers: {
+    init: (connId, data) => postJson('/peers/init', {connId, data})
   }
 }
 
