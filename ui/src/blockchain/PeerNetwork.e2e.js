@@ -1,7 +1,9 @@
 import PeerNetwork from './PeerNetwork'
 
+// todo: emulate all things a normal peer network would do and all class methods, mock out server
+
 export default {
-  'webrtc single peer': () => new Promise((resolve, reject) => {
+  'init': () => new Promise((resolve, reject) => {
     const peerNetwork = new PeerNetwork()
     peerNetwork ? resolve() : reject(`malformed peer network: ${peerNetwork}`)
   })
