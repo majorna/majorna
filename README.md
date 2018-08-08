@@ -65,7 +65,7 @@ UI:
 
 Server:
 * Node.js: https://nodejs.org/en/download/releases/
-* See relevant module docs in /config
+* See relevant module docs in /config (i.e. [config/firebase.js](/server/config/firebase.js))
 
 ### Hardcoded URLs
 * This readme
