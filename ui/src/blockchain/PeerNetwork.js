@@ -4,26 +4,30 @@ import server from '../data/server'
 export default class PeerNetwork {
   peers = []
 
+  connCounter = 0
+
   initPeer = () => {
+    this.connCounter++
+
     const peer = new InitiatingPeer()
     peer.on('error', e => console.error(e))
     peer.on('close', () => {})
-    peer.on('signal', data => server.peers.init(this.peers.length + 1, data))
+    peer.on('signal', data => server.peers.init(this.connCounter, data))
     peer.on('connect', () => console.log('peer successfully initialized:', peer))
-    peer.on('data', data => console.log(data))
-    this.peers.push(peer)
+    peer.on('data', this.onData)
+
+    this.peers.push({connId: this.connCounter, peer})
   }
 
-  receiveTxs = () => {
+  onData = data => console.log(data)
+
+  onReceiveTxs = () => {
     // no duplicates
     // no balance below 0
     // valid signatures
   }
 
-  receiveBlock = () => {
+  onReceiveBlocks = () => {
     // validate each tx signature unless block is signed by a trusted key
-  }
-
-  initPeerConns = () => {
   }
 }
