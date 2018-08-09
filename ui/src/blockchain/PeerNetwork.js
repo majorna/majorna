@@ -4,24 +4,40 @@ import server from '../data/server'
 export default class PeerNetwork {
   peers = []
 
-  connCounter = 0
+  connInitCounter = 0
 
   initPeer = () => {
-    this.connCounter++
+    this.connInitCounter++
 
     const peer = new InitiatingPeer()
     peer.on('error', e => console.error(e))
     peer.on('close', () => {})
-    peer.on('signal', data => server.peers.init(this.connCounter, data))
-    peer.on('connect', () => console.log('peer successfully initialized:', peer))
+    peer.on('signal', data => server.peers.init(this.connInitCounter, data))
+    peer.on('connect', () => console.log('peer successfully initialized:', this.connInitCounter, peer))
     peer.on('data', this.onData)
 
-    this.peers.push({connId: this.connCounter, peer})
+    this.peers.push({connId: this.connInitCounter, peer})
   }
 
-  onData = data => console.log(data)
+  /**
+   * Handle incoming peer data.
+   * @param data - A JSON-RPC 2.0 object: https://en.wikipedia.org/wiki/JSON-RPC#Version_2.0
+   */
+  onData = data => {
+    console.log('incoming peer data', data)
+    switch (data.method) {
+      case 'txs':
+        this.onReceiveTxs(data.params)
+        break
+      case 'blocks':
+        this.onReceiveBlocks(data.params)
+        break
+      default:
+        console.error('peer send malformed data:', data)
+    }
+  }
 
-  onReceiveTxs = () => {
+  onReceiveTxs = txs => {
     // no duplicates
     // no balance below 0
     // valid signatures
