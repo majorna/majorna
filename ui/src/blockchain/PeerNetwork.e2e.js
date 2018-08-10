@@ -4,12 +4,20 @@ import PeerNetwork from './PeerNetwork'
 
 export default {
   'init': () => new Promise((resolve, reject) => {
-    const mockServer = {
+    const getMockServer = id => ({
+      id,
       peers: {
-        signal: () => {}
+        signal: (connId, data) => {
+          this.id === 1 && peerNetwork2.onServerSignal(data)
+          this.id === 2 && peerNetwork1.onServerSignal(data)
+        }
       }
-    }
-    const peerNetwork = new PeerNetwork(mockServer)
-    peerNetwork ? resolve() : reject(`malformed peer network: ${peerNetwork}`)
+    })
+    const peerNetwork1 = new PeerNetwork(getMockServer(1))
+    const peerNetwork2 = new PeerNetwork(getMockServer(2))
+
+    peerNetwork1.initPeer()
+
+    peerNetwork1 ? resolve() : reject(`malformed peer network: ${peerNetwork1}`)
   })
 }
