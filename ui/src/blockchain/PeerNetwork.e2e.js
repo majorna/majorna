@@ -4,7 +4,12 @@ import PeerNetwork from './PeerNetwork'
 
 export default {
   'init': () => new Promise((resolve, reject) => {
-    const peerNetwork = new PeerNetwork()
+    const mockServer = {
+      peers: {
+        signal: () => {}
+      }
+    }
+    const peerNetwork = new PeerNetwork(mockServer)
     peerNetwork ? resolve() : reject(`malformed peer network: ${peerNetwork}`)
   })
 }

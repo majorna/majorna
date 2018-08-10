@@ -1,11 +1,18 @@
 import { InitiatingPeer, MatchingPeer } from './Peer'
-import server from '../data/server'
+import remoteServer from '../data/server'
 
 export default class PeerNetwork {
+  constructor (server) {
+    this.server = server || remoteServer
+  }
+
   peers = []
 
   connInitCounter = 0
 
+  /**
+   * Call this to send signaling server initialization data to establish a WebRTC connection to an available peer.
+   */
   initPeer = () => {
     this.connInitCounter++
     const peer = new InitiatingPeer()
@@ -18,7 +25,7 @@ export default class PeerNetwork {
       console.log('remote peer closed the connection', peer)
       this.peers.splice(this.peers.indexOf(peer), 1)
     })
-    peer.on('signal', data => server.peers.init(this.connInitCounter, data))
+    peer.on('signal', data => this.server.peers.signal(this.connInitCounter, data))
     peer.on('connect', () => console.log('peer successfully initialized:', this.connInitCounter, peer))
     peer.on('data', this.onData)
 
