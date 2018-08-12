@@ -183,7 +183,7 @@ export default class Block {
   /**
    * Returns the mining reward for a block given the difficulty.
    */
-  getBlockReward = difficultyRewardMultiplier => Math.round(this.minDifficulty * difficultyRewardMultiplier)
+  getBlockReward = difficultyRewardMultiplier => Math.ceil(this.minDifficulty * difficultyRewardMultiplier)
 
   /**
    * Concatenates the the block into a regular string, fit for hashing.
