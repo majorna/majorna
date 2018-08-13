@@ -1,3 +1,4 @@
+import assert from './assert'
 import PeerNetwork from './PeerNetwork'
 
 // todo: emulate all things a normal peer network would do and all class methods, mock out server
@@ -8,6 +9,7 @@ export default {
       id,
       peers: {
         signal: (connId, data) => {
+          assert(id === 1 || id === 2)
           this.id === 1 && peerNetwork2.onServerSignal(data)
           this.id === 2 && peerNetwork1.onServerSignal(data)
         }
