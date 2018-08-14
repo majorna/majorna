@@ -35,15 +35,17 @@ export default class PeerNetwork {
   /**
    * When a WebRTC connection initialization signal data is delivered to us by the server.
    */
-  onServerSignal = data => {
+  onServerSignal = (userId, data) => {
     this.connInitCounter++
     const peer = new MatchingPeer()
 
     // todo: handle events
 
     peer.signal(data)
-    this.peers.push({connId: this.connInitCounter, peer})
+    this.peers.push({connId: this.connInitCounter, data, peer})
   }
+
+  // todo: onServerSignalReply
 
   /**
    * Handle incoming peer data.

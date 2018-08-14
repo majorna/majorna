@@ -10,8 +10,8 @@ export default {
       peers: {
         signal: (connId, data) => {
           assert(id === 1 || id === 2)
-          this.id === 1 && peerNetwork2.onServerSignal(data)
-          this.id === 2 && peerNetwork1.onServerSignal(data)
+          this.id === 1 && peerNetwork2.onServerSignal(connId, 2, data)
+          this.id === 2 && peerNetwork1.onServerSignal(connId, 1, data)
         }
       }
     })
