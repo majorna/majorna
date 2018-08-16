@@ -108,9 +108,9 @@ MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAE2yLEGhHZMiClLt4rHm6Kajo2qsRRQMUW
 const blockchain = {
   blockInterval: (app.isProd ? 10 : 3) * 60 * 1000, // ms
 
-  initialMinBlockDifficulty: app.isProd ? 10 : 1,
+  initialMinBlockDifficulty: app.isProd ? 5 : 1,
   blockDifficultyIncrementStep: 1,
-  difficultyRewardMultiplier: app.isProd ? 0.05 : 1 // (reward multiplier < 1 breaks tests due to math.round)
+  difficultyRewardMultiplier: app.isProd ? 0.12 : 1 // (reward multiplier < 1 breaks tests due to math.round)
 }
 
 // 3rd party integrations
