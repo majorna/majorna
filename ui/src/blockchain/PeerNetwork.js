@@ -26,16 +26,25 @@ export default class PeerNetwork {
       this.peers.splice(this.peers.indexOf(peer), 1)
     })
     peer.on('signal', data => this.server.peers.signal(this.connInitCounter, data))
-    peer.on('connect', () => console.log('peer successfully initialized:', this.connInitCounter, peer))
+    peer.on('connect', () => this.onPeerConnect(peer))
     peer.on('data', this.onData)
 
     this.peers.push({connId: this.connInitCounter, peer})
   }
 
   /**
+   * Broadcast given data to all connected peers
+   * @param data - A JSON-RPC 2.0 object: https://en.wikipedia.org/wiki/JSON-RPC#Version_2.0
+   */
+  broadcast = data => {
+    data = JSON.stringify(data)
+    this.peers.forEach(p => p.send(data))
+  }
+
+  /**
    * When a WebRTC connection initialization signal data is delivered to us by the server.
    */
-  onServerSignal = (userId, data) => {
+  onServerSignal = (connId, userId, data) => {
     this.connInitCounter++
     const peer = new MatchingPeer()
 
@@ -47,13 +56,8 @@ export default class PeerNetwork {
 
   // todo: onServerSignalReply
 
-  /**
-   * Broadcast given data to all connected peers
-   * @param data - A JSON-RPC 2.0 object: https://en.wikipedia.org/wiki/JSON-RPC#Version_2.0
-   */
-  broadcast = data => {
-    data = JSON.stringify(data)
-    this.peers.forEach(p => p.send(data))
+  onPeerConnect = peer => {
+    console.log('peer successfully initialized:', this.connInitCounter, peer)
   }
 
   /**
