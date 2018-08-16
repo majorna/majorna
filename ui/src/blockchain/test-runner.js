@@ -19,6 +19,9 @@ export const testRunnerStatus = () => running
 export default async () => {
   console.log('[Tests START]')
 
+  let done
+  running = new Promise(resolve => done = resolve)
+
   // todo: move initializers to a dedicated register method
   await config.initKeys()
 
@@ -28,12 +31,10 @@ export default async () => {
   if (onlyTestCase) {
     console.log('Running single test case:', onlyTestCase[0].substring(1))
     await onlyTestCase[1]()
+    done()
     console.log('Success')
     return
   }
-
-  let done
-  running = new Promise(resolve => done = resolve)
 
   // run tests
   for (let i = 0; i < testSuites.length; i++) {
