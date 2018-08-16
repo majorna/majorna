@@ -48,10 +48,20 @@ export default class PeerNetwork {
   // todo: onServerSignalReply
 
   /**
+   * Broadcast given data to all connected peers
+   * @param data - A JSON-RPC 2.0 object: https://en.wikipedia.org/wiki/JSON-RPC#Version_2.0
+   */
+  broadcast = data => {
+    data = JSON.stringify(data)
+    this.peers.forEach(p => p.send(data))
+  }
+
+  /**
    * Handle incoming peer data.
    * @param data - A JSON-RPC 2.0 object: https://en.wikipedia.org/wiki/JSON-RPC#Version_2.0
    */
   onData = data => {
+    data = JSON.parse(data)
     switch (data.method) {
       case 'txs':
         this.onReceiveTxs(data.params)
@@ -60,7 +70,7 @@ export default class PeerNetwork {
         this.onReceiveBlocks(data.params)
         break
       default:
-        console.error('peer send malformed data:', data)
+        console.error('peer sent malformed data:', data)
     }
   }
 
