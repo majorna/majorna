@@ -54,8 +54,6 @@ export default class PeerNetwork {
     this.peers.push({connId: this.connInitCounter, data, peer})
   }
 
-  // todo: onServerSignalReply
-
   onPeerConnect = peer => {
     console.log('peer successfully initialized:', this.connInitCounter, peer)
   }
