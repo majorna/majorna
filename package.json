@@ -7,7 +7,7 @@
     "build": "npm run build --prefix ui",
     "test": "npm test --prefix server && npm run test-coverage --prefix ui",
     "deploy": "npm run build && firebase deploy && npm run deploy --prefix server",
-    "outdated": "(npm outdated || true) && (npm outdated --prefix ui || true) && (npm outdated --prefix server || true)",
+    "outdated": "(npm outdated || echo cli) && (npm outdated --prefix ui || echo ui) && (npm outdated --prefix server || echo server)",
     "install-all": "npm install && npm install --prefix ui && npm install --prefix server"
   }
 }
