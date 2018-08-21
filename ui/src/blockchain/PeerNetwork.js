@@ -1,12 +1,12 @@
 import { InitiatingPeer, MatchingPeer } from './Peer'
-import remoteServer from '../data/server'
+import server from '../data/server'
 
 export default class PeerNetwork {
-  constructor (server) {
-    this.server = server || remoteServer
+  constructor (customServer) {
+    this.server = customServer || server
   }
 
-  peers = []
+  peers = [] // {peer, localConnId, userId}
 
   connInitCounter = 0
 
@@ -14,7 +14,7 @@ export default class PeerNetwork {
    * Call this to send signaling server initialization data to establish a WebRTC connection to an available peer.
    */
   initPeer = () => {
-    const connId = ++this.connInitCounter
+    const localConnId = ++this.connInitCounter
     const peer = new InitiatingPeer()
 
     peer.on('error', e => {
@@ -25,29 +25,39 @@ export default class PeerNetwork {
       console.log('remote peer closed the connection', peer)
       this.peers.splice(this.peers.indexOf(peer), 1)
     })
-    peer.on('signal', data => this.server.peers.initPeer(connId, data)) // todo: send signals after connection via already established data channel?
+    peer.on('signal', data => this.server.peers.initPeer(localConnId, data)) // todo: send signals after connection via already established data channel?
     peer.on('connect', () => this.onPeerConnect(peer))
     peer.on('data', this.onData)
 
-    this.peers.push({connId, peer})
+    this.peers.push({peer, localConnId})
   }
 
   /**
    * When a connection initialization signal data is delivered to us by the server for a connection that was initialized by us with {initPeer}.
    */
-  onInitPeerResponse = (connId, userId, data) => this.peers.find(p => p.connId === connId).signal(data)
+  onInitPeerResponse = (localConnId, userId, data) => this.peers.find(p => p.localConnId === localConnId).peer.signal(data)
 
   /**
    * When a peer initializes a connection and server delivers us the details.
    */
   onInitPeer = (userId, data) => {
-    const connId = ++this.connInitCounter
+    const localConnId = ++this.connInitCounter
     const peer = new MatchingPeer()
 
-    // todo: handle events
+    peer.on('error', e => {
+      console.error('peer connection errored:', e)
+      this.peers.splice(this.peers.indexOf(peer), 1)
+    })
+    peer.on('close', () => {
+      console.log('remote peer closed the connection', peer)
+      this.peers.splice(this.peers.indexOf(peer), 1)
+    })
+    peer.on('signal', data => this.server.peers.signal(userId, data))
+    peer.on('connect', () => this.onPeerConnect(peer))
+    peer.on('data', this.onData)
 
     peer.signal(data)
-    this.peers.push({connId, userId, data, peer})
+    this.peers.push({peer, localConnId, userId})
   }
 
   /**

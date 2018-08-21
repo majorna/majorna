@@ -5,6 +5,19 @@ import PeerNetwork from './PeerNetwork'
 
 export default {
   'init': () => new Promise((resolve, reject) => {
+    const getMockServer = id => ({
+      peers: {
+        initPeer: (localConnId, data) => {
+          assert(id === 1)
+          peerNetwork2.onInitPeer(id, data)
+        },
+        signal: (userId, data) => {
+          assert(id === 2)
+          peerNetwork1.onInitPeerResponse(1, userId, data)
+        }
+      }
+    })
+
     class MockInitiatingPeerNetwork extends PeerNetwork {
       onPeerConnect = peer => {
         super.onPeerConnect(peer)
@@ -18,15 +31,6 @@ export default {
         resolve()
       }
     }
-
-    const getMockServer = id => ({
-      peers: {
-        initPeer: (connId, data) => {
-          id === 1 && peerNetwork2.onInitPeer(connId, 1, data)
-          id === 2 && peerNetwork1.onServerSignal(connId, 2, data)
-        }
-      }
-    })
 
     const peerNetwork1 = new MockInitiatingPeerNetwork(getMockServer(1))
     const peerNetwork2 = new MockMatchingPeerNetwork(getMockServer(2))
