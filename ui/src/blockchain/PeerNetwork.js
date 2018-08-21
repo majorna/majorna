@@ -13,7 +13,7 @@ export default class PeerNetwork {
   /**
    * Call this to send signaling server initialization data to establish a WebRTC connection to an available peer.
    */
-  initPeer = () => {
+  initPeer () {
     const localConnId = ++this.connInitCounter
     const peer = new InitiatingPeer()
 
@@ -27,7 +27,7 @@ export default class PeerNetwork {
     })
     peer.on('signal', data => this.server.peers.initPeer(localConnId, data)) // todo: send signals after connection via already established data channel?
     peer.on('connect', () => this.onPeerConnect(peer))
-    peer.on('data', this.onData)
+    peer.on('data', data => this.onData(data))
 
     this.peers.push({peer, localConnId})
   }
@@ -35,12 +35,14 @@ export default class PeerNetwork {
   /**
    * When a connection initialization signal data is delivered to us by the server for a connection that was initialized by us with {initPeer}.
    */
-  onInitPeerResponse = (localConnId, userId, data) => this.peers.find(p => p.localConnId === localConnId).peer.signal(data)
+  onInitPeerResponse (localConnId, userId, data) {
+    this.peers.find(p => p.localConnId === localConnId).peer.signal(data)
+  }
 
   /**
    * When a peer initializes a connection and server delivers us the details.
    */
-  onInitPeer = (userId, data) => {
+  onInitPeer (userId, data) {
     const localConnId = ++this.connInitCounter
     const peer = new MatchingPeer()
 
@@ -54,7 +56,7 @@ export default class PeerNetwork {
     })
     peer.on('signal', data => this.server.peers.signal(userId, data))
     peer.on('connect', () => this.onPeerConnect(peer))
-    peer.on('data', this.onData)
+    peer.on('data', data => this.onData(data))
 
     peer.signal(data)
     this.peers.push({peer, localConnId, userId})
@@ -64,20 +66,19 @@ export default class PeerNetwork {
    * Broadcast given data to all connected peers
    * @param data - A JSON-RPC 2.0 object: https://en.wikipedia.org/wiki/JSON-RPC#Version_2.0
    */
-  broadcast = data => {
+  broadcast (data) {
     data = JSON.stringify(data)
-    this.peers.forEach(p => p.send(data))
+    this.peers.forEach(p => p.peer.send(data))
   }
 
-  onPeerConnect = peer => {
-    console.log('peer successfully initialized:', this.connInitCounter, peer)
+  onPeerConnect (peer) {
   }
 
   /**
    * Handle incoming peer data.
    * @param data - A JSON-RPC 2.0 object: https://en.wikipedia.org/wiki/JSON-RPC#Version_2.0
    */
-  onData = data => {
+  onData (data) {
     data = JSON.parse(data)
     switch (data.method) {
       case 'txs':
@@ -91,13 +92,13 @@ export default class PeerNetwork {
     }
   }
 
-  onReceiveTxs = txs => {
+  onReceiveTxs (txs) {
     // no duplicates
     // no balance below 0
     // valid signatures
   }
 
-  onReceiveBlocks = () => {
+  onReceiveBlocks () {
     // validate each tx signature unless block is signed by a trusted key
   }
 }

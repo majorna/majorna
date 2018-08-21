@@ -21,14 +21,15 @@ export default {
     class MockInitiatingPeerNetwork extends PeerNetwork {
       onPeerConnect = peer => {
         super.onPeerConnect(peer)
-        this.broadcast({method: 'txs'})
+        this.broadcast({method: 'txs', params: [{id: '123ABC'}]})
       }
     }
 
     class MockMatchingPeerNetwork extends PeerNetwork {
       onReceiveTxs = txs => {
-        super.onReceiveTxs()
-        resolve()
+        super.onReceiveTxs(txs)
+        // todo: close all connections before resolve or reject
+        txs[0].id === '123ABC' ? resolve() : reject()
       }
     }
 
