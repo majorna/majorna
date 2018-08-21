@@ -21,12 +21,13 @@ export default {
 
     const getMockServer = id => ({
       peers: {
-        signal: (connId, data) => {
-          id === 1 && peerNetwork2.onServerSignal(connId, 1, data)
+        initPeer: (connId, data) => {
+          id === 1 && peerNetwork2.onInitPeer(connId, 1, data)
           id === 2 && peerNetwork1.onServerSignal(connId, 2, data)
         }
       }
     })
+
     const peerNetwork1 = new MockInitiatingPeerNetwork(getMockServer(1))
     const peerNetwork2 = new MockMatchingPeerNetwork(getMockServer(2))
 
