@@ -21,10 +21,7 @@ export default class PeerNetwork {
       console.error('peer connection errored:', e)
       this.peers.splice(this.peers.indexOf(peer), 1)
     })
-    peer.on('close', () => {
-      console.log('remote peer closed the connection', peer)
-      this.peers.splice(this.peers.indexOf(peer), 1)
-    })
+    peer.on('close', () => this.peers.splice(this.peers.indexOf(peer), 1))
     peer.on('signal', data => this.server.peers.initPeer(localConnId, data)) // todo: send signals after connection via already established data channel?
     peer.on('connect', () => this.onPeerConnect(peer))
     peer.on('data', data => this.onData(data))
@@ -46,29 +43,18 @@ export default class PeerNetwork {
     const localConnId = ++this.connInitCounter
     const peer = new MatchingPeer()
 
+    // todo: this is duplicated above by InitiatingPeer event handling
     peer.on('error', e => {
       console.error('peer connection errored:', e)
       this.peers.splice(this.peers.indexOf(peer), 1)
     })
-    peer.on('close', () => {
-      console.log('remote peer closed the connection', peer)
-      this.peers.splice(this.peers.indexOf(peer), 1)
-    })
+    peer.on('close', () => this.peers.splice(this.peers.indexOf(peer), 1))
     peer.on('signal', data => this.server.peers.signal(userId, data))
     peer.on('connect', () => this.onPeerConnect(peer))
     peer.on('data', data => this.onData(data))
 
     peer.signal(data)
     this.peers.push({peer, localConnId, userId})
-  }
-
-  /**
-   * Broadcast given data to all connected peers
-   * @param data - A JSON-RPC 2.0 object: https://en.wikipedia.org/wiki/JSON-RPC#Version_2.0
-   */
-  broadcast (data) {
-    data = JSON.stringify(data)
-    this.peers.forEach(p => p.peer.send(data))
   }
 
   onPeerConnect (peer) {
@@ -100,5 +86,22 @@ export default class PeerNetwork {
 
   onReceiveBlocks () {
     // validate each tx signature unless block is signed by a trusted key
+  }
+
+  /**
+   * Broadcast given data to all connected peers
+   * @param data - A JSON-RPC 2.0 object: https://en.wikipedia.org/wiki/JSON-RPC#Version_2.0
+   */
+  broadcast (data) {
+    data = JSON.stringify(data)
+    this.peers.forEach(p => p.peer.send(data))
+  }
+
+  /**
+   * Closes all peer connections and removes them from peers list.
+   */
+  close () {
+    this.peers.forEach(p => p.peer.destroy())
+    this.peers.length = 0
   }
 }

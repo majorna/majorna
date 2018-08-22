@@ -28,7 +28,8 @@ export default {
     class MockMatchingPeerNetwork extends PeerNetwork {
       onReceiveTxs = txs => {
         super.onReceiveTxs(txs)
-        // todo: close all connections before resolve or reject
+        peerNetwork1.close()
+        peerNetwork2.close()
         txs[0].id === '123ABC' ? resolve() : reject()
       }
     }
