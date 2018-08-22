@@ -1,8 +1,6 @@
 import assert from './assert'
 import PeerNetwork from './PeerNetwork'
 
-// todo: emulate all things a normal peer network would do and all class methods, mock out server
-
 export default {
   'init': () => new Promise((resolve, reject) => {
     const getMockServer = id => ({
