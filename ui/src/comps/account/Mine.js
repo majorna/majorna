@@ -139,8 +139,8 @@ export default class extends Component {
           <div className="m-t-xs"><strong>Hash:</strong> <small className="wrap-text">{this.state.blockInfo.header.prevHash}</small></div>
           <div><strong>Proof of Work:</strong> <small className="wrap-text">{this.state.blockInfo.header.prevPow}</small></div>
 
-          <div className="m-t-m">
-            <strong>Download Blockchain:</strong> <small className="wrap-text">
+          <strong className="has-text-info m-t-m">Blockchain</strong>
+          <div className="m-t-xs"><strong>Download Blockchain:</strong> <small className="wrap-text">
               <a href="https://github.com/majorna/blockchain/archive/master.zip" target="_blank" rel="noopener noreferrer">
                 https://github.com/majorna/blockchain/archive/master.zip
               </a>
