@@ -1,11 +1,9 @@
-import Peer from 'simple-peer'
-
-Peer.config.iceServers.push({urls: 'turn:numb.viagenie.ca', username: 'peer2peer@pokemail.net', credential: 'peer2peer'})
+import { InitiatingPeer, MatchingPeer } from './Peer'
 
 export default {
   'webrtc single peer': () => new Promise((resolve, reject) => {
-    const peer1 = new Peer({initiator: true, trickle: false})
-    const peer2 = new Peer({trickle: false})
+    const peer1 = new InitiatingPeer()
+    const peer2 = new MatchingPeer()
 
     peer1.on('error', e => reject(e))
     peer2.on('error', e => reject(e))
@@ -24,14 +22,14 @@ export default {
 
   'webrtc mesh network': () => new Promise((resolve, reject) => {
     // create mesh channels
-    const peer1toPeer2 = new Peer({initiator: true, trickle: false})
-    const peer1toPeer3 = new Peer({initiator: true, trickle: false})
+    const peer1toPeer2 = new InitiatingPeer()
+    const peer1toPeer3 = new InitiatingPeer()
 
-    const peer2toPeer1 = new Peer({trickle: false})
-    const peer2toPeer3 = new Peer({initiator: true, trickle: false})
+    const peer2toPeer1 = new MatchingPeer()
+    const peer2toPeer3 = new InitiatingPeer()
 
-    const peer3toPeer1 = new Peer({trickle: false})
-    const peer3toPeer2 = new Peer({trickle: false})
+    const peer3toPeer1 = new MatchingPeer()
+    const peer3toPeer2 = new MatchingPeer()
 
     // success checks
     let peer1Success, peer2Success, peer3Success

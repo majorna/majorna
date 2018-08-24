@@ -27,6 +27,7 @@ const config = require('./config')
 if (config.app.isTest) {
   exports.clientSdk = require('firebase') // firebase client sdk, to impersonate user logins during testing
   require('firebase/firestore') // side effect: required for the firebase client sdk app to have .firebase() method
+  // we need this since we use firebase web sdk (as opposed to admin sdk) to emulate firestore client connections just like web clients would do
 }
 
 // module exports

@@ -48,8 +48,8 @@ export default {
     const p = getBlockHashPalette()
     const t1 = performance.now()
     const td = t1 - t0
+
     assert(p)
-    // console.log(`block hash palette was generated in: ${td}ms, expected nominal: ${tNominal}ms`)
-    assert(td > (tNominal - (tNominal * 0.2)) && td < (tNominal * 1.5))
+    assert(td > (tNominal - (tNominal * 0.2)) && td < (tNominal * 1.5), `block hash palette was generated in: ${td}ms, expected nominal: ${tNominal}ms`)
   }
 }

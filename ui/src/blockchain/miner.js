@@ -2,19 +2,6 @@ import { getHashDifficulty } from './Block'
 import { getCryptoRandStr, convertBufferToHexStr, getBlockHashPalette } from './crypto'
 import { testRunnerStatus } from './test-runner'
 
-export const receiveTxs = () => {
-  // no duplicates
-  // no balance below 0
-  // valid signatures
-}
-
-export const receiveBlock = () => {
-  // validate each tx signature unless block is signed by a trusted key
-}
-
-export const initPeerConns = () => {
-}
-
 let interval
 export const stopMining = () => {
   interval && clearInterval(interval)

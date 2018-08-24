@@ -241,4 +241,4 @@ exports.mineHeaderStr = (blockHeaderStr, targetDifficulty) => {
 /**
  * Returns the mining reward for a block given the difficulty.
  */
-exports.getBlockReward = difficulty => Math.round(difficulty * config.blockchain.difficultyRewardMultiplier)
+exports.getBlockReward = difficulty => Math.ceil(difficulty * config.blockchain.difficultyRewardMultiplier)

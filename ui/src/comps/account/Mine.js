@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { fm, fn } from '../../data/utils'
 import server from '../../data/server'
-import { mineBlock, stopMining } from '../../blockchain/node'
+import { mineBlock, stopMining } from '../../blockchain/miner'
 import { ResponsiveContainer, Scatter, ScatterChart, XAxis, YAxis } from 'recharts'
 import worldMap from '../../res/world_map.svg'
 import { Link } from 'react-router-dom'
@@ -125,7 +125,7 @@ export default class extends Component {
       </div>
       {this.state.showDetails &&
         <small className="flex-column">
-          <strong className="m-t-m">Current Block</strong>
+          <strong className="has-text-info m-t-m">Current Block</strong>
           <div className="m-t-xs"><strong>No:</strong> {this.state.blockInfo.header.no}</div>
           <div><strong>Version:</strong> {this.state.blockInfo.header.version}</div>
           <div><strong>Time:</strong> {this.state.blockInfo.header.time && this.state.blockInfo.header.time.toLocaleString()}</div>
@@ -135,9 +135,17 @@ export default class extends Component {
           <div><strong>Merkle Root:</strong> <small className="wrap-text">{this.state.blockInfo.header.merkleRoot}</small></div>
           <div><strong>Proof of Work:</strong> <small className="wrap-text">{this.state.blockInfo.pow}</small></div>
 
-          <strong className="m-t-m">Previous Block</strong>
+          <strong className="has-text-info m-t-m">Previous Block</strong>
           <div className="m-t-xs"><strong>Hash:</strong> <small className="wrap-text">{this.state.blockInfo.header.prevHash}</small></div>
           <div><strong>Proof of Work:</strong> <small className="wrap-text">{this.state.blockInfo.header.prevPow}</small></div>
+
+          <strong className="has-text-info m-t-m">Blockchain</strong>
+          <div className="m-t-xs"><strong>Download Blockchain:</strong> <small className="wrap-text">
+              <a href="https://github.com/majorna/blockchain/archive/master.zip" target="_blank" rel="noopener noreferrer">
+                https://github.com/majorna/blockchain/archive/master.zip
+              </a>
+            </small>
+          </div>
 
           {/*<strong className="m-t-m">Peers</strong>*/}
           {/*<div><strong>Online Peers:</strong> ?</div>*/}

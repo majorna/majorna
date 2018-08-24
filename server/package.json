@@ -3,20 +3,20 @@
     "node": ">=10 <11"
   },
   "scripts": {
-    "start": "node index.js",
-    "test": "npm run lint && NODE_ENV=test mocha **/*test.js --recursive --timeout 60s --ui tdd",
+    "start": "[[ $DEVENVS ]] && source $DEVENVS; node index.js",
+    "test": "[[ $DEVENVS ]] && source $DEVENVS; npm run lint && NODE_ENV=test mocha **/*test.js --recursive --timeout 60s --ui tdd",
     "lint": "standard --fix",
     "deploy": "cd .. && git subtree push --prefix server heroku master",
     "deploy-force": "cd .. && git push heroku `git subtree split --prefix server master`:master --force"
   },
   "dependencies": {
-    "@google-cloud/logging": "1.2.0",
-    "@octokit/rest": "15.8.2",
+    "@google-cloud/logging": "3.0.1",
+    "@octokit/rest": "15.10.0",
     "axios": "0.18.0",
-    "firebase": "5.0.4",
-    "firebase-admin": "5.12.1",
-    "kcors": "2.2.1",
-    "koa": "2.5.1",
+    "firebase": "5.4.1",
+    "firebase-admin": "6.0.0",
+    "kcors": "2.2.2",
+    "koa": "2.5.2",
     "koa-bodyparser": "4.2.1",
     "koa-logger": "3.2.0",
     "koa-route": "3.2.0",

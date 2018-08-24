@@ -6,6 +6,11 @@ console.log(`config: ${env}`)
 
 const domain = 'getmajorna.com'
 
+// throw if required env vars are not defined
+if (!process.env.MAJORNA_FIREBASE_JSON && !process.env.MAJORNA_FIREBASE_JSON_PATH) {
+  throw new Error('required environment variables are not defined')
+}
+
 // app config
 const app = {
   env,
@@ -103,7 +108,7 @@ MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAE2yLEGhHZMiClLt4rHm6Kajo2qsRRQMUW
 const blockchain = {
   blockInterval: (app.isProd ? 10 : 3) * 60 * 1000, // ms
 
-  initialMinBlockDifficulty: app.isProd ? 7 : 1,
+  initialMinBlockDifficulty: app.isProd ? 5 : 1,
   blockDifficultyIncrementStep: 1,
   difficultyRewardMultiplier: app.isProd ? 0.12 : 1 // (reward multiplier < 1 breaks tests due to math.round)
 }
