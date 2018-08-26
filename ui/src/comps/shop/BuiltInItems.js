@@ -1,6 +1,8 @@
 import React from 'react'
 import mj from '../../res/mj.png'
 import ExchangeRatesWidget from '../shared/ExchangeRatesWidget'
+import server from '../../data/server'
+import config from '../../data/config'
 
 export default [
   // {
@@ -19,6 +21,7 @@ export default [
   {
     id: 'majorna',
     name: 'Buy Majorna',
+    unavailable: true,
     description: () => <React.Fragment>
       Contribute to Majorna development and get matching amount of Majorna within ~15 minutes that you can use freely on mainnet.
       You can donate with Bitcoin, Ethereum, or other cryptos.
