@@ -4,7 +4,7 @@ export default props =>
   <div className="mj-box flex-column">
     <div className="is-size-5 has-text-centered">Majorna Terms and Conditions</div>
     <div className="m-t-m">
-      Last updated: Jun 19, 2018.
+      Last updated: Aug 26, 2018.
     </div>
 
     <div className="m-t-m">
@@ -43,7 +43,7 @@ export default props =>
       Safety of your account, account data, and Majorna in it can not be guaranteed.
       Majorna is a young project and comprise of the entire network is a possibility.
       If Majorna fails as a project and stops operating before peer-to-peer network is in production, Majorna in your account may forever be lost.
-      Majorna project and its developers do not give you any guarantees of any kind, or accept any liability of any kind.
+      Majorna project and its developers do not give you any guarantees of any kind, or accept any liability of any kind within the legally permitted limits.
       Majorna has the right to terminate your account at any time during the development period, with or without cause, with or without notice, with or without destroying any Majorna in it (ability to move Majorna from account to a private key is a work-in-progress).
       Accounts terminated due to malicious activity cannot be reopened.
     </div>
