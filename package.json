@@ -1,6 +1,6 @@
 {
   "devDependencies": {
-    "firebase-tools": "4.2.0"
+    "firebase-tools": "4.2.1"
   },
   "scripts": {
     "start": "npm start --prefix server & npm start --prefix ui",
@@ -10,6 +10,7 @@
     "deploy": "npm run build && firebase deploy && npm run deploy --prefix server",
     "outdated": "(npm outdated || echo cli) && (npm outdated --prefix ui || echo ui) && (npm outdated --prefix server || echo server)",
     "delete-all": "rm -fr node_modules/ package-lock.json && (cd ui; rm -fr node_modules/ package-lock.json) && (cd server; rm -fr node_modules/ package-lock.json)",
-    "install-all": "npm install && npm install --prefix ui && npm install --prefix server"
+    "install-all": "npm install && npm install --prefix ui && npm install --prefix server",
+    "reinstall-all": "npm run delete-all && npm run install-all"
   }
 }
