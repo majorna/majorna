@@ -23,7 +23,7 @@ export default [
     name: 'Buy Majorna',
     unavailable: true,
     description: () => <React.Fragment>
-      Buy Majorna using Bitcoin, Ethereum, or other cryptos.
+      Buy Majorna using Card or Bitcoin, Ethereum, or other cryptos.
       Amount sent will be converted to mj and deposited in your account within 15 minutes.
       You can report problems about purchases to <a href={'mailto:support@' + config.hosting.domain} target="_blank" rel="noopener noreferrer">support@{config.hosting.domain}</a>
     </React.Fragment>,
