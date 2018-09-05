@@ -4,7 +4,7 @@ export default props =>
   <div className="mj-box flex-column">
     <div className="is-size-5 has-text-centered">Majorna Terms and Conditions</div>
     <div className="m-t-m">
-      Last updated: Aug 26, 2018.
+      Last updated: Sep 5, 2018.
     </div>
 
     <div className="m-t-m">
@@ -22,7 +22,7 @@ export default props =>
     <strong className="m-t-m">Development Period and Testnet</strong>
     <div>
       Until a final v1.0 <a href="https://github.com/majorna/majorna/releases" target="_blank" rel="noopener noreferrer">release</a>, Majorna platform will be under rapid development.
-      Occasional downtime, hardforks, or even full scale reverts are expected, and due to this, Majorna is not fit for production use yet.
+      Occasional downtime, hardforks, or even full scale reverts are expected.
       Majorna in testnet has no value, is not a legal tender, and is not sold.
       Sending and receiving Majorna in testnet does not result in exchange of any value.
     </div>
@@ -35,16 +35,17 @@ export default props =>
       Compromise of your account credentials may result in loss of your Majorna, therefore it is highly recommended for you to enable 2-step verification in your connected accounts.
       If you choose to move your Majorna to a personal private key, you are responsible for its safety and security.
       Majorna in your account does not give you any rights or claim of any kind, in Majorna project, or from Majorna developers.
-      Majorna project assumes no liability of any kind on your account or Majorna in it.
+      Majorna project assumes no liability of any kind on your account or Majorna in it, to the extent permitted by applicable law.
     </div>
 
     <strong className="m-t-m">No Guarantees</strong>
     <div>
       Safety of your account, account data, and Majorna in it can not be guaranteed.
       Majorna is a young project and comprise of the entire network is a possibility.
-      If Majorna fails as a project and stops operating before peer-to-peer network is in production, Majorna in your account may forever be lost.
-      Majorna project and its developers do not give you any guarantees of any kind, or accept any liability of any kind within the legally permitted limits.
-      Majorna has the right to terminate your account at any time during the development period, with or without cause, with or without notice, with or without destroying any Majorna in it (ability to move Majorna from account to a private key is a work-in-progress).
+      If Majorna fails as a project and stops operating, Majorna in your account may forever be lost.
+      Majorna project and its developers do not give you any guarantees or warranties of any kind, or accept any liability of any kind, to the extent permitted by applicable law.
+      Majorna has the right to terminate your account at any time during the development period, with or without cause, with or without notice, with or without destroying any Majorna in it.
+      Ability to move Majorna from account to a private key is a work-in-progress.
       Accounts terminated due to malicious activity cannot be reopened.
     </div>
 
@@ -53,7 +54,7 @@ export default props =>
       All donations goes towards Majorna development.
       Donations are anonymous and non-refundable.
       They are appreciated but never asked.
-      All donations are private (hence a tax-related donation receipt can not be issued) and have no rights or privileges associated with them.
+      All donations are private hence a tax-related donation receipt can not be issued, and have no rights or privileges associated with them.
     </div>
 
     <strong className="m-t-m">Privacy Policy</strong>
