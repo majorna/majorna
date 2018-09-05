@@ -141,9 +141,9 @@ export default class extends Component {
                 <button className="button is-info" disabled={!this.state.stripeCheckout} onClick={() => this.setState({showStripeAmount: true})}>
                   <i className="fas fa-credit-card m-r-s"/>Buy with Card
                 </button>
-                <a className="button is-info m-t-s" disabled={!this.state.coinbaseUrl} onClick={() => this.setState({showClose: true})} href={this.state.coinbaseUrl} target="_blank">
+                <button className="button is-info m-t-s" disabled={!this.state.coinbaseUrl || this.item.unavailable} onClick={() => {this.setState({showClose: true}); window.open(this.state.coinbaseUrl, '_blank')}}>
                   <i className="fab fa-bitcoin m-r-s"/>Buy with Cryptos
-                </a>
+                </button>
               </React.Fragment>}
             <button className="button m-t-s" onClick={this.props.history.goBack}>Cancel</button>
           </div>
