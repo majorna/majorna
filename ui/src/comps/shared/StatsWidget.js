@@ -4,7 +4,7 @@ import { fm } from '../../data/utils'
 export default props =>
   <div className="mj-box stats-grid">
     <div className="flex-column center-all">
-      <strong className="is-size-5 has-text-success">${props.mjMetaDoc.val}*</strong>
+      <strong className="is-size-5 has-text-success">${props.mjMetaDoc.val}</strong>
       Current Price
     </div>
     <div className="flex-column center-all">
