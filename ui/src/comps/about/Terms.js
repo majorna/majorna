@@ -4,7 +4,7 @@ export default props =>
   <div className="mj-box flex-column">
     <div className="is-size-5 has-text-centered">Majorna Terms and Conditions</div>
     <div className="m-t-m">
-      Last updated: Sep 5, 2018.
+      Last updated: Sep 6, 2018.
     </div>
 
     <div className="m-t-m">
@@ -49,13 +49,13 @@ export default props =>
       Accounts terminated due to malicious activity cannot be reopened.
     </div>
 
-    <strong className="m-t-m">Donations</strong>
-    <div>
-      All donations goes towards Majorna development.
-      Donations are anonymous and non-refundable.
-      They are appreciated but never asked.
-      All donations are private hence a tax-related donation receipt can not be issued, and have no rights or privileges associated with them.
-    </div>
+    {/*<strong className="m-t-m">Donations</strong>*/}
+    {/*<div>*/}
+      {/*All donations goes towards Majorna development.*/}
+      {/*Donations are anonymous and non-refundable.*/}
+      {/*They are appreciated but never asked.*/}
+      {/*All donations are private hence a tax-related donation receipt can not be issued, and have no rights or privileges associated with them.*/}
+    {/*</div>*/}
 
     <strong className="m-t-m">Privacy Policy</strong>
     <div>
