@@ -30,7 +30,7 @@ export default props =>
       <div className="flex-column flex-grow-1 m-l-m">
         <div className="is-size-5">Simple Cryptocurrency</div>
         Easy to use digital currency in your browser.
-        Log in with your Google account to start sending, receiving, and mining Majorna.
+        Log in with your Google or Facebook account to start sending, receiving, and mining Majorna.
         <Link to='/login'>+mj500 balance for new accounts.</Link>
       </div>
     </div>

@@ -44,7 +44,8 @@ export default withRouter(class extends Component {
     // firebase config
     this.firebaseUIConfig = {
       signInOptions: [
-        firebase.auth.GoogleAuthProvider.PROVIDER_ID
+        firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+        firebase.auth.FacebookAuthProvider.PROVIDER_ID
       ],
       callbacks: {signInSuccessWithAuthResult: () => false /* don't redirect anywhere */}
     }
