@@ -27,6 +27,6 @@ exports.getName = route.get('/users/:id', async (ctx, id) => {
   const user = await db.getUser(id)
   // todo: only display name if user is in the contact list
   if (user) {
-    ctx.body = {name: /* user.name */'Valid Address'}
+    ctx.body = { name: /* user.name */'Valid Address' }
   }
 })

@@ -233,7 +233,7 @@ exports.mineHeaderStr = (blockHeaderStr, targetDifficulty) => {
     if (difficulty >= targetDifficulty) {
       const powHashHex = powHashBuffer.toString('hex')
       console.log(`mined block with difficulty: ${difficulty} (target: ${targetDifficulty}), nonce: ${nonce}, hash: ${powHashHex}`)
-      return {powHashBuffer, powHashHex, difficulty, nonce}
+      return { powHashBuffer, powHashHex, difficulty, nonce }
     }
   }
 }

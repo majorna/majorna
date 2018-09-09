@@ -9,7 +9,7 @@ exports.addMiner = (id, lat, lon) => {
     miner.lat = lat
     miner.lon = lon
   } else {
-    exports.miners.push({id, lat, lon, seen: new Date()})
+    exports.miners.push({ id, lat, lon, seen: new Date() })
   }
 
   // todo: purge offline miners

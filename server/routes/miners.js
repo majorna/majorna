@@ -11,6 +11,6 @@ exports.set = route.post('/miners', async ctx => {
 
   miners.addMiner(ctx.state.user.uid, parseFloat(txBody.lat), parseFloat(txBody.lon))
 
-  ctx.body = {miners: miners.miners.map(m => ({lat: m.lat, lon: m.lon}))}
+  ctx.body = { miners: miners.miners.map(m => ({ lat: m.lat, lon: m.lon })) }
   ctx.status = 201
 })

@@ -47,7 +47,7 @@ exports.init = async () => {
     }
   })
   batch.create(blocksColRef.doc(signedGenesisBlock.header.no.toString()), signedGenesisBlock)
-  batch.create(usersColRef.doc('majorna'), {email: 'majorna@majorna', name: 'Majorna', created: new Date(), balance: 0, txs: []})
+  batch.create(usersColRef.doc('majorna'), { email: 'majorna@majorna', name: 'Majorna', created: new Date(), balance: 0, txs: [] })
   // todo: initial allocation of funds dev/foundation/public
   await batch.commit()
 }
@@ -125,7 +125,7 @@ exports.updateMjMetaStatsIfRequired = async endTime => {
     txsSnap.docs.forEach(tx => { volume += tx.data().amount })
   }
 
-  await mjMetaDocRef.update({'monthly.updated': previousMonthEnd, 'monthly.txVolume': volume})
+  await mjMetaDocRef.update({ 'monthly.updated': previousMonthEnd, 'monthly.txVolume': volume })
 
   console.log(`mj meta stats have been updated for period: previousMonthBeginning: ${previousMonthBeginning} - previousMonthEnd: ${previousMonthEnd}`)
   return true
@@ -173,11 +173,11 @@ exports.createUserDoc = (user, uid) => firestore.runTransaction(async t => {
   // update meta doc
   const metaDoc = await t.get(mjMetaDocRef)
   const meta = metaDoc.data()
-  t.update(mjMetaDocRef, {marketCap: meta.marketCap + initBalance, userCount: meta.userCount + 1})
+  t.update(mjMetaDocRef, { marketCap: meta.marketCap + initBalance, userCount: meta.userCount + 1 })
 
   // create the first transaction for the user
   const txRef = txsColRef.doc()
-  const signedTx = txUtils.sign({id: txRef.id, from: {id: 'majorna', balance: 0}, to: {id: uid, balance: 0}, time, amount: initBalance})
+  const signedTx = txUtils.sign({ id: txRef.id, from: { id: 'majorna', balance: 0 }, to: { id: uid, balance: 0 }, time, amount: initBalance })
   t.create(txRef, signedTx)
 
   // create user doc
@@ -264,14 +264,14 @@ exports.makeTx = (from, to, amount, showSenderName) => firestore.runTransaction(
 
   // add tx to txs collection
   const txRef = txsColRef.doc()
-  const signedTx = txUtils.sign({id: txRef.id, from: {id: from, balance: sender.balance}, to: {id: to, balance: receiver.balance}, time, amount})
+  const signedTx = txUtils.sign({ id: txRef.id, from: { id: from, balance: sender.balance }, to: { id: to, balance: receiver.balance }, time, amount })
   t.create(txRef, signedTx)
 
   // update user docs with tx and updated balances
   addTxToUserDoc(sender, txRef.id, null, null, to, null, time, amount)
-  t.update(senderDocRef, {balance: sender.balance - amount, txs: sender.txs})
+  t.update(senderDocRef, { balance: sender.balance - amount, txs: sender.txs })
   addTxToUserDoc(receiver, txRef.id, from, showSenderName && fromName, null, null, time, amount)
-  t.update(receiverDocRef, {balance: receiver.balance + amount, txs: receiver.txs})
+  t.update(receiverDocRef, { balance: receiver.balance + amount, txs: receiver.txs })
 
   return signedTx
 })
@@ -356,20 +356,20 @@ exports.giveMiningReward = (to, nonce) => firestore.runTransaction(async t => {
   // increase market marketCap
   const metaDoc = await t.get(mjMetaDocRef)
   const meta = metaDoc.data()
-  t.update(mjMetaDocRef, {marketCap: meta.marketCap + miningReward})
+  t.update(mjMetaDocRef, { marketCap: meta.marketCap + miningReward })
 
   // block op writes (here to have reads before writes)
-  t.update(lastBlockRef, {sig: lastBlock.sig, 'header.minDifficulty': lastBlock.header.minDifficulty, 'header.nonce': lastBlock.header.nonce})
+  t.update(lastBlockRef, { sig: lastBlock.sig, 'header.minDifficulty': lastBlock.header.minDifficulty, 'header.nonce': lastBlock.header.nonce })
   t.set(blockInfoMetaDocRef, blockInfo) // '.set' not to use dot notation for all nested fields
 
   // add tx to txs collection
   const txRef = txsColRef.doc()
-  const signedTx = txUtils.sign({id: txRef.id, from: {id: from, balance: 0}, to: {id: to, balance: receiver.balance}, time, amount: miningReward})
+  const signedTx = txUtils.sign({ id: txRef.id, from: { id: from, balance: 0 }, to: { id: to, balance: receiver.balance }, time, amount: miningReward })
   t.create(txRef, signedTx)
 
   // update user docs with tx and updated balances
   addTxToUserDoc(receiver, txRef.id, from, fromName, null, null, time, miningReward)
-  t.update(receiverDocRef, {balance: receiver.balance + miningReward, txs: receiver.txs})
+  t.update(receiverDocRef, { balance: receiver.balance + miningReward, txs: receiver.txs })
 
   return signedTx
 })
@@ -399,16 +399,16 @@ exports.giveMj = (userId, usdAmount) => firestore.runTransaction(async t => {
   const metaDoc = await t.get(mjMetaDocRef)
   const meta = metaDoc.data()
   const amount = Math.round(usdAmount / meta.val)
-  t.update(mjMetaDocRef, {marketCap: meta.marketCap + amount})
+  t.update(mjMetaDocRef, { marketCap: meta.marketCap + amount })
 
   // add tx to txs collection
   const txRef = txsColRef.doc()
-  const signedTx = txUtils.sign({id: txRef.id, from: {id: from, balance: 0}, to: {id: userId, balance: receiver.balance}, time, amount})
+  const signedTx = txUtils.sign({ id: txRef.id, from: { id: from, balance: 0 }, to: { id: userId, balance: receiver.balance }, time, amount })
   t.create(txRef, signedTx)
 
   // update user docs with tx and updated balances
   addTxToUserDoc(receiver, txRef.id, from, fromName, null, null, time, amount)
-  t.update(receiverDocRef, {balance: receiver.balance + amount, txs: receiver.txs})
+  t.update(receiverDocRef, { balance: receiver.balance + amount, txs: receiver.txs })
 
   return signedTx
 })
@@ -430,11 +430,11 @@ function addTxToUserDoc (userData, txId, fromId, fromName, toId, toName, time, a
   assert(userData.id !== fromId && userData.id !== toId, 'txs array object should omit self referencing IDs, otherwise we cannot know if it is outgoing or incoming tx')
 
   if (fromId) {
-    const tx = {id: txId, from: fromId, time, amount}
+    const tx = { id: txId, from: fromId, time, amount }
     fromName && (tx.fromName = fromName)
     userData.txs.unshift(tx)
   } else {
-    userData.txs.unshift({id: txId, to: toId, toName, time, amount})
+    userData.txs.unshift({ id: txId, to: toId, toName, time, amount })
   }
 
   userData.txs.length > maxTxsInUserDoc && (userData.txs.length = maxTxsInUserDoc)
