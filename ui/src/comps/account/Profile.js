@@ -15,14 +15,13 @@ export default props =>
     {props.user.providerData.map((p, i) =>
       <div className="content" key={p.providerId}>
         <ul>
-          <li><strong>Provider</strong>: {p.providerId}</li>
+          <li><strong>Provider</strong>: {p.providerId} {i !== 0 && <button className="button is-small is-danger" onClick={async () => {
+            await props.user.unlink(p.providerId)
+            props.history.goBack()
+          }}>Unlink</button>}</li>
           <li><strong>Name</strong>: {p.displayName}</li>
           <li><strong>Email</strong>: {p.email}</li>
           <li><strong>Phone</strong>: {p.phoneNumber}</li>
-          {i !== 0 && <li><button className="button is-small is-danger" onClick={async () => {
-            await props.user.unlink(p.providerId)
-            props.history.goBack()
-          }}>Unlink</button></li>}
         </ul>
       </div>
     )}
