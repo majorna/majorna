@@ -13,7 +13,7 @@ suite('route: blocks', () => {
     const miningRes = block.mineHeaderStr(blockInfo.miner.headerStrWithoutNonce, blockInfo.miner.targetDifficulty)
 
     // collect reward
-    const resReward = await testData.users.u1Request.post('/blocks', {nonce: miningRes.nonce})
+    const resReward = await testData.users.u1Request.post('/blocks', { nonce: miningRes.nonce })
     assert(resReward.status === 201)
     assert(resReward.data.reward > 0)
   })

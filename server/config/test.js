@@ -39,12 +39,12 @@ suiteSetup(async () => {
   })
   testData.users.u1Request = axios.create({
     baseURL: `http://localhost:${config.app.port}`,
-    headers: {'Authorization': `Bearer ${testData.users.u1Token}`},
+    headers: { 'Authorization': `Bearer ${testData.users.u1Token}` },
     validateStatus: false
   })
   testData.users.u4Request = axios.create({
     baseURL: `http://localhost:${config.app.port}`,
-    headers: {'Authorization': `Bearer ${testData.users.u4Token}`},
+    headers: { 'Authorization': `Bearer ${testData.users.u4Token}` },
     validateStatus: false
   })
 
@@ -106,7 +106,7 @@ const testData = exports.data = {
       name: 'Chuck Norris',
       created: time,
       balance: initBalance,
-      txs: [{id: '0', from, fromName, time, amount: initBalance}]
+      txs: [{ id: '0', from, fromName, time, amount: initBalance }]
     },
     u1Auth: {
       uid: '1',
@@ -124,14 +124,14 @@ const testData = exports.data = {
       name: 'Morgan Almighty',
       created: time,
       balance: initBalance,
-      txs: [{id: '1', from, fromName, time, amount: initBalance}]
+      txs: [{ id: '1', from, fromName, time, amount: initBalance }]
     },
     u3Doc: {
       email: `john.doe@${config.app.domain}`,
       name: 'John Doe',
       created: time,
       balance: initBalance,
-      txs: [{id: '2', from, fromName, time, amount: initBalance}]
+      txs: [{ id: '2', from, fromName, time, amount: initBalance }]
     },
     u4Auth: {
       uid: '4',
@@ -146,9 +146,9 @@ const testData = exports.data = {
     u4Request: null
   },
   txs: [
-    tx.sign({id: '0', from: {id: from, balance: 0}, to: {id: '1', balance: 0}, time, amount: initBalance}),
-    tx.sign({id: '1', from: {id: from, balance: 0}, to: {id: '2', balance: 0}, time, amount: initBalance}),
-    tx.sign({id: '2', from: {id: from, balance: 0}, to: {id: '3', balance: 0}, time, amount: initBalance})
+    tx.sign({ id: '0', from: { id: from, balance: 0 }, to: { id: '1', balance: 0 }, time, amount: initBalance }),
+    tx.sign({ id: '1', from: { id: from, balance: 0 }, to: { id: '2', balance: 0 }, time, amount: initBalance }),
+    tx.sign({ id: '2', from: { id: from, balance: 0 }, to: { id: '3', balance: 0 }, time, amount: initBalance })
   ],
   blocks: [
     signedGenesisBlock

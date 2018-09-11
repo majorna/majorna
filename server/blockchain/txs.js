@@ -7,7 +7,7 @@ const crypto = require('./crypto')
  */
 exports.createMerkle = txs => {
   const strs = txs.map(t => tx.getStr(t))
-  const merkleTools = new MerkleTools({hashType: crypto.algo})
+  const merkleTools = new MerkleTools({ hashType: crypto.algo })
   merkleTools.addLeaves(strs, true)
   merkleTools.makeTree()
   return merkleTools

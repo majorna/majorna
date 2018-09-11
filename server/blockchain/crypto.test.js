@@ -11,7 +11,7 @@ suite('crypto', () => {
     const sig2 = crypto.signTextOrBufferToText(text2)
     assert(crypto.verifyTextOrBuffer(sig2, text2))
 
-    assert(sig2.length === 140 || sig2.length === 142 || sig2.length === 144)
+    assert(sig2.length === 138 || sig2.length === 140 || sig2.length === 142 || sig2.length === 144)
   })
 
   test('hash', () => {

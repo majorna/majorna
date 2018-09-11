@@ -37,10 +37,10 @@ suite('config: server', () => {
   })
 
   test('invalid token auth', async () => {
-    const res = await testData.users.anonRequest.get('/users/init', {headers: {'Authorization': 'Bearer abc'}})
+    const res = await testData.users.anonRequest.get('/users/init', { headers: { 'Authorization': 'Bearer abc' } })
     assert(res.status === 401)
 
-    const res2 = await testData.users.anonRequest.get('/098gjhsdaf91', {headers: {'Authorization': 'Bea'}})
+    const res2 = await testData.users.anonRequest.get('/098gjhsdaf91', { headers: { 'Authorization': 'Bea' } })
     assert(res2.status === 401)
   })
 

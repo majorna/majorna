@@ -14,7 +14,7 @@ export default props =>
 
     <strong className="m-t-m">Why Cryptocurrency</strong>
     <div>
-      Majorna is a cryptocurrency that works both with delegated trust (for scalability) and with a decentralized and trustless peer-to-peer network (work in progress).
+      Majorna is a cryptocurrency that works both with delegated trust (for scalability) and with a decentralized and trustless peer-to-peer network.
       Being a <a href="https://en.wikipedia.org/wiki/Cryptocurrency" target="_blank" rel="noopener noreferrer">cryptocurrency</a> means your assets does not need to be stored physically; it is a digitally signed information.
       Being decentralized means that your account does not belong to an institution, all account information is duplicated across the globe, and you hold the key.
       Via memorizing your private key, you can have all your assets, in your memory!

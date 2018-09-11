@@ -72,7 +72,7 @@ suite('pubroute: webhooks', () => {
     // const amountMj = 10.12 / initMeta.val
     const receiverInitBalance = (await db.getUser('1')).balance
 
-    const res = await testData.users.anonRequest.post('/webhooks/coinbase-commerce', payload, {headers: {'X-CC-Webhook-Signature': sig}})
+    const res = await testData.users.anonRequest.post('/webhooks/coinbase-commerce', payload, { headers: { 'X-CC-Webhook-Signature': sig } })
     assert(res.status === 200)
 
     // validate that user received mj

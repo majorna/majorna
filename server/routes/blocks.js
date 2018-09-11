@@ -10,6 +10,6 @@ exports.create = route.post('/blocks', async ctx => {
 
   const rewardTx = await db.giveMiningReward(ctx.state.user.uid, minedBlock.nonce)
 
-  ctx.body = {reward: rewardTx.amount}
+  ctx.body = { reward: rewardTx.amount }
   ctx.status = 201
 })

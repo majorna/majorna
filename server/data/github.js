@@ -17,13 +17,13 @@ octokit.authenticate({
 const owner = config.github.owner
 const repo = config.github.repo
 const message = 'majorna' // commit msg
-const committer = {name: 'majorna', email: 'mj@majorna'}
+const committer = { name: 'majorna', email: 'mj@majorna' }
 
 /**
  * Retrieves a file's content from repo with given full path. i.e. "dir/sub_dir/filename".
  */
 exports.getFileContent = async path => {
-  const res = await octokit.repos.getContent({owner, repo, path})
+  const res = await octokit.repos.getContent({ owner, repo, path })
   return (Buffer.from(res.data.content, 'base64')).toString()
 }
 
@@ -31,7 +31,7 @@ exports.getFileContent = async path => {
  * Creates a file with given content at given path, asynchronously.
  * Throws an error if the file already exists.
  */
-exports.createFile = (text, path) => octokit.repos.createFile({owner, repo, path, message, committer, content: Buffer.from(text).toString('base64')})
+exports.createFile = (text, path) => octokit.repos.createFile({ owner, repo, path, message, committer, content: Buffer.from(text).toString('base64') })
 
 /**
  * Creates a file with given text if it does not exist.
@@ -44,14 +44,14 @@ exports.createFile = (text, path) => octokit.repos.createFile({owner, repo, path
 exports.upsertFile = async (text, path, append) => {
   let res
   try {
-    res = await octokit.repos.getContent({owner, repo, path})
+    res = await octokit.repos.getContent({ owner, repo, path })
   } catch (e) {
     if (e.code !== 404) {
       throw e
     }
 
     // file does not exist so create it
-    await octokit.repos.createFile({owner, repo, path, message, committer, content: Buffer.from(text).toString('base64')})
+    await octokit.repos.createFile({ owner, repo, path, message, committer, content: Buffer.from(text).toString('base64') })
     return
   }
 

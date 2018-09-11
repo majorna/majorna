@@ -105,7 +105,7 @@ export default class extends Component {
         <div className="m-t-m"><strong>Amount (mj):</strong> {fm(this.state.stripeAmount / this.props.mjMetaDoc.val)}</div>
 
         <button className="button is-info m-t-l" onClick={this.handleStripeBuy}>
-          <i className="fas fa-credit-card m-r-s"/>Donate with Card
+          <i className="fas fa-credit-card m-r-s"/>Buy with Card
         </button>
       </div>
     } else {
@@ -138,12 +138,12 @@ export default class extends Component {
             {this.item.id !== 'majorna' && <button className="button is-info" disabled={this.item.unavailable}><i className="fas fa-shopping-cart m-r-s"/>Get</button>}
             {this.item.id === 'majorna' &&
               <React.Fragment>
-                {/*<button className="button is-info" disabled={!this.state.stripeCheckout} onClick={() => this.setState({showStripeAmount: true})}>*/}
-                  {/*<i className="fas fa-credit-card m-r-s"/>Donate with Card*/}
-                {/*</button>*/}
-                <a className="button is-info m-t-s" disabled={!this.state.coinbaseUrl} onClick={() => this.setState({showClose: true})} href={this.state.coinbaseUrl} target="_blank" rel="noopener noreferrer">
-                  <i className="fab fa-bitcoin m-r-s"/>Donate with Cryptos
-                </a>
+                <button className="button is-info" disabled={!this.state.stripeCheckout} onClick={() => this.setState({showStripeAmount: true})}>
+                  <i className="fas fa-credit-card m-r-s"/>Buy with Card
+                </button>
+                <button className="button is-info m-t-s" disabled={!this.state.coinbaseUrl || this.item.unavailable} onClick={() => {this.setState({showClose: true}); window.open(this.state.coinbaseUrl, '_blank')}}>
+                  <i className="fab fa-bitcoin m-r-s"/>Buy with Cryptos
+                </button>
               </React.Fragment>}
             <button className="button m-t-s" onClick={this.props.history.goBack}>Cancel</button>
           </div>

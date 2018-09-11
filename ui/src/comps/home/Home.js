@@ -30,7 +30,7 @@ export default props =>
       <div className="flex-column flex-grow-1 m-l-m">
         <div className="is-size-5">Simple Cryptocurrency</div>
         Easy to use digital currency in your browser.
-        Log in with your Google account to start sending, receiving, and mining Majorna.
+        Log in with your Google, Facebook, or GitHub account to start sending, receiving, and mining Majorna.
         <Link to='/login'>+mj500 balance for new accounts.</Link>
       </div>
     </div>
@@ -38,14 +38,9 @@ export default props =>
     <div className="mj-box align-start">
       <i className="flex-order-1 m-l-m fas fa-globe" style={{width: 110, height: 110}}/>
       <div className="flex-column flex-grow-1">
-        {/*<div className="is-size-5">Decentralized and Scalable</div>*/}
-        {/*Trustless and decentralized with simple in-browser miner.*/}
-        {/*Peer-to-peer payments without a central authority.*/}
-        {/*Horizontal scalability through delegated trust.*/}
-        {/*<span>Visit <Link to='/about'>About</Link> section for development goals.</span>*/}
-        <div className="is-size-5">Gradual Decentralization</div>
-        Simple in-browser miner.
-        Upcoming decentralized and trustless peer-to-peer network.
+        <div className="is-size-5">Decentralized and Scalable</div>
+        Trustless and decentralized with simple in-browser miner.
+        Peer-to-peer payments without a central authority.
         Horizontal scalability through delegated trust.
         <span>Visit <Link to='/about'>About</Link> section for development goals.</span>
       </div>

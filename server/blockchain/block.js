@@ -142,7 +142,7 @@ exports.verify = (block, prevBlockHeader) => {
   assert(block.header.time, 'Block header does not have a time.')
   assert(block.header.time.getTime() > exports.getGenesisBlock().header.time.getTime(), 'Block time is invalid or is before the genesis.')
   if (block.sig) {
-    assert(block.sig.length === 140 || block.sig.length === 142 || block.sig.length === 144, `Block signature length is invalid. Expected ${140}, ${142} or ${144}, got ${block.sig.length}.`)
+    assert(block.sig.length === 138 || block.sig.length === 140 || block.sig.length === 142 || block.sig.length === 144, `Block signature length is invalid. Expected ${138}, ${140}, ${142} or ${144}, got ${block.sig.length}.`)
     block.header.minDifficulty > 0 && assert(block.header.nonce > 0, 'Nonce should be > 0 if difficulty is > 0.')
     block.header.nonce > 0 && assert(block.header.minDifficulty > 0, 'Difficulty should be > 0 if nonce is > 0.')
   } else {
@@ -233,7 +233,7 @@ exports.mineHeaderStr = (blockHeaderStr, targetDifficulty) => {
     if (difficulty >= targetDifficulty) {
       const powHashHex = powHashBuffer.toString('hex')
       console.log(`mined block with difficulty: ${difficulty} (target: ${targetDifficulty}), nonce: ${nonce}, hash: ${powHashHex}`)
-      return {powHashBuffer, powHashHex, difficulty, nonce}
+      return { powHashBuffer, powHashHex, difficulty, nonce }
     }
   }
 }
