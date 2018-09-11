@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@google-cloud/logging": "3.0.2",
-    "@octokit/rest": "15.10.0",
+    "@octokit/rest": "15.11.1",
     "axios": "0.18.0",
     "firebase": "5.4.2",
     "firebase-admin": "6.0.0",
