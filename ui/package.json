@@ -8,13 +8,13 @@
     "bulma": "0.7.1",
     "firebase": "5.4.2",
     "qrcode": "1.2.2",
-    "puppeteer": "1.7.0",
-    "react": "16.4.2",
-    "react-dom": "16.4.2",
-    "react-firebaseui": "3.0.6",
+    "puppeteer": "1.8.0",
+    "react": "16.5.0",
+    "react-dom": "16.5.0",
+    "react-firebaseui": "3.0.7",
     "react-router-dom": "4.3.1",
     "react-scripts": "1.1.5",
-    "recharts": "1.1.0",
+    "recharts": "1.2.0",
     "simple-peer": "9.1.2"
   },
   "scripts": {
