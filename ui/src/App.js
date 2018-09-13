@@ -98,7 +98,7 @@ export default withRouter(class extends Component {
         })
         config.server.token = await u.getIdToken()
         // run tests
-        config.app.isDev && isMining() ? console.log('skipping tests since miner is running') : testRunner()
+        config.app.isDev && (isMining() ? console.log('skipping tests since miner is running') : testRunner())
         config.app.isProd && setTimeout(() => { isMining() ? console.log('skipping tests since miner is running') : testRunner() }, 10 * 1000)
       } else {
         this.setState(this.nullState) // logged out or token expired and was not renewed
