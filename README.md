@@ -47,14 +47,6 @@ MAJORNA_COINBASE_COMMERCE_API_KEY
 MAJORNA_COINBASE_COMMERCE_WEBHOOK_SHARED_SECRET
 ```
 
-### Heroku Push
-```bash
-git subtree push --prefix server heroku master
-
-# in case --force is needed
-git push heroku `git subtree split --prefix server master`:master --force
-```
-
 ### Upgrading Packages
 UI:
 * Firebase: https://firebase.google.com/support/release-notes/js
