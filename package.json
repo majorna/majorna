@@ -9,8 +9,8 @@
     "test-e2e": "npm start --prefix server & npm run start-test --prefix ui",
     "deploy": "npm run build && firebase deploy && npm run deploy --prefix server",
     "outdated": "(npm outdated || echo cli) && (npm outdated --prefix ui || echo ui) && (npm outdated --prefix server || echo server)",
-    "delete-all": "rm -fr node_modules/ package-lock.json && (cd ui; rm -fr node_modules/ package-lock.json) && (cd server; rm -fr node_modules/ package-lock.json)",
-    "install-all": "npm install && npm install --prefix ui && npm install --prefix server",
-    "reinstall-all": "npm run delete-all && npm run install-all"
+    "delete-all": "rm -fr node_modules ui/node_modules server/node_modules",
+    "install-all": "npm run delete-all && npm ci && npm ci --prefix ui && npm ci --prefix server",
+    "update-all": "npm run delete-all && rm package-lock.json ui/package-lock.json server/package-lock.json && npm install && npm install --prefix ui && npm install --prefix server"
   }
 }
