@@ -19,7 +19,7 @@ export default {
     class MockInitiatingPeerNetwork extends PeerNetwork {
       onPeerConnect = peer => {
         super.onPeerConnect(peer)
-        this.broadcast({method: 'txs', params: [{id: '123ABC'}]})
+        this.broadcastTxs([{id: '123ABC'}])
       }
     }
 

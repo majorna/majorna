@@ -97,18 +97,18 @@ export default class PeerNetwork {
   }
 
   broadcastTxs (txs) {
-    this.broadcast({method: 'txs', params: txs})
+    this._broadcast({method: 'txs', params: txs})
   }
 
   broadcastBlocks (blocks) {
-    this.broadcast({method: 'blocks', params: blocks})
+    this._broadcast({method: 'blocks', params: blocks})
   }
 
   /**
    * Broadcast given data to all connected peers
    * @param data - A JSON-RPC 2.0 object: https://en.wikipedia.org/wiki/JSON-RPC#Version_2.0
    */
-  broadcast (data) {
+  _broadcast (data) {
     data = JSON.stringify(data)
     this.peers.forEach(p => p.peer.send(data))
   }
