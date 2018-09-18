@@ -36,5 +36,9 @@ export default {
     const peerNetwork2 = new MockMatchingPeerNetwork(getMockServer(2))
 
     peerNetwork1.initPeer()
-  })
+  }),
+
+  'txs': () => {},
+
+  'blocks': () => {}
 }

@@ -89,19 +89,27 @@ export default class PeerNetwork {
   }
 
   /**
-   * Broadcast given data to all connected peers
-   * @param data - A JSON-RPC 2.0 object: https://en.wikipedia.org/wiki/JSON-RPC#Version_2.0
-   */
-  broadcast (data) {
-    data = JSON.stringify(data)
-    this.peers.forEach(p => p.peer.send(data))
-  }
-
-  /**
    * Closes all peer connections and removes them from peers list.
    */
   close () {
     this.peers.forEach(p => p.peer.destroy())
     this.peers.length = 0
+  }
+
+  broadcastTxs (txs) {
+    this._broadcast({method: 'txs', params: txs})
+  }
+
+  broadcastBlocks (blocks) {
+    this._broadcast({method: 'blocks', params: blocks})
+  }
+
+  /**
+   * Broadcast given data to all connected peers
+   * @param data - A JSON-RPC 2.0 object: https://en.wikipedia.org/wiki/JSON-RPC#Version_2.0
+   */
+  _broadcast (data) {
+    data = JSON.stringify(data)
+    this.peers.forEach(p => p.peer.send(data))
   }
 }
