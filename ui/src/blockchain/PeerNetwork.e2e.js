@@ -2,16 +2,21 @@ import assert from './assert'
 import PeerNetwork from './PeerNetwork'
 
 export default {
+  // todo: verify that all peers are closed and removed from array after test
+
   'init': () => new Promise((resolve, reject) => {
-    const getMockServer = id => ({
+    let _localConnId
+
+    const getMockServer = peerId => ({
       peers: {
         initPeer: (localConnId, data) => {
-          assert(id === 1)
-          peerNetwork2.onInitPeer(id, data)
+          _localConnId = localConnId
+          assert(peerId === 'initiating')
+          peerNetwork2.onInitPeer(_localConnId, data)
         },
         signal: (userId, data) => {
-          assert(id === 2)
-          peerNetwork1.onInitPeerResponse(1, userId, data)
+          assert(peerId === 'matching')
+          peerNetwork1.onInitPeerResponse(_localConnId, userId, data)
         }
       }
     })
@@ -19,7 +24,7 @@ export default {
     class MockInitiatingPeerNetwork extends PeerNetwork {
       onPeerConnect = peer => {
         super.onPeerConnect(peer)
-        this.broadcastTxs([{id: '123ABC'}])
+        this.broadcastTxs([{id: '123ABC', amount: 250}])
       }
     }
 
@@ -32,8 +37,8 @@ export default {
       }
     }
 
-    const peerNetwork1 = new MockInitiatingPeerNetwork(getMockServer(1))
-    const peerNetwork2 = new MockMatchingPeerNetwork(getMockServer(2))
+    const peerNetwork1 = new MockInitiatingPeerNetwork(getMockServer('initiating'))
+    const peerNetwork2 = new MockMatchingPeerNetwork(getMockServer('matching'))
 
     peerNetwork1.initPeer()
   }),
