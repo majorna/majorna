@@ -8,7 +8,7 @@ export default class PeerNetwork {
 
   peers = [] // {peer, localConnId, userId}
 
-  connInitCounter = 0
+  connInitCounter = 0 // counter to create locally unique connection IDs
 
   /**
    * Call this to send signaling server initialization data to establish a WebRTC connection to an available peer.
@@ -57,6 +57,10 @@ export default class PeerNetwork {
     this.peers.push({peer, localConnId, userId})
   }
 
+  /**
+   * When a WebRTC connection is successfully established with a peer.
+   * @param peer - Connected peer object.
+   */
   onPeerConnect (peer) {
   }
 
@@ -96,16 +100,24 @@ export default class PeerNetwork {
     this.peers.length = 0
   }
 
+  /**
+   * Broadcast given transactions to all connected peers.
+   * @param txs - Transaction array.
+   */
   broadcastTxs (txs) {
     this._broadcast({method: 'txs', params: txs})
   }
 
+  /**
+   * Broadcast given blocks to all connected peers.
+   * @param blocks - Block array.
+   */
   broadcastBlocks (blocks) {
     this._broadcast({method: 'blocks', params: blocks})
   }
 
   /**
-   * Broadcast given data to all connected peers
+   * Broadcast given data to all connected peers.
    * @param data - A JSON-RPC 2.0 object: https://en.wikipedia.org/wiki/JSON-RPC#Version_2.0
    */
   _broadcast (data) {
