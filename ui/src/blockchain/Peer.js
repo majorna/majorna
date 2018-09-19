@@ -10,7 +10,8 @@ export class InitiatingPeer extends Peer {
 }
 
 export class MatchingPeer extends Peer {
-  constructor() {
+  constructor(userId) {
     super({trickle: false})
+    this.userId = userId
   }
 }

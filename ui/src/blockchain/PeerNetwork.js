@@ -40,8 +40,7 @@ export default class PeerNetwork {
    * When a peer initializes a connection and server delivers us the details.
    */
   onInitPeer (userId, data) {
-    const peer = new MatchingPeer()
-    peer.userId = userId
+    const peer = new MatchingPeer(userId)
 
     // todo: this is duplicated above by InitiatingPeer event handling
     peer.on('error', e => {
