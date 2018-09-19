@@ -18,7 +18,7 @@ export default class PeerNetwork {
     const peer = new InitiatingPeer()
 
     peer.on('error', e => {
-      console.error('peer connection errored:', e)
+      console.error('initiating peer connection error:', e)
       this.peers.splice(this.peers.indexOf(peer), 1) // todo: add a test verifying this removal step
     })
     peer.on('close', () => this.peers.splice(this.peers.indexOf(peer), 1))
@@ -32,19 +32,19 @@ export default class PeerNetwork {
   /**
    * When a connection initialization signal data is delivered to us by the server for a connection that was initialized by us with {initPeer}.
    */
-  onInitPeerResponse (localPeerId, userId, data) {
-    this.peers.find(p => p._id === localPeerId).signal(data)
+  onInitPeerResponse (localPeerId, userId, signalData) {
+    this.peers.find(p => p._id === localPeerId).signal(signalData)
   }
 
   /**
    * When a peer initializes a connection and server delivers us the details.
    */
-  onInitPeer (userId, data) {
+  onInitPeer (userId, signalData) {
     const peer = new MatchingPeer(userId)
 
     // todo: this is duplicated above by InitiatingPeer event handling
     peer.on('error', e => {
-      console.error('peer connection errored:', e)
+      console.error('matching peer connection error:', e)
       this.peers.splice(this.peers.indexOf(peer), 1)
     })
     peer.on('close', () => this.peers.splice(this.peers.indexOf(peer), 1))
@@ -52,7 +52,7 @@ export default class PeerNetwork {
     peer.on('connect', () => this.onPeerConnect(peer))
     peer.on('data', data => this.onData(data))
 
-    peer.signal(data)
+    peer.signal(signalData)
     this.peers.push(peer)
   }
 
