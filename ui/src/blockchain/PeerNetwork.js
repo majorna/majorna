@@ -17,9 +17,14 @@ export default class PeerNetwork {
   initPeer () {
     const peer = new InitiatingPeer()
     this._attachCommonPeerEventHandlers(peer)
-    // todo: don't call initPeer for subsequent signals (which can happen with trickle ICE)
-    // todo: send signals after connection via already established data channel?
-    peer.on('signal', data => this.server.peers.initPeer(peer._id, data))
+    peer.on('signal', data => {
+      if (!peer.initPeerCalled) {
+        peer.initPeerCalled = true
+        this.server.peers.initPeer(peer._id, data)
+      } else {
+        this.server.peers.signal(peer.userId, data)
+      }
+    })
     this.peers.push(peer)
   }
 
@@ -27,7 +32,9 @@ export default class PeerNetwork {
    * When a connection initialization signal data is delivered to us by the server for a connection that was initialized by us with {initPeer}.
    */
   onInitPeerResponse (localPeerId, userId, signalData) {
-    this.peers.find(p => p._id === localPeerId).signal(signalData)
+    const peer = this.peers.find(p => p._id === localPeerId)
+    peer.userId = userId
+    peer.signal(signalData)
   }
 
   /**
