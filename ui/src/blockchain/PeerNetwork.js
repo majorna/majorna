@@ -44,11 +44,15 @@ export default class PeerNetwork {
   _attachCommonPeerEventHandlers (peer) {
     peer.on('error', e => {
       console.error('peer connection error:', e)
-      this.peers.splice(this.peers.indexOf(peer), 1)
+      this._removePeer(peer)
     })
-    peer.on('close', () => this.peers.splice(this.peers.indexOf(peer), 1))
+    peer.on('close', () => this._removePeer(peer))
     peer.on('connect', () => this.onPeerConnect(peer))
     peer.on('data', data => this.onData(data))
+  }
+
+  _removePeer (peer) {
+    this.peers.splice(this.peers.indexOf(peer), 1)
   }
 
   /**
