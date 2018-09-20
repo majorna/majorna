@@ -16,16 +16,10 @@ export default class PeerNetwork {
    */
   initPeer () {
     const peer = new InitiatingPeer()
-
-    peer.on('error', e => {
-      console.error('initiating peer connection error:', e)
-      this.peers.splice(this.peers.indexOf(peer), 1) // todo: add a test verifying this removal step
-    })
-    peer.on('close', () => this.peers.splice(this.peers.indexOf(peer), 1))
-    peer.on('signal', data => this.server.peers.initPeer(peer._id, data)) // todo: send signals after connection via already established data channel?
-    peer.on('connect', () => this.onPeerConnect(peer))
-    peer.on('data', data => this.onData(data))
-
+    this._attachCommonPeerEventHandlers(peer)
+    // todo: don't call initPeer for subsequent signals (which can happen with trickle ICE)
+    // todo: send signals after connection via already established data channel?
+    peer.on('signal', data => this.server.peers.initPeer(peer._id, data))
     this.peers.push(peer)
   }
 
@@ -41,19 +35,20 @@ export default class PeerNetwork {
    */
   onInitPeer (userId, signalData) {
     const peer = new MatchingPeer(userId)
+    this._attachCommonPeerEventHandlers(peer)
+    peer.on('signal', data => this.server.peers.signal(userId, data))
+    peer.signal(signalData)
+    this.peers.push(peer)
+  }
 
-    // todo: this is duplicated above by InitiatingPeer event handling
+  _attachCommonPeerEventHandlers (peer) {
     peer.on('error', e => {
-      console.error('matching peer connection error:', e)
+      console.error('peer connection error:', e)
       this.peers.splice(this.peers.indexOf(peer), 1)
     })
     peer.on('close', () => this.peers.splice(this.peers.indexOf(peer), 1))
-    peer.on('signal', data => this.server.peers.signal(userId, data))
     peer.on('connect', () => this.onPeerConnect(peer))
     peer.on('data', data => this.onData(data))
-
-    peer.signal(signalData)
-    this.peers.push(peer)
   }
 
   /**

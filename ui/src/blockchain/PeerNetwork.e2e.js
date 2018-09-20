@@ -4,6 +4,8 @@ import PeerNetwork from './PeerNetwork'
 export default {
   // todo: verify that all peers are closed and removed from array after test
 
+  // todo: add a test verifying  peer.on('error'...) actually removes peer connection from peers array
+
   'init': () => new Promise((resolve, reject) => {
     let _localConnId
 
