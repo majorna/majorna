@@ -91,18 +91,12 @@ export default class PeerNetwork {
     // no duplicates
     // no balance below 0
     // valid signatures
+    console.log('received txs from peer:', txs)
   }
 
-  onReceiveBlocks () {
+  onReceiveBlocks (blocks) {
     // validate each tx signature unless block is signed by a trusted key
-  }
-
-  /**
-   * Closes all peer connections and removes them from peers list.
-   */
-  close () {
-    this.peers.forEach(p => p.destroy())
-    this.peers.length = 0
+    console.log('received blocks from peer:', blocks)
   }
 
   /**
@@ -128,5 +122,13 @@ export default class PeerNetwork {
   _broadcast (data) {
     data = JSON.stringify(data)
     this.peers.forEach(p => p.send(data))
+  }
+
+  /**
+   * Closes all peer connections and removes them from peers list.
+   */
+  close () {
+    this.peers.forEach(p => p.destroy())
+    this.peers.length = 0
   }
 }
