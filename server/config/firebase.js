@@ -20,7 +20,7 @@
  * - Src: https://github.com/googleapis/nodejs-logging
  */
 const firebaseAdmin = require('firebase-admin')
-const Logging = require('@google-cloud/logging')
+const { Logging } = require('@google-cloud/logging')
 const config = require('./config')
 
 // (testing only)
