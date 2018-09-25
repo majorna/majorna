@@ -12,5 +12,5 @@ exports.addMiner = (id, lat, lon) => {
     exports.miners.push({ id, lat, lon, seen: new Date() })
   }
 
-  // todo: purge offline miners
+  // todo: purge offline miners (heroku restart does the business for the moment)
 }
