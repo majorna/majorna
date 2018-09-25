@@ -91,12 +91,12 @@ export default class PeerNetwork {
     // no duplicates
     // no balance below 0
     // valid signatures
-    console.log('received txs from peer:', txs)
+    // console.log('received txs from peer:', txs)
   }
 
   onReceiveBlocks (blocks) {
     // validate each tx signature unless block is signed by a trusted key
-    console.log('received blocks from peer:', blocks)
+    // console.log('received blocks from peer:', blocks)
   }
 
   /**
