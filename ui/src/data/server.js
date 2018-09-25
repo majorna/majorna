@@ -22,10 +22,6 @@ export default {
   blocks: {
     create: nonce => postJson('/blocks', {nonce})
   },
-  miners: {
-    getLocation: () => fetch('https://geoip-db.com/json/'),
-    post: (lat, lon) => postJson('/miners', {lat, lon})
-  },
   shop: {
     createStripeCharge: (token, usdAmount) => postJson('/shop/stripe-charge', {token, usdAmount}),
     getCoinbaseCommerceChargeUrl: () => get('/shop/coinbase-commerce-charge-url')
@@ -35,7 +31,11 @@ export default {
   },
   peers: {
     initPeer: (localConnId, data) => postJson('/peers/initPeer', {localConnId, data}),
-    signal: (userId, data) => postJson('/peers/signal', {userId, data})
+    signal: (userId, data) => postJson('/peers/signal', {userId, data}),
+    getSelfLocation: () => fetch('https://geoip-db.com/json/'),
+    miners: {
+      join: (lat, lon) => postJson('/peers/miners', {lat, lon})
+    }
   }
 }
 
