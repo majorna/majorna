@@ -17,12 +17,12 @@ export default class PeerNetwork {
   initPeer () {
     const peer = new InitiatingPeer()
     this._attachCommonPeerEventHandlers(peer)
-    peer.on('signal', data => {
+    peer.on('signal', signalData => {
       if (!peer.initPeerCalled) {
         peer.initPeerCalled = true
-        this.server.peers.initPeer(peer._id, data)
+        this.server.peers.initPeer(peer._id, signalData)
       } else {
-        this.server.peers.signal(peer.userId, data)
+        this.server.peers.signal(peer.userId, signalData)
       }
     })
     this.peers.push(peer)
@@ -43,7 +43,7 @@ export default class PeerNetwork {
   onInitPeer (userId, signalData) {
     const peer = new MatchingPeer(userId)
     this._attachCommonPeerEventHandlers(peer)
-    peer.on('signal', data => this.server.peers.signal(userId, data))
+    peer.on('signal', signalData => this.server.peers.signal(userId, signalData))
     peer.signal(signalData)
     this.peers.push(peer)
   }

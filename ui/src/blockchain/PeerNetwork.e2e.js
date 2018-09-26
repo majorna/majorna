@@ -11,14 +11,14 @@ export default {
 
     const getMockServer = peerId => ({
       peers: {
-        initPeer: (localConnId, data) => {
+        initPeer: (localConnId, signalData) => {
           _localConnId = localConnId
           assert(peerId === 'initiating')
-          peerNetwork2.onInitPeer(_localConnId, data)
+          peerNetwork2.onInitPeer(_localConnId, signalData)
         },
-        signal: (userId, data) => {
+        signal: (userId, signalData) => {
           assert(peerId === 'matching')
-          peerNetwork1.onInitPeerResponse(_localConnId, userId, data)
+          peerNetwork1.onInitPeerResponse(_localConnId, userId, signalData)
         }
       }
     })

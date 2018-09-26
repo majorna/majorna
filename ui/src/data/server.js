@@ -30,8 +30,8 @@ export default {
     usdExchangeRates: () => fetch('https://api.coinbase.com/v2/exchange-rates?currency=USD')
   },
   peers: {
-    initPeer: (localConnId, data) => postJson('/peers/initPeer', {localConnId, data}),
-    signal: (userId, data) => postJson('/peers/signal', {userId, data}),
+    initPeer: (localConnId, signalData) => postJson('/peers/initPeer', {localConnId, signalData}),
+    signal: (userId, signalData) => postJson('/peers/signal', {userId, signalData}),
     getSelfLocation: () => fetch('https://geoip-db.com/json/'),
     miners: {
       join: (lat, lon) => postJson('/peers/miners', {lat, lon})
