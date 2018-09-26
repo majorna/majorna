@@ -2,7 +2,7 @@ const assert = require('assert')
 const testData = require('../config/test').data
 
 suite('route: miners', () => {
-  test('post', async () => {
+  test('joinMiners', async () => {
     // post location
     const id = testData.users.u1Auth.uid
     const res = await testData.users.u1Request.post('/peers/miners', { id, lat: 0, lon: 123 })
@@ -19,4 +19,8 @@ suite('route: miners', () => {
     assert(res3.status === 400)
     assert(!res3.data.miners)
   })
+
+  test('initPeer', async () => {})
+
+  test('signal', async () => {})
 })
