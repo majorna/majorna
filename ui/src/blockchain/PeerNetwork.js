@@ -17,24 +17,20 @@ export default class PeerNetwork {
   initPeer () {
     const peer = new InitiatingPeer()
     this._attachCommonPeerEventHandlers(peer)
-    peer.on('signal', signalData => {
+    peer.on('signal', async signalData => {
       if (!peer.initPeerCalled) {
+        // send the first signal data to server to initialize new peer
         peer.initPeerCalled = true
-        this.server.peers.initPeer(peer._id, signalData)
+        const initRes = await this.server.peers.initPeer(signalData)
+        const initData = await initRes.json()
+        peer.userId = initData.userId
+        peer.signal(signalData)
       } else {
-        this.server.peers.signal(peer.userId, signalData)
+        // send subsequent signal data (if any) directly to user through server
+        await this.server.peers.signal(peer.userId, signalData)
       }
     })
     this.peers.push(peer)
-  }
-
-  /**
-   * When a connection initialization signal data is delivered to us by the server for a connection that was initialized by us with {initPeer}.
-   */
-  onInitPeerResponse (localPeerId, userId, signalData) {
-    const peer = this.peers.find(p => p._id === localPeerId)
-    peer.userId = userId
-    peer.signal(signalData)
   }
 
   /**
@@ -46,6 +42,14 @@ export default class PeerNetwork {
     peer.on('signal', signalData => this.server.peers.signal(userId, signalData))
     peer.signal(signalData)
     this.peers.push(peer)
+  }
+
+  /**
+   * When a peer produces a signal data.
+   */
+  onSignal (userId, signalData) {
+    const peer = this.peers.find(p => p.userId === userId)
+    peer.signal(signalData)
   }
 
   _attachCommonPeerEventHandlers (peer) {

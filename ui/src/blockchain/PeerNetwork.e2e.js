@@ -7,23 +7,21 @@ export default {
   // todo: add a test verifying  peer.on('error'...) actually removes peer connection from peers array
 
   'init': () => new Promise((resolve, reject) => {
-    let _localConnId
-
-    const getMockServer = peerId => ({
-      peers: {
-        initPeer: (localConnId, signalData) => {
-          _localConnId = localConnId
-          assert(peerId === 'initiating')
-          peerNetwork2.onInitPeer(_localConnId, signalData)
-        },
-        signal: (userId, signalData) => {
-          assert(peerId === 'matching')
-          peerNetwork1.onInitPeerResponse(_localConnId, userId, signalData)
-        }
-      }
-    })
+    let matchingSignalReceivedFn
+    const matchingSignalPromise = new Promise((resolve, reject) => { matchingSignalReceivedFn = resolve})
 
     class MockInitiatingPeerNetwork extends PeerNetwork {
+      constructor () {
+        super({
+          peers: {
+            initPeer: async signalData => {
+              peerNetwork2.onInitPeer(userId, signalData)
+              return matchingSignalPromise
+            }
+          }
+        })
+      }
+
       onPeerConnect = peer => {
         super.onPeerConnect(peer)
         this.broadcastTxs([{id: '123ABC', amount: 250}])
@@ -31,6 +29,14 @@ export default {
     }
 
     class MockMatchingPeerNetwork extends PeerNetwork {
+      constructor () {
+        super({
+          peers: {
+            signal: (userId, signalData) => matchingSignalReceivedFn(userId, signalData)
+          }
+        })
+      }
+
       onReceiveTxs = txs => {
         super.onReceiveTxs(txs)
         peerNetwork1.close()
@@ -39,8 +45,8 @@ export default {
       }
     }
 
-    const peerNetwork1 = new MockInitiatingPeerNetwork(getMockServer('initiating'))
-    const peerNetwork2 = new MockMatchingPeerNetwork(getMockServer('matching'))
+    const peerNetwork1 = new MockInitiatingPeerNetwork()
+    const peerNetwork2 = new MockMatchingPeerNetwork()
 
     peerNetwork1.initPeer()
   }),
