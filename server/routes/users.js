@@ -31,4 +31,4 @@ exports.getName = route.get('/users/:id', async (ctx, id) => {
   }
 })
 
-// todo: exports.clearNotification(id): route.delete('/users/:id/notifications/:id')
+// todo: exports.deleteNotification = route.delete('/users/:uid/notifications/:nid', async (ctx, uid, nid) => {})

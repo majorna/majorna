@@ -1,3 +1,5 @@
+const utils = require('./utils')
+
 const miners = [] // todo: purge offline miners before interacting with this array (heroku restart does the business once a day, for the moment)
 
 /**
@@ -18,5 +20,8 @@ exports.addMiner = (id, lat, lon) => {
   return miners.map(m => ({ lat: m.lat, lon: m.lon }))
 }
 
-exports.initPeer = signalData => {
+exports.initPeer = (id, signalData) => {
+  // get a random miner from list that is not us
+  const peers = miners.filter(m => m.id !== id)
+  const peer = peers[utils.getRandomInt(peers.length - 1)] // todo: add a test for getRandomInt max inclusiveness
 }
