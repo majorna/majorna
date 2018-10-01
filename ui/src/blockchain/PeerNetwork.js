@@ -24,7 +24,7 @@ export default class PeerNetwork {
         const initRes = await this.server.peers.initPeer(signalData)
         const initData = await initRes.json()
         peer.userId = initData.userId
-        peer.signal(signalData)
+        peer.signal(initData.signalData)
       } else {
         // send subsequent signal data (if any) directly to user through server
         await this.server.peers.signal(peer.userId, signalData)
@@ -45,7 +45,8 @@ export default class PeerNetwork {
   }
 
   /**
-   * When a peer produces a signal data.
+   * When a peer produces a signal data outside of the initialization sequence.
+   * todo: remove this if WebRTC protocol does not allow arbitrary signals outside of init sequence.
    */
   onSignal (userId, signalData) {
     const peer = this.peers.find(p => p.userId === userId)

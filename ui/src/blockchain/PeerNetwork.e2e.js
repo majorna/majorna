@@ -1,4 +1,4 @@
-import assert from './assert'
+// import assert from './assert'
 import PeerNetwork from './PeerNetwork'
 
 export default {
@@ -8,14 +8,14 @@ export default {
 
   'init': () => new Promise((resolve, reject) => {
     let matchingSignalReceivedFn
-    const matchingSignalPromise = new Promise((resolve, reject) => { matchingSignalReceivedFn = resolve})
+    const matchingSignalPromise = new Promise((resolve, reject) => {matchingSignalReceivedFn = resolve})
 
     class MockInitiatingPeerNetwork extends PeerNetwork {
       constructor () {
         super({
           peers: {
             initPeer: async signalData => {
-              peerNetwork2.onInitPeer(userId, signalData)
+              peerNetwork2.onInitPeer('peerNetwork2', signalData)
               return matchingSignalPromise
             }
           }
@@ -32,7 +32,7 @@ export default {
       constructor () {
         super({
           peers: {
-            signal: (userId, signalData) => matchingSignalReceivedFn(userId, signalData)
+            signal: (userId, signalData) => matchingSignalReceivedFn({json: () => ({userId, signalData})})
           }
         })
       }
