@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@google-cloud/logging": "4.0.1",
-    "@octokit/rest": "15.12.0",
+    "@octokit/rest": "15.12.1",
     "axios": "0.18.0",
     "firebase-admin": "6.0.0",
     "kcors": "2.2.2",
@@ -22,7 +22,7 @@
     "merkle-tools": "1.4.0"
   },
   "devDependencies": {
-    "firebase": "5.5.1",
+    "firebase": "5.5.2",
     "mocha": "5.2.0",
     "nyc": "13.0.1",
     "standard": "12.0.1"

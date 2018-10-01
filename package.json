@@ -8,9 +8,9 @@
     "test": "npm test --prefix server && npm run test-coverage --prefix ui",
     "test-e2e": "npm start --prefix server & npm run start-test --prefix ui",
     "deploy": "npm run build && firebase deploy && npm run deploy --prefix server",
-    "outdated": "(npm outdated || echo cli) && (npm outdated --prefix ui || echo ui) && (npm outdated --prefix server || echo server)",
+    "outdated": "(echo CLI: && npm outdated || true) && (echo UI: && npm outdated --prefix ui || true) && (echo SERVER: && npm outdated --prefix server || true)",
     "delete-all": "rm -fr node_modules ui/node_modules server/node_modules",
-    "reinstall-all": "npm run delete-all && npm ci && npm ci --prefix ui && npm ci --prefix server",
+    "install-all": "npm run delete-all && npm ci && npm ci --prefix ui && npm ci --prefix server",
     "force-https": "sed -i '' 's/http:/https:/g' package-lock.json ui/package-lock.json server/package-lock.json",
     "update-all": "npm run delete-all && rm package-lock.json ui/package-lock.json server/package-lock.json && npm install && npm install --prefix ui && npm install --prefix server && npm run force-https"
   }
