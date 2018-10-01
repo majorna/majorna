@@ -18,7 +18,6 @@ exports.joinMiners = route.post('/peers/miners', async ctx => {
  */
 exports.initPeer = route.post('/peers/initPeer', async ctx => {
   const txBody = ctx.request.body
-  ctx.assert(typeof txBody.localConnId === 'string', 400, '"localConnId" field is required and must be a string.')
   ctx.assert(typeof txBody.signalData === 'string', 400, '"signalData" field is required and must be a string.')
 })
 
