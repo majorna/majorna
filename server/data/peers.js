@@ -19,6 +19,4 @@ exports.addMiner = (id, lat, lon) => {
 }
 
 exports.initPeer = signalData => {
-  // todo: how to clear notification: [...] data from receiving end after use (user calls it from client side after notification is handled?)
-  // todo: return signalData from a matching peer or send back a notification with 'onInitPeerResponse'?
 }
