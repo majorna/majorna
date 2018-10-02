@@ -30,6 +30,7 @@ export default props =>
     <strong className="m-t-m">Majorna Supply</strong>
     <div>
       Max Majorna supply allocated for public distribution is denoted on the front page (this is subject to change).
+      There is essentially no pre-mined mj, developer, or transaction fees at the moment but this can be re-evaluated in line with the community consensus.
       Current Majorna supply denotes the currently distributed amount.
     </div>
 
