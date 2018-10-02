@@ -38,6 +38,10 @@ export default props =>
     <ul>
       <li>Block time: ~10 minutes. Can vary during development.</li>
       <li>Block reward: 1mj per block difficulty level. There is a planned algorithm to increase block reward in line with the network's hash rate.</li>
-      <li>Miner memory requirement: ~2MB. This can be varied for further ASIC resistance.</li>
+      <li>
+        Miner memory requirement: ~2MB.
+        This can be varied for further ASIC resistance.
+        There is ongoing work to make miner most efficient using fast access memory (i.e. CPU L2/L3 cache).
+      </li>
     </ul>
   </div>
