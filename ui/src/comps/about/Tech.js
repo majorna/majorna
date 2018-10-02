@@ -17,14 +17,14 @@ export default props =>
       As the mining reward, you get some majorna, which in turn helps distribute the currency to users.
     </div>
 
-    <strong id="mining" className="m-t-m">Web Technologies Used</strong>
+    <strong id="web-tech" className="m-t-m">Web Technologies Used</strong>
     <ul>
       <li>Signing/mining in browser using <a href="https://en.wikipedia.org/wiki/Web_cryptography_API" target="_blank" rel="noopener noreferrer">Web Crypto API</a>.</li>
       <li>Nodes peer-to-peer connectivity using <a href="https://en.wikipedia.org/wiki/WebRTC" target="_blank" rel="noopener noreferrer">WebRTC</a>.</li>
       <li>Until P2P API is production ready, all miners trust all blocks signed by main Majorna key as a means of delegated trust.</li>
     </ul>
 
-    <strong id="mining" className="m-t-m">Cryptographic Algorithms Used</strong>
+    <strong id="crpto-algos" className="m-t-m">Cryptographic Algorithms Used</strong>
     <ul>
       <li>Account public/private key pairs: Elliptic Curve DSA using SECP256K1 curve.</li>
       <li>Transaction signature: ECDSA with SHA256.</li>
@@ -32,5 +32,12 @@ export default props =>
       <li>Block (miner) hash: SHA256.</li>
       <li>Transition to GPU mining in browser using SHA3 is in works.</li>
       <li>Transition to proof-of-stake or delegated trust algorithm after all currency distribution is done is planned.</li>
+    </ul>
+
+    <strong id="blockchain-params" className="m-t-m">Blockchain Parameters</strong>
+    <ul>
+      <li>Block time: ~10 minutes. Can vary during development.</li>
+      <li>Block reward: 1mj per block difficulty level. There is a planned algorithm to increase block reward in line with the network's hash rate.</li>
+      <li>Miner memory requirement: ~2MB. This can be varied for further ASIC resistance.</li>
     </ul>
   </div>
