@@ -20,8 +20,12 @@ exports.addMiner = (id, lat, lon) => {
   return miners.map(m => ({ lat: m.lat, lon: m.lon }))
 }
 
-exports.initPeer = (id, signalData) => {
+exports.initPeer = async (id, signalData) => {
   // get a random miner from list that is not us
-  const peers = miners.filter(m => m.id !== id)
-  const peer = peers[utils.getRandomInt(peers.length - 1)] // todo: add a test for getRandomInt max inclusiveness
+  const filteredMiners = miners.filter(m => m.id !== id)
+  const miner = filteredMiners[utils.getRandomInt(filteredMiners.length - 1)] // todo: add a test for getRandomInt max inclusiveness
+  await db.addNotification({type: 'webRTCInit', signalData})
+  return new Promise((resolve, reject) => {
+    miner.onInitPeerList.push({resolve, reject, time: new Date()})
+  })
 }
