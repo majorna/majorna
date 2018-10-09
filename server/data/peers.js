@@ -36,7 +36,7 @@ exports.addMiner = (id, lat, lon) => {
 exports.initPeer = async (id, signalData) => {
   // get a random miner from list that is not us
   const filteredMiners = miners.filter(m => m.id !== id)
-  const miner = filteredMiners[utils.getRandomInt(filteredMiners.length - 1)] // todo: add a test for getRandomInt max inclusiveness
+  const miner = filteredMiners[utils.getRandomInt(0, filteredMiners.length - 1)]
   await db.addNotification({type: 'webRTCInit', signalData})
   return new Promise((resolve, reject) => {
     miner.onInitPeerList.push({resolve, reject, time: new Date()})

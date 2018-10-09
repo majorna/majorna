@@ -1,13 +1,22 @@
+const assert = require('assert')
+
 exports.sleep = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds))
 
 exports.isCloseToDate = (date, closeToDate = new Date(), varianceSeconds = 30) =>
   date.getTime() + varianceSeconds * 1000 > closeToDate.getTime() &&
   date.getTime() - varianceSeconds * 1000 < closeToDate.getTime()
 
+const MAX32INT = Math.pow(2, 32) - 1
 /**
- * A random integer (not crypto safe) of given max value.
+ * A crypto safe random integer between given min (inclusive) and max (inclusive).
  */
-exports.getRandomInt = max => Math.floor(Math.random() * Math.floor(max))
+exports.getRandomInt = (min, max) => {
+  assert(min >= 0 && min < MAX32INT, `Min must be greater than or equal to ${0} and less than ${MAX32INT}`)
+  assert(max > 0 && max <= MAX32INT, `Max must be greater than ${0} and less than or equal to ${MAX32INT}`)
+  const array = new Uint32Array(1)
+  crypto.getRandomValues(array)
+  return (array[0] + min) % (max + 1)
+}
 
 /**
  * A random string (not crypto safe) of length 11.
