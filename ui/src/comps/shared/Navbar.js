@@ -31,7 +31,7 @@ export default class extends Component {
             <NavLink className="navbar-item" activeClassName="is-active" to='/dashboard' onClick={this.closeNav}>Dashboard</NavLink>
             <NavLink className="navbar-item" activeClassName="is-active" to='/shop' onClick={this.closeNav}>Shop</NavLink>
             <div className="navbar-item has-dropdown is-hoverable">
-              <a className="navbar-link">{this.props.user.displayName}</a>
+              <NavLink className="navbar-link" to='/profile'>{this.props.user.displayName}</NavLink>
               <div className="navbar-dropdown is-boxed is-right">
                 <NavLink className="navbar-item" activeClassName="is-active" to='/about' onClick={this.closeNav}>About</NavLink>
                 <NavLink className="navbar-item" activeClassName="is-active" to='/profile' onClick={this.closeNav}>Profile</NavLink>
