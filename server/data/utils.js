@@ -1,4 +1,5 @@
 const assert = require('assert')
+const crypto = require('crypto')
 
 exports.sleep = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds))
 
@@ -14,7 +15,7 @@ exports.getRandomInt = (min, max) => {
   assert(min >= 0 && min < MAX32INT, `Min must be greater than or equal to ${0} and less than ${MAX32INT}`)
   assert(max > 0 && max <= MAX32INT, `Max must be greater than ${0} and less than or equal to ${MAX32INT}`)
   const array = new Uint32Array(1)
-  crypto.getRandomValues(array)
+  crypto.getRandomValues ? crypto.getRandomValues(array) : crypto.randomFillSync(array)
   return (array[0] + min) % (max + 1)
 }
 

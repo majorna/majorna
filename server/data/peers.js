@@ -1,19 +1,20 @@
 const utils = require('./utils')
+const db = require('./db')
 
 const miners = [] // todo: purge offline miners before interacting with this array (heroku restart does the business once a day, for the moment)
 
-const minerSchema = {
-  lat: 1.1234,
-  lon: 1.1234,
-  lastOnline: new Date(),
-  onInitPeerList: [
-    {
-      resolve: () => {},
-      reject: () => {},
-      time: new Date()
-    }
-  ]
-}
+// const minerSchema = {
+//   lat: 1.1234,
+//   lon: 1.1234,
+//   lastOnline: new Date(),
+//   onInitPeerList: [
+//     {
+//       resolve: () => {},
+//       reject: () => {},
+//       time: new Date()
+//     }
+//   ]
+// }
 
 /**
  * Adds a miner to the miner map. If the miner exists on the map, the coordinates are updated.
@@ -37,8 +38,8 @@ exports.initPeer = async (id, signalData) => {
   // get a random miner from list that is not us
   const filteredMiners = miners.filter(m => m.id !== id)
   const miner = filteredMiners[utils.getRandomInt(0, filteredMiners.length - 1)]
-  await db.addNotification({type: 'webRTCInit', signalData})
+  await db.addNotification({ type: 'webRTCInit', signalData })
   return new Promise((resolve, reject) => {
-    miner.onInitPeerList.push({resolve, reject, time: new Date()})
+    miner.onInitPeerList.push({ resolve, reject, time: new Date() })
   })
 }
