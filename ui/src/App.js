@@ -71,6 +71,11 @@ export default withRouter(class extends Component {
         storageBucket: 'majorna-fire.appspot.com',
         messagingSenderId: '526928901295'
       }
+
+    if (config.app.isTest) {
+      return // otherwise un-awaited promises created by firebase.initializeApp causes test runner (Jest) to throw error
+    }
+
     this.firebaseApp = firebase.initializeApp(firebaseConf)
 
     // initialize firebase sockets
