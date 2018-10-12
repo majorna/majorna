@@ -37,15 +37,15 @@ exports.addMiner = (id, lat, lon) => {
 
 /**
  *
- * @param id - ID of the user that is calling this function.
+ * @param uid - ID of the user that is calling this function.
  * @param signalData - WebRTC signal data produced by the user calling this function.
  * @returns {Promise<*>}
  */
-exports.initPeer = async (id, signalData) => {
+exports.initPeer = async (uid, signalData) => {
   // get a random miner from list that is not us
-  const filteredMiners = miners.filter(m => m.id !== id)
+  const filteredMiners = miners.filter(m => m.id !== uid)
   const miner = filteredMiners[utils.getRandomInt(0, filteredMiners.length - 1)]
-  await db.addNotification({ type: 'webRTCInit', signalData })
+  await db.addNotification(miner.id, { type: 'webRTCInit', data: { uid, signalData } })
   await new Promise((resolve, reject) => {
     miner.onInitPeerList.push({ resolve, reject, time: new Date() })
   })

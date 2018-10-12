@@ -1,4 +1,5 @@
 const assert = require('assert')
+const firebaseAdmin = require('firebase-admin')
 const config = require('../config/config')
 const txUtils = require('../blockchain/tx')
 const blockUtils = require('../blockchain/block')
@@ -412,6 +413,16 @@ exports.giveMj = (userId, usdAmount) => firestore.runTransaction(async t => {
 
   return signedTx
 })
+
+/**
+ * Add given notification object to given user's document's notifications array.
+ */
+exports.addNotification = async (uid, notification) => {
+  const userDocRef = usersColRef.doc(uid)
+  await userDocRef.update({
+    notifications: firebaseAdmin.firestore.FieldValue.arrayUnion(notification)
+  })
+}
 
 /**
  * Adds a tx in txs array property in the given user doc. This function mutates the doc.
