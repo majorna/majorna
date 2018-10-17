@@ -349,7 +349,7 @@ suite('db', () => {
     assert(metaAfter.marketCap === initMeta.marketCap + amountMj)
   })
 
-  test.only('addNotification', async () => {
+  test('addNotification', async () => {
     const uid = '1'
     await db.addNotification(uid, { type: 'wow', data: { text: 'yeah' } })
     await db.addNotification(uid, { type: 'wow2', data: { text: 'yeah2' } })
