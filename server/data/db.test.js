@@ -353,5 +353,13 @@ suite('db', () => {
     const uid = '1'
     await db.addNotification(uid, { type: 'wow', data: { text: 'yeah' } })
     await db.addNotification(uid, { type: 'wow2', data: { text: 'yeah2' } })
+
+    const userDoc = await db.getUser(uid)
+
+    assert(userDoc.notifications.length === 2)
+    assert(userDoc.notifications[0].type === 'wow')
+    assert(userDoc.notifications[0].data.text === 'yeah')
+    assert(userDoc.notifications[1].type === 'wow2')
+    assert(userDoc.notifications[1].data.text === 'yeah2')
   })
 })
