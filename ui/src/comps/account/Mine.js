@@ -5,6 +5,7 @@ import { mineBlock, stopMining } from '../../blockchain/miner'
 import { ResponsiveContainer, Scatter, ScatterChart, XAxis, YAxis } from 'recharts'
 import worldMap from '../../res/world_map.svg'
 import { Link } from 'react-router-dom'
+import config from '../../data/config'
 
 export default class extends Component {
   state = {
@@ -141,8 +142,8 @@ export default class extends Component {
 
           <strong className="has-text-info m-t-m">Blockchain</strong>
           <div className="m-t-xs"><strong>Download Blockchain:</strong> <small className="wrap-text">
-              <a href="https://github.com/majorna/blockchain/archive/master.zip" target="_blank" rel="noopener noreferrer">
-                https://github.com/majorna/blockchain/archive/master.zip
+              <a href={config.github.blockchainDownloadUrl} target="_blank" rel="noopener noreferrer">
+                {config.github.blockchainDownloadUrl}
               </a>
             </small>
           </div>

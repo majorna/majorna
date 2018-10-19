@@ -4,7 +4,7 @@ import config from '../../data/config'
 
 export default props => {
   const tx = props.userDoc.txs.find(i => i.id === props.match.params.id)
-  const githubLink = config.github.blockUrl + tx.id
+  const githubLink = config.github.blockchainSearchUrl + tx.id
 
   return <div className="mj-box flex-column box-center w-m">
     <div className="is-size-5 has-text-centered">Transaction Details</div>
