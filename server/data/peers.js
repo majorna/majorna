@@ -32,16 +32,24 @@ exports.addMiner = (id, lat, lon) => {
  * Initiates a connection to a suitable peer, asynchronously.
  * @param uid - ID of the user that is calling this function.
  * @param signalData - WebRTC signal data produced by the user calling this function.
+ * @returns {Promise<{userId: *}>}
  */
 exports.initPeer = async (uid, signalData) => {
   // get a random miner from list, excluding the initializing user itself
   const filteredMiners = miners.filter(m => m.id !== uid)
+  if (!filteredMiners.length) {
+    throw new utils.UserVisibleError('no available miners', 500)
+  }
   const miner = filteredMiners[utils.getRandomInt(0, filteredMiners.length - 1)]
   await db.addNotification(miner.id, { type: 'webRTCInit', data: { uid, signalData } })
   return {userId: miner.id}
-  // todo: return error if no miners
 }
 
-exports.signal = (uid, signalData) => {
+exports.signal = async (fromId, toId, signalData) => {
   // see if miner is still online
+  const miner = miners.find(m => m.id === toId)
+  if (!miner) {
+    throw new utils.UserVisibleError(`miner with ID: ${toId} is unavailable`, 500)
+  }
+  await db.addNotification(toId, { type: 'webRTCInit', data: { fromId, signalData } })
 }
