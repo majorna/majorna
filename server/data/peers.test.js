@@ -1,7 +1,7 @@
 const assert = require('assert')
 const peers = require('./peers')
 
-suite.only('peers', () => {
+suite('peers', () => {
   test('addMiner', async () => {
     const miners1 = peers.addMiner('1', 1.123, 4.567)
     assert(miners1.length === 1)
@@ -23,7 +23,7 @@ suite.only('peers', () => {
     assert(miners3[0].lon === 4.567)
   })
 
-  test('initPeer', async () => {
+  test.only('initPeer', async () => {
     assert(peers)
   })
 })
