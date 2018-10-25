@@ -4,17 +4,10 @@ const db = require('./db')
 const miners = [] // todo: purge offline miners before interacting with this array (heroku restart does the business once a day, for the moment)
 
 miners.schema = {
+  id: 'miner1',
   lat: 1.1234,
   lon: 1.1234,
-  lastOnline: new Date(),
-  onInitPeerList: [
-    {
-      id: 'abcd1234',
-      resolve: () => {},
-      reject: () => {},
-      time: new Date()
-    }
-  ]
+  lastOnline: new Date()
 }
 
 /**
@@ -29,7 +22,7 @@ exports.addMiner = (id, lat, lon) => {
     miner.lon = lon
     miner.lastOnline = lastOnline
   } else {
-    miners.push({ id, lat, lon, lastOnline: lastOnline, onInitPeerList: [] })
+    miners.push({ id, lat, lon, lastOnline: lastOnline })
   }
 
   return miners.map(m => ({ lat: m.lat, lon: m.lon }))
@@ -45,7 +38,10 @@ exports.initPeer = async (uid, signalData) => {
   const filteredMiners = miners.filter(m => m.id !== uid)
   const miner = filteredMiners[utils.getRandomInt(0, filteredMiners.length - 1)]
   await db.addNotification(miner.id, { type: 'webRTCInit', data: { uid, signalData } })
-  await new Promise((resolve, reject) => {
-    miner.onInitPeerList.push({ resolve, reject, time: new Date() })
-  })
+  return {userId: miner.id}
+  // todo: return error if no miners
+}
+
+exports.signal = (uid, signalData) => {
+  // see if miner is still online
 }

@@ -24,6 +24,7 @@ suite('peers', () => {
   })
 
   test.only('initPeer', async () => {
-    assert(peers)
+    const miners1 = peers.addMiner('1', 1.123, 4.567)
+    const miners2 = peers.addMiner('2', 8.8, 9.9)
   })
 })
