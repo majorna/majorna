@@ -7,13 +7,16 @@ exports.isCloseToDate = (date, closeToDate = new Date(), varianceSeconds = 30) =
   date.getTime() + varianceSeconds * 1000 > closeToDate.getTime() &&
   date.getTime() - varianceSeconds * 1000 < closeToDate.getTime()
 
-const MAX32INT = Math.pow(2, 32) - 1
+exports.MAX32INT = Math.pow(2, 32) - 1
+
 /**
  * A crypto safe random integer between given min (inclusive) and max (inclusive).
  */
 exports.getRandomInt = (min, max) => {
-  assert(min >= 0 && min < MAX32INT, `Min must be greater than or equal to ${0} and less than ${MAX32INT}`)
-  assert(max > 0 && max <= MAX32INT, `Max must be greater than ${0} and less than or equal to ${MAX32INT}`)
+  assert(min >= 0 && min <= exports.MAX32INT && max >= 0 && max <= exports.MAX32INT, `Min and max must be greater than or equal to ${0} and less than or equal to ${exports.MAX32INT}`)
+  if (min === max) {
+    return max
+  }
   const array = new Uint32Array(1)
   crypto.getRandomValues ? crypto.getRandomValues(array) : crypto.randomFillSync(array)
   return (array[0] + min) % (max + 1)
