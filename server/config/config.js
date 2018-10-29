@@ -106,7 +106,7 @@ MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAE2yLEGhHZMiClLt4rHm6Kajo2qsRRQMUW
 
 // blockchain
 const blockchain = {
-  blockInterval: (app.isProd ? 20 : 3) * 60 * 1000, // ms
+  blockInterval: (app.isProd ? 40 : 3) * 60 * 1000, // ms
 
   initialMinBlockDifficulty: app.isProd ? 5 : 1,
   blockDifficultyIncrementStep: 1,
