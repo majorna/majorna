@@ -1,25 +1,22 @@
 // import assert from './assert'
 import PeerNetwork from './PeerNetwork'
 
+// todo: verify that all peers are closed and removed from array after test
+// todo: add a test verifying  peer.on('error'...) actually removes peer connection from peers array
+
 export default {
-  // todo: verify that all peers are closed and removed from array after test
-
-  // todo: add a test verifying  peer.on('error'...) actually removes peer connection from peers array
-
   'init': () => new Promise((resolve, reject) => {
-    let matchingSignalReceivedFn
-    const matchingSignalPromise = new Promise((resolve, reject) => {matchingSignalReceivedFn = resolve})
-
-    class MockInitiatingPeerNetwork extends PeerNetwork {
+    class Peer1Network extends PeerNetwork {
       constructor () {
-        super({
+        super({ // mock server:
           peers: {
             initPeer: async signalData => {
-              peerNetwork2.onInitPeer('peerNetwork2', signalData)
-              return matchingSignalPromise
+              peerNetwork2.onSignal('peer1', signalData)
+              return {json: () => ({userId: 'peer2'})}
             }
           }
         })
+        this.name = 'Peer1Network'
       }
 
       onPeerConnect = peer => {
@@ -28,13 +25,14 @@ export default {
       }
     }
 
-    class MockMatchingPeerNetwork extends PeerNetwork {
+    class Peer2Network extends PeerNetwork {
       constructor () {
-        super({
+        super({ // mock server:
           peers: {
-            signal: (userId, signalData) => matchingSignalReceivedFn({json: () => ({userId, signalData})})
+            signal: (userId, signalData) => peerNetwork1.onSignal('peer2', signalData)
           }
         })
+        this.name = 'Peer2Network'
       }
 
       onReceiveTxs = txs => {
@@ -45,8 +43,8 @@ export default {
       }
     }
 
-    const peerNetwork1 = new MockInitiatingPeerNetwork()
-    const peerNetwork2 = new MockMatchingPeerNetwork()
+    const peerNetwork1 = new Peer1Network()
+    const peerNetwork2 = new Peer2Network()
 
     peerNetwork1.initPeer()
   }),
