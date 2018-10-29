@@ -1,8 +1,8 @@
 const assert = require('assert')
 const peers = require('./peers')
 
-suite('peers', () => {
-  test('addMiner', async () => {
+suite.only('peers', () => {
+  test('addMiner', () => {
     const miners1 = peers.addMiner('1', 1.123, 4.567)
     assert(miners1.length === 1)
     assert(miners1[0].lat === 1.123)
@@ -23,8 +23,10 @@ suite('peers', () => {
     assert(miners3[0].lon === 4.567)
   })
 
-  test.only('initPeer', async () => {
-    const miners1 = peers.addMiner('1', 1.123, 4.567)
-    const miners2 = peers.addMiner('2', 8.8, 9.9)
+  test('initPeer', () => {
+    peers.addMiner('1', 1.123, 4.567)
+    peers.addMiner('2', 8.8, 9.9)
+
+    for (let i = 0; i < 10; i++) assert(peers.initPeer('1').userId === '2')
   })
 })

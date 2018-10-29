@@ -16,9 +16,7 @@ exports.joinMiners = route.post('/peers/miners', async ctx => {
 /**
  * Initiates a connection to a suitable peer with the provided signal data.
  */
-exports.initPeer = route.post('/peers/initPeer', async ctx => {
-  const txBody = ctx.request.body
-  ctx.assert(typeof txBody.signalData === 'string', 400, '"signalData" field is required and must be a string.')
+exports.initPeer = route.get('/peers/initPeer', async ctx => {
 })
 
 /**

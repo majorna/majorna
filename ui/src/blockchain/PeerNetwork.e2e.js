@@ -14,7 +14,6 @@ export default {
             signal: (userId, signalData) => peerNetwork2.onSignal('peer1', signalData)
           }
         })
-        this.name = 'Peer1Network'
       }
 
       onPeerConnect = peer => {
@@ -30,7 +29,6 @@ export default {
             signal: (userId, signalData) => peerNetwork1.onSignal('peer2', signalData)
           }
         })
-        this.name = 'Peer2Network'
       }
 
       onReceiveTxs = txs => {
