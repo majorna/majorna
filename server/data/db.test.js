@@ -71,10 +71,7 @@ suite('db', () => {
   test('getUser', async () => {
     const user = await db.getUser('1')
     assert(user.name)
-
-    let err = null
-    try { await db.getUser('98u23hkasd8') } catch (e) { err = e }
-    assert(err)
+    await assert.rejects(() => db.getUser('98u23hkasd8'))
   })
 
   test('createUserDoc', async () => {
@@ -107,9 +104,7 @@ suite('db', () => {
     assert(tx.amount === starterBalance)
 
     // try to create user again and verify error
-    let err = null
-    try { await db.createUserDoc(testUserData, uid) } catch (e) { err = e }
-    assert(err)
+    await assert.rejects(() => db.createUserDoc(testUserData, uid))
   })
 
   test('getTx', async () => {
@@ -120,9 +115,7 @@ suite('db', () => {
     assert(tx.from.id === tx0.from.id)
 
     // inexisting tx
-    let err = null
-    try { await db.getTx('sdaf089y097gs') } catch (e) { err = e }
-    assert(err.status === 404)
+    await assert.rejects(() => db.getTx('sdaf089y097gs'), e => e.status === 404)
   })
 
   test('getTxsByTimeRange', async () => {
@@ -198,29 +191,23 @@ suite('db', () => {
   })
 
   test('makeTx: invalid', async () => {
-    let err = null // insufficient funds
-    try { await db.makeTx('1', '2', 500 * 1000) } catch (e) { err = e }
-    assert(err)
+    // insufficient funds
+    await assert.rejects(() => db.makeTx('1', '2', 500 * 1000))
 
-    err = null // missing args
-    try { await db.makeTx() } catch (e) { err = e }
-    assert(err)
+    // missing args
+    await assert.rejects(() => db.makeTx())
 
-    err = null // inexistent sender
-    try { await db.makeTx('asdf98709ysadgfg', '2', 10) } catch (e) { err = e }
-    assert(err)
+    // inexistent sender
+    await assert.rejects(() => db.makeTx('asdf98709ysadgfg', '2', 10))
 
-    err = null // inexistent receiver
-    try { await db.makeTx('1', '129807aysdfiopohasdf', 10) } catch (e) { err = e }
-    assert(err)
+    // inexistent receiver
+    await assert.rejects(() => db.makeTx('1', '129807aysdfiopohasdf', 10))
 
-    err = null // amount should be integer
-    try { await db.makeTx('1', '1', 5.1) } catch (e) { err = e }
-    assert(err)
+    // amount should be integer
+    await assert.rejects(() => db.makeTx('1', '1', 5.1))
 
-    err = null // tx to self is not allowed
-    try { await db.makeTx('1', '1', 10) } catch (e) { err = e }
-    assert(err)
+    // tx to self is not allowed
+    await assert.rejects(() => db.makeTx('1', '1', 10))
   })
 
   test('insertBlock', async () => {
@@ -306,11 +293,9 @@ suite('db', () => {
     // choosing higher difficulty otherwise same nonce can fit into multiple difficulties at a very low difficulty
     const miningRes = blockUtils.mineHeaderStr(blockInfo.miner.headerStrWithoutNonce, blockInfo.miner.targetDifficulty + 10)
 
-    let err
-    try {
-      await Promise.all([db.giveMiningReward(to, miningRes.nonce), db.giveMiningReward(to, miningRes.nonce)])
-    } catch (e) { err = e }
-    assert(err.message.includes('contention') || err.message.includes('nonce'))
+    await assert.rejects(
+      () => Promise.all([db.giveMiningReward(to, miningRes.nonce), db.giveMiningReward(to, miningRes.nonce)]),
+      e => e.message.includes('contention') || e.message.includes('nonce'))
 
     const receiverAfterBalance = (await db.getUser(to)).balance
     const miningReward = blockUtils.getBlockReward(miningRes.difficulty)

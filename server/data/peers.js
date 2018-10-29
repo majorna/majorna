@@ -18,7 +18,7 @@ miners.schema = {
 exports.addMiner = (id, lat, lon) => {
   const lastOnline = new Date()
   const miner = miners.find(m => m.id === id)
-  if (miner) {π
+  if (miner) {
     miner.lat = lat
     miner.lon = lon
     miner.lastOnline = lastOnline
