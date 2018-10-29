@@ -1,7 +1,7 @@
 const assert = require('assert')
 const peers = require('./peers')
 
-suite.only('peers', () => {
+suite('peers', () => {
   test('addMiner', () => {
     const miners1 = peers.addMiner('1', 1.123, 4.567)
     assert(miners1.length === 1)
@@ -26,7 +26,12 @@ suite.only('peers', () => {
   test('initPeer', () => {
     peers.addMiner('1', 1.123, 4.567)
     peers.addMiner('2', 8.8, 9.9)
-
     for (let i = 0; i < 10; i++) assert(peers.initPeer('1').userId === '2')
+
+    peers.addMiner('3', 8.85, 9.95)
+    for (let i = 0; i < 10; i++) {
+      const peerId = peers.initPeer('1').userId
+      assert(peerId === '2' || peerId === '3')
+    }
   })
 })
