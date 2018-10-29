@@ -2,7 +2,7 @@ import { InitiatingPeer, MatchingPeer } from './Peer'
 
 export default {
   'webrtc single peer': () => new Promise((resolve, reject) => {
-    const peer1 = new InitiatingPeer()
+    const peer1 = new InitiatingPeer('peer1')
     const peer2 = new MatchingPeer('peer2')
 
     peer1.on('error', e => reject(e))
@@ -22,11 +22,11 @@ export default {
 
   'webrtc mesh network': () => new Promise((resolve, reject) => {
     // create mesh channels
-    const peer1toPeer2 = new InitiatingPeer()
-    const peer1toPeer3 = new InitiatingPeer()
+    const peer1toPeer2 = new InitiatingPeer('peer1toPeer2')
+    const peer1toPeer3 = new InitiatingPeer('peer1toPeer3')
 
     const peer2toPeer1 = new MatchingPeer('peer2toPeer1')
-    const peer2toPeer3 = new InitiatingPeer()
+    const peer2toPeer3 = new InitiatingPeer('peer2toPeer3')
 
     const peer3toPeer1 = new MatchingPeer('peer3toPeer1')
     const peer3toPeer2 = new MatchingPeer('peer3toPeer2')

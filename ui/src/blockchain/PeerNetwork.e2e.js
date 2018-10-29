@@ -10,10 +10,8 @@ export default {
       constructor () {
         super({ // mock server:
           peers: {
-            initPeer: async signalData => {
-              peerNetwork2.onSignal('peer1', signalData)
-              return {json: () => ({userId: 'peer2'})}
-            }
+            initPeer: () => ({json: () => ({userId: 'peer2'})}),
+            signal: (userId, signalData) => peerNetwork2.onSignal('peer1', signalData)
           }
         })
         this.name = 'Peer1Network'
@@ -39,14 +37,14 @@ export default {
         super.onReceiveTxs(txs)
         peerNetwork1.close()
         peerNetwork2.close()
-        txs[0].id === '123ABC' ? resolve() : reject()
+        txs[0].id === '123ABC' ? resolve() : reject('received unexpected tx ID')
       }
     }
 
     const peerNetwork1 = new Peer1Network()
     const peerNetwork2 = new Peer2Network()
 
-    peerNetwork1.initPeer()
+    peerNetwork1.initPeer().catch(e => reject(e))
   }),
 
   'txs': () => {},

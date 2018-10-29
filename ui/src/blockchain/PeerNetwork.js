@@ -12,23 +12,15 @@ export default class PeerNetwork {
   peers = []
 
   /**
-   * Call this to send signaling server initialization data to establish a WebRTC connection to an available peer.
+   * Call this to ask the server to give us the ID of a suitable peer to initiate a connection to.
    */
-  initPeer () {
-    const peer = new InitiatingPeer()
+  async initPeer () {
+    const initRes = await this.server.peers.initPeer()
+    const initData = await initRes.json()
+
+    const peer = new InitiatingPeer(initData.userId)
     this._attachCommonPeerEventHandlers(peer)
-    peer.on('signal', async signalData => {
-      if (!peer.initPeerCalled) {
-        // send the first signal data to server to initialize new peer
-        peer.initPeerCalled = true
-        const initRes = await this.server.peers.initPeer(signalData)
-        const initData = await initRes.json()
-        peer.userId = initData.userId
-      } else {
-        // send subsequent signal data (if any) directly to user through server
-        await this.server.peers.signal(peer.userId, signalData)
-      }
-    })
+
     this.peers.push(peer)
   }
 
@@ -42,13 +34,13 @@ export default class PeerNetwork {
     } else {
       const peer = new MatchingPeer(userId)
       this._attachCommonPeerEventHandlers(peer)
-      peer.on('signal', signalData => this.server.peers.signal(peer.userId, signalData))
       peer.signal(signalData)
       this.peers.push(peer)
     }
   }
 
   _attachCommonPeerEventHandlers (peer) {
+    peer.on('signal', signalData => this.server.peers.signal(peer.userId, signalData))
     peer.on('error', e => {
       console.error('peer connection error:', e)
       this._removePeer(peer)

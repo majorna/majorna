@@ -5,8 +5,10 @@ import assert from './assert'
 // Peer.config.iceServers.push({urls: 'turn:numb.viagenie.ca', username: 'peer2peer@pokemail.net', credential: 'peer2peer'})
 
 export class InitiatingPeer extends Peer {
-  constructor() {
+  constructor(userId) {
     super({trickle: false, initiator: true})
+    assert(userId, 'userId parameter is required')
+    this.userId = userId
   }
 }
 
