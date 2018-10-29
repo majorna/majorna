@@ -20,6 +20,7 @@ assert.notEqual = function (a, b, failureDescription) {
   }
 }
 
+// todo: use the same sig as node's assert.rejects
 assert.throws = async function (fn, expectedErrorMsgIncludes) {
   let err
   try {
