@@ -50,10 +50,10 @@ exports.initPeer = uid => {
  * Delivers given WebRTC signal data to desired peer, asynchronously.
  */
 exports.signal = async (fromId, toId, signalData) => {
-  // see if miner is still online
+  // see if the target miner is still online
   const miner = miners.find(m => m.id === toId)
   if (!miner) {
     throw new utils.UserVisibleError(`miner with ID: ${toId} is unavailable`, 500)
   }
-  await db.addNotification(toId, { type: 'webRtcSignal', data: { userId: fromId, signalData } })
+  await db.addNotification(toId, { type: 'webRTCSignal', data: { userId: fromId, signalData } })
 }

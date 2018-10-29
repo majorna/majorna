@@ -1,5 +1,6 @@
 const assert = require('assert')
 const peers = require('./peers')
+const db = require('./db')
 
 suite('peers', () => {
   test('addMiner', () => {
@@ -33,5 +34,22 @@ suite('peers', () => {
       const peerId = peers.initPeer('1').userId
       assert(peerId === '2' || peerId === '3')
     }
+  })
+
+  test('signal', async () => {
+    peers.addMiner('2', 8.8, 9.9)
+
+    const from = '1'
+    const to = '2'
+    const signalData = { wow: 'yeah' }
+
+    await assert.rejects(() => peers.signal(from, 'def123', signalData), e => e.message.includes('miner with ID: def123'))
+
+    await peers.signal(from, to, signalData)
+    const userDoc = await db.getUser(to)
+    const not = userDoc.notifications.pop()
+    assert(not.type === 'webRTCSignal')
+    assert(not.data.userId === from)
+    assert(not.data.signalData.wow === signalData.wow)
   })
 })
