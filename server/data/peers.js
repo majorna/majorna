@@ -1,7 +1,8 @@
 const utils = require('./utils')
 const db = require('./db')
 
-const miners = [] // todo: purge offline miners before interacting with this array (heroku restart does the business once a day, for the moment)
+// peer.js is in /data directory since it contains miners list, which might become persistent in the futureπ
+const miners = [] // todo: purge offline miners before interacting with this array (Heroku restart does the business once a day, for the moment)
 
 miners.schema = {
   id: 'miner1',
@@ -17,7 +18,7 @@ miners.schema = {
 exports.addMiner = (id, lat, lon) => {
   const lastOnline = new Date()
   const miner = miners.find(m => m.id === id)
-  if (miner) {
+  if (miner) {π
     miner.lat = lat
     miner.lon = lon
     miner.lastOnline = lastOnline
