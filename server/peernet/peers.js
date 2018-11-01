@@ -1,7 +1,6 @@
-const utils = require('./utils')
-const db = require('./db')
+const utils = require('../utils/utils')
+const db = require('../data/db')
 
-// peer.js is in /data directory since it contains miners list, which might become persistent in the future
 const miners = [] // todo: purge offline miners before interacting with this array (Heroku restart does the business once a day, for the moment)
 
 miners.schema = {

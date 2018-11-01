@@ -1,6 +1,6 @@
 const assert = require('assert')
 const peers = require('./peers')
-const db = require('./db')
+const db = require('../data/db')
 
 suite('peers', () => {
   test('addMiner', () => {

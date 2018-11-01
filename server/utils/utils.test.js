@@ -22,7 +22,6 @@ suite('utils', () => {
     let got0, got5
     for (let i = 0; i < 500; i++) {
       const j = utils.getRandomInt(0, 5)
-      console.log(j)
       assert(j >= 0 && j <= 5)
       j === 0 && (got0 = true)
       j === 5 && (got5 = true)

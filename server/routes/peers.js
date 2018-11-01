@@ -1,5 +1,5 @@
 const route = require('koa-route')
-const peers = require('../data/peers')
+const peers = require('../peernet/peers')
 
 /**
  * Join miners list and set location on the miner map.

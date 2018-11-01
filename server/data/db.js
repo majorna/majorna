@@ -3,7 +3,7 @@ const firebaseAdmin = require('firebase-admin')
 const config = require('../config/config')
 const txUtils = require('../blockchain/tx')
 const blockUtils = require('../blockchain/block')
-const utils = require('./utils')
+const utils = require('../utils/utils')
 const firebaseConfig = require('../config/firebase')
 const firestore = firebaseConfig.firestore
 

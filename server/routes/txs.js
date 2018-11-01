@@ -1,5 +1,5 @@
 const route = require('koa-route')
-const utils = require('../data/utils')
+const utils = require('../utils/utils')
 const db = require('../data/db')
 
 /**
