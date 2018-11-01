@@ -1,6 +1,6 @@
 import { getHashDifficulty } from './Block'
-import { getCryptoRandStr, convertBufferToHexStr, getBlockHashPalette } from './crypto'
-import { testRunnerStatus } from './test-runner'
+import { getCryptoRandStr, convertBufferToHexStr, getBlockHashPalette } from '../utils/crypto'
+import { testRunnerStatus } from '../utils/test-runner'
 
 let interval
 export const stopMining = () => {

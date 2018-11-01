@@ -1,4 +1,4 @@
-import { hashBufferToBuffer, hashStrToBuffer, convertBufferToHexStr } from './crypto'
+import { hashBufferToBuffer, hashStrToBuffer, convertBufferToHexStr } from '../utils/crypto'
 
 export default class Merkle {
   /**

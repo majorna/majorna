@@ -1,7 +1,7 @@
-import assert from './assert'
+import assert from '../utils/assert'
 import Block, { getHashDifficulty } from './Block'
 import Tx from './Tx'
-import { convertBufferToHexStr } from './crypto'
+import { convertBufferToHexStr } from '../utils/crypto'
 
 const getSampleBlock = () => new Block('', 2, 0, '', new Date(), 0, 0, [])
 
