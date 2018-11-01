@@ -1,5 +1,5 @@
 import React from 'react'
-import { fm } from '../../data/utils'
+import { fm } from '../../utils/utils'
 import config from '../../data/config'
 
 export default props => {

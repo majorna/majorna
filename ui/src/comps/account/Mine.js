@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { fm, fn } from '../../data/utils'
+import { fm, fn } from '../../utils/utils'
 import server from '../../data/server'
 import { mineBlock, stopMining } from '../../blockchain/miner'
 import { ResponsiveContainer, Scatter, ScatterChart, XAxis, YAxis } from 'recharts'

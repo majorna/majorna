@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import server from '../../data/server'
-import { fm } from '../../data/utils'
+import { fm } from '../../utils/utils'
 
 // todo: 'successfully sent' screen should show tx details
 // todo: every character difference in handleReceiver results in a search query and the last one overwrite everything (might be the one with no result)

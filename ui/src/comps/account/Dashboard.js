@@ -1,7 +1,7 @@
 import React from 'react'
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from 'recharts'
 import { Link } from 'react-router-dom'
-import { fm, getChartData } from '../../data/utils'
+import { fm, getChartData } from '../../utils/utils'
 import StatsWidget from '../shared/StatsWidget'
 import TestnetWidget from '../shared/TestnetWidget'
 
