@@ -4,7 +4,7 @@ const peers = require('../peernet/peers')
 /**
  * Join miners list and set location on the miner map.
  */
-exports.joinMiners = route.post('/peers/miners', async ctx => {
+exports.joinMiners = route.post('/peers', async ctx => {
   const txBody = ctx.request.body
   ctx.assert(Number.isInteger(txBody.lat) || (txBody.lat && parseFloat(txBody.lat)), 400, '"lat" field is required and must be an int or float.')
   ctx.assert(Number.isInteger(txBody.lon) || (txBody.lon && parseFloat(txBody.lon)), 400, '"long" field is required and must be an int or float.')
@@ -14,16 +14,19 @@ exports.joinMiners = route.post('/peers/miners', async ctx => {
 })
 
 /**
- * Initiates a connection to a suitable peer with the provided signal data.
+ * Retrieves a suitable peer to initiate a WebRTC connection to.
  */
-exports.getPeer = route.get('/peers/getPeer', async ctx => {
+exports.getPeer = route.get('/peers', async ctx => {
+  ctx.body = await peers.getPeer(ctx.state.user.uid)
 })
 
 /**
  * Posts given signal data to target user by ID.
  */
-exports.signal = route.post('/peers/signal', async ctx => {
+exports.signal = route.post('/peers/:id/signal', async (ctx, id) => {
   const txBody = ctx.request.body
-  ctx.assert(typeof txBody.userId === 'string', 400, '"userId" field is required and must be a string.')
   ctx.assert(typeof txBody.signalData === 'string', 400, '"signalData" field is required and must be a string.')
+
+  await peers.signal(ctx.state.user.uid, id, txBody.signalData)
+  ctx.status = 201
 })

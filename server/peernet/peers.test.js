@@ -25,7 +25,10 @@ suite('peers', () => {
   })
 
   test('getPeer', () => {
+    // can never return user self back to himself
     peers.addMiner('1', 1.123, 4.567)
+    assert.throws(() => peers.getPeer('1'), e => e.message === 'no available miners')
+
     peers.addMiner('2', 8.8, 9.9)
     for (let i = 0; i < 10; i++) assert(peers.getPeer('1').userId === '2')
 

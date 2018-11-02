@@ -10,7 +10,7 @@ exports.send = route.post('/txs', async ctx => {
   ctx.assert(txBody.to, 400, '"to" field is required.')
   ctx.assert(txBody.amount, 400, '"amount" field is required.')
 
-  const from = utils.stripPrefix(ctx.state.user.uid)
+  const from = ctx.state.user.uid
   const to = utils.stripPrefix(txBody.to)
 
   await db.makeTx(from, to, txBody.amount, txBody.showSenderName)
