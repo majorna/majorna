@@ -179,8 +179,9 @@ export default {
     minedBlock.minDifficulty = 6
     await minedBlock.mine()
 
-    assert(convertBufferToHexStr(await minedBlock.hashToBufferUsingHashPalette()).substring(0, 1) === '0')
-    assert(minedBlock.nonce > 0)
+    const hashBuffHex = convertBufferToHexStr(await minedBlock.hashToBufferUsingHashPalette())
+    assert(hashBuffHex.substring(0, 1) === '0', `expected hash hex to start with 0, got: ${hashBuffHex.substring(0, 25)}`)
+    assert(minedBlock.nonce > 0, `expected mined block nonce to be > 0, got: ${minedBlock.nonce}`)
 
     await minedBlock.verify(genesis)
   },
