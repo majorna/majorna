@@ -14,8 +14,8 @@ export default class PeerNetwork {
   /**
    * Call this to ask the server to give us the ID of a suitable peer to initiate a connection to.
    */
-  async initPeer () {
-    const initRes = await this.server.peers.initPeer()
+  async getPeer () {
+    const initRes = await this.server.peers.getPeer()
     const initData = await initRes.json()
 
     const peer = new InitiatingPeer(initData.userId)

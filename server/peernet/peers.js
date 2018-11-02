@@ -32,7 +32,7 @@ exports.addMiner = (id, lat, lon) => {
  * Finds and returns the ID of a suitable peer.
  * @param uid - ID of the user that is calling this function.
  */
-exports.initPeer = uid => {
+exports.getPeer = uid => {
   // get a random miner from list, excluding the initializing user itself
   const filteredMiners = miners.filter(m => m.id !== uid)
   if (!filteredMiners.length) {

@@ -10,7 +10,7 @@ export default {
       constructor () {
         super({ // mock server:
           peers: {
-            initPeer: () => ({json: () => ({userId: 'peer2'})}),
+            getPeer: () => ({json: () => ({userId: 'peer2'})}),
             signal: (userId, signalData) => peerNetwork2.onSignal('peer1', signalData)
           }
         })
@@ -42,7 +42,7 @@ export default {
     const peerNetwork1 = new Peer1Network()
     const peerNetwork2 = new Peer2Network()
 
-    peerNetwork1.initPeer().catch(e => reject(e))
+    peerNetwork1.getPeer().catch(e => reject(e))
   }),
 
   'txs': () => {},

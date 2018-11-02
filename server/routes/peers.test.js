@@ -20,7 +20,7 @@ suite('route: miners', () => {
     assert(!res3.data.miners)
   })
 
-  test('initPeer', async () => {
+  test('getPeer', async () => {
 
   })
 

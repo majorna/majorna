@@ -16,7 +16,7 @@ exports.joinMiners = route.post('/peers/miners', async ctx => {
 /**
  * Initiates a connection to a suitable peer with the provided signal data.
  */
-exports.initPeer = route.get('/peers/initPeer', async ctx => {
+exports.getPeer = route.get('/peers/getPeer', async ctx => {
 })
 
 /**

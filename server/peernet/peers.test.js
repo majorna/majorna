@@ -24,14 +24,14 @@ suite('peers', () => {
     assert(miners3[0].lon === 4.567)
   })
 
-  test('initPeer', () => {
+  test('getPeer', () => {
     peers.addMiner('1', 1.123, 4.567)
     peers.addMiner('2', 8.8, 9.9)
-    for (let i = 0; i < 10; i++) assert(peers.initPeer('1').userId === '2')
+    for (let i = 0; i < 10; i++) assert(peers.getPeer('1').userId === '2')
 
     peers.addMiner('3', 8.85, 9.95)
     for (let i = 0; i < 10; i++) {
-      const peerId = peers.initPeer('1').userId
+      const peerId = peers.getPeer('1').userId
       assert(peerId === '2' || peerId === '3')
     }
   })
