@@ -13,7 +13,8 @@ exports.MAX32INT = Math.pow(2, 32) - 1
  * A crypto safe random integer between given min (inclusive) and max (inclusive).
  */
 exports.getRandomInt = (min, max) => {
-  assert(min >= 0 && min <= exports.MAX32INT && max >= 0 && max <= exports.MAX32INT, `Min and max must be greater than or equal to ${0} and less than or equal to ${exports.MAX32INT}`)
+  assert(min >= 0 && min <= exports.MAX32INT && max >= 0 && max <= exports.MAX32INT,
+    `Min and max must be greater than or equal to ${0} and less than or equal to ${exports.MAX32INT}`)
   if (min === max) {
     return max
   }

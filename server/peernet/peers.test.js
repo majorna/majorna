@@ -47,9 +47,9 @@ suite('peers', () => {
 
     await peers.signal(from, to, signalData)
     const userDoc = await db.getUser(to)
-    const not = userDoc.notifications.pop()
-    assert(not.type === 'webRTCSignal')
-    assert(not.data.userId === from)
-    assert(not.data.signalData.wow === signalData.wow)
+    const notification = userDoc.notifications.pop()
+    assert(notification.type === 'webRTCSignal')
+    assert(notification.data.userId === from)
+    assert(notification.data.signalData.wow === signalData.wow)
   })
 })
