@@ -2,14 +2,14 @@ const route = require('koa-route')
 const peers = require('../peernet/peers')
 
 /**
- * Join miners list and set location on the miner map.
+ * Join peers list and set location on the peer map.
  */
-exports.joinMiners = route.post('/peers', async ctx => {
+exports.joinPeers = route.post('/peers', async ctx => {
   const txBody = ctx.request.body
   ctx.assert(Number.isInteger(txBody.lat) || (txBody.lat && parseFloat(txBody.lat)), 400, '"lat" field is required and must be an int or float.')
   ctx.assert(Number.isInteger(txBody.lon) || (txBody.lon && parseFloat(txBody.lon)), 400, '"long" field is required and must be an int or float.')
 
-  ctx.body = { miners: peers.addMiner(ctx.state.user.uid, parseFloat(txBody.lat), parseFloat(txBody.lon)) }
+  ctx.body = { peers: peers.addPeer(ctx.state.user.uid, parseFloat(txBody.lat), parseFloat(txBody.lon)) }
   ctx.status = 201
 })
 
