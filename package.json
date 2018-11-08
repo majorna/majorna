@@ -7,6 +7,7 @@
     "build": "npm run build --prefix ui",
     "test": "npm test --prefix server && npm run test-coverage --prefix ui",
     "test-e2e": "npm start --prefix server & npm run start-test --prefix ui",
+    "firebase-login": "firebase login",
     "deploy": "npm run build && firebase deploy && npm run deploy --prefix server",
     "outdated": "(echo CLI: && npm outdated || true) && (echo UI: && npm outdated --prefix ui || true) && (echo SERVER: && npm outdated --prefix server || true)",
     "delete-all": "rm -fr node_modules ui/node_modules server/node_modules",
