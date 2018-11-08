@@ -26,7 +26,7 @@ export default class extends Component {
 
     // ui state
     showDetails: false,
-    miners: []
+    peers: []
   }
 
   componentDidMount = async () => {
@@ -37,10 +37,10 @@ export default class extends Component {
         const locationRes = await server.peers.getSelfLocation()
         const location = locationRes.status === 200 && await locationRes.json()
 
-        // set miner location for miner map (also wakes server up)
-        const minersRes = await server.peers.miners.join(location.latitude, location.longitude)
-        const minersData = await minersRes.json()
-        this.setState({miners: minersData.miners})
+        // set peer location for miner map (also wakes server up)
+        const peersRes = await server.peers.join(location.latitude, location.longitude)
+        const peersData = await peersRes.json()
+        this.setState({peers: peersData.peers})
       } catch (e) {
         console.error(e)
       }
@@ -110,7 +110,7 @@ export default class extends Component {
           <ScatterChart style={{backgroundImage: `url(${worldMap})`, backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%', backgroundPosition: '1rem center'}}>
             <XAxis dataKey={'lon'} type="number" domain={[-180, 180]} hide/>
             <YAxis dataKey={'lat'} type="number" domain={[-90, 90]} hide/>
-            <Scatter data={this.state.miners} fill='darkorange'/>
+            <Scatter data={this.state.peers} fill='darkorange'/>
           </ScatterChart>
         </ResponsiveContainer>
       </div>
