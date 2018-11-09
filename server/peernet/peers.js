@@ -43,10 +43,8 @@ exports.getPeer = uid => {
   if (!filteredPeers.length) {
     throw new utils.UserVisibleError('no available peers', 500)
   }
+
   const peer = filteredPeers[utils.getRandomInt(0, filteredPeers.length - 1)]
-  if (!peer) {
-    throw new utils.UserVisibleError(`no suitable peers available at the moment`, 500)
-  }
 
   return { userId: peer.id }
 }

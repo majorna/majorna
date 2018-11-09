@@ -28,6 +28,7 @@ suite('peers', () => {
 
   test('getPeer', () => {
     peers.purgePeers()
+    assert.throws(() => peers.getPeer('1'), e => e.message === 'no available peers')
 
     // can never return user self back to himself
     peers.addPeer('1', 1.123, 4.567)
