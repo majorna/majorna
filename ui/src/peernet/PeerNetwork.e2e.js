@@ -10,7 +10,7 @@ export default {
       constructor () {
         super({ // mock server:
           peers: {
-            getPeer: () => ({json: () => ({userId: 'peer2'})}),
+            get: () => ({json: () => ({userId: 'peer2'})}),
             signal: (userId, signalData) => peerNetwork2.onSignal('peer1', signalData)
           }
         })
