@@ -54,7 +54,7 @@ export default class PeerNetwork {
     })
     peer.on('close', () => this._removePeer(peer))
     peer.on('connect', () => this.onPeerConnect(peer))
-    peer.on('data', data => this.onData(data))
+    peer.on('data', data => this.onData(peer, data))
   }
 
   _removePeer (peer) {
@@ -65,38 +65,46 @@ export default class PeerNetwork {
    * When a WebRTC connection is successfully established with a peer.
    * @param peer - Connected peer object.
    */
-  onPeerConnect (peer) {
-  }
+  onPeerConnect (peer) {}
 
   /**
    * Handle incoming peer data.
+   * @param peer - Peer that sent this data.
    * @param data - A JSON-RPC 2.0 object: https://en.wikipedia.org/wiki/JSON-RPC#Version_2.0
    */
-  onData (data) {
+  onData (peer, data) {
     data = JSON.parse(data)
     switch (data.method) {
+      case 'ping':
+        peer.send({method: 'pong'})
+        break
+      case 'pong':
+        this.ongPong(peer)
+        break
       case 'txs':
-        this.onReceiveTxs(data.params)
+        this.onReceiveTxs(peer, data.params)
         break
       case 'blocks':
-        this.onReceiveBlocks(data.params)
+        this.onReceiveBlocks(peer, data.params)
         break
       default:
         console.error('peer sent malformed data:', data)
     }
   }
 
-  onReceiveTxs (txs) {
+  onReceiveTxs (peer, txs) {
     // no duplicates
     // no balance below 0
     // valid signatures
     // console.log('received txs from peer:', txs)
   }
 
-  onReceiveBlocks (blocks) {
+  onReceiveBlocks (peer, blocks) {
     // validate each tx signature unless block is signed by a trusted key
     // console.log('received blocks from peer:', blocks)
   }
+
+  ongPong (peer) {}
 
   /**
    * Broadcast given transactions to all connected peers.
@@ -112,6 +120,10 @@ export default class PeerNetwork {
    */
   broadcastBlocks (blocks) {
     this._broadcast({method: 'blocks', params: blocks})
+  }
+
+  broadcastPing () {
+    this._broadcast({method: 'ping'})
   }
 
   /**

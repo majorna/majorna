@@ -32,7 +32,7 @@ export default {
         })
       }
 
-      onReceiveTxs = txs => {
+      onReceiveTxs = (peer, txs) => {
         super.onReceiveTxs(txs)
         peerNetwork1.close()
         peerNetwork2.close()
@@ -46,12 +46,30 @@ export default {
     peerNetwork1.initPeer().catch(e => reject(e))
   }),
 
-  'init': async () => {
-    const peerNetwork = new PeerNetwork()
-    const success = await peerNetwork.initPeer()
-    config.app.isTest && assert(!success)
+  'init': () => new Promise((resolve, reject) => {
+    class PeerNetworkTest extends PeerNetwork {
+      onPeerConnect () {
+        super.onPeerConnect()
+        this.broadcastPing()
+      }
+
+      ongPong () {
+        super.ongPong()
+        resolve()
+      }
+    }
+
+    const peerNetwork = new PeerNetworkTest()
+    peerNetwork.initPeer().then(success => {
+      if (!success) {
+        resolve()
+      } else if (config.app.isTest) {
+        reject('there should be no peers to connect in test mode')
+      }
+    }, err => reject(err))
+
     peerNetwork.close()
-  },
+  }),
 
   'txs': () => {},
 
