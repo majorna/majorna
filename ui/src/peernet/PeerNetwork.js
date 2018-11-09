@@ -29,6 +29,8 @@ export default class PeerNetwork {
     this._attachCommonPeerEventHandlers(peer)
 
     this.peers.push(peer)
+
+    return true
   }
 
   /**

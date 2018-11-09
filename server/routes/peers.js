@@ -25,7 +25,7 @@ exports.getPeer = route.get('/peers', async ctx => {
  */
 exports.signal = route.post('/peers/:id/signal', async (ctx, id) => {
   const txBody = ctx.request.body
-  ctx.assert(typeof txBody.signalData === 'string', 400, '"signalData" field is required and must be a string.')
+  ctx.assert(typeof txBody.signalData === 'object', 400, '"signalData" field is required and must be an object.')
 
   await peers.signal(ctx.state.user.uid, id, txBody.signalData)
   ctx.status = 201

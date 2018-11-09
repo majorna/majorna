@@ -1,4 +1,3 @@
-import assert from '../utils/assert'
 import config from '../data/config'
 import PeerNetwork from './PeerNetwork'
 
