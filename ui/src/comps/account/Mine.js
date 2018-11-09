@@ -6,6 +6,7 @@ import { ResponsiveContainer, Scatter, ScatterChart, XAxis, YAxis } from 'rechar
 import worldMap from '../../res/world_map.svg'
 import { Link } from 'react-router-dom'
 import config from '../../data/config'
+import PeerNetwork from '../../peernet/PeerNetwork'
 
 export default class extends Component {
   state = {
@@ -29,6 +30,8 @@ export default class extends Component {
     peers: []
   }
 
+  peerNetwork = new PeerNetwork()
+
   componentDidMount = async () => {
     // 3rd party service can fail here so waking server is enough even if request fails
     new Promise(async () => {
@@ -47,7 +50,7 @@ export default class extends Component {
     })
 
     // start network requests
-    this.fbUnsubBlockInfoMetaDocSnapshot = this.props.db.collection('meta').doc('blockInfo').onSnapshot(async doc => {
+    this.fbUnsubBlockInfoMetaDocSnapshot = this.props.blockInfoDoc.onSnapshot(async doc => {
       if (!this.fbUnsubBlockInfoMetaDocSnapshot) {
         return // can happen if callback queued to be triggered right after unmount function call
       }

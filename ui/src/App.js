@@ -150,7 +150,7 @@ export default withRouter(class extends Component {
         <PrivateRoute path='/shop' component={Shop} />
         <PrivateRoute path='/send' render={routeProps => <Send {...routeProps} userDoc={this.state.userDoc}/>} />
         <PrivateRoute path='/receive' render={routeProps => <Receive {...routeProps} user={this.state.user} acctQr={this.state.acctQr}/>} />
-        <PrivateRoute path='/mine' render={routeProps => <Mine {...routeProps} db={this.db}/>} />
+        <PrivateRoute path='/mine' render={routeProps => <Mine {...routeProps} blockInfoDoc={this.db.collection('meta').doc('blockInfo')}/>} />
         <PrivateRoute path='/tx/:id' render={routeProps => <TxDetails {...routeProps} user={this.state.user} userDoc={this.state.userDoc}/>} />
         <Redirect from='*' to='/'/>
       </Switch>
