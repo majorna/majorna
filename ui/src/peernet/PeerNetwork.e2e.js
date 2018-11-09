@@ -1,16 +1,17 @@
-// import assert from './assert'
+import assert from '../utils/assert'
+import config from '../data/config'
 import PeerNetwork from './PeerNetwork'
 
 // todo: verify that all peers are closed and removed from array after test
 // todo: add a test verifying  peer.on('error'...) actually removes peer connection from peers array
 
 export default {
-  'init': () => new Promise((resolve, reject) => {
+  'init with mock server': () => new Promise((resolve, reject) => {
     class Peer1Network extends PeerNetwork {
       constructor () {
         super({ // mock server:
           peers: {
-            get: () => ({json: () => ({userId: 'peer2'})}),
+            get: () => ({ok: true, json: () => ({userId: 'peer2'})}),
             signal: (userId, signalData) => peerNetwork2.onSignal('peer1', signalData)
           }
         })
@@ -42,8 +43,15 @@ export default {
     const peerNetwork1 = new Peer1Network()
     const peerNetwork2 = new Peer2Network()
 
-    peerNetwork1.getPeer().catch(e => reject(e))
+    peerNetwork1.initPeer().catch(e => reject(e))
   }),
+
+  'init': async () => {
+    const peerNetwork = new PeerNetwork()
+    const success = await peerNetwork.initPeer()
+    config.app.isTest && assert(!success)
+    peerNetwork.close()
+  },
 
   'txs': () => {},
 
