@@ -28,6 +28,11 @@ exports.addPeer = (id, lat, lon) => {
   return peers.map(m => ({ lat: m.lat, lon: m.lon }))
 }
 
+exports.removePeer = id => {
+  const peer = peers.find(m => m.id === id)
+  peers.splice(peers.indexOf(peer), 1)
+}
+
 /**
  * Removes all peers form the peers list.
  */

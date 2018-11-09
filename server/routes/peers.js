@@ -13,6 +13,11 @@ exports.joinPeers = route.post('/peers', async ctx => {
   ctx.status = 201
 })
 
+exports.leavePeers = route.del('/peers', ctx => {
+  peers.removePeer(ctx.state.user.uid)
+  ctx.status = 200
+})
+
 /**
  * Retrieves a suitable peer to initiate a WebRTC connection to.
  */
