@@ -85,6 +85,8 @@ export default class extends Component {
   }
 
   componentWillUnmount = () => {
+    server.peers.leave().catch(e => console.error(e))
+    this.peerNetwork.close()
     this.fbUnsubBlockInfoMetaDocSnapshot && this.fbUnsubBlockInfoMetaDocSnapshot()
     this.fbUnsubBlockInfoMetaDocSnapshot = null
     stopMining()
