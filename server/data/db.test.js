@@ -341,10 +341,8 @@ suite('db', () => {
 
     const userDoc = await db.getUser(uid)
 
-    assert(userDoc.notifications.length === 2)
-    assert(userDoc.notifications[0].type === 'wow')
-    assert(userDoc.notifications[0].data.text === 'yeah')
-    assert(userDoc.notifications[1].type === 'wow2')
-    assert(userDoc.notifications[1].data.text === 'yeah2')
+    assert(userDoc.notifications.length === 1)
+    assert(userDoc.notifications[0].type === 'wow2')
+    assert(userDoc.notifications[0].data.text === 'yeah2')
   })
 })

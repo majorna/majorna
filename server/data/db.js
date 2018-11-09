@@ -1,5 +1,4 @@
 const assert = require('assert')
-const firebaseAdmin = require('firebase-admin')
 const config = require('../config/config')
 const txUtils = require('../blockchain/tx')
 const blockUtils = require('../blockchain/block')
@@ -419,9 +418,7 @@ exports.giveMj = (userId, usdAmount) => firestore.runTransaction(async t => {
  */
 exports.addNotification = async (uid, notification) => {
   const userDocRef = usersColRef.doc(uid)
-  await userDocRef.update({
-    notifications: firebaseAdmin.firestore.FieldValue.arrayUnion(notification)
-  })
+  await userDocRef.update({ notifications: [notification] })
 }
 
 /**

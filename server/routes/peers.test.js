@@ -42,7 +42,7 @@ suite('route: peers', () => {
     await testData.users.u1Request.post('/peers', { id: user1id, lat: 0, lon: 123888999 })
     await testData.users.u4Request.post('/peers', { id: testData.users.u4Auth.uid, lat: 55, lon: 66 })
 
-    const res = await testData.users.u4Request.post(`/peers/${user1id}/signal`, { signalData: 'abc123' })
+    const res = await testData.users.u4Request.post(`/peers/${user1id}/signal`, { signalData: { something: 'abc123' } })
     assert(res.status === 201)
   })
 })
