@@ -34,6 +34,9 @@ export default {
     get: () => get('/peers'),
     join: (lat, lon) => postJson('/peers', {lat, lon}),
     signal: (userId, signalData) => postJson(`/peers/${userId}/signal`, {signalData}),
+  },
+  notifications: {
+    clear: () => del('/notifications')
   }
 }
 
@@ -57,6 +60,11 @@ function handleNetworkError (e) {
 
 const get = url => fetch(config.server.url + url, {
   method: 'GET',
+  headers: new Headers({Authorization: `Bearer ${config.server.token}`})
+}).then(handle401).catch(handleNetworkError)
+
+const del = url => fetch(config.server.url + url, {
+  method: 'DELETE',
   headers: new Headers({Authorization: `Bearer ${config.server.token}`})
 }).then(handle401).catch(handleNetworkError)
 

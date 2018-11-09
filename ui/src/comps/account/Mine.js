@@ -32,6 +32,8 @@ export default class extends Component {
 
   peerNetwork = new PeerNetwork()
 
+  webRTCSignalNotification = null
+
   componentDidMount = async () => {
     // 3rd party service can fail here so waking server is enough even if request fails
     new Promise(async () => {
@@ -92,42 +94,59 @@ export default class extends Component {
 
   handleShowDetails = () => this.setState(prevState => ({showDetails: !prevState.showDetails}))
 
-  render = () =>
-    <div className="mj-box flex-column box-center w-m">
-      <div className="is-size-5 has-text-centered">Mining mj</div>
+  render = () => {
+    // handle peer network events
+    if (this.props.userDoc.notifications && this.props.userDoc.notifications.length) {
+      const newNotification = this.props.userDoc.notifications[0]
+      if (newNotification.type === 'webRTCSignal') {
+        if (!this.webRTCSignalNotification) {
+          // store any stale notification and move on
+          this.webRTCSignalNotification = newNotification
+          server.notifications.clear().catch(e => console.error(e))
+        } else if (this.webRTCSignalNotification.data.userId !== newNotification.data.userId) {
+          this.peerNetwork.onSignal(newNotification.data.userId, newNotification.data.signalData)
+          this.webRTCSignalNotification = newNotification
+          server.notifications.clear().catch(e => console.error(e))
+        }
+      }
+    }
 
-      <div className="flex-row center-all spinner m-t-l"/>
-      <div><strong>Time:</strong> {this.state.time}s</div>
-      <div><strong>Rate:</strong> {fn(this.state.hashRate)} Hash/s</div>
-      <div><strong>Nonce:</strong> {fn(this.state.nonce)}</div>
+    return (
+      <div className="mj-box flex-column box-center w-m">
+        <div className="is-size-5 has-text-centered">Mining mj</div>
 
-      <div className="m-t-m"><strong>Target Difficulty:</strong> {this.state.blockInfo.miner.targetDifficulty}</div>
-      <div><strong>Reward for Block:</strong> mj{fm(this.state.blockInfo.miner.reward || 0)}</div>
+        <div className="flex-row center-all spinner m-t-l"/>
+        <div><strong>Time:</strong> {this.state.time}s</div>
+        <div><strong>Rate:</strong> {fn(this.state.hashRate)} Hash/s</div>
+        <div><strong>Nonce:</strong> {fn(this.state.nonce)}</div>
 
-      <div className="m-t-m"><strong>Mined Blocks:</strong> {this.state.minedBlocks}</div>
-      <div><strong>Collected Rewards:</strong> mj{fm(this.state.collectedReward)}</div>
+        <div className="m-t-m"><strong>Target Difficulty:</strong> {this.state.blockInfo.miner.targetDifficulty}</div>
+        <div><strong>Reward for Block:</strong> mj{fm(this.state.blockInfo.miner.reward || 0)}</div>
 
-      <div className="m-t-m" style={{maxWidth: '30rem'}}>
-        <strong>Miner Map:</strong>
-        <ResponsiveContainer width="100%" aspect={2}>
-          <ScatterChart style={{backgroundImage: `url(${worldMap})`, backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%', backgroundPosition: '1rem center'}}>
-            <XAxis dataKey={'lon'} type="number" domain={[-180, 180]} hide/>
-            <YAxis dataKey={'lat'} type="number" domain={[-90, 90]} hide/>
-            <Scatter data={this.state.peers} fill='darkorange'/>
-          </ScatterChart>
-        </ResponsiveContainer>
-      </div>
+        <div className="m-t-m"><strong>Mined Blocks:</strong> {this.state.minedBlocks}</div>
+        <div><strong>Collected Rewards:</strong> mj{fm(this.state.collectedReward)}</div>
 
-      <div className="m-t-m">
-        <button className="button is-small" onClick={this.handleShowDetails}>
-          <span style={{display: (this.state.showDetails ? 'none' : 'initial')}}><i className="far fa-plus-square m-r-s"/></span>
-          <span style={{display: (this.state.showDetails ? 'initial' : 'none')}}><i className="far fa-minus-square m-r-s"/></span>
-          Details
-        </button>
-        {/* todo: anchor link might not work without this: https://github.com/rafrex/react-router-hash-link */}
-        <Link to='/about/tech#mining' className="button is-small m-l-s"><i className="far fa-question-circle m-r-s"/>What is mining?</Link>
-      </div>
-      {this.state.showDetails &&
+        <div className="m-t-m" style={{maxWidth: '30rem'}}>
+          <strong>Miner Map:</strong>
+          <ResponsiveContainer width="100%" aspect={2}>
+            <ScatterChart style={{backgroundImage: `url(${worldMap})`, backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%', backgroundPosition: '1rem center'}}>
+              <XAxis dataKey={'lon'} type="number" domain={[-180, 180]} hide/>
+              <YAxis dataKey={'lat'} type="number" domain={[-90, 90]} hide/>
+              <Scatter data={this.state.peers} fill='darkorange'/>
+            </ScatterChart>
+          </ResponsiveContainer>
+        </div>
+
+        <div className="m-t-m">
+          <button className="button is-small" onClick={this.handleShowDetails}>
+            <span style={{display: (this.state.showDetails ? 'none' : 'initial')}}><i className="far fa-plus-square m-r-s"/></span>
+            <span style={{display: (this.state.showDetails ? 'initial' : 'none')}}><i className="far fa-minus-square m-r-s"/></span>
+            Details
+          </button>
+          {/* todo: anchor link might not work without this: https://github.com/rafrex/react-router-hash-link */}
+          <Link to='/about/tech#mining' className="button is-small m-l-s"><i className="far fa-question-circle m-r-s"/>What is mining?</Link>
+        </div>
+        {this.state.showDetails &&
         <small className="flex-column">
           <strong className="has-text-info m-t-m">Current Block</strong>
           <div className="m-t-xs"><strong>No:</strong> {this.state.blockInfo.header.no}</div>
@@ -145,10 +164,10 @@ export default class extends Component {
 
           <strong className="has-text-info m-t-m">Blockchain</strong>
           <div className="m-t-xs"><strong>Download Blockchain:</strong> <small className="wrap-text">
-              <a href={config.github.blockchainDownloadUrl} target="_blank" rel="noopener noreferrer">
-                {config.github.blockchainDownloadUrl}
-              </a>
-            </small>
+            <a href={config.github.blockchainDownloadUrl} target="_blank" rel="noopener noreferrer">
+              {config.github.blockchainDownloadUrl}
+            </a>
+          </small>
           </div>
 
           {/*<strong className="m-t-m">Peers</strong>*/}
@@ -157,10 +176,12 @@ export default class extends Component {
 
           {/*<div><strong>Expected Reward (per hour):</strong> ?</div>*/}
         </small>
-      }
+        }
 
-      <div className="flex-row center-h m-t-l">
-        <button className="button" onClick={this.handleStop}>Stop</button>
+        <div className="flex-row center-h m-t-l">
+          <button className="button" onClick={this.handleStop}>Stop</button>
+        </div>
       </div>
-    </div>
+    )
+  }
 }
