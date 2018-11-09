@@ -80,6 +80,7 @@ export default withRouter(class extends Component {
 
     // initialize firebase sockets
     this.db = this.firebaseApp.firestore()
+    this.blockInfoDoc = this.db.collection('meta').doc('blockInfo')
     this.fbUnsubMjMetaDocSnapshot = this.db.collection('meta').doc('mj').onSnapshot(doc => this.setState({mjMetaDoc: doc.data()}))
 
     this.firebaseAuth = this.firebaseApp.auth()
@@ -150,7 +151,7 @@ export default withRouter(class extends Component {
         <PrivateRoute path='/shop' component={Shop} />
         <PrivateRoute path='/send' render={routeProps => <Send {...routeProps} userDoc={this.state.userDoc}/>} />
         <PrivateRoute path='/receive' render={routeProps => <Receive {...routeProps} user={this.state.user} acctQr={this.state.acctQr}/>} />
-        <PrivateRoute path='/mine' render={routeProps => <Mine {...routeProps} blockInfoDoc={this.db.collection('meta').doc('blockInfo')}/>} />
+        <PrivateRoute path='/mine' render={routeProps => <Mine {...routeProps} blockInfoDoc={this.blockInfoDoc}/>} />
         <PrivateRoute path='/tx/:id' render={routeProps => <TxDetails {...routeProps} user={this.state.user} userDoc={this.state.userDoc}/>} />
         <Redirect from='*' to='/'/>
       </Switch>
