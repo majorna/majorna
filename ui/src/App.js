@@ -34,7 +34,7 @@ export default withRouter(class extends Component {
   constructor(props) {
     super(props)
     this.state = this.nullState = {
-      notification: null,
+      notification: null, // notification text to be displayed on a modal dialog
       user: null, // firebase auth user
       acctQr: null, // data:image/png;base64,iVBORw0KG.......kJggg==,
       /* firestore docs */
@@ -80,7 +80,7 @@ export default withRouter(class extends Component {
 
     // initialize firebase sockets
     this.db = this.firebaseApp.firestore()
-    this.blockInfoDoc = this.db.collection('meta').doc('blockInfo')
+    this.blockInfoDocRef = this.db.collection('meta').doc('blockInfo')
     this.fbUnsubMjMetaDocSnapshot = this.db.collection('meta').doc('mj').onSnapshot(doc => this.setState({mjMetaDoc: doc.data()}))
 
     this.firebaseAuth = this.firebaseApp.auth()
@@ -151,7 +151,7 @@ export default withRouter(class extends Component {
         <PrivateRoute path='/shop' component={Shop} />
         <PrivateRoute path='/send' render={routeProps => <Send {...routeProps} userDoc={this.state.userDoc}/>} />
         <PrivateRoute path='/receive' render={routeProps => <Receive {...routeProps} user={this.state.user} acctQr={this.state.acctQr}/>} />
-        <PrivateRoute path='/mine' render={routeProps => <Mine {...routeProps} blockInfoDoc={this.blockInfoDoc}/>} />
+        <PrivateRoute path='/mine' render={routeProps => <Mine {...routeProps} blockInfoDocRef={this.blockInfoDocRef} userDoc={this.state.userDoc}/>} />
         <PrivateRoute path='/tx/:id' render={routeProps => <TxDetails {...routeProps} user={this.state.user} userDoc={this.state.userDoc}/>} />
         <Redirect from='*' to='/'/>
       </Switch>

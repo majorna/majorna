@@ -50,7 +50,7 @@ export default class extends Component {
     })
 
     // start network requests
-    this.fbUnsubBlockInfoMetaDocSnapshot = this.props.blockInfoDoc.onSnapshot(async doc => {
+    this.fbUnsubBlockInfoMetaDocSnapshot = this.props.blockInfoDocRef.onSnapshot(async doc => {
       if (!this.fbUnsubBlockInfoMetaDocSnapshot) {
         return // can happen if callback queued to be triggered right after unmount function call
       }
