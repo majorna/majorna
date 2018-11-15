@@ -30,9 +30,7 @@ export default class extends Component {
     peers: []
   }
 
-  peerNetwork = new PeerNetwork()
-
-  webRTCSignalNotification = null
+  peerNetwork = new PeerNetwork(this.props.userDocRef)
 
   componentDidMount = async () => {
     // 3rd party service can fail here so waking server is enough even if request fails
@@ -97,22 +95,6 @@ export default class extends Component {
   handleShowDetails = () => this.setState(prevState => ({showDetails: !prevState.showDetails}))
 
   render = () => {
-    // handle peer network events
-    if (this.props.userDoc.notifications && this.props.userDoc.notifications.length) {
-      const newNotification = this.props.userDoc.notifications[0]
-      if (newNotification.type === 'webRTCSignal') {
-        if (!this.webRTCSignalNotification) {
-          // store any stale notification and move on
-          this.webRTCSignalNotification = newNotification
-          server.notifications.clear().catch(e => console.error(e))
-        } else if (this.webRTCSignalNotification.data.userId !== newNotification.data.userId) {
-          this.peerNetwork.onSignal(newNotification.data.userId, newNotification.data.signalData)
-          this.webRTCSignalNotification = newNotification
-          server.notifications.clear().catch(e => console.error(e))
-        }
-      }
-    }
-
     return (
       <div className="mj-box flex-column box-center w-m">
         <div className="is-size-5 has-text-centered">Mining mj</div>

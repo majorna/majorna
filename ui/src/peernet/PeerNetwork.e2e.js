@@ -8,7 +8,7 @@ export default {
   'init with mock server': () => new Promise((resolve, reject) => {
     class Peer1Network extends PeerNetwork {
       constructor () {
-        super({ // mock server:
+        super(null, { // mock server:
           peers: {
             get: () => ({ok: true, json: () => ({userId: 'peer2'})}),
             signal: (userId, signalData) => peerNetwork2.onSignal('peer1', signalData)
@@ -24,7 +24,7 @@ export default {
 
     class Peer2Network extends PeerNetwork {
       constructor () {
-        super({ // mock server:
+        super(null, { // mock server:
           peers: {
             signal: (userId, signalData) => peerNetwork1.onSignal('peer2', signalData)
           }

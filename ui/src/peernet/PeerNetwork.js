@@ -2,8 +2,29 @@ import { InitiatingPeer, MatchingPeer } from './Peer'
 import server from '../data/server'
 
 export default class PeerNetwork {
-  constructor (customServer) {
+  constructor (userDocRef, customServer) {
     this.server = customServer || server
+
+    // handle peer network events
+    this.webRTCSignalNotification = null
+    userDocRef && userDocRef.onSnapshot(docRef => {
+      const userDoc = docRef.data()
+      if (userDoc.notifications && userDoc.notifications.length) {
+        const newNotification = userDoc.notifications[0]
+        if (newNotification.type === 'webRTCSignal') {
+          if (!this.webRTCSignalNotification) {
+            // store any stale notification and move on
+            this.webRTCSignalNotification = newNotification
+            server.notifications.clear().catch(e => console.error(e))
+          } else if (this.webRTCSignalNotification.data.userId !== newNotification.data.userId) {
+            this.onSignal(newNotification.data.userId, newNotification.data.signalData)
+            this.webRTCSignalNotification = newNotification
+            server.notifications.clear().catch(e => console.error(e))
+          }
+        }
+      }
+
+    })
   }
 
   /**
