@@ -16,7 +16,7 @@ export default class PeerNetwork {
             // store any stale notification and move on
             this.webRTCSignalNotification = newNotification
             server.notifications.clear().catch(e => console.error(e))
-          } else if (this.webRTCSignalNotification.data.userId !== newNotification.data.userId) {
+          } else if (this.webRTCSignalNotification.data.sdp !== newNotification.data.sdp) {
             this.onSignal(newNotification.data.userId, newNotification.data.signalData)
             this.webRTCSignalNotification = newNotification
             server.notifications.clear().catch(e => console.error(e))
