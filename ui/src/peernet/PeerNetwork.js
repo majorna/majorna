@@ -5,7 +5,7 @@ export default class PeerNetwork {
   constructor (userDocRef, customServer) {
     this.server = customServer || server
 
-    // handle peer network events
+    // receive signals from firestore via userDoc.notifications
     this.webRTCSignalNotification = null
     userDocRef && userDocRef.onSnapshot(docRef => {
       const userDoc = docRef.data()
@@ -23,7 +23,6 @@ export default class PeerNetwork {
           }
         }
       }
-
     })
   }
 
