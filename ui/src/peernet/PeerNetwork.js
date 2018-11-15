@@ -9,19 +9,24 @@ export default class PeerNetwork {
     this.webRTCSignalNotification = null
     userDocRef && userDocRef.onSnapshot(docRef => {
       const userDoc = docRef.data()
-      if (userDoc.notifications && userDoc.notifications.length) {
-        const newNotification = userDoc.notifications[0]
-        if (newNotification.type === 'webRTCSignal') {
-          if (!this.webRTCSignalNotification) {
-            // store any stale notification and move on
-            this.webRTCSignalNotification = newNotification
-            server.notifications.clear().catch(e => console.error(e))
-          } else if (this.webRTCSignalNotification.data.sdp !== newNotification.data.sdp) {
-            this.onSignal(newNotification.data.userId, newNotification.data.signalData)
-            this.webRTCSignalNotification = newNotification
-            server.notifications.clear().catch(e => console.error(e))
-          }
-        }
+      if (!userDoc.notifications || !userDoc.notifications.length) {
+        this.webRTCSignalNotification = {data: {sdp: 'no initial signal notification found'}}
+        return
+      }
+
+      const newNotification = userDoc.notifications[0]
+      if (newNotification.type !== 'webRTCSignal') {
+        return
+      }
+
+      if (!this.webRTCSignalNotification) {
+        // store any stale notification and move on
+        this.webRTCSignalNotification = newNotification
+        server.notifications.clear().catch(e => console.error(e))
+      } else if (this.webRTCSignalNotification.data.sdp !== newNotification.data.sdp) {
+        this.onSignal(newNotification.data.userId, newNotification.data.signalData)
+        this.webRTCSignalNotification = newNotification
+        server.notifications.clear().catch(e => console.error(e))
       }
     })
   }

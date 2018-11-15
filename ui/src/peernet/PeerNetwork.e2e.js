@@ -1,4 +1,4 @@
-import config from '../data/config'
+// import config from '../data/config'
 import PeerNetwork from './PeerNetwork'
 
 // todo: verify that all peers are closed and removed from array after test
@@ -45,32 +45,30 @@ export default {
     peerNetwork1.initPeer().catch(e => reject(e))
   }),
 
-  'init': ctx => new Promise((resolve, reject) => {
-    // ctx.userDocRef.onSnapshot(doc => console.log(doc.data()))
-
-    class PeerNetworkTest extends PeerNetwork {
-      onPeerConnect () {
-        super.onPeerConnect()
-        this.broadcastPing()
-      }
-
-      ongPong () {
-        super.ongPong()
-        resolve()
-      }
-    }
-
-    const peerNetwork = new PeerNetworkTest()
-    peerNetwork.initPeer().then(success => {
-      if (!success) {
-        resolve()
-      } else if (config.app.isTest) {
-        reject('there should be no peers to connect in test mode')
-      }
-    }, err => reject(err))
-
-    peerNetwork.close()
-  }),
+  // 'init': ctx => new Promise((resolve, reject) => {
+  //   class PeerNetworkTest extends PeerNetwork {
+  //     onPeerConnect () {
+  //       super.onPeerConnect()
+  //       this.broadcastPing()
+  //     }
+  //
+  //     ongPong () {
+  //       super.ongPong()
+  //       resolve()
+  //     }
+  //   }
+  //
+  //   const peerNetwork = new PeerNetworkTest(ctx.userDocRef)
+  //   peerNetwork.initPeer().then(success => {
+  //     if (!success) {
+  //       resolve()
+  //     } else if (config.app.isTest) {
+  //       reject('there should be no peers to connect in test mode')
+  //     }
+  //   }, err => reject(err))
+  //
+  //   peerNetwork.close()
+  // }),
 
   'txs': () => {},
 
