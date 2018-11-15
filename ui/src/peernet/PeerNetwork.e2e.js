@@ -45,7 +45,9 @@ export default {
     peerNetwork1.initPeer().catch(e => reject(e))
   }),
 
-  'init': () => new Promise((resolve, reject) => {
+  'init': ctx => new Promise((resolve, reject) => {
+    // ctx.userDocRef.onSnapshot(doc => console.log(doc.data()))
+
     class PeerNetworkTest extends PeerNetwork {
       onPeerConnect () {
         super.onPeerConnect()

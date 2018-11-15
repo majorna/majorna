@@ -16,7 +16,7 @@ const testSuites = Object.entries({assert, crypto, Merkle, Tx, Block, Peer, Peer
 let running = Promise.resolve()
 export const testRunnerStatus = () => running
 
-export default async () => {
+export default async (ctx) => {
   console.log('[Tests START]')
 
   let done
@@ -30,7 +30,7 @@ export default async () => {
   const onlyTestCase = allTests.find(tc => tc[0].startsWith('O'))
   if (onlyTestCase) {
     console.log('Running single test case:', onlyTestCase[0].substring(1))
-    await onlyTestCase[1]()
+    await onlyTestCase[1](ctx)
     done()
     console.log('Success')
     return
@@ -50,7 +50,7 @@ export default async () => {
 
       try {
         await Promise.race([
-          test(),
+          test(ctx),
           new Promise((resolve, reject) => setTimeout(() => reject(`test case did not complete in ${testTimeout} seconds`), testTimeout * 1000))])
         console.log(`\t[Pass] ${testCaseName}`)
       } catch (e) {

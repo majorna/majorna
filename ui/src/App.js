@@ -89,7 +89,8 @@ export default withRouter(class extends Component {
         this.props.history.push('/dashboard')
         this.setState({user: u})
         // todo: this.fbUnsubMjMetaDocSnapshot = this.db.collection('meta').doc('mj').onSnapshot(doc => this.setState({mjMetaDoc: doc.data()}))
-        this.fbUnsubUserSelfDocSnapshot = this.db.collection('users').doc(u.uid).onSnapshot(async doc => {
+        this.userDocRef = this.db.collection('users').doc(u.uid)
+        this.fbUnsubUserSelfDocSnapshot = this.userDocRef.onSnapshot(async doc => {
           if (doc.exists) {
             const userData = doc.data()
             !doc.metadata.hasPendingWrites && this.setState({userDoc: userData})
@@ -104,8 +105,9 @@ export default withRouter(class extends Component {
         })
         config.server.token = await u.getIdToken()
         // run tests
-        config.app.isDev && (isMining() ? console.log('skipping tests since miner is running') : testRunner())
-        config.app.isProd && setTimeout(() => { isMining() ? console.log('skipping tests since miner is running') : testRunner() }, 10 * 1000)
+        const testCtx = {userDocRef: this.userDocRef}
+        config.app.isDev && (isMining() ? console.log('skipping tests since miner is running') : testRunner(testCtx))
+        config.app.isProd && setTimeout(() => { isMining() ? console.log('skipping tests since miner is running') : testRunner(testCtx) }, 10 * 1000)
       } else {
         this.setState(this.nullState) // logged out or token expired and was not renewed
         this.props.location.pathname !== '/login' && this.props.history.push('/')
@@ -151,7 +153,7 @@ export default withRouter(class extends Component {
         <PrivateRoute path='/shop' component={Shop} />
         <PrivateRoute path='/send' render={routeProps => <Send {...routeProps} userDoc={this.state.userDoc}/>} />
         <PrivateRoute path='/receive' render={routeProps => <Receive {...routeProps} user={this.state.user} acctQr={this.state.acctQr}/>} />
-        <PrivateRoute path='/mine' render={routeProps => <Mine {...routeProps} blockInfoDocRef={this.blockInfoDocRef} userDoc={this.state.userDoc}/>} />
+        <PrivateRoute path='/mine' render={routeProps => <Mine {...routeProps} blockInfoDocRef={this.blockInfoDocRef} userDocRef={this.userDocRef}/>} />
         <PrivateRoute path='/tx/:id' render={routeProps => <TxDetails {...routeProps} user={this.state.user} userDoc={this.state.userDoc}/>} />
         <Redirect from='*' to='/'/>
       </Switch>
