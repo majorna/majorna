@@ -41,8 +41,14 @@ exports.purgePeers = () => { peers.length = 0 }
 /**
  * Finds and returns the ID of a suitable peer.
  * @param uid - ID of the user that is calling this function.
+ * @param toSelf - Initialize a connection back to user himself. Useful for testing.
  */
-exports.getPeer = uid => {
+exports.getPeer = (uid, toSelf) => {
+  // return user himself for testing purposes
+  if (toSelf) {
+    return { userId: uid }
+  }
+
   // get a random peer from list, excluding the initializing user itself
   const filteredPeers = peers.filter(m => m.id !== uid)
   if (!filteredPeers.length) {

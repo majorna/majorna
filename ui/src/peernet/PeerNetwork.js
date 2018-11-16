@@ -38,9 +38,10 @@ export default class PeerNetwork {
 
   /**
    * Call this to initiate a connection to a suitable peer (if any).
+   * @param toSelf - Asks server to initialize a connection back to the same user for testing purposes.
    */
-  async initPeer () {
-    const initRes = await this.server.peers.get()
+  async initPeer (toSelf) {
+    const initRes = await this.server.peers.get(toSelf)
     if (!initRes.ok) {
       const errRes = await initRes.text()
       if (errRes === 'no available peers') {

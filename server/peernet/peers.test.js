@@ -42,6 +42,9 @@ suite('peers', () => {
       const peerId = peers.getPeer('1').userId
       assert(peerId === '2' || peerId === '3')
     }
+
+    // connection to self in test mode
+    assert(peers.getPeer('1', true).userId === '1')
   })
 
   test('signal', async () => {

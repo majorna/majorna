@@ -33,6 +33,11 @@ suite('route: peers', () => {
     const res = await testData.users.u4Request.get('/peers')
     assert(res.status === 200)
     assert(res.data.userId === user1id)
+
+    // connection to self in test mode
+    const res2 = await testData.users.u4Request.get('/peers?toSelf=true')
+    assert(res2.status === 200)
+    assert(res2.data.userId === testData.users.u4Auth.uid)
   })
 
   test('signal', async () => {

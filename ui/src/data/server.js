@@ -31,7 +31,7 @@ export default {
   },
   peers: {
     getSelfLocation: () => fetch('https://geoip-db.com/json/'),
-    get: () => get('/peers'),
+    get: toSelf => get('/peers' + (toSelf ? '?toSelf=true' : '')),
     join: (lat, lon) => postJson('/peers', {lat, lon}),
     leave: () => del('/peers'),
     signal: (userId, signalData) => postJson(`/peers/${userId}/signal`, {signalData}),

@@ -59,7 +59,7 @@ export default {
     }
 
     const peerNetwork = new PeerNetworkTest(ctx.userDocRef)
-    peerNetwork.initPeer().then(success => {
+    peerNetwork.initPeer(true).then(success => {
       if (!success) {
         resolve()
       } else if (config.app.isTest) {
