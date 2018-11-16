@@ -30,3 +30,5 @@ exports.getName = route.get('/users/:id', async (ctx, id) => {
     ctx.body = { name: /* user.name */'Valid Address' }
   }
 })
+
+// todo: exports.deleteNotification = route.delete('/users/:uid/notifications/:nid', async (ctx, uid, nid) => {})

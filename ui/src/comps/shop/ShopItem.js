@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import builtInItems from './BuiltInItems'
-import { fm } from '../../data/utils'
+import { fm } from '../../utils/utils'
 import config from '../../data/config'
 import server from '../../data/server'
 

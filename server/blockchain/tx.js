@@ -1,4 +1,4 @@
-const crypto = require('./crypto')
+const crypto = require('../utils/crypto')
 
 /**
  * Transaction schema. All fields are mandatory.

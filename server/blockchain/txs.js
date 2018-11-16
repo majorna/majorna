@@ -1,6 +1,6 @@
 const MerkleTools = require('merkle-tools')
 const tx = require('./tx')
-const crypto = require('./crypto')
+const crypto = require('../utils/crypto')
 
 /**
  * Creates a merkle tree out of given txs.

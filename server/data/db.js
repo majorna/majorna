@@ -1,8 +1,9 @@
 const assert = require('assert')
+const firebaseAdmin = require('firebase-admin')
 const config = require('../config/config')
 const txUtils = require('../blockchain/tx')
 const blockUtils = require('../blockchain/block')
-const utils = require('./utils')
+const utils = require('../utils/utils')
 const firebaseConfig = require('../config/firebase')
 const firestore = firebaseConfig.firestore
 
@@ -142,7 +143,7 @@ exports.getBlockInfo = async () => (await blockInfoMetaDocRef.get()).data()
 exports.getBlock = async no => (await blocksColRef.doc(no.toString()).get()).data()
 
 /**
- * Get a user by id, asynchronously.
+ * Get a user doc by id, asynchronously.
  */
 exports.getUser = async id => {
   assert(id, 'user ID parameters is required')
@@ -412,6 +413,19 @@ exports.giveMj = (userId, usdAmount) => firestore.runTransaction(async t => {
 
   return signedTx
 })
+
+/**
+ * Add given notification object to given user's document's notifications array.
+ */
+exports.addNotification = async (uid, notification) => {
+  const userDocRef = usersColRef.doc(uid)
+  await userDocRef.update({ notifications: [notification] })
+}
+
+exports.clearNotifications = async uid => {
+  const userDocRef = usersColRef.doc(uid)
+  await userDocRef.update({ notifications: firebaseAdmin.firestore.FieldValue.delete() })
+}
 
 /**
  * Adds a tx in txs array property in the given user doc. This function mutates the doc.

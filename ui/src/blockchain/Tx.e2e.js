@@ -1,4 +1,4 @@
-import assert from './assert'
+import assert from '../utils/assert'
 import Tx from './Tx'
 
 const getSampleTx = () => new Tx(null, 'tx-123', '1', 500, '2', 500, new Date(), 25)

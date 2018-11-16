@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
-import { fm, fn } from '../../data/utils'
+import { fm, fn } from '../../utils/utils'
 import server from '../../data/server'
 import { mineBlock, stopMining } from '../../blockchain/miner'
 import { ResponsiveContainer, Scatter, ScatterChart, XAxis, YAxis } from 'recharts'
 import worldMap from '../../res/world_map.svg'
 import { Link } from 'react-router-dom'
+import config from '../../data/config'
+import PeerNetwork from '../../peernet/PeerNetwork'
 
 export default class extends Component {
   state = {
@@ -25,28 +27,30 @@ export default class extends Component {
 
     // ui state
     showDetails: false,
-    miners: []
+    peers: []
   }
+
+  peerNetwork = new PeerNetwork(this.props.userDocRef)
 
   componentDidMount = async () => {
     // 3rd party service can fail here so waking server is enough even if request fails
     new Promise(async () => {
       try {
         // get rough location so we can populate miner map
-        const locationRes = await server.miners.getLocation()
+        const locationRes = await server.peers.getSelfLocation()
         const location = locationRes.status === 200 && await locationRes.json()
 
-        // set miner location for miner map (also wakes server up)
-        const minersRes = await server.miners.post(location.latitude, location.longitude)
-        const minersData = await minersRes.json()
-        this.setState({miners: minersData.miners})
+        // set peer location for miner map (also wakes server up)
+        const peersRes = await server.peers.join(location.latitude, location.longitude)
+        const peersData = await peersRes.json()
+        this.setState({peers: peersData.peers})
       } catch (e) {
         console.error(e)
       }
     })
 
     // start network requests
-    this.fbUnsubBlockInfoMetaDocSnapshot = this.props.db.collection('meta').doc('blockInfo').onSnapshot(async doc => {
+    this.fbUnsubBlockInfoMetaDocSnapshot = this.props.blockInfoDocRef.onSnapshot(async doc => {
       if (!this.fbUnsubBlockInfoMetaDocSnapshot) {
         return // can happen if callback queued to be triggered right after unmount function call
       }
@@ -79,6 +83,8 @@ export default class extends Component {
   }
 
   componentWillUnmount = () => {
+    server.peers.leave().catch(e => console.error(e))
+    this.peerNetwork.close()
     this.fbUnsubBlockInfoMetaDocSnapshot && this.fbUnsubBlockInfoMetaDocSnapshot()
     this.fbUnsubBlockInfoMetaDocSnapshot = null
     stopMining()
@@ -88,42 +94,43 @@ export default class extends Component {
 
   handleShowDetails = () => this.setState(prevState => ({showDetails: !prevState.showDetails}))
 
-  render = () =>
-    <div className="mj-box flex-column box-center w-m">
-      <div className="is-size-5 has-text-centered">Mining mj</div>
+  render = () => {
+    return (
+      <div className="mj-box flex-column box-center w-m">
+        <div className="is-size-5 has-text-centered">Mining mj</div>
 
-      <div className="flex-row center-all spinner m-t-l"/>
-      <div><strong>Time:</strong> {this.state.time}s</div>
-      <div><strong>Rate:</strong> {fn(this.state.hashRate)} Hash/s</div>
-      <div><strong>Nonce:</strong> {fn(this.state.nonce)}</div>
+        <div className="flex-row center-all spinner m-t-l"/>
+        <div><strong>Time:</strong> {this.state.time}s</div>
+        <div><strong>Rate:</strong> {fn(this.state.hashRate)} Hash/s</div>
+        <div><strong>Nonce:</strong> {fn(this.state.nonce)}</div>
 
-      <div className="m-t-m"><strong>Target Difficulty:</strong> {this.state.blockInfo.miner.targetDifficulty}</div>
-      <div><strong>Reward for Block:</strong> mj{fm(this.state.blockInfo.miner.reward || 0)}</div>
+        <div className="m-t-m"><strong>Target Difficulty:</strong> {this.state.blockInfo.miner.targetDifficulty}</div>
+        <div><strong>Reward for Block:</strong> mj{fm(this.state.blockInfo.miner.reward || 0)}</div>
 
-      <div className="m-t-m"><strong>Mined Blocks:</strong> {this.state.minedBlocks}</div>
-      <div><strong>Collected Rewards:</strong> mj{fm(this.state.collectedReward)}</div>
+        <div className="m-t-m"><strong>Mined Blocks:</strong> {this.state.minedBlocks}</div>
+        <div><strong>Collected Rewards:</strong> mj{fm(this.state.collectedReward)}</div>
 
-      <div className="m-t-m" style={{maxWidth: '30rem'}}>
-        <strong>Miner Map:</strong>
-        <ResponsiveContainer width="100%" aspect={2}>
-          <ScatterChart style={{backgroundImage: `url(${worldMap})`, backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%', backgroundPosition: '1rem center'}}>
-            <XAxis dataKey={'lon'} type="number" domain={[-180, 180]} hide/>
-            <YAxis dataKey={'lat'} type="number" domain={[-90, 90]} hide/>
-            <Scatter data={this.state.miners} fill='darkorange'/>
-          </ScatterChart>
-        </ResponsiveContainer>
-      </div>
+        <div className="m-t-m" style={{maxWidth: '30rem'}}>
+          <strong>Miner Map:</strong>
+          <ResponsiveContainer width="100%" aspect={2}>
+            <ScatterChart style={{backgroundImage: `url(${worldMap})`, backgroundRepeat: 'no-repeat', backgroundSize: '100% 100%', backgroundPosition: '1rem center'}}>
+              <XAxis dataKey={'lon'} type="number" domain={[-180, 180]} hide/>
+              <YAxis dataKey={'lat'} type="number" domain={[-90, 90]} hide/>
+              <Scatter data={this.state.peers} fill='darkorange'/>
+            </ScatterChart>
+          </ResponsiveContainer>
+        </div>
 
-      <div className="m-t-m">
-        <button className="button is-small" onClick={this.handleShowDetails}>
-          <span style={{display: (this.state.showDetails ? 'none' : 'initial')}}><i className="far fa-plus-square m-r-s"/></span>
-          <span style={{display: (this.state.showDetails ? 'initial' : 'none')}}><i className="far fa-minus-square m-r-s"/></span>
-          Details
-        </button>
-        {/* todo: anchor link might not work without this: https://github.com/rafrex/react-router-hash-link */}
-        <Link to='/about/tech#mining' className="button is-small m-l-s"><i className="far fa-question-circle m-r-s"/>What is mining?</Link>
-      </div>
-      {this.state.showDetails &&
+        <div className="m-t-m">
+          <button className="button is-small" onClick={this.handleShowDetails}>
+            <span style={{display: (this.state.showDetails ? 'none' : 'initial')}}><i className="far fa-plus-square m-r-s"/></span>
+            <span style={{display: (this.state.showDetails ? 'initial' : 'none')}}><i className="far fa-minus-square m-r-s"/></span>
+            Details
+          </button>
+          {/* todo: anchor link might not work without this: https://github.com/rafrex/react-router-hash-link */}
+          <Link to='/about/tech#mining' className="button is-small m-l-s"><i className="far fa-question-circle m-r-s"/>What is mining?</Link>
+        </div>
+        {this.state.showDetails &&
         <small className="flex-column">
           <strong className="has-text-info m-t-m">Current Block</strong>
           <div className="m-t-xs"><strong>No:</strong> {this.state.blockInfo.header.no}</div>
@@ -141,10 +148,10 @@ export default class extends Component {
 
           <strong className="has-text-info m-t-m">Blockchain</strong>
           <div className="m-t-xs"><strong>Download Blockchain:</strong> <small className="wrap-text">
-              <a href="https://github.com/majorna/blockchain/archive/master.zip" target="_blank" rel="noopener noreferrer">
-                https://github.com/majorna/blockchain/archive/master.zip
-              </a>
-            </small>
+            <a href={config.github.blockchainDownloadUrl} target="_blank" rel="noopener noreferrer">
+              {config.github.blockchainDownloadUrl}
+            </a>
+          </small>
           </div>
 
           {/*<strong className="m-t-m">Peers</strong>*/}
@@ -153,10 +160,12 @@ export default class extends Component {
 
           {/*<div><strong>Expected Reward (per hour):</strong> ?</div>*/}
         </small>
-      }
+        }
 
-      <div className="flex-row center-h m-t-l">
-        <button className="button" onClick={this.handleStop}>Stop</button>
+        <div className="flex-row center-h m-t-l">
+          <button className="button" onClick={this.handleStop}>Stop</button>
+        </div>
       </div>
-    </div>
+    )
+  }
 }

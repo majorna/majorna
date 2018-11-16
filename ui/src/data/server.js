@@ -22,10 +22,6 @@ export default {
   blocks: {
     create: nonce => postJson('/blocks', {nonce})
   },
-  miners: {
-    getLocation: () => fetch('https://geoip-db.com/json/'),
-    post: (lat, lon) => postJson('/miners', {lat, lon})
-  },
   shop: {
     createStripeCharge: (token, usdAmount) => postJson('/shop/stripe-charge', {token, usdAmount}),
     getCoinbaseCommerceChargeUrl: () => get('/shop/coinbase-commerce-charge-url')
@@ -34,8 +30,14 @@ export default {
     usdExchangeRates: () => fetch('https://api.coinbase.com/v2/exchange-rates?currency=USD')
   },
   peers: {
-    initPeer: (localConnId, data) => postJson('/peers/initPeer', {localConnId, data}),
-    signal: (userId, data) => postJson('/peers/signal', {userId, data})
+    getSelfLocation: () => fetch('https://geoip-db.com/json/'),
+    get: () => get('/peers'),
+    join: (lat, lon) => postJson('/peers', {lat, lon}),
+    leave: () => del('/peers'),
+    signal: (userId, signalData) => postJson(`/peers/${userId}/signal`, {signalData}),
+  },
+  notifications: {
+    clear: () => del('/notifications')
   }
 }
 
@@ -59,6 +61,11 @@ function handleNetworkError (e) {
 
 const get = url => fetch(config.server.url + url, {
   method: 'GET',
+  headers: new Headers({Authorization: `Bearer ${config.server.token}`})
+}).then(handle401).catch(handleNetworkError)
+
+const del = url => fetch(config.server.url + url, {
+  method: 'DELETE',
   headers: new Headers({Authorization: `Bearer ${config.server.token}`})
 }).then(handle401).catch(handleNetworkError)
 

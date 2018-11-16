@@ -1,5 +1,5 @@
-import assert from './assert'
-import { hashStrToBuffer, signStrToHexStr, verifyStrWithHexStrSig } from './crypto'
+import assert from '../utils/assert'
+import { hashStrToBuffer, signStrToHexStr, verifyStrWithHexStrSig } from '../utils/crypto'
 
 export default class Tx {
   constructor (sig, id, fromId, fromBalance, toId, toBalance, time, amount) {

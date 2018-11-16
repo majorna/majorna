@@ -1,5 +1,5 @@
 import React from 'react'
-import { fm } from '../../data/utils'
+import { fm } from '../../utils/utils'
 
 export default props =>
   <div className="mj-box stats-grid">

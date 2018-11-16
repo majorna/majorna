@@ -1,6 +1,6 @@
 const assert = require('assert')
 const config = require('../config/config')
-const crypto = require('./crypto')
+const crypto = require('../utils/crypto')
 const txsUtils = require('./txs')
 const txUtils = require('./tx')
 

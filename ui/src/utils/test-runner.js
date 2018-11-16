@@ -1,10 +1,10 @@
 import assert from './assert.e2e'
 import crypto from './crypto.e2e'
-import Merkle from './Merkle.e2e'
-import Tx from './Tx.e2e'
-import Block from './Block.e2e'
-import Peer from './Peer.e2e'
-import PeerNetwork from './PeerNetwork.e2e'
+import Merkle from '../blockchain/Merkle.e2e'
+import Tx from '../blockchain/Tx.e2e'
+import Block from '../blockchain/Block.e2e'
+import Peer from '../peernet/Peer.e2e'
+import PeerNetwork from '../peernet/PeerNetwork.e2e'
 import config from '../data/config'
 import bugsnag from '../data/bugsnag'
 
@@ -16,7 +16,7 @@ const testSuites = Object.entries({assert, crypto, Merkle, Tx, Block, Peer, Peer
 let running = Promise.resolve()
 export const testRunnerStatus = () => running
 
-export default async () => {
+export default async (ctx) => {
   console.log('[Tests START]')
 
   let done
@@ -30,7 +30,7 @@ export default async () => {
   const onlyTestCase = allTests.find(tc => tc[0].startsWith('O'))
   if (onlyTestCase) {
     console.log('Running single test case:', onlyTestCase[0].substring(1))
-    await onlyTestCase[1]()
+    await onlyTestCase[1](ctx)
     done()
     console.log('Success')
     return
@@ -50,7 +50,7 @@ export default async () => {
 
       try {
         await Promise.race([
-          test(),
+          test(ctx),
           new Promise((resolve, reject) => setTimeout(() => reject(`test case did not complete in ${testTimeout} seconds`), testTimeout * 1000))])
         console.log(`\t[Pass] ${testCaseName}`)
       } catch (e) {

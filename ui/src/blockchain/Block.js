@@ -1,9 +1,9 @@
-import assert from './assert'
+import assert from '../utils/assert'
 import {
   convertBufferToHexStr, getBlockHashPalette, hashBufferToBuffer, hashStrToBuffer,
   signStrToHexStr,
   verifyStrWithHexStrSig
-} from './crypto'
+} from '../utils/crypto'
 import Merkle from './Merkle'
 import Tx from './Tx'
 

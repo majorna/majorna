@@ -6,6 +6,8 @@ const isProd = env === 'production'
 
 const domain = 'getmajorna.com'
 
+const blockchainUrl = isProd ? 'https://github.com/majorna/blockchain' : 'https://github.com/majorna/test-blockchain'
+
 /**
  * Global UI configuration.
  */
@@ -36,7 +38,9 @@ const config = {
     publishableKey: isDev ? 'pk_test_98A7TrR0G8W7SyUIdjoQytZj' : 'pk_live_5a1IQUuynng65TjcwmnGQkvY'
   },
   github: {
-    blockUrl: isProd ? 'https://github.com/majorna/blockchain/search?q=' : 'https://github.com/majorna/test-blockchain/search?q='
+    blockchainUrl,
+    blockchainSearchUrl: blockchainUrl + '/search?q=',
+    blockchainDownloadUrl: blockchainUrl + '/archive/master.zip'
   }
 }
 

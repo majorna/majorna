@@ -83,11 +83,7 @@ suite('blockchain', () => {
     // not required
     const blockPath2 = testConfig.getGitHubTestFilePath()
     await blockchain.insertBlockIfRequired(tomorrow, blockPath2)
-    let err
-    try {
-      await github.getFileContent(blockPath2)
-    } catch (e) { err = e }
-    assert(err)
+    await assert.rejects(() => github.getFileContent(blockPath2))
   })
 
   test('startBlockchainInsertTimer', () => {
