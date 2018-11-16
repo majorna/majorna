@@ -22,7 +22,7 @@ exports.addPeer = (id, lat, lon) => {
     peer.lon = lon
     peer.lastOnline = lastOnline
   } else {
-    peers.push({ id, lat, lon, lastOnline: lastOnline })
+    peers.push({ id, lat, lon, lastOnline })
   }
 
   return peers.map(m => ({ lat: m.lat, lon: m.lon }))
