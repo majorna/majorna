@@ -343,6 +343,7 @@ suite('db', () => {
 
     assert(userDoc.notifications.length === 1)
     assert(userDoc.notifications[0].type === 'wow2')
+    assert(userDoc.notifications[0].time)
     assert(userDoc.notifications[0].data.text === 'yeah2')
   })
 })

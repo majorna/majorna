@@ -63,5 +63,5 @@ exports.signal = async (fromId, toId, signalData) => {
   if (!peer) {
     throw new utils.UserVisibleError(`peer with ID: ${toId} is unavailable`, 500)
   }
-  await db.addNotification(toId, { type: 'webRTCSignal', data: { userId: fromId, signalData } })
+  await db.addNotification(toId, { type: 'webRTCSignal', time: new Date(), data: { userId: fromId, signalData } })
 }
