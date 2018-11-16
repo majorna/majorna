@@ -10,19 +10,19 @@
     "deploy-force": "cd .. && git push heroku `git subtree split --prefix server master`:master --force"
   },
   "dependencies": {
-    "@google-cloud/logging": "4.0.1",
-    "@octokit/rest": "15.13.1",
+    "@google-cloud/logging": "4.1.0",
+    "@octokit/rest": "15.17.0",
     "axios": "0.18.0",
-    "firebase-admin": "6.0.0",
+    "firebase-admin": "6.1.0",
     "kcors": "2.2.2",
-    "koa": "2.5.3",
+    "koa": "2.6.2",
     "koa-bodyparser": "4.2.1",
     "koa-logger": "3.2.0",
     "koa-route": "3.2.0",
     "merkle-tools": "1.4.0"
   },
   "devDependencies": {
-    "firebase": "5.5.4",
+    "firebase": "5.5.8",
     "mocha": "5.2.0",
     "nyc": "13.1.0",
     "standard": "12.0.1"
