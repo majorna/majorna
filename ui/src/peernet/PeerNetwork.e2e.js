@@ -46,25 +46,25 @@ export default {
   }),
 
   'init': ctx => new Promise((resolve, reject) => {
+    let toSelfPong, toSelfMatchingPong
     class PeerNetworkTest extends PeerNetwork {
-      onPeerConnect () {
+      onPeerConnect (peer) {
         super.onPeerConnect()
-        this.broadcastPing()
+        peer.userId === 'toSelfMatching' && this.broadcastPing()
       }
 
-      ongPong () {
-        super.ongPong()
-        resolve()
+      ongPong (peer) {
+        super.ongPong(peer)
+        peer.userId === 'toSelf' && (toSelfPong = true)
+        peer.userId === 'toSelfMatching' && (toSelfMatchingPong = true)
+        toSelfPong && toSelfMatchingPong && resolve()
       }
     }
 
     const peerNetwork = new PeerNetworkTest(ctx.userDocRef)
     peerNetwork.initPeer(true).then(success => {
-      if (!success) {
-        resolve()
-      } else if (config.app.isTest) {
-        reject('there should be no peers to connect in test mode')
-      }
+      config.app.isTest && reject('there should be no peers to connect in test mode')
+      !success && reject('could not initialize a connection to a suitable peer')
     }, err => reject(err))
 
     peerNetwork.close()
