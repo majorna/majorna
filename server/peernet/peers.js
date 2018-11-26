@@ -46,7 +46,7 @@ exports.purgePeers = () => { peers.length = 0 }
 exports.getPeer = (uid, toSelf) => {
   // return user himself for testing purposes
   if (toSelf) {
-    return { userId: uid }
+    return { userId: 'toSelf' }
   }
 
   // get a random peer from list, excluding the initializing user itself
@@ -64,10 +64,19 @@ exports.getPeer = (uid, toSelf) => {
  * Delivers given WebRTC signal data to desired peer, asynchronously.
  */
 exports.signal = async (fromId, toId, signalData) => {
-  // see if the target peer is still online
-  const peer = peers.find(m => m.id === toId)
-  if (!peer) {
-    throw new utils.UserVisibleError(`peer with ID: ${toId} is unavailable`, 500)
+  // check if this is a self-test
+  if (toId === 'toSelf') {
+    toId = fromId
+    fromId = 'toSelf'
+  } else if (toId === 'toSelfMatching') {
+    toId = fromId
+    fromId = 'toSelfMatching'
+  } else {
+    // see if the target peer is still online
+    const peer = peers.find(m => m.id === toId)
+    if (!peer) {
+      throw new utils.UserVisibleError(`peer with ID: ${toId} is unavailable`, 500)
+    }
   }
   await db.addNotification(toId, { type: 'webRTCSignal', time: new Date(), data: { userId: fromId, signalData } })
 }

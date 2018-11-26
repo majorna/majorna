@@ -63,6 +63,12 @@ export default class PeerNetwork {
    * When a peer produces a signal data and server delivers it to us.
    */
   onSignal (userId, signalData) {
+    if (userId === 'toSelf') {
+      userId = 'toSelfMatching'
+    } else if (userId === 'toSelfMatching') {
+      userId = 'toSelf'
+    }
+
     const peer = this.peers.find(p => p.userId === userId)
     if (peer) {
       peer.signal(signalData)
@@ -104,7 +110,7 @@ export default class PeerNetwork {
     data = JSON.parse(data)
     switch (data.method) {
       case 'ping':
-        peer.send({method: 'pong'})
+        peer.send(JSON.stringify({method: 'pong'}))
         break
       case 'pong':
         this.ongPong(peer)
@@ -159,8 +165,7 @@ export default class PeerNetwork {
    * @param data - A JSON-RPC 2.0 object: https://en.wikipedia.org/wiki/JSON-RPC#Version_2.0
    */
   _broadcast (data) {
-    data = JSON.stringify(data)
-    this.peers.forEach(p => p.send(data))
+    this.peers.forEach(p => p.send(JSON.stringify(data)))
   }
 
   /**
