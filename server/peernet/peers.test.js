@@ -44,7 +44,7 @@ suite('peers', () => {
     }
 
     // connection to self in test mode
-    assert(peers.getPeer('1', true).userId === '1')
+    assert(peers.getPeer('1', true).userId === 'toSelf')
   })
 
   test('signal', async () => {
