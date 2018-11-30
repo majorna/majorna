@@ -65,12 +65,15 @@ exports.getPeer = (uid, toSelf) => {
  */
 exports.signal = async (fromId, toId, signalData) => {
   // check if this is a self-test
+  let isTest = false
   if (toId === 'toSelf') {
     toId = fromId
     fromId = 'toSelf'
+    isTest = true
   } else if (toId === 'toSelfMatching') {
     toId = fromId
     fromId = 'toSelfMatching'
+    isTest = true
   } else {
     // see if the target peer is still online
     const peer = peers.find(m => m.id === toId)
@@ -78,5 +81,5 @@ exports.signal = async (fromId, toId, signalData) => {
       throw new utils.UserVisibleError(`peer with ID: ${toId} is unavailable`, 500)
     }
   }
-  await db.addNotification(toId, { type: 'webRTCSignal', time: new Date(), data: { userId: fromId, signalData } })
+  await db.addNotification(toId, { type: 'webRTCSignal', time: new Date(), isTest, data: { userId: fromId, signalData } })
 }

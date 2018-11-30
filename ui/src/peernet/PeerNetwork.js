@@ -15,7 +15,9 @@ export default class PeerNetwork {
       }
 
       const newNotification = userDoc.notifications[0]
-      if (newNotification.type !== 'webRTCSignal') {
+      if (newNotification.type !== 'webRTCSignal'
+        || (customServer && !newNotification.isTest/*skip real messages in test mode*/
+        || (!customServer && newNotification.isTest/*skip test messages in real mode*/))) {
         return
       }
 
