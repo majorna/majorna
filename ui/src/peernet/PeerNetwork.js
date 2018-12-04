@@ -5,9 +5,13 @@ export default class PeerNetwork {
   constructor (userDocRef, customServer) {
     this.server = customServer || server
 
+    if (!userDocRef) {
+      return
+    }
+
     // receive signals from firestore via userDoc.notifications
     this.webRTCSignalNotification = null
-    userDocRef && userDocRef.onSnapshot(docRef => {
+    this.fbUnsubUserSelfDocSnapshot = userDocRef.onSnapshot(docRef => {
       const userDoc = docRef.data()
       if (!userDoc.notifications || !userDoc.notifications.length) {
         this.webRTCSignalNotification = {data: {sdp: 'no initial signal notification found'}}
@@ -174,6 +178,7 @@ export default class PeerNetwork {
    * Closes all peer connections and removes them from peers list.
    */
   close () {
+    this.fbUnsubUserSelfDocSnapshot && this.fbUnsubUserSelfDocSnapshot()
     this.peers.forEach(p => p.destroy())
     this.peers.length = 0
   }

@@ -45,6 +45,8 @@ export default {
     peerNetwork1.initPeer().catch(e => reject(e))
   }),
 
+  // todo: call peerNetwork.close() if promise times out or errors or completes successfully
+
   'init': ctx => new Promise((resolve, reject) => {
     let toSelfPong, toSelfMatchingPong
     class PeerNetworkTest extends PeerNetwork {
@@ -59,7 +61,10 @@ export default {
         super.ongPong(peer)
         peer.userId === 'toSelf' && (toSelfPong = true)
         peer.userId === 'toSelfMatching' && (toSelfMatchingPong = true)
-        toSelfPong && toSelfMatchingPong && resolve()
+        if (toSelfPong && toSelfMatchingPong) {
+          peerNetwork.close()
+          resolve()
+        }
       }
     }
 
@@ -67,9 +72,7 @@ export default {
     peerNetwork.initPeer(true).then(success => {
       config.app.isTest && reject('there should be no peers to connect in test mode')
       !success && reject('could not initialize a connection to a suitable peer')
-    }, err => reject(err))
-
-    peerNetwork.close()
+    }, err => { peerNetwork.close(); reject(err) })
   }),
 
   'txs': () => {},
