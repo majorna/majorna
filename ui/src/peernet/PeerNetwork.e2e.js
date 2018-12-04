@@ -48,6 +48,8 @@ export default {
   'init': ctx => new Promise((resolve, reject) => {
     let toSelfPong, toSelfMatchingPong
     class PeerNetworkTest extends PeerNetwork {
+      isTest = true
+
       onPeerConnect (peer) {
         super.onPeerConnect()
         peer.userId === 'toSelfMatching' && this.broadcastPing()
