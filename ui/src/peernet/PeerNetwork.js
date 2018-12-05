@@ -166,12 +166,21 @@ export default class PeerNetwork {
     this._broadcast({method: 'ping'})
   }
 
+  sendPing (userId) {
+    this._send(userId, {method: 'ping'})
+  }
+
   /**
    * Broadcast given data to all connected peers.
    * @param data - A JSON-RPC 2.0 object: https://en.wikipedia.org/wiki/JSON-RPC#Version_2.0
    */
   _broadcast (data) {
     this.peers.forEach(p => p.send(JSON.stringify(data)))
+  }
+
+  _send (userId, data) {
+    const peer = this.peers.find(p => p.userId === userId)
+    peer.send(JSON.stringify(data))
   }
 
   /**
