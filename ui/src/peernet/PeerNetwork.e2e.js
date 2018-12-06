@@ -46,6 +46,7 @@ export default {
   }),
 
   // todo: call peerNetwork.close() if promise times out or errors or completes successfully
+  // todo: add test to see if testMode/productionMode signals and notification.clear() requests interfere with each other
 
   'init': ctx => new Promise((resolve, reject) => {
     let connectedPeers = 0
