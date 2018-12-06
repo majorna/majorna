@@ -89,7 +89,7 @@ export default class PeerNetwork {
   _attachCommonPeerEventHandlers (peer) {
     peer.on('signal', signalData => this.server.peers.signal(peer.userId, signalData))
     peer.on('error', e => {
-      console.error('peer connection error:', e)
+      console.error('peer connection error:', peer, e)
       this._removePeer(peer)
     })
     peer.on('close', () => this._removePeer(peer))
@@ -128,7 +128,7 @@ export default class PeerNetwork {
         this.onReceiveBlocks(peer, data.params)
         break
       default:
-        console.error('peer sent malformed data:', data)
+        console.error('peer sent malformed data:', peer, data)
     }
   }
 
