@@ -188,7 +188,8 @@ export default class PeerNetwork {
    */
   close () {
     this.fbUnsubUserSelfDocSnapshot && this.fbUnsubUserSelfDocSnapshot()
-    this.peers.forEach(p => p.destroy())
+    // work on a copy of peers array since original is getting modified as be destroy connections
+    this.peers.slice().forEach(p => p.destroy())
     this.peers.length = 0
   }
 }
