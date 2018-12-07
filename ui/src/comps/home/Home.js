@@ -11,7 +11,7 @@ export default props =>
       <div className="hero-body has-text-centered">
         <h1 className="title is-size-1" style={{marginBottom: '3rem'}}>Send, Receive, and Mine Majorna</h1>
         {/* Upon changing this, match public/index.html#metaDescription */}
-        <h2 className="subtitle" style={{marginBottom: '3rem'}}>Simple cryptocurrency, in your browser.</h2>
+        <h2 className="subtitle" style={{marginBottom: '3rem'}}>World's simplest cryptocurrency, in your browser.</h2>
         <div className="field is-grouped is-grouped-centered">
           <p className="control is-hidden-mobile"><input readOnly className="input is-medium" type="text" style={{fontSize: '1.23rem'}} placeholder="Starter Balance: mj500" /></p>
           <p className="control"><Link className="button is-medium is-info" to='/login'>Get Started</Link></p>
