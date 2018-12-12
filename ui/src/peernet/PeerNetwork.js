@@ -5,9 +5,13 @@ export default class PeerNetwork {
   constructor (userDocRef, customServer) {
     this.server = customServer || server
 
+    if (!userDocRef) {
+      return
+    }
+
     // receive signals from firestore via userDoc.notifications
     this.webRTCSignalNotification = null
-    userDocRef && userDocRef.onSnapshot(docRef => {
+    this.fbUnsubUserSelfDocSnapshot = userDocRef.onSnapshot(docRef => {
       const userDoc = docRef.data()
       if (!userDoc.notifications || !userDoc.notifications.length) {
         this.webRTCSignalNotification = {data: {sdp: 'no initial signal notification found'}}
@@ -15,7 +19,9 @@ export default class PeerNetwork {
       }
 
       const newNotification = userDoc.notifications[0]
-      if (newNotification.type !== 'webRTCSignal') {
+      if (newNotification.type !== 'webRTCSignal'
+        || (this.isTest && !newNotification.isTest/*skip real messages in test mode*/)
+        || (!this.isTest && newNotification.isTest/*skip test messages in real mode*/)) {
         return
       }
 
@@ -38,9 +44,10 @@ export default class PeerNetwork {
 
   /**
    * Call this to initiate a connection to a suitable peer (if any).
+   * @param toSelf - Asks server to initialize a connection back to the same user for testing purposes.
    */
-  async initPeer () {
-    const initRes = await this.server.peers.get()
+  async initPeer (toSelf) {
+    const initRes = await this.server.peers.get(toSelf)
     if (!initRes.ok) {
       const errRes = await initRes.text()
       if (errRes === 'no available peers') {
@@ -62,6 +69,12 @@ export default class PeerNetwork {
    * When a peer produces a signal data and server delivers it to us.
    */
   onSignal (userId, signalData) {
+    if (userId === 'toSelf') {
+      userId = 'toSelfMatching'
+    } else if (userId === 'toSelfMatching') {
+      userId = 'toSelf'
+    }
+
     const peer = this.peers.find(p => p.userId === userId)
     if (peer) {
       peer.signal(signalData)
@@ -76,7 +89,7 @@ export default class PeerNetwork {
   _attachCommonPeerEventHandlers (peer) {
     peer.on('signal', signalData => this.server.peers.signal(peer.userId, signalData))
     peer.on('error', e => {
-      console.error('peer connection error:', e)
+      console.error('peer connection error:', peer, e)
       this._removePeer(peer)
     })
     peer.on('close', () => this._removePeer(peer))
@@ -103,7 +116,7 @@ export default class PeerNetwork {
     data = JSON.parse(data)
     switch (data.method) {
       case 'ping':
-        peer.send({method: 'pong'})
+        peer.send(JSON.stringify({method: 'pong'}))
         break
       case 'pong':
         this.ongPong(peer)
@@ -115,7 +128,7 @@ export default class PeerNetwork {
         this.onReceiveBlocks(peer, data.params)
         break
       default:
-        console.error('peer sent malformed data:', data)
+        console.error('peer sent malformed data:', peer, data)
     }
   }
 
@@ -153,20 +166,30 @@ export default class PeerNetwork {
     this._broadcast({method: 'ping'})
   }
 
+  sendPing (userId) {
+    this._send(userId, {method: 'ping'})
+  }
+
   /**
    * Broadcast given data to all connected peers.
    * @param data - A JSON-RPC 2.0 object: https://en.wikipedia.org/wiki/JSON-RPC#Version_2.0
    */
   _broadcast (data) {
-    data = JSON.stringify(data)
-    this.peers.forEach(p => p.send(data))
+    this.peers.forEach(p => p.send(JSON.stringify(data)))
+  }
+
+  _send (userId, data) {
+    const peer = this.peers.find(p => p.userId === userId)
+    peer.send(JSON.stringify(data))
   }
 
   /**
    * Closes all peer connections and removes them from peers list.
    */
   close () {
-    this.peers.forEach(p => p.destroy())
+    this.fbUnsubUserSelfDocSnapshot && this.fbUnsubUserSelfDocSnapshot()
+    // work on a copy of peers array since original is getting modified as be destroy connections
+    this.peers.slice().forEach(p => p.destroy())
     this.peers.length = 0
   }
 }

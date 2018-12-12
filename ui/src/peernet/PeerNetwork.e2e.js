@@ -1,4 +1,4 @@
-// import config from '../data/config'
+import config from '../data/config'
 import PeerNetwork from './PeerNetwork'
 
 // todo: verify that all peers are closed and removed from array after test
@@ -45,30 +45,33 @@ export default {
     peerNetwork1.initPeer().catch(e => reject(e))
   }),
 
-  // 'init': ctx => new Promise((resolve, reject) => {
-  //   class PeerNetworkTest extends PeerNetwork {
-  //     onPeerConnect () {
-  //       super.onPeerConnect()
-  //       this.broadcastPing()
-  //     }
-  //
-  //     ongPong () {
-  //       super.ongPong()
-  //       resolve()
-  //     }
-  //   }
-  //
-  //   const peerNetwork = new PeerNetworkTest(ctx.userDocRef)
-  //   peerNetwork.initPeer().then(success => {
-  //     if (!success) {
-  //       resolve()
-  //     } else if (config.app.isTest) {
-  //       reject('there should be no peers to connect in test mode')
-  //     }
-  //   }, err => reject(err))
-  //
-  //   peerNetwork.close()
-  // }),
+  // todo: call peerNetwork.close() if promise times out or errors or completes successfully
+  // todo: add test to see if testMode/productionMode signals and notification.clear() requests interfere with each other
+
+  'init': ctx => new Promise((resolve, reject) => {
+    let connectedPeers = 0
+
+    class PeerNetworkTest extends PeerNetwork {
+      isTest = true
+
+      onPeerConnect (peer) {
+        super.onPeerConnect()
+        ++connectedPeers === 2 && this.sendPing(peer.userId)
+      }
+
+      ongPong (peer) {
+        super.ongPong(peer)
+        peerNetwork.close()
+        resolve()
+      }
+    }
+
+    const peerNetwork = new PeerNetworkTest(ctx.userDocRef)
+    peerNetwork.initPeer(true).then(success => {
+      config.app.isTest && reject('there should be no peers to connect in test mode')
+      !success && reject('could not initialize a connection to a suitable peer')
+    }, err => { peerNetwork.close(); reject(err) })
+  }),
 
   'txs': () => {},
 

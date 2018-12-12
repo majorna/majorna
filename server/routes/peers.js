@@ -22,7 +22,7 @@ exports.leavePeers = route.del('/peers', ctx => {
  * Retrieves a suitable peer to initiate a WebRTC connection to.
  */
 exports.getPeer = route.get('/peers', async ctx => {
-  ctx.body = await peers.getPeer(ctx.state.user.uid)
+  ctx.body = await peers.getPeer(ctx.state.user.uid, ctx.query.toSelf)
 })
 
 /**

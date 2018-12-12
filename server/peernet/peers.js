@@ -22,7 +22,7 @@ exports.addPeer = (id, lat, lon) => {
     peer.lon = lon
     peer.lastOnline = lastOnline
   } else {
-    peers.push({ id, lat, lon, lastOnline: lastOnline })
+    peers.push({ id, lat, lon, lastOnline })
   }
 
   return peers.map(m => ({ lat: m.lat, lon: m.lon }))
@@ -41,8 +41,14 @@ exports.purgePeers = () => { peers.length = 0 }
 /**
  * Finds and returns the ID of a suitable peer.
  * @param uid - ID of the user that is calling this function.
+ * @param toSelf - Initialize a connection back to user himself. Useful for testing.
  */
-exports.getPeer = uid => {
+exports.getPeer = (uid, toSelf) => {
+  // return user himself for testing purposes
+  if (toSelf) {
+    return { userId: 'toSelf' }
+  }
+
   // get a random peer from list, excluding the initializing user itself
   const filteredPeers = peers.filter(m => m.id !== uid)
   if (!filteredPeers.length) {
@@ -58,10 +64,22 @@ exports.getPeer = uid => {
  * Delivers given WebRTC signal data to desired peer, asynchronously.
  */
 exports.signal = async (fromId, toId, signalData) => {
-  // see if the target peer is still online
-  const peer = peers.find(m => m.id === toId)
-  if (!peer) {
-    throw new utils.UserVisibleError(`peer with ID: ${toId} is unavailable`, 500)
+  // check if this is a self-test
+  let isTest = false
+  if (toId === 'toSelf') {
+    toId = fromId
+    fromId = 'toSelf'
+    isTest = true
+  } else if (toId === 'toSelfMatching') {
+    toId = fromId
+    fromId = 'toSelfMatching'
+    isTest = true
+  } else {
+    // see if the target peer is still online
+    const peer = peers.find(m => m.id === toId)
+    if (!peer) {
+      throw new utils.UserVisibleError(`peer with ID: ${toId} is unavailable`, 500)
+    }
   }
-  await db.addNotification(toId, { type: 'webRTCSignal', data: { userId: fromId, signalData } })
+  await db.addNotification(toId, { type: 'webRTCSignal', time: new Date(), isTest, data: { userId: fromId, signalData } })
 }
