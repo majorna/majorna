@@ -1,4 +1,4 @@
-import bugsnag from 'bugsnag-js'
+import bugsnag from '@bugsnag/js'
 import config from './config'
 
 const bugsnagClient = !config.app.isTest ? bugsnag({
