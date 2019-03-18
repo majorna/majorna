@@ -44,6 +44,7 @@
 
 -"server listening on port" AND
 -"The behavior for Date objects stored in Firestore is going to change"
+-"The timestampsInSnapshots setting will soon be removed. YOU MUST UPDATE"
 
 https://console.cloud.google.com/logs/viewer?project=majorna-fire&minLogLevel=0&expandAll=false&customFacets&limitCustomFacetWidth=true&interval=NO_LIMIT&resource=global&scrollTimestamp=2018-12-07T16%3A50%3A56.622999906Z&advancedFilter=-%22--%3E%20POST%20%2Fblocks%20201%22%20AND%0A-%22%3C--%20POST%20%2Fblocks%22%20AND%0A-%22--%3E%20OPTIONS%20%2Fblocks%20204%22%20AND%0A-%22%3C--%20OPTIONS%20%2Fblocks%22%20AND%0A-%22--%3E%20POST%20%2Fpeers%20201%22%20AND%0A-%22%3C--%20POST%20%2Fpeers%22%20AND%0A-%22OPTIONS%20%2Fpeers%20204%22%20AND%0A-%22%3C--%20OPTIONS%20%2Fpeers%22%20AND%0A-%22--%3E%20DELETE%20%2Fpeers%20200%22%20AND%0A-%22%3C--%20DELETE%20%2Fpeers%22%20AND%0A-%22xxx%20POST%20%2Fblocks%20400%22%20AND%0A-%22xxx%20POST%20%2Fblocks%20500%22%20AND%0A-%22Error%3A%2010%20ABORTED%3A%20Too%20much%20contention%20on%20these%20documents.%22%20AND%0A-%22skipping%20mj%20meta%20stats%20update.%22%20AND%0A-%22not%20enough%20time%20elapsed%20since%20the%20last%20block%20so%20skipping%20block%20creation%22%20AND%0A-%22inserted%20new%20block%3A%20no%22%20AND%0A-%22server%20listening%20on%20port%22%20AND%0A-%22The%20behavior%20for%20Date%20objects%20stored%20in%20Firestore%20is%20going%20to%20change%22&dateRangeUnbound=forwardInTime
 
@@ -64,6 +65,7 @@ if (config.app.isTest) {
 exports.app = firebaseAdmin.initializeApp(config.firebase.config)
 exports.auth = exports.app.auth()
 exports.firestore = exports.app.firestore()
+exports.firestore.settings({ timestampsInSnapshots: false })
 exports.log = new Logging({
   projectId: config.firebase.serviceJson.project_id,
   credentials: {

@@ -80,6 +80,7 @@ export default withRouter(class extends Component {
 
     // initialize firebase sockets
     this.db = this.firebaseApp.firestore()
+    this.db.settings({ timestampsInSnapshots: false })
     this.blockInfoDocRef = this.db.collection('meta').doc('blockInfo')
     this.fbUnsubMjMetaDocSnapshot = this.db.collection('meta').doc('mj').onSnapshot(doc => this.setState({mjMetaDoc: doc.data()}))
 
