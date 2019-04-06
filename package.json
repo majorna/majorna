@@ -3,9 +3,9 @@
     "firebase-tools": "6.5.3"
   },
   "scripts": {
-    "start": "npm start --prefix server & npm start --prefix ui",
+    "start": "[[ $STARTUP_SH ]] && source $STARTUP_SH keys; npm start --prefix server & npm start --prefix ui",
     "build": "npm run build --prefix ui",
-    "test": "npm test --prefix server && npm run test-coverage --prefix ui",
+    "test": "[[ $STARTUP_SH ]] && source $STARTUP_SH keys; npm test --prefix server && npm run test-coverage --prefix ui",
     "test-e2e": "npm start --prefix server & npm run start-test --prefix ui",
     "firebase-login": "firebase login",
     "deploy": "npm run build && firebase deploy && npm run deploy --prefix server",
