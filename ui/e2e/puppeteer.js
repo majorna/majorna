@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer')
 
 (async () => {
   // https://github.com/GoogleChrome/puppeteer/blob/master/docs/troubleshooting.md#running-puppeteer-on-travis-ci
-  const browser = process.env.CI ? await puppeteer.launch({args: ['--no-sandbox']}) : await puppeteer.launch()
+  const browser = await puppeteer.launch()
   const page = await browser.newPage()
   await page.goto('http://localhost:3002')
 
