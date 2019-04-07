@@ -1,8 +1,9 @@
-const puppeteer = require('puppeteer');
+const testDebug = true
+const puppeteer = require('puppeteer')
 
-(async () => {
+;(async () => {
   // https://github.com/GoogleChrome/puppeteer/blob/master/docs/troubleshooting.md#running-puppeteer-on-travis-ci
-  const browser = await puppeteer.launch(/*{headless: false}*/)
+  const browser = await puppeteer.launch(testDebug ? {headless: false} : undefined)
   const page = await browser.newPage()
   await page.goto('http://localhost:3002')
 
