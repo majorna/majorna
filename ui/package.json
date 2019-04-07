@@ -22,7 +22,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "test-coverage": "npm test -- --coverage",
-    "test-e2e": "PORT=3002 BROWSER=none npm start && node e2e/puppeteer.js",
+    "test-e2e": "PORT=3002 BROWSER=none npm start & node e2e/puppeteer.js",
     "eject": "react-scripts eject"
   },
   "browserslist": [
