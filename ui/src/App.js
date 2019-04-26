@@ -106,9 +106,7 @@ export default withRouter(class extends Component {
         })
         config.server.token = await u.getIdToken()
         // run tests
-        const testCtx = {userDocRef: this.userDocRef}
-        config.app.isDev && (isMining() ? console.log('skipping tests since miner is running') : testRunner(testCtx))
-        config.app.isProd && setTimeout(() => { isMining() ? console.log('skipping tests since miner is running') : testRunner(testCtx) }, 10 * 1000)
+        if (config.app.isDev || config.app.isProd) setTimeout(() => { isMining() ? console.log('skipping tests: miner is running') : !this.state.userDoc ? console.log('skipping tests: user doc not ready (first login, slow network ..)') : testRunner({userDocRef: this.userDocRef}) }, (config.app.isProd ? 10 : 1) * 1000)
       } else {
         this.setState(this.nullState) // logged out or token expired and was not renewed
         this.props.location.pathname !== '/login' && this.props.history.push('/')
