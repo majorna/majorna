@@ -1,6 +1,6 @@
 {
   "devDependencies": {
-    "firebase-tools": "6.6.0"
+    "firebase-tools": "6.7.1"
   },
   "scripts": {
     "start": "[[ $STARTUP_SH ]] && source $STARTUP_SH keys; npm start --prefix server & npm start --prefix ui",
