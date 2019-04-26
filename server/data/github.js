@@ -4,13 +4,10 @@
  * - Node.js SDK src: https://github.com/octokit/rest.js
  * - Node.js SDK ref: https://octokit.github.io/rest.js/#api-Repos-getContent
  */
-const octokit = require('@octokit/rest')()
 const config = require('../config/config')
-
-// token auth (https://github.com/settings/tokens)
-octokit.authenticate({
-  type: 'token',
-  token: config.github.token
+const octokit = require('@octokit/rest')({
+  // token auth (https://github.com/settings/tokens)
+  auth: `token ${config.github.token}`
 })
 
 // github api params

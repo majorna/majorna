@@ -1,18 +1,19 @@
 {
   "devDependencies": {
-    "firebase-tools": "6.1.1"
+    "firebase-tools": "6.7.1"
   },
   "scripts": {
-    "start": "npm start --prefix server & npm start --prefix ui",
+    "start": "[[ $STARTUP_SH ]] && source $STARTUP_SH keys; npm start --prefix server & npm start --prefix ui",
     "build": "npm run build --prefix ui",
-    "test": "npm test --prefix server && npm run test-coverage --prefix ui",
-    "test-e2e": "npm start --prefix server & npm run start-test --prefix ui",
+    "test": "[[ $STARTUP_SH ]] && source $STARTUP_SH keys; npm test --prefix server && npm run test-coverage --prefix ui",
+    "test-e2e": "[[ $STARTUP_SH ]] && source $STARTUP_SH keys; npm start --prefix server & npm run test-e2e --prefix ui",
     "firebase-login": "firebase login",
     "deploy": "npm run build && firebase deploy && npm run deploy --prefix server",
-    "outdated": "(echo CLI: && npm outdated || true) && (echo UI: && npm outdated --prefix ui || true) && (echo SERVER: && npm outdated --prefix server || true)",
+    "outdated-all": "(echo CLI: && npm outdated || true) && (echo UI: && npm outdated --prefix ui || true) && (echo SERVER: && npm outdated --prefix server || true)",
     "delete-all": "rm -fr node_modules ui/node_modules server/node_modules",
     "install-all": "npm run delete-all && npm ci && npm ci --prefix ui && npm ci --prefix server",
     "force-https": "sed -i '' 's/http:/https:/g' package-lock.json ui/package-lock.json server/package-lock.json",
-    "update-all": "npm run delete-all && rm package-lock.json ui/package-lock.json server/package-lock.json && npm install && npm install --prefix ui && npm install --prefix server && npm run force-https"
+    "update-package-json-all": "npm install npm-check-updates --no-save && ncu -u && pushd ui && ncu -u && popd && pushd server && ncu -u && popd",
+    "update-all": "npm run update-package-json-all && npm run delete-all && rm package-lock.json ui/package-lock.json server/package-lock.json && npm install && npm install --prefix ui && npm install --prefix server && npm run force-https && npm run outdated-all"
   }
 }

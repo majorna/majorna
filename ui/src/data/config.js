@@ -1,7 +1,7 @@
 const env = navigator.userAgent.includes('Node.js') || navigator.userAgent.includes('jsdom') ? 'test' :
   window.document.URL.includes('http://localhost:3000') ? 'development' : 'production'
 const isDev = env === 'development'
-const isTest = env === 'test'
+const isTest = env === 'test' // unit tests (Jest)
 const isProd = env === 'production'
 
 const domain = 'getmajorna.com'
