@@ -11,6 +11,7 @@
     "deploy": "npm run build && firebase deploy && npm run deploy --prefix server",
     "outdated-all": "(echo CLI: && npm outdated || true) && (echo UI: && npm outdated --prefix ui || true) && (echo SERVER: && npm outdated --prefix server || true)",
     "delete-all": "rm -fr node_modules ui/node_modules server/node_modules",
+    "install-all-comment": "echo We use npm ci here, which is same as npm install but more strict. Read more about it here: https://docs.npmjs.com/cli/v6/commands/npm-ci#description",
     "install-all": "npm run delete-all && npm ci && npm ci --prefix ui && npm ci --prefix server",
     "force-https": "sed -i '' 's/http:/https:/g' package-lock.json ui/package-lock.json server/package-lock.json",
     "update-package-json-all": "npm install npm-check-updates --no-save && ncu -u && pushd ui && ncu -u && popd && pushd server && ncu -u && popd",
