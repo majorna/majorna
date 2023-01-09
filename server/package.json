@@ -13,7 +13,7 @@
     "@google-cloud/logging": "4.1.0",
     "@octokit/rest": "16.1.0",
     "axios": "0.18.0",
-    "firebase-admin": "6.3.0",
+    "firebase-admin": "11.4.1",
     "kcors": "2.2.2",
     "koa": "2.6.2",
     "koa-bodyparser": "4.2.1",
